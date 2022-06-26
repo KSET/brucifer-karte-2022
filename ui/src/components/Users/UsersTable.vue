@@ -24,13 +24,12 @@
                     <button @click="changeprivilege(user,'2')" class="btn btn-primary" id="gumbar"> 2</button>
                     <button @click="changeprivilege(user,'3')" class="btn btn-primary" id="gumbar"> 3</button>
                     <button @click="changeprivilege(user,'4')" class="btn btn-primary" id="gumbar"> 4</button>
-                    <button @click="deleteUser(user)" class="btn btn-primary" id="gumbard"> d</button>
+                    <button @click="deleteUser(user)" class="btn btn-primary" id="gumbard">  <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
                   </td>
                 </tr>
               </tbody>
             </table>
         
-     
       
   </div>
   </div>
@@ -62,6 +61,8 @@ export default {
     axios.get('http://127.0.0.1:8000/users/',)
     .then(response => {
       this.users =response.data;
+
+
     })},
     changeprivilege(user,changenum){
       axios.put('http://127.0.0.1:8000/users/'+user.id+'/',

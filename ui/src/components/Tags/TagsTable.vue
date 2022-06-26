@@ -1,8 +1,7 @@
 <template>
   <div id="tags-table">
-      <div class=row>
-        
-            <table class="table" id="guests">
+     <div class=row>
+            <table id="guests">
               <thead>
               <th>Name</th>
               <th>Count</th>
@@ -16,15 +15,15 @@
                   <td>{{tag.count}}</td>
                   <td>{{tag.bought}}</td>
                   <td>{{tag.entered}}</td>
-                  <td><button @click="deleteTag(tag)" class="btn btn-primary" id="gumbard"> d</button>
+                  <td><button @click="deleteTag(tag)" class="btn btn-primary" id="gumbard"> <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
                   </td>
                 </tr>
               </tbody>
             </table>
         
       </div>
-      
-  </div>
+      </div>
+
   
 </template>
 

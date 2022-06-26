@@ -10,6 +10,7 @@ export default createStore({
       name: '',
       email: '',
       privilege: '',
+      tokenExp: 10000000000000000,
   },
   plugins: [createPersistedState()],
   mutations: {
@@ -24,6 +25,9 @@ export default createStore({
     },
     setPrivilege (state, value) {
       state.privilege = value
+    },
+    setTokenExp (state, value) {
+      state.tokenExp = value
     }
   }
 });

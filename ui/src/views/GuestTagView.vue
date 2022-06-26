@@ -1,8 +1,9 @@
 <template>
   
   <div id="guests-table">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+   <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
           <div class="card-header">Ulaz</div>
           <div class="card-body">
     <div id="guests-search">
@@ -11,7 +12,7 @@
       <button @click="searchGuest" class="btn btn-primary"
                       id="gumb2" >search</button>
   </div>
-        <div class="col-lg-6">
+        
             <table class="table" id="guests">
               <thead>
               <th>Name</th>
@@ -33,9 +34,9 @@
                       class="btn btn-primary"
                       id="gumbarn"
                     >
-                    x
+                    <font-awesome-icon icon="fa-solid fa-xmark" />
                     </button>
-                    <button v-else class="btn btn-primary" id="gumbary" @click="changebought(guest,'0')"> ✓</button>
+                    <button v-else class="btn btn-primary" id="gumbary" @click="changebought(guest,'0')"> <font-awesome-icon icon="fa-solid fa-check" /></button>
                   </td>
                 </tr>
               </tbody>
@@ -78,9 +79,7 @@ export default {
 
   mounted() {
     this.slug=this.$route.params.slug
-    var path=this.$route.path
-    path.split("/")
-    console.log(path)
+    
 
     var changeSlugs=["guests","tags","home","","privileges","users","import","export","logout"]
     if(changeSlugs.includes(String(this.slug))){

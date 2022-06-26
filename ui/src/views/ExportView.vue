@@ -1,17 +1,22 @@
 <template>
   <div class="export">
-    <download-csv
-	class   = "btn btn-default"
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card">
+          <div class="card-header">Export</div>
+          <div class="card-body">
+    <download-csv id="gumb2"
+	class   = "btn btn-primary"
 	:data   = this.users
   separator-excel = true,
-  encoding = 'UTF-8'
+  encoding = 'iso-8859'
 	name    = "export.csv">
   
 
-	Download CSV (This is a slot)
+	Download CSV
 
 </download-csv>
-  </div>
+  </div></div></div></div></div>
 </template>
 
 <script>
@@ -42,3 +47,13 @@ export default {
   }
 }
 </script>
+
+
+<style>
+#gumb2 {
+  margin: 2px;
+  width: 220px;
+  height: 100px;
+  text-align: center;
+}
+</style>

@@ -2,11 +2,12 @@
     <div id="login">
         <div class="row justify-content-center">
         <div class="col-md-8">
+          <div class="card">
           <div class="card-header">Login</div>
           <div class="card-body">
         <br>
         <div id="signin_button"></div>
-    </div></div></div></div>
+    </div></div></div></div></div>
 </template>
 
 <script>
@@ -29,6 +30,9 @@ export default {
     },
     email(){
       return store.state.email;
+    },
+    tokenExp(){
+      return store.state.tokenExp;
     }
     },
     data() {
@@ -41,7 +45,6 @@ export default {
 
         handleCredentialResponse(res) {
             const responsePayload = VueJwtDecode.decode(res.credential);
-
             console.log("ID: " + responsePayload.sub);
             console.log('Full Name: ' + responsePayload.name);
             console.log('Given Name: ' + responsePayload.given_name);
@@ -54,6 +57,7 @@ export default {
             store.commit('setId', responsePayload.sub)
             store.commit('setName', decodeURIComponent(escape(responsePayload.name)));
             store.commit('setEmail', responsePayload.email)
+            store.commit('setTokenExp', responsePayload.exp)
 
             
 
@@ -114,6 +118,8 @@ export default {
             console.log(window.google);
             window.google.accounts.id.initialize({
                 client_id: "729300808359-9qt44p6ksjivnbfd981pgjbmkh4ifgcj.apps.googleusercontent.com",
+                /* RESTRIKCIJA DOMENE NA kset.org
+                hosted_domain: "kset.org",*/
                 callback: this.handleCredentialResponse,
 
             });

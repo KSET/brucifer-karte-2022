@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-  <navbar></navbar>
+  <navbar v-if="this.navtype=='bruckarte'"></navbar>
 <router-view/>
 </div>
 </template>
@@ -12,6 +12,19 @@ export default {
   name: 'app',
   components: {
     Navbar
+  },
+  data() {
+      return {
+        navtype:'brucweb',
+      }
+
+    },
+  mounted(){
+    if(((String(window.location.href).split("/"))[3])=="bruckarte"){
+      this.navtype="bruckarte"
+    }else{
+      this.navtype="brucweb"
+    }
   }
 }
 </script>
