@@ -1,76 +1,98 @@
 <template>
+  <div id="navbar">
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <router-link class="navbar-item" :to="'/bruckarte/home/'">#BRUCIFER</router-link>
 
-  <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a class="navbar-item" href="https://bulma.io">
-      "#BRUCIFER"
-    </a>
 
-    <a @click="toggleBurger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-
-  <div id="navbarBasicExample" class="navbar-menu">
-    <div class="navbar-start">
-        <a  class="navbar-item" v-if="privilege=='1' || privilege=='3'|| privilege=='4'" href="guests">Brucoši</a>
-
-<div class="navbar-item has-dropdown is-hoverable" v-if="privilege=='1' || privilege=='2'|| privilege=='4'">
-        <a class="navbar-link">
-          Ulaz
+        <a v-on:click="showNav = !showNav" v-bind:class="{ 'is-active': showNav }" role="button" class="navbar-burger"
+          aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
         </a>
+      </div>
 
-        <div class="navbar-dropdown">
-          <router-link class="navbar-item" :to="'/guest_tag/Brucoši'">Brucoši</router-link>
+      <div id="navbarBasicExample" class="navbar-menu" v-bind:class="{ 'is-active': showNav }">
+        <div class="navbar-start">
 
-          <a href="guest_tag/KSET" class="navbar-item">
-            KSET
-          </a>
-          <a href="guest_tag/VIP" class="navbar-item">
-            VIP
-          </a>
+          <router-link class="navbar-item" v-if="privilege == '1' || privilege == '3' || privilege == '4'"
+            :to="'/bruckarte/guests/'">Brucoši</router-link>
+
+
+          <div class="navbar-item has-dropdown is-hoverable"
+            v-if="privilege == '1' || privilege == '2' || privilege == '4'">
+            <a class="navbar-link">
+              Ulaz
+            </a>
+
+            <div class="navbar-dropdown">
+              <a href="/bruckarte/guest_tag/Brucoši" class="navbar-item">
+                Brucoši
+              </a>
+              <a href="/bruckarte/guest_tag/KSET" class="navbar-item">
+                KSET
+              </a>
+              <a href="/bruckarte/guest_tag/VIP" class="navbar-item">
+                VIP
+              </a>
+            </div>
+          </div>
+
+          <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/tags/'">Tags</router-link>
+          <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/privileges/'">Privileges
+          </router-link>
+          <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/users/'">Users</router-link>
+          <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/import/'">Import</router-link>
+          <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/export/'">Export</router-link>
+          <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/'">|</router-link>
+
+
+
+
+          <div class="navbar-item has-dropdown is-hoverable" v-if="privilege == '1'">
+            <a class="navbar-link">
+              Bruciweb
+            </a>
+
+            <div class="navbar-dropdown">
+              <a href="/bruckarte/lineup" class="navbar-item">
+                Lineup
+              </a>
+              <a href="/bruckarte/sponsors" class="navbar-item">
+                Sponsors
+              </a>
+
+            </div>
+          </div>
+
         </div>
       </div>
 
+      <div class="navbar-end">
+        <div class="navbar-item">
 
- 
- <a class="navbar-item" v-if="privilege=='1'" href="tags">Tags</a>
- <a class="navbar-item" v-if="privilege=='1'" href="privileges">Privileges</a>
- <a class="navbar-item" v-if="privilege=='1'" href="users">Users</a>
-  <a class="navbar-item" v-if="privilege=='1'" href="import">Import</a>
- <a class="navbar-item" v-if="privilege=='1'" href="export">Export</a>
+          <div v-if="name != ''" class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              {{ name }}
+            </a>
 
-        
-      </div>
-    </div>
+            <div class="navbar-dropdown">
 
-    <div class="navbar-end">
-      <div class="navbar-item">
-        
-      <div v-if="name!=''" class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          {{name}}
-        </a>
+              <router-link class="navbar-item" :to="'/bruckarte/logout'">Logout</router-link>
 
-        <div class="navbar-dropdown">
-         <a href="logout" class="navbar-item">
-            Logout
-          </a>
-          
-        </div>
-      </div>
-          
+            </div>
+          </div>
+
           <a v-else class="button is-light">
             Log in
           </a>
         </div>
-    </div>
+      </div>
 
-      
-</nav>
 
+    </nav>
+  </div>
 </template>
 
 <script>
@@ -78,34 +100,51 @@ import Dropdown from './DropdownRoute';
 import store from '@/store/index.js';
 export default {
   name: 'Navbar',
+  el: '#app',
   components: {
     Dropdown
+  },
+  data() {
+    return {
+      showNav: false,
+    }
   },
   computed: {
     privilege() {
       return store.state.privilege;
     },
-    name(){
+    name() {
       return store.state.name;
     }
   },
-  data () {
+  data() {
     return {
-      services: ['Brucoši','KSET','VIP'],
+      tagsList: ['Brucoši', 'KSET', 'VIP'],
       logoutlist: ['logout']
     }
   },
   methods: {
-    toggleBurger(){
+    toggleBurger() {
       $(".navbar-burger").toggleClass("is-active");
       $(".navbar-menu").toggleClass("is-active");
+    },
+    refresh() {
+      if (!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+      }
     }
-  }}
-  
+  }
+}
+
 
 </script>
 <style>
-body {margin:0;}
+body {
+  margin: 0;
+}
+
+#navbar-item-1 {}
 
 ul {
   list-style-type: none;
@@ -137,7 +176,10 @@ li a:hover:not(.active) {
 .active {
   background-color: #fb8c04;
 }
-.right{float: right;}
+
+.right {
+  float: right;
+}
 </style>
 
 

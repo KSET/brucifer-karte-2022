@@ -27,9 +27,9 @@
                       class="btn btn-xs btn-danger"
                       id="gumbarn"
                     >
-                    x
+                    <font-awesome-icon icon="fa-solid fa-xmark" />
                     </button>
-                    <button v-else class="btn btn-xs btn-success" id="gumbary" @click="changebought(guest,'0')"> ✓</button>
+                    <button v-else class="btn btn-xs btn-success" id="gumbary" @click="changebought(guest,'0')"> <font-awesome-icon icon="fa-solid fa-check" /></button>
                   </td>
                 </tr>
               </tbody>

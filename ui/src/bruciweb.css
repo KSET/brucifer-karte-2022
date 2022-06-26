@@ -1,0 +1,117 @@
+.page-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+main {
+    position: relative;
+    flex: 1;
+    padding-bottom: 82px;
+    background-repeat: no-repeat;
+    background-position: top right;
+    background-size: cover;
+}
+.contents {
+    font-size: 1.5rem;
+    padding: 0 calc(var(--content-padding) * 1vw);
+    padding-top: calc(var(--content-padding) * 0.85 * 1vw);
+    transition: padding .3s ease, font-size .3s ease;
+    will-change: padding, font-size;
+}
+
+@media screen and (max-width: 980px) {
+    .contents {
+        font-size: 1.125rem;
+    }
+}
+
+.contents h1,
+.contents h3,
+.contents h4,
+.contents h5,
+.contents h6,
+.contents h2 {
+    font-size: 1.5em;
+}
+
+.contents section {
+    color: var(--bruc-black);
+}
+
+.contents section + section {
+    margin-top: 6rem;
+    transition: margin-top .3s ease;
+    will-change: margin-top;
+}
+
+@media screen and (max-width: 980px) {
+    .contents section + section {
+        margin-top: 4rem;
+    }
+}
+
+.contents section > * {
+    margin-bottom: 1em;
+}
+
+
+.contents p + h2,
+.contents p + h3,
+.contents p + h4,
+.contents p + h5,
+.contents p + h6,
+.contents p + h1 {
+    margin-top: 6rem;
+    transition: margin-top .3s ease;
+    will-change: margin-top;
+}
+
+@media screen and (max-width: 980px) {
+    .contents p + h1 {
+        margin-top: 4rem;
+    }
+}
+
+.contents section strong {
+    font-weight: bold;
+}
+
+.contents section em {
+    font-style: italic;
+}
+
+.contents section del {
+    text-decoration: line-through;
+}
+
+.contents section blockquote {
+    padding-left: .5em;
+    border-left: 4px solid rgba(0, 0, 0, .69);
+}
+
+
+.contents section hr {
+    width: 5rem;
+    margin: 1.5rem 0;
+}
+
+/*------------------ FOOTER ------------------*/
+
+footer::before {
+    position: absolute;
+    top: -81px;
+    right: 0;
+    left: 0;
+    height: 82px;
+    content: "";
+    background-image: url(./assets/images/footer/bg.svg);
+    background-repeat: repeat-x;
+}
+
+footer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 110px;
+
+}

@@ -9,62 +9,111 @@ import Export from '../views/ExportView.vue'
 import GuestTag from '../views/GuestTagView.vue'
 import Login from '../views/LoginView.vue'
 import Logout from '../views/LogoutView.vue'
+import Lineup from '../views/LineupView.vue'
+import Sponsors from '../views/SponsorsView.vue'
+import Bwlineup from '../views/BruciWebViews/BWlineupView.vue'
+import BWsponsors from '../views/BruciWebViews/BWsponsorsView.vue'
+import Kontakt from '../views/BruciWebViews/KontaktView.vue'
+import Ulaznice from '../views/BruciWebViews/UlazniceView.vue'
+import Pravila from '../views/BruciWebViews/PravilaView.vue'
+import Naslovnica from '../views/BruciWebViews/NaslovnicaView.vue'
+
 import store from '@/store/index.js';
 
 
 
 const routes = [
   {
-    path: '/',
+    path: '/bruckarte/',
     name: 'home',
     component: HomeView
   },
   {
-    path: '/tags',
+    path: '/bruckarte/tags',
     name: 'tags',
     component : Tags,
   },
   {
-    path: '/guests',
+    path: '/bruckarte/guests',
     name: 'guests',
     component : Guests
   },
   {
-    path: '/guest_tag/:slug',
+    path: '/bruckarte/guest_tag/:slug',
     name: 'guest_tag',
     alias: '/guest_tag/guest_tag/:slug',
     component : GuestTag
   },
   {
-    path: '/users',
+    path: '/bruckarte/users',
     name: 'users',
     component : Users
   },
   {
-    path: '/privileges',
+    path: '/bruckarte/privileges',
     name: 'privileges',
     component : Privileges
   },
   {
-    path: '/import',
+    path: '/bruckarte/import',
     name: 'import',
     component : Import
   }
   ,
   {
-    path: '/export',
+    path: '/bruckarte/export',
     name: 'export',
     component : Export
   },
   {
-    path: '/login',
+    path: '/bruckarte/login',
     name: 'login',
     component : Login
   },
   {
-    path: '/logout',
+    path: '/bruckarte/logout',
     name: 'logout',
     component : Logout
+  },
+  {
+    path: '/bruckarte/lineup',
+    name: 'lineup',
+    component : Lineup
+  },
+  {
+    path: '/bruckarte/sponsors',
+    name: 'sponsors',
+    component : Sponsors
+  },
+  {
+    path: '/sponsors',
+    name: 'bwsponsors',
+    component : BWsponsors
+  },
+  {
+    path: '/lineup',
+    name: 'bwlineup',
+    component : Bwlineup
+  },
+  {
+    path: '/kontakt',
+    name: 'kontakt',
+    component : Kontakt
+  },
+  {
+    path: '/ulaznice',
+    name: 'ulaznice',
+    component : Ulaznice
+  },
+  {
+    path: '/pravila-ponasanja',
+    name: 'pravila-ponasanja',
+    component : Pravila
+  },
+  {
+    path: '/',
+    name: 'naslovnica',
+    component : Naslovnica
   },
   
   
@@ -78,29 +127,38 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  var allowedRoutesForprivilege2= ["home","login","logout","guest_tag","",undefined]
+  
+  //provjera auth i privilegija
+  var allowedRoutesForprivilege2= ["home","login","logout","guest_tag","",undefined,"bruckarte"]
   var allowedRoutesForprivilege3= ["home","login","logout","guests","",undefined]
   var allowedRoutesForprivilege4= ["home","login","logout","guest_tag","guests","",undefined]
 
-  console.log("provjera auth se kao dogodila")
-  console.log("---ime  ",to.name)
-  if(store.state.id=='' && to.name!='login'){
-    next({path: '/login'});
-  }else if((store.state.privilege==0 && to.name!='login')){
-    window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku(?)");
-    next({path: '/home'});
-  }else if((store.state.privilege==2 && !allowedRoutesForprivilege2.includes(to.name))){
+  if((Date.now()/1000)>store.state.tokenExp && to.name!='logout'){
+    console.log("aj ća")
+    next({path: '/bruckarte/logout'});
+  }else{
+  if((String(to.path).split("/"))[1]=="bruckarte"){
+    if(store.state.id=='' && to.name!='login'){
+      next({path: '/bruckarte/login'});
+    }else if((store.state.privilege==0 && to.name!='login')){
       window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku(?)");
-      next({path: '/home'});
-  }else if((store.state.privilege==3 && !allowedRoutesForprivilege3.includes(to.name))){
+      next({path: '/bruckarte/home'});
+    }else if((store.state.privilege==2 && !allowedRoutesForprivilege2.includes(to.name))){
+        window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku(?)");
+        next({path: '/bruckarte/home'});
+    }else if((store.state.privilege==3 && !allowedRoutesForprivilege3.includes(to.name))){
+        window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku(?)");
+        next({path: '/bruckarte/home'});
+    }else if((store.state.privilege==4 && !allowedRoutesForprivilege4.includes(to.name))){
       window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku(?)");
-      next({path: '/home'});
-  }else if((store.state.privilege==4 && !allowedRoutesForprivilege4.includes(to.name))){
-    window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku(?)");
-    next({path: '/home'});
+      next({path: '/bruckarte/home'});
+    }else{
+      next();
+    }
   }else{
     next();
-  }
+  }}
+  
 })
 
 export default router

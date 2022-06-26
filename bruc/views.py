@@ -2,18 +2,16 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import filters
 from rest_framework import routers, serializers, viewsets
-from .models import Guests, Tags, Users
+from .models import Guests, Tags, Users, Lineup, Sponsors
 from django_filters.rest_framework import DjangoFilterBackend
-from .serializer import GuestsSerializer, TagsSerializer, UsersSerializer, DynamicSearchFilter
+from .serializer import GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, DynamicSearchFilter
 
 # Create your views here.
 
 class GuestsViewSet(viewsets.ModelViewSet):
     queryset = Guests.objects.all()
     serializer_class = GuestsSerializer
-    #filterset_fields = ['bought','tag']
     filter_backends = [DynamicSearchFilter]
-    #search_fields = ['name', 'surname']
     
 
 class TagsViewSet(viewsets.ModelViewSet):
@@ -26,6 +24,13 @@ class UsersViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'email']
 
+class LineupViewSet(viewsets.ModelViewSet):
+    queryset = Lineup.objects.all()
+    serializer_class = LineupSerializer
+
+class SponsorsViewSet(viewsets.ModelViewSet):
+    queryset = Sponsors.objects.all()
+    serializer_class = SponsorsSerializer
 
 
 
