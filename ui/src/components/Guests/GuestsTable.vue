@@ -5,7 +5,7 @@
       <h>Search:  </h>
       <input @input="searchGuest" type="form" id="searchgumb" v-model="search" placeholder="Name">
       <button @click="searchGuest" class="btn btn-primary"
-                      id="gumb2" >search</button>
+                      id="gumb2" >Search</button>
   </div>
     
             <table class="table" id="guests">
@@ -140,6 +140,8 @@ font-family: 'Avenir', Helvetica, Arial, sans-serif;
   text-align: center;
 }
 #gumbary{
+
+  padding: 0px;
   margin: 2px;
   width: 40px;
   height: 40px;
@@ -147,6 +149,7 @@ font-family: 'Avenir', Helvetica, Arial, sans-serif;
   border-color: green;
 }
 #gumbarn{
+  padding: 0px;
   margin: 2px;
   width: 40px;
   height: 40px;

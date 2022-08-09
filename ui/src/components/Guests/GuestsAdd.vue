@@ -93,6 +93,7 @@ export default {
 
 
 #gumb2 {
+  padding: 0px;
   margin: 2px;
   width: 220px;
   height: 30px;

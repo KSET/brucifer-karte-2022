@@ -1,37 +1,20 @@
 <template>
-  <div id="tags-table">
-      <div class=row>
-        
-            <table class="table" id="guests">
-              <thead>
-              <th>IMG</th>
-              <th>Id</th>
-              <th>Name</th>
-              <th>Url</th>
-              <th>Options</th>
-              </thead>
-              <tbody>
-                <tr v-for="sponsor in sponsors" :key="sponsor.id">
-                  <td><img v-bind:src="sponsor.image"></td>
-                  <td>{{sponsor.id}}</td>
-                  <td>{{sponsor.name}}</td>
-                  <td><a v-bind:href="sponsor.url">{{sponsor.url}}</a></td>
-                  <td><button @click="deleteTag(sponsor)" class="btn btn-primary" id="gumbard">  <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-        
-      </div>
-      
+  <div class="grid">
+    <article v-for="sponsor in sponsors" :key="sponsor.id">
+    <img v-bind:src="sponsor.image">
+    <div class="text">
+      <h3>{{sponsor.id}} ; {{sponsor.name}}</h3>
+      <button @click="deleteTag(sponsor)" class="btn btn-primary" id="gumbard">  <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
+    </div>
+    </article>
+
   </div>
-  
 </template>
 
 <script>
 import axios from 'axios'
 export default {
-  name: 'SponsorsTable',
+  name: 'LineupTable',
   props: {
     msg: String
   },
@@ -59,69 +42,33 @@ export default {
         this.created();
       })
     },
-    getAp(elementName){
-    
-    
-    }
   }
 
 }
 </script>
+
 <style>
-#guests {
-  font-family: Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-  text-align: center;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+.grid { 
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 20px;
+  align-items: stretch;
+  }
+.grid > article {
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 6px 0px  rgba(0,0,0,0.3);
 }
-
-#guests td, #guests th {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+.grid > article img {
+  max-width: 100%;
 }
-
-#guests tr:nth-child(even){background-color: #f2f2f2;
-font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;}
-
-#guests tr:hover {background-color: #ddd;font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;}
-
-#guests th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: rgba(0, 119, 255, 0.979);
+.text {
+  padding: 0 20px 20px;
+}
+.text > button {
+  background: gray;
+  border: 0;
   color: white;
-  text-align: center;
-}
-#gumbary{
-  margin: 2px;
-  width: 40px;
-  height: 40px;
-  background-color: green;
-  border-color: green;
-}
-#gumbarn{
-  margin: 2px;
-  width: 40px;
-  height: 40px;
-  background-color: red;
-  border-color: red;
-}
+  padding: 10px;
+  width: 100%;
+  }
 </style>
-
-

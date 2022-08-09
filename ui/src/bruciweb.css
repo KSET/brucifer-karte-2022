@@ -97,21 +97,13 @@ main {
 
 /*------------------ FOOTER ------------------*/
 
-footer::before {
-    position: absolute;
-    top: -81px;
-    right: 0;
-    left: 0;
-    height: 82px;
-    content: "";
-    background-image: url(./assets/images/footer/bg.svg);
-    background-repeat: repeat-x;
-}
-
 footer {
     position: relative;
     display: flex;
     align-items: center;
     height: 110px;
+    padding: 0 calc(var(6.25) * 1vw);
+    color: var(f0feff);
+    background-color: var(f0526d);
 
 }

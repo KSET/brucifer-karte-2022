@@ -1,11 +1,9 @@
 <template>
   <div id="guests-add">
-    <form @submit="postGuest">
       <a>Dodaj na popis: </a>
       <input type="text" id="inputname" v-model="name" placeholder="Name">
       <input type="file" accept="image/*" ref="file" id="file-input" @change="selectImage">
-      <button class="btn btn-primary" id="gumb2">Add</button>
-    </form>
+      <button @click="postGuest" class="btn btn-primary" id="gumb2">Add</button>
   </div>
 </template>
 
@@ -48,7 +46,7 @@ export default {
   },
 
   created() {
-    axios.get('http://127.0.0.1:8000/sponsors/',)
+    axios.get('http://127.0.0.1:8000/lineup/',)
       .then(response => {
         this.sponsors = response.data;
       })
@@ -90,12 +88,12 @@ export default {
       console.log(this.currentImage)
      
     console.log(this.nextId)
-      axios.post('http://127.0.0.1:8000/sponsors/',
-        { id: this.nextId, name: this.name, url: this.url},
+      axios.post('http://127.0.0.1:8000/lineup/',
+        { id: this.nextId, name: this.name, url: this.url, image:this.currentImage},
         { auth: { username: 'paxx', password: 'KSETpenisica43' } }
       )
         .then(() => {
-          location.reload();
+          
         })
     }
   }
@@ -116,6 +114,7 @@ export default {
 
 
 #gumb2 {
+  padding: 0px;
   margin: 2px;
   width: 220px;
   height: 30px;

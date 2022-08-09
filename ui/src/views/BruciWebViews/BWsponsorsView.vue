@@ -1,5 +1,6 @@
 <template>
 <div class="sponsors"> 
+  <br>
     <div v-for="user in users" :key="user.id">
             <div class="artist" title="{{ user.name }}">
                 <div class="image-container">
@@ -131,6 +132,9 @@ export default {
         .sponsors {
             grid-template-columns: repeat(1, minmax(0, 1fr));
         }
+    }
+    h6{
+        color:white;
     }
 
 </style>

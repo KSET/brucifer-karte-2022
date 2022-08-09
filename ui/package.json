@@ -26,6 +26,7 @@
     "jwt-decode": "^3.1.2",
     "material-icons": "^1.11.2",
     "popper.js": "^1.16.1",
+    "read-excel-file": "^5.4.4",
     "vue": "^3.2.37",
     "vue-google-oauth2": "^1.5.8",
     "vue-json-csv": "^2.1.0",

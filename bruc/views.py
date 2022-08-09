@@ -27,10 +27,12 @@ class UsersViewSet(viewsets.ModelViewSet):
 class LineupViewSet(viewsets.ModelViewSet):
     queryset = Lineup.objects.all()
     serializer_class = LineupSerializer
+    ordering_fields = '__all__'
 
 class SponsorsViewSet(viewsets.ModelViewSet):
     queryset = Sponsors.objects.all()
     serializer_class = SponsorsSerializer
+    ordering_fields = '__all__'
 
 
 

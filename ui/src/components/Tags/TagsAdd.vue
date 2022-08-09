@@ -1,9 +1,9 @@
 <template>
   <div id="tags-add">
-      <h>Dodaj:</h>
-      <input type="text" id="inputtagname" v-model="name" placeholder="Name">
+      <h>Dodaj: </h>
+      <input type="text" id="inputtagname" v-model="name" placeholder="Tag Name">
       <button @click="postTag" class="btn btn-primary"
-                      id="gumb2" >add</button>
+                      id="gumb2" >Add</button>
   </div>
 </template>
 

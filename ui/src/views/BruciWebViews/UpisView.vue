@@ -1,0 +1,82 @@
+<template>
+    <div id="upis">
+        <br>
+        <h>Ime: </h>
+        <input type="text" id="inputname" v-model="name" placeholder="Name">
+        <br>
+        <br>
+        <h>Prezime: </h>
+        <input type="text" id="inputsurname" v-model="surname" placeholder="Surname">
+        <br>
+        <br>
+        <h>JMBAG: </h>
+        <input type="text" id="inputjmbag" v-model="jmbag" placeholder="JMBAG">
+        <br>
+        <br>
+        <h>e-mail: </h>
+        <input type="text" id="inputemail" v-model="email" placeholder="email">
+        <br>
+        <br>
+
+        <button @click="postGuest" class="btn btn-primary" id="gumb3">Upiši se!</button>
+    </div>
+</template>
+
+<script>
+import axios from 'axios'
+
+export default {
+    name: 'Upis',
+
+    props: {
+        msg: String
+    },
+    data() {
+        return {
+            chosenguest: [],
+            id: '',
+            name: '',
+            surname: '',
+            jmbag: '',
+            email: '',
+            tag: '',
+            bought: '',
+            entered: '',
+            deleted: '',
+            len: '',
+        }
+    },
+    created() {
+
+
+    },
+    methods: {
+        postGuest() {
+
+            axios.get('http://127.0.0.1:8000/guests/?search=' + this.jmbag + '&search_fields=jmbag',)
+                .then(response => {
+                    this.chosenguest = response.data;
+                    console.log(response.data.length);
+                    if (response.data.length == 0) {
+                        window.alert("kriv jmbag");
+                    } else {
+                        var osoba = this.chosenguest[0];
+                        if (osoba.name != "") {
+                            window.alert("podaci već ispunjeni, u slučaju pogreške javiti se na help@kset.org");
+                        } else {
+                            axios.put('http://127.0.0.1:8000/guests/' + osoba.id + '/',
+                                { name: this.name, surname: this.surname, email: this.email },
+                                { auth: { username: 'paxx', password: 'KSETpenisica43' } }
+                            )
+                        }
+
+                    }
+                })
+
+        }
+    }
+}
+</script>
+
+<style>
+</style>

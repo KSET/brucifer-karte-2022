@@ -121,6 +121,7 @@ export default {
   text-align: center;
 }
 #gumbard{
+  padding: 0px;
   background-color: #FFAE42;
   border-color: #FFAE42;
   margin: 2px;
@@ -129,6 +130,7 @@ export default {
 }
 
 #gumbar{
+  padding: 0px;
   background-color: #111;
   border-color: #111;
   margin: 2px;

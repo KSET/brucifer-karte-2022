@@ -1,6 +1,7 @@
 <template>
   <div class="export">
-    <div class="row justify-content-center">
+    <br>
+<div class="row justify-content-center">
         <div class="col-md-8">
           <div class="card">
           <div class="card-header">Export</div>
@@ -9,9 +10,8 @@
 	class   = "btn btn-primary"
 	:data   = this.users
   separator-excel = true,
-  encoding = 'iso-8859'
+  encoding = 'UTF-8'
 	name    = "export.csv">
-  
 
 	Download CSV
 
@@ -51,9 +51,11 @@ export default {
 
 <style>
 #gumb2 {
+  padding: 0px;
   margin: 2px;
   width: 220px;
   height: 100px;
   text-align: center;
 }
+
 </style>

@@ -13,11 +13,10 @@
 <script>
 import axios from 'axios'
 
-import Dropdown from '../DropdownRoute.vue';
+
 export default {
   name: 'SponsorsAdd',
   components: {
-    Dropdown
   },
   props: {
     msg: String
@@ -48,8 +47,8 @@ export default {
     }
   },
 
-  created() {
-    axios.get('http://127.0.0.1:8000/sponsors/',)
+  mounted() {
+    axios.get('http://127.0.0.1:8000/sponsors',)
       .then(response => {
         this.sponsors = response.data;
       })
@@ -57,12 +56,11 @@ export default {
   methods: {
     selectImage(e) {
       //this.currentImage = this.$refs.file.files.item(0);
-      this.currentImage=e.target.files[0]
-      console.log(this.currentImage)
+      this.currentImage = this.$refs.file.files.item(0);
       this.previewImage = URL.createObjectURL(this.currentImage);
       this.progress = 0;
       this.message = "";
-      console.log(this.currentImage)
+      //console.log(this.currentImage)
     },
     postGuest() {
 
@@ -92,8 +90,13 @@ export default {
      
     console.log(this.nextId)
       axios.post('http://127.0.0.1:8000/sponsors/',
-        { id: this.nextId, name: this.name, url: this.url},
-        { auth: { username: 'paxx', password: 'KSETpenisica43' } }
+        { id: this.nextId, name: this.name, url:this.url, image:this.currentImage},
+        { auth: { username: 'paxx', password: 'KSETpenisica43' }, },
+         {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+}
       )
         .then(() => {
           location.reload();
@@ -117,6 +120,7 @@ export default {
 
 
 #gumb2 {
+  padding: 0px;
   margin: 2px;
   width: 220px;
   height: 30px;

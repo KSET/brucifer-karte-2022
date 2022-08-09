@@ -3,7 +3,7 @@
     <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <router-link class="navbar-item" :to="'/bruckarte/home/'">#BRUCIFER</router-link>
-
+      </div>
 
         <a v-on:click="showNav = !showNav" v-bind:class="{ 'is-active': showNav }" role="button" class="navbar-burger"
           aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -11,7 +11,7 @@
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
-      </div>
+      
 
       <div id="navbarBasicExample" class="navbar-menu" v-bind:class="{ 'is-active': showNav }">
         <div class="navbar-start">
@@ -39,16 +39,24 @@
             </div>
           </div>
 
+
+          <div class="navbar-item has-dropdown is-hoverable"
+            v-if="privilege == '1'">
+            <a class="navbar-link">
+              Admin
+            </a>
+
+            <div class="navbar-dropdown">
           <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/tags/'">Tags</router-link>
           <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/privileges/'">Privileges
           </router-link>
           <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/users/'">Users</router-link>
           <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/import/'">Import</router-link>
           <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/export/'">Export</router-link>
+          </div></div>
           <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/'">|</router-link>
 
-
-
+            
 
           <div class="navbar-item has-dropdown is-hoverable" v-if="privilege == '1'">
             <a class="navbar-link">

@@ -8,13 +8,17 @@
                 </div>
                 <h3>{{ user.name }}</h3>
             </div>
-    </div></div>
+    </div>
+    <footer></footer>
+    </div>
 </template>
 
 <script>
 import axios from 'axios'
+import Footer from '../../components/Footer.vue';
 export default {
   name: 'UsersTable',
+    Footer,
   props: {
     msg: String
   },
@@ -297,7 +301,17 @@ h4 {
             }
         }
 
-      
+      footer::before {
+    position: absolute;
+    top: -81px;
+    right: 0;
+    left: 0;
+    height: 82px;
+    content: "";
+    background-image: url(../../assets/images/footer/bg.svg);
+    background-repeat: repeat-x;
+}
+
 
     </style>
 

@@ -1,13 +1,18 @@
 <template>
   <div class="guestss">
-     <div class="row justify-content-center">
-        <div class="col-md-8">
-          <div class="card">
-          <div class="card-header">Tags</div>
+    <br>
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">Brucoši</div>
           <div class="card-body">
-    <guests-add></guests-add>
-    <guests-table></guests-table>
-  </div></div></div></div></div>
+            <guests-add></guests-add>
+            <guests-table></guests-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </template>
 
@@ -20,7 +25,7 @@ import GuestsTable from '../components/Guests/GuestsTable.vue'
 export default {
   name: 'GuestsView',
   components: {
-    
+
     GuestsTable,
     GuestsAdd
 
@@ -29,6 +34,5 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
 

@@ -1,6 +1,7 @@
 <template>
     <div id="login">
-        <div class="row justify-content-center">
+        <br>
+<div class="row justify-content-center">
         <div class="col-md-8">
           <div class="card">
           <div class="card-header">Login</div>
@@ -139,4 +140,6 @@ export default {
     justify-content: center;
     align-items: center;
 }
+
+
 </style>

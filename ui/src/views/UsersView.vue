@@ -1,6 +1,7 @@
 <template>
   <div class="users">
-    <div class="row justify-content-center">
+    <br>
+<div class="row justify-content-center">
         <div class="col-md-8">
           <div class="card">
           <div class="card-header">Users</div>
@@ -21,6 +22,10 @@ export default {
 }
 </script>
 
+<style scoped>
+
+</style>
+
 
 <style scoped>
 #users-table{
@@ -28,4 +33,5 @@ export default {
 }
 
 @import url(../bruckarte.css);
+
 </style>

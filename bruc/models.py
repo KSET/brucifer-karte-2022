@@ -9,7 +9,7 @@ class Guests(models.Model):
     name=models.CharField(max_length=50, default='', blank=True)
     surname=models.CharField(max_length=50, default='', blank=True)
     jmbag=models.CharField(max_length=50, default='', blank=True)
-    phone=models.CharField(max_length=50, default='', blank=True)
+    email=models.CharField(max_length=50, default='', blank=True)
     tag=models.CharField(max_length=50, default='', blank=True)
     bought=models.CharField(max_length=50, default='0', blank=True)
     entered=models.CharField(max_length=50, default='', blank=True)

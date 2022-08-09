@@ -1,18 +1,23 @@
 <template>
 <div id="app">
   <navbar v-if="this.navtype=='bruckarte'"></navbar>
+  <NavbarBweb v-if="this.navtype=='brucweb'"></NavbarBweb>
 <router-view/>
 </div>
 </template>
 
 <script>
-import Navbar from './components/Navbar'
+import Navbar from './components/Navbar.vue'
+import NavbarBweb from './components/NavbarBweb.vue'
+
 
 export default {
   name: 'app',
   components: {
-    Navbar
-  },
+    Navbar,
+    NavbarBweb,
+    
+},
   data() {
       return {
         navtype:'brucweb',

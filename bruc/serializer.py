@@ -5,7 +5,7 @@ from .models import Guests, Tags, Users, Lineup, Sponsors
 class GuestsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Guests
-        fields = ["id","name","surname","phone","tag","bought","entered","deleted"]
+        fields = ["id","name","surname","jmbag","email","tag","bought","entered","deleted"]
 
 
 class TagsSerializer(serializers.HyperlinkedModelSerializer):
