@@ -28,10 +28,8 @@ $ python manage.py migrate
 $ python manage.py runserver
 ```
 Open another terminal:
-Running frontend:
 
 ```
 $ cd ui
 $ npm run serve
-
-
+```
