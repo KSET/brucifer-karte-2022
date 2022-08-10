@@ -38,7 +38,7 @@ $ npm run serve
 
 - got to the develeopent server, the rest api service
 - click on users
-- at the bottom on the page add ur admin user
+- at the bottom on the page your ur admin user
 - set the id to any number
 - set the privilege to "1" 
 - be sure to set the same email you are gonna use for the google login
