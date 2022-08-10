@@ -36,7 +36,7 @@ npm run serve
 
 ## Adding an admin user to be able to access the site
 
-- got to the develeopent server, the rest api service at http://127.0.0.1:8000/
+- got to the development server, the rest api service at http://127.0.0.1:8000/
 - click on users
 - at the bottom on the page your admin user
 - set the id to any number
