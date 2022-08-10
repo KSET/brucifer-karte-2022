@@ -58,7 +58,7 @@ export default {
       {auth:{username:'paxx',password:'KSETpenisica43'}}
       )
       .then(()=>{
-        location.reload();
+        this.created();
       })
     }
   }

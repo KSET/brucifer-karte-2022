@@ -1,0 +1,4 @@
+Django==4.0.4
+django_filter==21.1
+djangorestframework==3.13.1
+oauth2client==4.1.3

@@ -102,10 +102,6 @@ export default {
       .then(()=>{
         this.created();
       })
-    },
-    getAp(elementName){
-    
-    
     }
   }
 
