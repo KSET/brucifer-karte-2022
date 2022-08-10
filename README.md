@@ -12,26 +12,27 @@ Before getting started you should have the following installed and running:
 ## Setup Template
 
 ```
-$ git clone https://github.com/pavleerg/brucifer-karte.git
-$ cd brucifer-karte
+git clone https://github.com/pavleerg/brucifer-karte.git
+cd brucifer-karte
 ```
 
 Setup
 ```
-$ npm install
-$ python manage.py migrate
+npm install
+pip install -m ./requirements.txt
+python manage.py migrate
 ```
 
 ## Running Development Servers
 
 ```
-$ python manage.py runserver
+python manage.py runserver
 ```
 Open another terminal:
 
 ```
-$ cd ui
-$ npm run serve
+cd ui
+npm run serve
 ```
 
 ## Adding an admin user to be able to access the site
