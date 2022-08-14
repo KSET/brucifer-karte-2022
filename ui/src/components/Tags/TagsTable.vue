@@ -81,7 +81,7 @@ export default {
           
           axios.put('http://127.0.0.1:8000/tags/'+element.id+'/',
               {count:this.numc,bought:this.numb,entered:this.nume},
-              {auth:{username:process.env.VUE_APP_AUTH_USER,password:VUE_APP_AUTH_PASS}}
+              {auth:{username:process.env.VUE_APP_AUTH_USER,password:process.env.VUE_APP_AUTH_PASS}}
           
       )
             
@@ -97,7 +97,7 @@ export default {
   },
     deleteTag(tag){
       axios.delete('http://127.0.0.1:8000/tags/'+tag.id+'/',
-      {auth:{username:process.env.VUE_APP_AUTH_USER,password:VUE_APP_AUTH_PASS}}
+      {auth:{username:process.env.VUE_APP_AUTH_USER,password:process.env.VUE_APP_AUTH_PASS}}
       )
       .then(()=>{
         this.created();

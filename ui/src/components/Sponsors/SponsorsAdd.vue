@@ -91,7 +91,7 @@ export default {
     console.log(this.nextId)
       axios.post('http://127.0.0.1:8000/sponsors/',
         { id: this.nextId, name: this.name, url:this.url, image:this.currentImage},
-        { auth: { username: process.env.VUE_APP_AUTH_USER, password: VUE_APP_AUTH_PASS }, },
+        { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS }, },
          {
     headers: {
       'Content-Type': 'multipart/form-data'

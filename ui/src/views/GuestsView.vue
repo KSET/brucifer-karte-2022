@@ -81,14 +81,14 @@ export default {
       if (this.guest != '') {
         axios.put('http://127.0.0.1:8000/guests/' + this.guest.id + '/',
           { name: this.name, surname: this.surname },
-          { auth: { username: process.env.VUE_APP_AUTH_USER, password: VUE_APP_AUTH_PASS } }
+          { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS } }
         )
       }
     },
     changebought(guest, changenum) {
       axios.put('http://127.0.0.1:8000/guests/' + guest.id + '/',
         { bought: changenum },
-        { auth: { username: process.env.VUE_APP_AUTH_USER, password: VUE_APP_AUTH_PASS } }
+        { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS } }
       )
         .then(() => {
           guest.bought=changenum;

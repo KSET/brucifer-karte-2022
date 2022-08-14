@@ -70,7 +70,7 @@ export default {
       console.log(process.env.AUTH_USER);
       axios.post('http://127.0.0.1:8000/guests/',
         { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: '0', entered: '0' },
-        { auth: { username: process.env.AUTH_USER, password: VUE_APP_AUTH_PASS } }
+        { auth: { username: process.env.AUTH_USER, password: process.env.VUE_APP_AUTH_PASS } }
       )
         .then(() => {
           location.reload();

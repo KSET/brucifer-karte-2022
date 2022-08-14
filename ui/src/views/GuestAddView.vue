@@ -131,7 +131,7 @@ export default {
 
             axios.post('http://127.0.0.1:8000/guests/',
                 { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
-                { auth: { username: process.env.VUE_APP_AUTH_USER, password: VUE_APP_AUTH_PASS } }
+                { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS } }
             )
                 .then(() => {
                 })
