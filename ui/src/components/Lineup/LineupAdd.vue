@@ -90,7 +90,7 @@ export default {
     console.log(this.nextId)
       axios.post('http://127.0.0.1:8000/lineup/',
         { id: this.nextId, name: this.name, url: this.url, image:this.currentImage},
-        { auth: { username: 'paxx', password: 'KSETpenisica43' } }
+        { auth: { username: process.env.VUE_APP_AUTH_USER, password: VUE_APP_AUTH_PASS } }
       )
         .then(() => {
           

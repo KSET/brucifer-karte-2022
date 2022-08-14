@@ -3,9 +3,7 @@
   <div id="guests-table">
     <div id="guests-search">
       <h>Search:  </h>
-      <input @input="searchGuest" type="form" id="searchgumb" v-model="search" placeholder="Name">
-      <button @click="searchGuest" class="btn btn-primary"
-                      id="gumb2" >Search</button>
+      <input @input="searchGuest" type="form" id="searchgumb" v-model="search">
   </div>
     
             <table class="table" id="guests">
@@ -23,7 +21,7 @@
                   <td>
                     <button
                     @click="changebought(guest,'1')"
-                      v-if="guest.bought==='0'"
+                      v-if="guest.bought=='0'"
                       class="btn btn-xs btn-danger"
                       id="gumbarn"
                     >
@@ -80,7 +78,7 @@ export default {
     changebought(guest,changenum){
       axios.put('http://127.0.0.1:8000/guests/'+guest.id+'/',
       {bought:changenum},
-      {auth:{username:'paxx',password:'KSETpenisica43'}}
+      {auth:{username:process.env.VUE_APP_AUTH_USER,password:VUE_APP_AUTH_PASS}}
       )
       .then(()=> {
         this.created();

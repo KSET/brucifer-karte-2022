@@ -1,14 +1,13 @@
 <template>
     <footer>
-            <span>
-                KSET © Copyright 2021. All Rights Reserved.
-            </span>
-                <span style="margin-left: auto"></span>
-                <span style="z-index: 999">
-                <a class="white" href="/pravila">Pravila ponašanja</a>
-            </span>
-            </footer>
-  
+        <span>
+            KSET © Copyright 2021. All Rights Reserved.
+        </span>
+        <span style="margin-left: auto"></span>
+        <span style="z-index: 999">
+            <a class="white" href="/pravila">Pravila ponašanja</a>
+        </span>
+    </footer>
 </template>
 
 <script>

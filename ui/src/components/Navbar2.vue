@@ -14,7 +14,7 @@ export default {
   components: {
     Dropdown
   },
-  data () {
+  data() {
     return {
       services: [
         {
@@ -23,7 +23,7 @@ export default {
         },
         {
           title: 'Design',
-          link:'#'
+          link: '#'
         },
         {
           title: 'Videos',
@@ -41,6 +41,7 @@ nav {
   align-items: center;
   justify-content: center;
 }
+
 nav .menu-item {
   color: #9e9e9e;
   padding: 10px 20px;
@@ -50,11 +51,13 @@ nav .menu-item {
   display: flex;
   transition: 0.4s;
 }
+
 nav .menu-item.active,
 nav .menu-item:hover {
   background-color: #444;
   border-bottom-color: #FF5858;
 }
+
 nav .menu-item a {
   color: inherit;
   text-decoration: none;

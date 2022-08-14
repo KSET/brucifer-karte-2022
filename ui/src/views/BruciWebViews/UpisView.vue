@@ -66,7 +66,7 @@ export default {
                         } else {
                             axios.put('http://127.0.0.1:8000/guests/' + osoba.id + '/',
                                 { name: this.name, surname: this.surname, email: this.email },
-                                { auth: { username: 'paxx', password: 'KSETpenisica43' } }
+                                { auth: { username: process.env.VUE_APP_AUTH_USER, password: VUE_APP_AUTH_PASS } }
                             )
                         }
 

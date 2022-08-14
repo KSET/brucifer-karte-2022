@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+//import HomeView from '../views/HomeView.vue'
 import Guests from '../views/GuestsView.vue'
 import Tags from '../views/TagsView.vue'
 import Users from '../views/UsersView.vue'
@@ -11,6 +11,7 @@ import Login from '../views/LoginView.vue'
 import Logout from '../views/LogoutView.vue'
 import Lineup from '../views/LineupView.vue'
 import Sponsors from '../views/SponsorsView.vue'
+import GuestAdd from '../views/GuestAddView.vue'
 import Bwlineup from '../views/BruciWebViews/BWlineupView.vue'
 import BWsponsors from '../views/BruciWebViews/BWsponsorsView.vue'
 import Kontakt from '../views/BruciWebViews/KontaktView.vue'
@@ -24,11 +25,11 @@ import store from '@/store/index.js';
 
 
 const routes = [
-  {
+  /* obrisat ako se odluci da nista nece biti na homa page{
     path: '/bruckarte/',
     name: 'home',
     component: HomeView
-  },
+  },*/
   {
     path: '/bruckarte/tags',
     name: 'tags',
@@ -120,6 +121,11 @@ const routes = [
     path: '/upis',
     name: 'upis',
     component : Upis
+  },
+  {
+    path: '/bruckarte/guest-add',
+    name: 'guest-add',
+    component : GuestAdd
   },
   
   

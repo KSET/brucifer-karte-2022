@@ -1,14 +1,18 @@
 <template>
     <div id="login">
         <br>
-<div class="row justify-content-center">
-        <div class="col-md-8">
-          <div class="card">
-          <div class="card-header">Login</div>
-          <div class="card-body">
-        <br>
-        <div id="signin_button"></div>
-    </div></div></div></div></div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Login</div>
+                    <div class="card-body">
+                        <br>
+                        <div id="signin_button"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -20,21 +24,21 @@ export default {
     },
     el: '#app',
     computed: {
-    privilege() {
-      return store.state.privilege;
-    },
-    name(){
-      return store.state.name;
-    },
-    id(){
-      return store.state.id;
-    },
-    email(){
-      return store.state.email;
-    },
-    tokenExp(){
-      return store.state.tokenExp;
-    }
+        privilege() {
+            return store.state.privilege;
+        },
+        name() {
+            return store.state.name;
+        },
+        id() {
+            return store.state.id;
+        },
+        email() {
+            return store.state.email;
+        },
+        tokenExp() {
+            return store.state.tokenExp;
+        }
     },
     data() {
         return {
@@ -53,14 +57,14 @@ export default {
             console.log("Image URL: " + responsePayload.picture);
             console.log("Email: " + responsePayload.email);
 
-           
+
 
             store.commit('setId', responsePayload.sub)
             store.commit('setName', decodeURIComponent(escape(responsePayload.name)));
             store.commit('setEmail', responsePayload.email)
             store.commit('setTokenExp', responsePayload.exp)
 
-            
+
 
             axios.get('http://127.0.0.1:8000/users/',)
                 .then(response => {
@@ -77,6 +81,13 @@ export default {
                         if (element.email == responsePayload.email) {
                             registeredEmail = true
                             store.commit('setPrivilege', element.privilege)
+                            console.log(element.name)
+                            if (element.name == "") {
+                                axios.put('http://127.0.0.1:8000/users/' + element.id + '/',
+                                    { name: decodeURIComponent(escape(responsePayload.name)) },
+                                    { auth: { username: process.env.VUE_APP_AUTH_USER, password: VUE_APP_AUTH_PASS } }
+                                )
+                            }
                         }
                     });
                     for (let index = 0; index < ids.length; index++) {
@@ -93,7 +104,7 @@ export default {
                     if (!registeredEmail) {
                         axios.post('http://127.0.0.1:8000/users/',
                             { id: nextId, name: decodeURIComponent(escape(responsePayload.name)), email: responsePayload.email, privilege: '0' },
-                            { auth: { username: 'paxx', password: 'KSETpenisica43' } }
+                            { auth: { username: process.env.VUE_APP_AUTH_USER, password: VUE_APP_AUTH_PASS } }
                         )
                         store.commit('setPrivilege', '0')
                     }
@@ -107,10 +118,10 @@ export default {
 
     },
     mounted: function () {
-         if(!window.location.hash) {
-        window.location = window.location + '#loaded';
-        window.location.reload();
-    }
+        if (!window.location.hash) {
+            window.location = window.location + '#loaded';
+            window.location.reload();
+        }
         let googleScript = document.createElement('script');
         googleScript.src = 'https://accounts.google.com/gsi/client';
         document.head.appendChild(googleScript);
@@ -140,6 +151,4 @@ export default {
     justify-content: center;
     align-items: center;
 }
-
-
 </style>

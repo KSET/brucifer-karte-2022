@@ -44,7 +44,7 @@ export default {
     changeprivilege(user,changenum){
       axios.put('http://127.0.0.1:8000/users/'+user.id+'/',
       {privilege:changenum},
-      {auth:{username:'paxx',password:'KSETpenisica43'}}
+      {auth:{username:process.env.VUE_APP_AUTH_USER,password:VUE_APP_AUTH_PASS}}
       )
       .then(()=>{
         this.created();
@@ -52,7 +52,7 @@ export default {
     },
     deleteUser(user){
       axios.delete('http://127.0.0.1:8000/users/'+user.id+'/',
-      {auth:{username:'paxx',password:'KSETpenisica43'}}
+      {auth:{username:process.env.VUE_APP_AUTH_USER,password:VUE_APP_AUTH_PASS}}
       )
       .then(()=>{
         this.created();

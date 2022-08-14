@@ -13,13 +13,12 @@ export default {
         store.commit('setPrivilege', '')
         store.commit('setTokenExp', 10000000000000000)
         console.log("User logged out")
-        this.$router.push({ name: "login" })
+        this.$router.push({ name: "home" })
     }
 }
 </script>
 
 <style scoped>
-
 </style>
 
 

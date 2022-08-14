@@ -1,12 +1,8 @@
 <template>
   <div id="users-search">
     <h>Search:  </h>
-      <input @input="searchUser" type="form" id="searchgumb" v-model="search" placeholder="Name">
-      <button @click="searchUser" class="btn btn-primary"
-                      id="gumb2" >search</button>
+      <input @input="searchUser" type="form" id="searchgumb" v-model="search">
       <div class=row>
-        
-       
             <table id="users">
               <thead>
               <th>Name</th>
@@ -16,10 +12,10 @@
               </thead>
               <tbody>
                 <tr  v-for="user in users" :key="user.id">
-                  <td v-if="user.name!=''">{{user.name}}</td>
-                  <td v-if="user.name!=''">{{user.email}}</td>
-                  <td v-if="user.name!=''">{{user.privilege}}</td>
-                  <td v-if="user.name!=''">
+                  <td v-if="user.email!=''">{{user.name}}</td>
+                  <td v-if="user.email!=''">{{user.email}}</td>
+                  <td v-if="user.email!=''">{{user.privilege}}</td>
+                  <td v-if="user.email!=''">
                     <button @click="changeprivilege(user,'1')" class="btn btn-primary" id="gumbar"> 1</button>
                     <button @click="changeprivilege(user,'2')" class="btn btn-primary" id="gumbar"> 2</button>
                     <button @click="changeprivilege(user,'3')" class="btn btn-primary" id="gumbar"> 3</button>
@@ -61,13 +57,13 @@ export default {
     axios.get('http://127.0.0.1:8000/users/',)
     .then(response => {
       this.users =response.data;
-
+      console.log(this.users);
 
     })},
     changeprivilege(user,changenum){
       axios.put('http://127.0.0.1:8000/users/'+user.id+'/',
       {privilege:changenum},
-      {auth:{username:'paxx',password:'KSETpenisica43'}}
+      {auth:{username:process.env.VUE_APP_AUTH_USER,password:VUE_APP_AUTH_PASS}}
       )
       .then(()=>{
         this.created();
@@ -75,7 +71,7 @@ export default {
     },
     deleteUser(user){
       axios.delete('http://127.0.0.1:8000/users/'+user.id+'/',
-      {auth:{username:'paxx',password:'KSETpenisica43'}}
+      {auth:{username:process.env.VUE_APP_AUTH_USER,password:VUE_APP_AUTH_PASS}}
       )
       .then(()=>{
         this.created();

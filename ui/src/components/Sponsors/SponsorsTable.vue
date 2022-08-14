@@ -36,7 +36,7 @@ export default {
   },
     deleteTag(tag){
       axios.delete('http://127.0.0.1:8000/sponsors/'+tag.id+'/',
-      {auth:{username:'paxx',password:'KSETpenisica43'}}
+      {auth:{username:process.env.VUE_APP_AUTH_USER,password:VUE_APP_AUTH_PASS}}
       )
       .then(()=>{
         this.created();

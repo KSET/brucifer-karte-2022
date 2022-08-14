@@ -76,7 +76,6 @@ body {
   margin: 0;
 }
 
-#navbar-item-1 {}
 
 ul {
   list-style-type: none;

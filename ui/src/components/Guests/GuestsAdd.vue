@@ -54,7 +54,6 @@ export default {
   methods: {
     postGuest() {
       var ids = [];
-
       this.guests.forEach(element => {
         ids.push(element.id);
       });
@@ -67,9 +66,11 @@ export default {
       if (this.nextId == '') {
         this.nextId = ids.length;
       }
+      
+      console.log(process.env.AUTH_USER);
       axios.post('http://127.0.0.1:8000/guests/',
         { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: '0', entered: '0' },
-        { auth: { username: 'paxx', password: 'KSETpenisica43' } }
+        { auth: { username: process.env.AUTH_USER, password: VUE_APP_AUTH_PASS } }
       )
         .then(() => {
           location.reload();

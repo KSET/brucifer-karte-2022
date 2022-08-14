@@ -31,6 +31,7 @@ export default {
     }
   },
   created() {
+    console.log(process.env.VUE_APP_AUTH_USER);
     axios.get('http://127.0.0.1:8000/tags/',)
     .then(response => {
       this.tags =response.data;
@@ -53,12 +54,14 @@ export default {
         this.nextId=ids.length;
       }
 
+
+      console.log(process.env.VUE_APP_AUTH_USER);
       axios.post('http://127.0.0.1:8000/tags/',
       {id:this.nextId,name:this.name},
-      {auth:{username:'paxx',password:'KSETpenisica43'}}
+      {auth:{username:process.env.VUE_APP_AUTH_USER,password:VUE_APP_AUTH_PASS}}
       )
       .then(()=>{
-        this.created();
+        location.reload();
       })
     }
   }
@@ -84,5 +87,4 @@ export default {
   text-align: center;
 }
 </style>
-
 

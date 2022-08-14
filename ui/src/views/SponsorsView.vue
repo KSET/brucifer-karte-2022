@@ -1,7 +1,7 @@
 <template>
   <div class="sponsorss">
     <br>
-<div class="row justify-content-center">
+    <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card">
           <div class="card-header">Sponsors</div>
@@ -11,7 +11,8 @@
           </div>
         </div>
       </div>
-    </div></div>
+    </div>
+  </div>
 </template>
 
 
@@ -32,5 +33,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

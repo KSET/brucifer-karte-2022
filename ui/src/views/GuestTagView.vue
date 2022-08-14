@@ -31,7 +31,7 @@
                   <td>
                     <button
                     @click="changebought(guest,'1')"
-                      v-if="guest.entered==='0'"
+                      v-if="guest.entered=='0'"
                       class="btn btn-primary"
                       id="gumbarn"
                     >
@@ -99,7 +99,7 @@ export default {
     changebought(guest,changenum){
       axios.put('http://127.0.0.1:8000/guests/'+guest.id+'/',
       {entered:changenum},
-      {auth:{username:'paxx',password:'KSETpenisica43'}}
+      {auth:{username:process.env.VUE_APP_AUTH_USER,password:VUE_APP_AUTH_PASS}}
       )
       .then(()=> {
         this.created();
