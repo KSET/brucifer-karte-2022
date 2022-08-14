@@ -1,13 +1,13 @@
 <template>
-  <div class="tagss">
+  <div class="lineupp">
     <br>
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card">
-          <div class="card-header">Tags</div>
+          <div class="card-header">Lineup</div>
           <div class="card-body">
-            <tags-add></tags-add>
-            <tags-table></tags-table>
+            <lineup-add></lineup-add>
+            <lineup-table></lineup-table>
           </div>
         </div>
       </div>
@@ -19,18 +19,18 @@
 
 
 <script>
-import TagsTable from '../components/Tags/TagsTable.vue'
+import LineupAdd from "../../components/Lineup/LineupTable.vue"
+import LineupTable from '../../components/Lineup/LineupTable.vue'
 import store from '@/store/index.js';
-import TagsAdd from '@/components/Tags/TagsAdd.vue';
 export default {
   name: 'SponsorsView',
   components: {
-    TagsTable,
-    TagsAdd
+    LineupAdd,
+    LineupTable
+
   }
 }
 </script>
-
 
 <style scoped>
 </style>

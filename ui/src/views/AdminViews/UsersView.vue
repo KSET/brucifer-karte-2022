@@ -16,7 +16,7 @@
 
 
 <script>
-import UsersTable from '../components/Users/UsersTable.vue'
+import UsersTable from '../../components/Users/UsersTable.vue'
 export default {
   name: 'UsersView',
   components: {
@@ -35,5 +35,5 @@ export default {
   position: relative;
 }
 
-@import url(../bruckarte.css);
+@import url(../../bruckarte.css);
 </style>

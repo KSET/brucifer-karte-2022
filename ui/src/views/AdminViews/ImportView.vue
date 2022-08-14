@@ -34,7 +34,7 @@
 </template>
 <script>
 
-import { XlsxRead, XlsxJson } from "../../node_modules/vue3-xlsx/dist/vue3-xlsx.cjs.prod.js";
+import { XlsxRead, XlsxJson } from "../../../node_modules/vue3-xlsx/dist/vue3-xlsx.cjs.prod.js";
 import readXlsxFile from 'read-excel-file';
 import axios from 'axios';
 

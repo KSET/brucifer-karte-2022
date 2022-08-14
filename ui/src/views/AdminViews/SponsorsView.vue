@@ -19,8 +19,8 @@
 
 
 <script>
-import SponsorsAdd from '../components/Sponsors/SponsorsAdd.vue'
-import SponsorsTable from '../components/Sponsors/SponsorsTable.vue'
+import SponsorsAdd from '../../components/Sponsors/SponsorsAdd.vue'
+import SponsorsTable from '../../components/Sponsors/SponsorsTable.vue'
 import store from '@/store/index.js';
 export default {
   name: 'SponsorsView',
