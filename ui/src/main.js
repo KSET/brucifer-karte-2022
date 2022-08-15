@@ -15,7 +15,8 @@ import VueJwtDecode from 'vue-jwt-decode'
 import Vuex from 'vuex';
 import VueNavigationBar from 'vue-navigation-bar';
 import 'vue-navigation-bar/dist/vue-navigation-bar.css';
-import "./../node_modules/bulma/css/bulma.css"
+import "./../node_modules/bulma/css/bulma.css";
+
 
 const app= createApp(App).use(store).use(router)
 

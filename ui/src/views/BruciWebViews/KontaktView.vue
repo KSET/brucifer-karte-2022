@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Footer from '../../components/Footer.vue';
+import Footer from '../../components/NavbarAndFooter/Footer.vue';
 
 export default {
 name: 'KontaktView',

@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import Navbar from './components/Navbar.vue'
-import NavbarBweb from './components/NavbarBweb.vue'
+import Navbar from './components/NavbarAndFooter/Navbar.vue'
+import NavbarBweb from './components/NavbarAndFooter/NavbarBweb.vue'
 
 
 export default {

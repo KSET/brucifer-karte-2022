@@ -28,13 +28,12 @@
 </template>
 
 <script>
-import Dropdown from './DropdownRoute';
 import store from '@/store/index.js';
 export default {
   name: 'NavbarBweb',
   el: '#app',
   components: {
-    Dropdown
+    
   },
   data() {
     return {

@@ -1,18 +1,25 @@
 import { createRouter, createWebHistory } from 'vue-router'
-//import HomeView from '../views/HomeView.vue'
+
+/* Buckarte page Views */
 import Guests from '../views/GuestsView.vue'
+import GuestTag from '../views/GuestTagView.vue'
+import Login from '../views/LoginView.vue'
+import Logout from '../views/LogoutView.vue'
+import GuestAdd from '../views/GuestAddView.vue'
+
+/* Admin Views */
 import Tags from '../views/AdminViews/TagsView.vue'
 import Users from '../views/AdminViews/UsersView.vue'
 import Privileges from '../views/AdminViews/PrivilegesView.vue'
 import Import from '../views/AdminViews/ImportView.vue'
 import Export from '../views/AdminViews/ExportView.vue'
-import GuestTag from '../views/GuestTagView.vue'
-import Login from '../views/LoginView.vue'
-import Logout from '../views/LogoutView.vue'
 import Lineup from '../views/AdminViews/LineupView.vue'
 import Sponsors from '../views/AdminViews/SponsorsView.vue'
-import GuestAdd from '../views/GuestAddView.vue'
+import AdminPanel from '../views/AdminViews/AdminPanelView.vue'
+import LineupAdd from '../views/AdminViews/LineupAddView.vue'
+import SponsorsAdd from '../views/AdminViews/SponsorsAddView.vue'
 
+/* BruciWeb Views */
 import Bwlineup from '../views/BruciWebViews/BWlineupView.vue'
 import BWsponsors from '../views/BruciWebViews/BWsponsorsView.vue'
 import Kontakt from '../views/BruciWebViews/KontaktView.vue'
@@ -31,6 +38,8 @@ const routes = [
     name: 'home',
     component: HomeView
   },*/
+
+  /* Bruckarte Views setup */
   {
     path: '/bruckarte/tags',
     name: 'tags',
@@ -89,6 +98,28 @@ const routes = [
     component : Sponsors
   },
   {
+    path: '/bruckarte/guests-add',
+    name: 'guest-add',
+    component : GuestAdd
+  },
+  {
+    path: '/bruckarte/admin-panel',
+    name: 'admin-panel',
+    component : AdminPanel
+  },
+  {
+    path: '/bruckarte/lineup-add',
+    name: 'lineup-add',
+    component : LineupAdd
+  },
+  {
+    path: '/bruckarte/sponsors-add',
+    name: 'sponsors-add',
+    component : SponsorsAdd
+  },
+  
+  /* Brucweb Views setup */
+  {
     path: '/sponsors',
     name: 'bwsponsors',
     component : BWsponsors
@@ -123,11 +154,7 @@ const routes = [
     name: 'upis',
     component : Upis
   },
-  {
-    path: '/bruckarte/guest-add',
-    name: 'guest-add',
-    component : GuestAdd
-  },
+  
   
   
 ]

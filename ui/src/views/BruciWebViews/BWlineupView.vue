@@ -15,7 +15,7 @@
 
 <script>
 import axios from 'axios'
-import Footer from '../../components/Footer.vue';
+import Footer from '../../components/NavbarAndFooter/Footer.vue';
 export default {
   name: 'UsersTable',
     Footer,

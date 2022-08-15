@@ -10,11 +10,10 @@
 <script>
 import axios from 'axios'
 
-import Dropdown from '../DropdownRoute.vue';
 export default {
   name: 'SponsorsAdd',
   components: {
-    Dropdown
+    
   },
   props: {
     msg: String

@@ -104,13 +104,12 @@
 </template>
 
 <script>
-import Dropdown from './DropdownRoute';
 import store from '@/store/index.js';
 export default {
   name: 'Navbar',
   el: '#app',
   components: {
-    Dropdown
+    
   },
   data() {
     return {
