@@ -1,105 +1,27 @@
 <template>
   <div id="navbar">
-    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <router-link class="navbar-item" :to="'/bruckarte/home/'">#BRUCIFER</router-link>
-      </div>
-
-        <a v-on:click="showNav = !showNav" v-bind:class="{ 'is-active': showNav }" role="button" class="navbar-burger"
-          aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-      
-
-      <div id="navbarBasicExample" class="navbar-menu" v-bind:class="{ 'is-active': showNav }">
-        <div class="navbar-start">
-
-          <router-link class="navbar-item" v-if="privilege == '1' || privilege == '3' || privilege == '4'"
-            :to="'/bruckarte/guests/'">Brucoši</router-link>
-
-
-          <div class="navbar-item has-dropdown is-hoverable"
-            v-if="privilege == '1' || privilege == '2' || privilege == '4'">
-            <a class="navbar-link">
-              Ulaz
-            </a>
-
-            <div class="navbar-dropdown">
-              <a href="/bruckarte/guest_tag/Brucoši" class="navbar-item">
-                Brucoši
-              </a>
-              <a href="/bruckarte/guest_tag/KSET" class="navbar-item">
-                KSET
-              </a>
-              <a href="/bruckarte/guest_tag/VIP" class="navbar-item">
-                VIP
-              </a>
-            </div>
-          </div>
-
-
-          <div class="navbar-item has-dropdown is-hoverable"
-            v-if="privilege == '1'">
-            <a class="navbar-link">
-              Admin
-            </a>
-
-            <div class="navbar-dropdown">
-          <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/tags/'">Tags</router-link>
-          <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/privileges/'">Privileges
-          </router-link>
-          <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/users/'">Users</router-link>
-          <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/import/'">Import</router-link>
-          <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/export/'">Export</router-link>
-          </div></div>
-          <router-link class="navbar-item" v-if="privilege == '1'" :to="'/bruckarte/'">|</router-link>
-
-            
-
-          <div class="navbar-item has-dropdown is-hoverable" v-if="privilege == '1'">
-            <a class="navbar-link">
-              Bruciweb
-            </a>
-
-            <div class="navbar-dropdown">
-              <a href="/bruckarte/lineup" class="navbar-item">
-                Lineup
-              </a>
-              <a href="/bruckarte/sponsors" class="navbar-item">
-                Sponsors
-              </a>
-
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="navbar-end">
-        <div class="navbar-item">
-
-          <div v-if="name != ''" class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
-              {{ name }}
-            </a>
-
-            <div class="navbar-dropdown">
-
-              <router-link class="navbar-item" :to="'/bruckarte/logout'">Logout</router-link>
-
-            </div>
-          </div>
-
-          <a v-else class="button is-light">
-            Log in
-          </a>
-        </div>
-      </div>
-
-
-    </nav>
+    <ul>
+      <li>
+        <router-link style="float:right" to="/bruckarte/home">
+          #Brucifer
+        </router-link>
+      </li>
+      <li>
+        <router-link style="float:right" to="/bruckarte/guests">
+          Brucoši
+        </router-link>
+      </li>
+      <li>
+        <router-link style="float:right" to="/bruckarte/ulaz">
+          Ulaz
+        </router-link>
+      </li>
+      <li>
+        <router-link style="float:right" to="/bruckarte/admin-panel">
+          Admin
+        </router-link>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -109,7 +31,7 @@ export default {
   name: 'Navbar',
   el: '#app',
   components: {
-    
+
   },
   data() {
     return {
@@ -147,28 +69,20 @@ export default {
 
 </script>
 <style>
-body {
-  margin: 0;
-}
-
-#navbar-item-1 {}
-
 ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #9e9e9e;
-  position: fixed;
-  top: 0;
-  width: 100%;
+  background-color: #333;
 }
 
-li {
+router-link {
   float: left;
+
 }
 
-li a {
+li router-link {
   display: block;
   color: white;
   text-align: center;
@@ -176,16 +90,12 @@ li a {
   text-decoration: none;
 }
 
-li a:hover:not(.active) {
-  background-color: #8e8e8e;
+li router-link:hover:not(.active) {
+  background-color: #111;
 }
 
 .active {
-  background-color: #fb8c04;
-}
-
-.right {
-  float: right;
+  background-color: #04AA6D;
 }
 </style>
 

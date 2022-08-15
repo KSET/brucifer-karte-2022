@@ -1,10 +1,23 @@
 <template>
-  <div id="guests-add">
+  <div id="sponsors-add">
+    <br><br>
+    <h1>Dodavanje sponzora</h1>
+    <br>
     <form @submit="postGuest">
-      <a>Dodaj na popis: </a>
+      <br>
+      <h>Ime </h>
       <input type="text" id="inputname" v-model="name" placeholder="Name">
+
+      <br><br>
+      <h>Link </h>
       <input type="text" id="inputurl" v-model="url" placeholder="Url">
+      <br>
+      <br>
+      <h>Slika </h>
       <input type="file" accept="image/*" ref="file" id="file-input" @change="selectImage">
+      <br>
+      <br>
+      <img class="preview my-3" :src="previewImage" alt="" />
       <button class="btn btn-primary" id="gumb2">Add</button>
     </form>
   </div>
@@ -34,7 +47,7 @@ export default {
       bought: '',
       entered: '',
       url: '',
-      img:'',
+      img: '',
       nextId: '',
       services: ['Brucoši', 'KSET', 'VIP'],
       selectedTag: '',
@@ -64,7 +77,7 @@ export default {
     },
     postGuest() {
 
-      
+
       var ids = [];
 
       this.sponsors.forEach(element => {
@@ -85,18 +98,29 @@ export default {
       console.log(formData)
       formData.append('name', this.name);
       formData.append('url', this.url);
-      
+
       console.log(this.currentImage)
-     
-    console.log(this.nextId)
+
+      console.log(this.nextId)
+
+      let fd = new FormData();
+      fd.appent("int", this.nextId);
+      fd.append("file", this.currentImage);/* 
+      return axios.post("http://127.0.0.1:8000/sponsors/", fd, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      },
+      
+    });*/
+
       axios.post('http://127.0.0.1:8000/sponsors/',
-        { id: this.nextId, name: this.name, url:this.url, image:this.currentImage},
+        { id: this.nextId, name: this.name, url: this.url, image: this.currentImage },
         { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS }, },
-         {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-}
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
       )
         .then(() => {
           location.reload();

@@ -1,19 +1,32 @@
 <template>
-  <div id="guests-add">
-      <a>Dodaj na popis: </a>
+  <div id="sponsors-add">
+    <br><br>
+    <h1>Dodavanje izvođača</h1>
+    <br>
+    <form @submit="postGuest">
+      <br>
+      <h>Ime </h>
       <input type="text" id="inputname" v-model="name" placeholder="Name">
+
+      <br><br>
+     
+      <h>Slika </h>
       <input type="file" accept="image/*" ref="file" id="file-input" @change="selectImage">
-      <button @click="postGuest" class="btn btn-primary" id="gumb2">Add</button>
+      <br>
+      <br>
+      <img class="preview my-3" :src="previewImage" alt="" />
+      <button class="btn btn-primary" id="gumb2">Add</button>
+    </form>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 
+
 export default {
   name: 'SponsorsAdd',
   components: {
-    
   },
   props: {
     msg: String
@@ -31,7 +44,7 @@ export default {
       bought: '',
       entered: '',
       url: '',
-      img:'',
+      img: '',
       nextId: '',
       services: ['Brucoši', 'KSET', 'VIP'],
       selectedTag: '',
@@ -44,8 +57,8 @@ export default {
     }
   },
 
-  created() {
-    axios.get('http://127.0.0.1:8000/lineup/',)
+  mounted() {
+    axios.get('http://127.0.0.1:8000/sponsors',)
       .then(response => {
         this.sponsors = response.data;
       })
@@ -53,16 +66,15 @@ export default {
   methods: {
     selectImage(e) {
       //this.currentImage = this.$refs.file.files.item(0);
-      this.currentImage=e.target.files[0]
-      console.log(this.currentImage)
+      this.currentImage = this.$refs.file.files.item(0);
       this.previewImage = URL.createObjectURL(this.currentImage);
       this.progress = 0;
       this.message = "";
-      console.log(this.currentImage)
+      //console.log(this.currentImage)
     },
     postGuest() {
 
-      
+
       var ids = [];
 
       this.sponsors.forEach(element => {
@@ -83,16 +95,32 @@ export default {
       console.log(formData)
       formData.append('name', this.name);
       formData.append('url', this.url);
-      
+
       console.log(this.currentImage)
-     
-    console.log(this.nextId)
+
+      console.log(this.nextId)
+
+      let fd = new FormData();
+      fd.appent("int", this.nextId);
+      fd.append("file", this.currentImage);/* 
+      return axios.post("http://127.0.0.1:8000/sponsors/", fd, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      },
+      
+    });*/
+
       axios.post('http://127.0.0.1:8000/lineup/',
-        { id: this.nextId, name: this.name, url: this.url, image:this.currentImage},
-        { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS } }
+        { id: this.nextId, name: this.name, image: this.currentImage },
+        { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS }, },
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
       )
         .then(() => {
-          
+          location.reload();
         })
     }
   }

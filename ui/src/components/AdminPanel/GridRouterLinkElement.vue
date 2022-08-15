@@ -18,6 +18,9 @@ export default {
 
 <style scoped>
 .grid-element {
+  display: block;
+  color: white;
+  text-align: center;
         background: rgba(0, 0, 0, .3);
         border-radius: 18px;
         padding: 30px;
