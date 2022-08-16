@@ -44,5 +44,5 @@ export default {
   margin-top: 60px;
 }
 
-@import'~bootstrap/dist/css/bootstrap.css'
+@import '~bootstrap/dist/css/bootstrap.css'
 </style>

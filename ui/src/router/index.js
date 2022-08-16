@@ -108,12 +108,12 @@ const routes = [
     component : AdminPanel
   },
   {
-    path: '/bruckarte/lineup-add',
+    path: '/bruckarte/lineup-add/:slug',
     name: 'lineup-add',
     component : LineupAdd
   },
   {
-    path: '/bruckarte/sponsors-add',
+    path: '/bruckarte/sponsors-add/:slug',
     name: 'sponsors-add',
     component : SponsorsAdd
   },

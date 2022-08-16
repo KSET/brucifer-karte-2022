@@ -1,0 +1,217 @@
+#textfield1 {
+    position: absolute;
+    width: 86px;
+    height: 36px;
+    left: 62px;
+    top: 188px;
+
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 36px;
+    /* identical to box height, or 225% */
+
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.015em;
+
+}
+
+#textfield2 {
+    position: absolute;
+    width: 86px;
+    height: 36px;
+    left: 62px;
+    top: 275px;
+
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 36px;
+    /* identical to box height, or 225% */
+
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.015em;
+
+}
+
+#textfield3 {
+    position: absolute;
+    width: 86px;
+    height: 36px;
+    left: 62px;
+    top: 371px;
+
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 36px;
+    /* identical to box height, or 225% */
+
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.015em;
+
+}
+
+#textfield4 {
+    position: absolute;
+    width: 86px;
+    height: 36px;
+    left: 62px;
+    top: 471px;
+
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 36px;
+    /* identical to box height, or 225% */
+
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.015em;
+
+}
+
+#textfield5 {
+    position: absolute;
+    width: 86px;
+    height: 36px;
+    left: 62px;
+    top: 573px;
+
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 36px;
+    /* identical to box height, or 225% */
+
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.015em;
+
+}
+
+#textfield6 {
+    position: absolute;
+    width: 86px;
+    height: 36px;
+    left: 643px;
+    top: 573px;
+
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 36px;
+    /* identical to box height, or 225% */
+
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.015em;
+
+    color: #000000;
+}
+
+
+#page-title {
+    position: absolute;
+    width: 642px;
+    height: 36px;
+    left: calc(50% - 642px/2 - 136px);
+    top: calc(50% - 36px/2 - 263px);
+
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 36px;
+    /* identical to box height, or 112% */
+
+    letter-spacing: -0.015em;
+
+    color: #000000;
+}
+
+#inputfield1 {
+    box-sizing: border-box;
+
+    position: absolute;
+    width: 332px;
+    height: 45px;
+    left: 290px;
+    top: 182px;
+
+    border: 1px solid #000000;
+}
+
+#inputfield2 {
+    box-sizing: border-box;
+
+    position: absolute;
+    width: 332px;
+    height: 45px;
+    left: 290px;
+    top: 270px;
+
+    border: 1px solid #000000;
+}
+
+#inputfield3 {
+    box-sizing: border-box;
+
+    position: absolute;
+    width: 332px;
+    height: 45px;
+    left: 290px;
+    top: 366px;
+
+    border: 1px solid #000000;
+}
+
+#inputfield4 {
+    box-sizing: border-box;
+
+    position: absolute;
+    width: 332px;
+    height: 45px;
+    left: 290px;
+    top: 466px;
+
+    border: 1px solid #000000;
+}
+
+#button1 {
+    position: absolute;
+    width: 43px;
+    height: 43px;
+    left: 285px;
+    top: 569px;
+}
+
+#button2 {
+    position: absolute;
+    width: 43px;
+    height: 43px;
+    left: 866px;
+    top: 569px;
+}
+
+#submit-button {
+    position: absolute;
+    left: 6.05%;
+    right: 81.25%;
+    top: 85.03%;
+    bottom: 9.77%;
+
+    color: white;
+
+    background: #000000;
+    border-radius: 6px;
+}

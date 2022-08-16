@@ -53,11 +53,14 @@ export default {
       progress: 0,
       message: "",
       imageInfos: [],
+      slug:'',
 
     }
   },
 
   mounted() {
+    console.log(this.$route.params.slug)
+    this.slug=this.$route.params.slug;
     axios.get('http://127.0.0.1:8000/sponsors',)
       .then(response => {
         this.sponsors = response.data;
