@@ -34,6 +34,10 @@ cd ui
 npm run serve
 ```
 
+## Adjusting the environment variables
+
+- in the ui folder, rename the .env.example to .env and ajust your enivronment variables
+
 ## Adding an admin user to be able to access the site
 
 - got to the development server, the rest api service at http://127.0.0.1:8000/
