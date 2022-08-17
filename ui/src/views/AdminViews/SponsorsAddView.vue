@@ -12,6 +12,6 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scope>
+@import '../../assets/scss/Admin-scss/SponsorsAddView.scss';
 </style>

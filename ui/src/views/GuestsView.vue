@@ -1,35 +1,25 @@
 <template>
   <div class="guestss">
-    <br>
-    <br>
-    <br>
-    <br>
-    <h>Search: </h>
-    <input @input="searchGuest" type="form" id="searchgumb" v-model="search">
-    <br><br>
-
-    <br>
-    <h>Ime: </h>
-    <input type="text"  @input="changevalue" id="inputname" v-model="name" placeholder="Surname">
-    <br>
-    <br>
-    <h>Prezime: </h>
-    <input type="text" @input="changevalue" id="inputsurname" v-model="surname" placeholder="Surname">
-    <br>
-    <br>
-    <h>JMBAG: </h>
-    <input type="text" readonly id="inputjmbag" v-model="jmbag" placeholder="JMBAG">
-    <br>
-    <br>
-    <h>Karta: </h>
+    <input id="search-field" @input="searchGuest" type="form"  v-model="search" placeholder="Unesi JMBAG">
+  
+    <h id="textfield1">Ime </h>
+    <input id="inputfield1" type="text" @input="changevalue"  v-model="name" placeholder="Name">
     
-    <button v-if="guest.bought == '1'" class="btn btn-xs btn-success" id="gumbary" @click="changebought(guest, '0')">
-      <font-awesome-icon icon="fa-solid fa-check" />
+    <h id="textfield2">Prezime </h>
+    <input id="inputfield2" type="text"  @input="changevalue"  v-model="surname" placeholder="Surname">
+    
+    <h id="textfield3">JMBAG </h>
+    <input id="inputfield3" readonly  type="text" v-model="jmbag" placeholder="JMBAG">
+    
+    <h id="textfield4">Karta </h>
+    
+    <button id="btn1" v-if="guest.bought == '1'"  @click="changebought(guest, '0')">
+      <img src="../assets/icons/yes-icon.svg">
     </button> 
-    <button v-else @click="changebought(guest, '1')"  class="btn btn-xs btn-danger" id="gumbarn">
-      <font-awesome-icon icon="fa-solid fa-xmark" />
-    </button><br>
-    <br>
+    <button id="btn1" v-else @click="changebought(guest, '1')" >
+      <img src="../assets/icons/no-icon.svg">
+    </button>
+    
 
 
   </div>
@@ -121,6 +111,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scope>
+@import '../assets/scss/GuestsView.scss';
 </style>
 

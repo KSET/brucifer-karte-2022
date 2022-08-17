@@ -7,12 +7,10 @@ class GuestsSerializer(serializers.HyperlinkedModelSerializer):
         model = Guests
         fields = ["id","name","surname","jmbag","email","tag","bought","entered","deleted"]
 
-
 class TagsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Tags
         fields = ["id","name","count","bought","entered"]
-
 
 class UsersSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

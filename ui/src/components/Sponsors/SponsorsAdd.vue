@@ -1,24 +1,25 @@
 <template>
   <div id="sponsors-add">
-    <br><br>
-    <h1>Dodavanje sponzora</h1>
     <br>
-    <form @submit="postGuest">
-      <br>
-      <h>Ime </h>
-      <input type="text" id="inputname" v-model="name" placeholder="Name">
+    <h1 v-if="(this.slug == '0')" id="page-title">Dodavanje sponzora</h1>
+    <h1 v-else id="page-title">Uređivanje sponzora</h1>
 
-      <br><br>
-      <h>Link </h>
-      <input type="text" id="inputurl" v-model="url" placeholder="Url">
-      <br>
-      <br>
-      <h>Slika </h>
-      <input type="file" accept="image/*" ref="file" id="file-input" @change="selectImage">
-      <br>
-      <br>
-      <img class="preview my-3" :src="previewImage" alt="" />
-      <button class="btn btn-primary" id="gumb2">Add</button>
+    <form @submit="postGuest">
+
+      <h id="textfield1">Ime </h>
+      <input id="inputfield1" type="text" v-model="name" placeholder="Name">
+
+      <h id="textfield2">Link </h>
+      <input id="inputfield2" type="text" v-model="url" placeholder="Url">
+
+
+      <h id="textfield3">Slika </h>
+      <input id="inputfield3" type="file" accept="image/*" ref="file" @change="selectImage">
+
+
+      <img id="image-preview" class="preview my-3" :src="previewImage" alt="" />
+      <button v-if="(this.slug == '0')" id="submit-button" class="btn btn-primary">Dodaj</button>
+      <button v-else id="submit-button" class="btn btn-primary">Spremi promjene</button>
     </form>
   </div>
 </template>
@@ -38,6 +39,8 @@ export default {
     return {
       items: ['Brucoši', 'KSET', 'VIP'],
       sponsors: [],
+      slug: 0,
+      sponsor: '',
       id: '',
       name: '',
       surname: '',
@@ -61,10 +64,21 @@ export default {
   },
 
   mounted() {
-    axios.get('http://127.0.0.1:8000/sponsors',)
-      .then(response => {
-        this.sponsors = response.data;
-      })
+    console.log(this.$route.params.slug)
+    this.slug = this.$route.params.slug;
+    if (this.slug != '0') {
+      axios.get('http://127.0.0.1:8000/sponsors/?search=' + this.slug,)
+        .then(response => {
+          this.sponsors = response.data;
+          this.sponsor = this.sponsors[0];
+          this.name = this.sponsor.name;
+          this.url = this.sponsor.url;
+          this.previewImage = this.sponsor.image;
+
+        })
+
+    }
+
   },
   methods: {
     selectImage(e) {

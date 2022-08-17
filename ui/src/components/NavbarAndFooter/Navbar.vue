@@ -1,27 +1,22 @@
 <template>
-  <div id="navbar">
-    <ul>
-      <li>
-        <router-link style="float:right" to="/bruckarte/home">
-          #Brucifer
+  <div id="admin-navbar">
+
+        <router-link id="navbar-title" to="/bruckarte/home">
+          #BRUCIFER
         </router-link>
-      </li>
-      <li>
-        <router-link style="float:right" to="/bruckarte/guests">
+
+        <router-link id="navbar-item1"  to="/bruckarte/guests">
           Brucoši
         </router-link>
-      </li>
-      <li>
-        <router-link style="float:right" to="/bruckarte/ulaz">
+
+        <router-link id="navbar-item2" to="/bruckarte/ulaz">
           Ulaz
         </router-link>
-      </li>
-      <li>
-        <router-link style="float:right" to="/bruckarte/admin-panel">
+
+        <router-link id="navbar-item3" to="/bruckarte/admin-panel">
           Admin
         </router-link>
-      </li>
-    </ul>
+
   </div>
 </template>
 
@@ -68,34 +63,102 @@ export default {
 
 
 </script>
-<style>
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
+<style lang="scss">
+#admin-navbar{
+  position: absolute;
+width: 100%;
+height: 3.75rem;
+left: 0px;
+top: 0px;
+
+background: #FFFFFF;
+border-bottom: 1px solid #000000;
 }
 
-router-link {
-  float: left;
+#navbar-title{
+position: absolute;
+width: 24.563rem;
+height: 2.25rem;
+left: calc(50% - 293px/2 - 337.5px);
+top: calc(50% - 36px/2);
+
+font-family: 'Montserrat';
+font-style: normal;
+font-weight: 700;
+font-size: 2rem;
+line-height: 2.25rem;
+/* identical to box height, or 112% */
+
+letter-spacing: -0.015em;
+
+color: #000000;
 
 }
 
-li router-link {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+#navbar-item1{
+position: absolute;
+width: 62px;
+height: 36px;
+left: 690px;
+top: 10px;
+
+font-family: 'Montserrat';
+font-style: normal;
+font-weight: 700;
+font-size: 16px;
+line-height: 36px;
+/* identical to box height, or 225% */
+
+display: flex;
+align-items: center;
+text-align: center;
+letter-spacing: -0.015em;
+
+color: #000000;
 }
 
-li router-link:hover:not(.active) {
-  background-color: #111;
+#navbar-item2{
+  position: absolute;
+width: 62px;
+height: 36px;
+left: 776px;
+top: 10px;
+
+font-family: 'Montserrat';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 36px;
+/* identical to box height, or 225% */
+
+display: flex;
+align-items: center;
+text-align: center;
+letter-spacing: -0.015em;
+
+color: #000000;
 }
 
-.active {
-  background-color: #04AA6D;
+#navbar-item3{
+position: absolute;
+width: 62px;
+height: 36px;
+left: 862px;
+top: 10px;
+
+font-family: 'Montserrat';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 36px;
+/* identical to box height, or 225% */
+
+display: flex;
+align-items: center;
+text-align: center;
+letter-spacing: -0.015em;
+
+color: #000000;
 }
 </style>
 

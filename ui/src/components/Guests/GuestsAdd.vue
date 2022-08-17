@@ -7,7 +7,7 @@
       <select v-model="selectedTag" name={{selectedTag}} id={{selectedTag}}>
         <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
       </select>
-      <button class="btn btn-primary" id="gumb2">Add</button>
+      <button class="btn btn-primary" id="gumb2">Dodaj</button>
     </form>
   </div>
 </template>

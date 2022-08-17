@@ -12,7 +12,6 @@ class GuestsViewSet(viewsets.ModelViewSet):
     queryset = Guests.objects.all()
     serializer_class = GuestsSerializer
     filter_backends = [DynamicSearchFilter]
-    
 
 class TagsViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
@@ -27,49 +26,16 @@ class UsersViewSet(viewsets.ModelViewSet):
 class LineupViewSet(viewsets.ModelViewSet):
     queryset = Lineup.objects.all()
     serializer_class = LineupSerializer
-    ordering_fields = '__all__'
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['slug']
 
 class SponsorsViewSet(viewsets.ModelViewSet):
     queryset = Sponsors.objects.all()
     serializer_class = SponsorsSerializer
-    ordering_fields = '__all__'
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['slug']
 
 
 
-
-
-
-
-
-
-
-
-
-def home(request):
-    return render(request,'home.html')
-
-def guests(request):
-    return render(request,'guests.html')
-
-def tags(request):
-    return render(request,'tags.html')
-
-def privileges(request):
-    return render(request,'privileges.html')
-    
-def users(request):
-    return render(request,'users.html')
-    
-def iimport(request):
-    return render(request,'iimport.html')
-    
-def export(request):
-    return render(request,'export.html')
-    
-def logout(request):
-    return render(request,'logout.html')
-
-def login(request):
-    return render(request,'login.html')
     
     

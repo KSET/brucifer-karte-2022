@@ -3,7 +3,7 @@
       <h>Dodaj: </h>
       <input type="text" id="inputtagname" v-model="name" placeholder="Tag Name">
       <button @click="postTag" class="btn btn-primary"
-                      id="gumb2" >Add</button>
+                      id="gumb2" >Dodaj</button>
   </div>
 </template>
 

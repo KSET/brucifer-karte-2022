@@ -1,21 +1,22 @@
 <template>
-  <div id="sponsors-add">
-    <br><br>
-    <h1>Dodavanje izvođača</h1>
+  <div id="lineup-add">
     <br>
-    <form @submit="postGuest">
-      <br>
-      <h>Ime </h>
-      <input type="text" id="inputname" v-model="name" placeholder="Name">
+    <h1 v-if="(this.slug == '0')" id="page-title">Dodavanje izvođača</h1>
+    <h1 v-else id="page-title">Uređivanje izvođača</h1>
 
-      <br><br>
-     
-      <h>Slika </h>
-      <input type="file" accept="image/*" ref="file" id="file-input" @change="selectImage">
-      <br>
-      <br>
-      <img class="preview my-3" :src="previewImage" alt="" />
-      <button class="btn btn-primary" id="gumb2">Add</button>
+    <form @submit="postGuest">
+
+      <h id="textfield1">Ime </h>
+      <input id="inputfield1" type="text" v-model="name" placeholder="Name">
+
+
+      <h id="textfield3">Slika </h>
+      <input id="inputfield3" type="file" accept="image/*" ref="file" @change="selectImage">
+
+
+      <img id="image-preview" class="preview my-3" :src="previewImage" alt="" />
+      <button v-if="(this.slug == '0')" id="submit-button" class="btn btn-primary">Dodaj</button>
+      <button v-else id="submit-button" class="btn btn-primary">Spremi promjene</button>
     </form>
   </div>
 </template>
@@ -34,7 +35,9 @@ export default {
   data() {
     return {
       items: ['Brucoši', 'KSET', 'VIP'],
-      sponsors: [],
+      lineup: [],
+      slug: 0,
+      lineupp: '',
       id: '',
       name: '',
       surname: '',
@@ -53,18 +56,26 @@ export default {
       progress: 0,
       message: "",
       imageInfos: [],
-      slug:'',
 
     }
   },
 
   mounted() {
     console.log(this.$route.params.slug)
-    this.slug=this.$route.params.slug;
-    axios.get('http://127.0.0.1:8000/sponsors',)
-      .then(response => {
-        this.sponsors = response.data;
-      })
+    this.slug = this.$route.params.slug;
+    if (this.slug != '0') {
+      axios.get('http://127.0.0.1:8000/lineup/?search=' + this.slug,)
+        .then(response => {
+          this.lineup = response.data;
+          this.lineupp = this.lineup[0];
+          this.name = this.lineupp.name;
+          this.url = this.lineupp.url;
+          this.previewImage = this.lineupp.image;
+
+        })
+
+    }
+
   },
   methods: {
     selectImage(e) {
@@ -80,7 +91,7 @@ export default {
 
       var ids = [];
 
-      this.sponsors.forEach(element => {
+      this.lineup.forEach(element => {
         ids.push(element.id);
       });
       for (let index = 0; index < ids.length; index++) {
@@ -106,7 +117,7 @@ export default {
       let fd = new FormData();
       fd.appent("int", this.nextId);
       fd.append("file", this.currentImage);/* 
-      return axios.post("http://127.0.0.1:8000/sponsors/", fd, {
+      return axios.post("http://127.0.0.1:8000/lineup/", fd, {
       headers: {
         "Content-Type": "multipart/form-data"
       },
@@ -114,7 +125,7 @@ export default {
     });*/
 
       axios.post('http://127.0.0.1:8000/lineup/',
-        { id: this.nextId, name: this.name, image: this.currentImage },
+        { id: this.nextId, name: this.name, url: this.url, image: this.currentImage },
         { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS }, },
         {
           headers: {
@@ -132,24 +143,7 @@ export default {
 
 
 <style>
-#inputname {
-  width: 220px;
-  margin: 2px;
-}
 
-#inputsurname {
-  width: 220px;
-  margin: 2px;
-}
-
-
-#gumb2 {
-  padding: 0px;
-  margin: 2px;
-  width: 220px;
-  height: 30px;
-  text-align: center;
-}
 </style>
 
 

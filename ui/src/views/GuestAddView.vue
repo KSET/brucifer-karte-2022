@@ -1,44 +1,42 @@
 <template>
     <div id="guests-add">
-        <br><br><br>
+
         <h2 id="page-title">Dodavanje gosta</h2>
         <form @submit="postGuest">
-            <h1 id="textfield1">Ime: </h1>
-            <input id="inputfield1" type="text" @input="changevalue" v-model="name" placeholder="Surname">
-            <br>
-            <br>
-            <h id="textfield2">Prezime: </h>
-            <input id="inputfield2" type="text" @input="changevalue" v-model="surname" placeholder="Surname">
-            <br><br>
-            <h id="textfield3">Tag: </h>
+            <h1 id="textfield7">Ime: </h1>
+            <input id="inputfield7" type="text" @input="changevalue" v-model="name" placeholder="Surname">
 
-            <select id="inputfield3" v-model="selectedTag" name={{selectedTag}}>
+            <h id="textfield8">Prezime: </h>
+            <input id="inputfield8" type="text" @input="changevalue" v-model="surname" placeholder="Surname">
+
+            <h id="textfield9">Tag: </h>
+
+            <select id="inputfield9" v-model="selectedTag" name={{selectedTag}}>
                 <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
             </select>
-            <br>
-            <br>
-            <h id="textfield4">JMBAG: </h>
-            <input id="inputfield4" type="text" v-model="jmbag" placeholder="JMBAG">
-            <br><br>
-            <h id="textfield5">Karta: </h>
 
-            <button id="button1" v-if="karta == '1'" class="btn btn-xs btn-success" type="button"
-                @click="changeKarta()">
-                <font-awesome-icon icon="fa-solid fa-check" />
+
+            <h id="textfield10">JMBAG: </h>
+            <input id="inputfield10" type="text" v-model="jmbag" placeholder="JMBAG">
+
+            <h id="textfield11">Karta: </h>
+
+            <button id="btn4" v-if="karta == '1'"  type="button" @click="changeKarta()">
+                <img src="../assets/icons/yes-icon.svg">
             </button>
-            <button id="button1" v-else @click="changeKarta()" type="button" class="btn btn-xs btn-danger" >
-                <font-awesome-icon icon="fa-solid fa-xmark" />
-            </button><br><br>
-
-            <h id="textfield6">Ulaz: </h>
-
-            <button v-if="ulaz == '1'" type="button" class="btn btn-xs btn-success" id="button2" @click="changeUlaz()">
-                <font-awesome-icon icon="fa-solid fa-check" />
+            <button id="btn4" v-else @click="changeKarta()" type="button" >
+                <img src="../assets/icons/no-icon.svg">
             </button>
-            <button v-else @click="changeUlaz()" type="button" class="btn btn-xs btn-danger" id="button2">
-                <font-awesome-icon icon="fa-solid fa-xmark" />
-            </button><br><br>
-            <button id="submit-button">Dodaj</button>
+
+            <h id="textfield12">Ulaz: </h>
+
+            <button v-if="ulaz == '1'" type="button"  id="button5" @click="changeUlaz()">
+                <img src="../assets/icons/yes-icon.svg">
+            </button>
+            <button v-else @click="changeUlaz()" type="button"  id="button5">
+                <img src="../assets/icons/no-icon.svg">
+            </button>
+            <button id="submit-button2">Dodaj</button>
         </form>
     </div>
 </template>
@@ -142,6 +140,6 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import url(../assets/scss/GuestAddView.scss);
+<style lang="scss" scope>
+@import '../assets/scss/GuestAddView.scss';
 </style>
