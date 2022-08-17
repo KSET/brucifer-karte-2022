@@ -36,7 +36,7 @@ npm run serve
 
 ## Adjusting the environment variables
 
-- in the ui folder, rename the .env.example to .env and ajust your enivronment variables
+- in the ui directory, rename the .env.example to .env and adjust your enivronment variables
 
 ## Adding an admin user to be able to access the site
 
