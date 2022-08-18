@@ -1,42 +1,42 @@
 <template>
-    <div id="guests-add">
+    <div class="guests-add">
 
-        <h2 id="page-title">Dodavanje gosta</h2>
+        <h2 class="page-title">Dodavanje gosta</h2>
         <form @submit="postGuest">
-            <h1 id="textfield7">Ime: </h1>
-            <input id="inputfield7" type="text" @input="changevalue" v-model="name" placeholder="Surname">
+            <h1 class="textfield7">Ime: </h1>
+            <input class="inputfield7" type="text" @input="changevalue" v-model="name" placeholder="Surname">
 
-            <h id="textfield8">Prezime: </h>
-            <input id="inputfield8" type="text" @input="changevalue" v-model="surname" placeholder="Surname">
+            <h class="textfield8">Prezime: </h>
+            <input class="inputfield8" type="text" @input="changevalue" v-model="surname" placeholder="Surname">
 
-            <h id="textfield9">Tag: </h>
+            <h class="textfield9">Tag: </h>
 
-            <select id="inputfield9" v-model="selectedTag" name={{selectedTag}}>
+            <select class="inputfield9" v-model="selectedTag" name={{selectedTag}}>
                 <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
             </select>
 
 
-            <h id="textfield10">JMBAG: </h>
-            <input id="inputfield10" type="text" v-model="jmbag" placeholder="JMBAG">
+            <h class="textfield10">JMBAG: </h>
+            <input class="inputfield10" type="text" v-model="jmbag" placeholder="JMBAG">
 
-            <h id="textfield11">Karta: </h>
+            <h class="textfield11">Karta: </h>
 
-            <button id="btn4" v-if="karta == '1'"  type="button" @click="changeKarta()">
+            <button class="btn4" v-if="karta == '1'"  type="button" @click="changeKarta()">
                 <img src="../assets/icons/yes-icon.svg">
             </button>
-            <button id="btn4" v-else @click="changeKarta()" type="button" >
+            <button class="btn4" v-else @click="changeKarta()" type="button" >
                 <img src="../assets/icons/no-icon.svg">
             </button>
 
-            <h id="textfield12">Ulaz: </h>
+            <h class="textfield12">Ulaz: </h>
 
-            <button v-if="ulaz == '1'" type="button"  id="button5" @click="changeUlaz()">
+            <button v-if="ulaz == '1'" type="button"  class="button5" @click="changeUlaz()">
                 <img src="../assets/icons/yes-icon.svg">
             </button>
-            <button v-else @click="changeUlaz()" type="button"  id="button5">
+            <button v-else @click="changeUlaz()" type="button"  class="button5">
                 <img src="../assets/icons/no-icon.svg">
             </button>
-            <button id="submit-button2">Dodaj</button>
+            <button class="submit-button2">Dodaj</button>
         </form>
     </div>
 </template>

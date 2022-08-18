@@ -1,25 +1,24 @@
 <template>
   <div id="sponsors-add">
     <br>
-    <h1 v-if="(this.slug == '0')" id="page-title">Dodavanje sponzora</h1>
-    <h1 v-else id="page-title">Uređivanje sponzora</h1>
+    <h1 v-if="(this.slug == '0')" id="page-title1">Dodavanje sponzora</h1>
+    <h1 v-else id="page-title1">Uređivanje sponzora</h1>
 
     <form @submit="postGuest">
 
-      <h id="textfield1">Ime </h>
-      <input id="inputfield1" type="text" v-model="name" placeholder="Name">
+      <h class="textfield1">Ime </h>
+      <input class="inputfield1" type="text" v-model="name" placeholder="Name">
 
-      <h id="textfield2">Link </h>
-      <input id="inputfield2" type="text" v-model="url" placeholder="Url">
-
-
-      <h id="textfield3">Slika </h>
-      <input id="inputfield3" type="file" accept="image/*" ref="file" @change="selectImage">
+      <h class="textfield2">Link </h>
+      <input class="inputfield2" type="text" v-model="url" placeholder="Url">
 
 
-      <img id="image-preview" class="preview my-3" :src="previewImage" alt="" />
-      <button v-if="(this.slug == '0')" id="submit-button" class="btn btn-primary">Dodaj</button>
-      <button v-else id="submit-button" class="btn btn-primary">Spremi promjene</button>
+      <h class="textfield3">Slika </h>
+      <input class="inputfield3" type="file" accept="image/*" ref="file" @change="selectImage">
+
+      <img class="image-preview"  :src="previewImage" alt="" />
+      <button v-if="(this.slug == '0')" class="submit-button">Dodaj</button>
+      <button v-else class="submit-button">Spremi promjene</button>
     </form>
   </div>
 </template>
@@ -144,26 +143,5 @@ export default {
 }
 </script>
 
-
-<style>
-#inputname {
-  width: 220px;
-  margin: 2px;
-}
-
-#inputsurname {
-  width: 220px;
-  margin: 2px;
-}
-
-
-#gumb2 {
-  padding: 0px;
-  margin: 2px;
-  width: 220px;
-  height: 30px;
-  text-align: center;
-}
-</style>
 
 

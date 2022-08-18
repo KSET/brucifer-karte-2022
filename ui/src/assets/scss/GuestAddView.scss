@@ -1,4 +1,4 @@
-#textfield7 {
+.textfield7 {
     position: absolute;
     width: 86px;
     height: 36px;
@@ -17,7 +17,7 @@
     letter-spacing: -0.015em;
 }
 
-#textfield8 {
+.textfield8 {
     position: absolute;
     width: 86px;
     height: 36px;
@@ -37,7 +37,7 @@
 
 }
 
-#textfield9 {
+.textfield9 {
     position: absolute;
     width: 86px;
     height: 36px;
@@ -57,7 +57,7 @@
 
 }
 
-#textfield10{
+.textfield10{
     position: absolute;
     width: 86px;
     height: 36px;
@@ -77,7 +77,7 @@
 
 }
 
-#textfield11 {
+.textfield11 {
     position: absolute;
     width: 86px;
     height: 36px;
@@ -97,7 +97,7 @@
 
 }
 
-#textfield12 {
+.textfield12 {
     position: absolute;
     width: 86px;
     height: 36px;
@@ -115,11 +115,11 @@
     align-items: center;
     letter-spacing: -0.015em;
 
-    color: #000000;
+    color: .000000;
 }
 
 
-#page-title {
+.page-title {
     position: absolute;
     width: 642px;
     height: 36px;
@@ -135,10 +135,10 @@
 
     letter-spacing: -0.015em;
 
-    color: #000000;
+    color: .000000;
 }
 
-#inputfield7 {
+.inputfield7 {
     box-sizing: border-box;
 
     position: absolute;
@@ -147,10 +147,10 @@
     left: 290px;
     top: 182px;
 
-    border: 1px solid #000000;
+    border: 1px solid .000000;
 }
 
-#inputfield8 {
+.inputfield8 {
     box-sizing: border-box;
 
     position: absolute;
@@ -159,10 +159,10 @@
     left: 290px;
     top: 270px;
 
-    border: 1px solid #000000;
+    border: 1px solid .000000;
 }
 
-#inputfield9 {
+.inputfield9 {
     box-sizing: border-box;
 
     position: absolute;
@@ -171,10 +171,10 @@
     left: 290px;
     top: 366px;
 
-    border: 1px solid #000000;
+    border: 1px solid .000000;
 }
 
-#inputfield10 {
+.inputfield10 {
     box-sizing: border-box;
 
     position: absolute;
@@ -183,10 +183,10 @@
     left: 290px;
     top: 466px;
 
-    border: 1px solid #000000;
+    border: 1px solid .000000;
 }
 
-#btn4 {
+.btn4 {
     position: absolute;
     width: 50px;
     height: 50px;
@@ -197,7 +197,7 @@
     background-color: #ffffffff;
 }
 
-#button5 {
+.button5 {
     position: absolute;
     width: 50px;
     height: 50px;
@@ -208,7 +208,7 @@
     background-color: #ffffffff;
 }
 
-#submit-button2 {
+.submit-button2 {
     position: absolute;
     left: 6.05%;
     right: 81.25%;

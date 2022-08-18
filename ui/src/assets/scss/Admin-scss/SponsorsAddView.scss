@@ -1,4 +1,4 @@
-#page-title {
+.page-title1 {
     position: absolute;
     width: 642px;
     height: 36px;
@@ -17,7 +17,7 @@
     color: #000000;
 }
 
-#textfield1 {
+.textfield1 {
     position: absolute;
     width: 86px;
     height: 36px;
@@ -36,7 +36,7 @@
     letter-spacing: -0.015em;
 }
 
-#textfield2 {
+.textfield2 {
     position: absolute;
     width: 86px;
     height: 36px;
@@ -55,7 +55,7 @@
     letter-spacing: -0.015em;
 }
 
-#textfield3 {
+.textfield3 {
     position: absolute;
     width: 86px;
     height: 36px;
@@ -74,7 +74,7 @@
     letter-spacing: -0.015em;
 }
 
-#inputfield1 {
+.inputfield1 {
     box-sizing: border-box;
 
     position: absolute;
@@ -86,7 +86,7 @@
     border: 1px solid #000000;
 }
 
-#inputfield2 {
+.inputfield2 {
     box-sizing: border-box;
 
     position: absolute;
@@ -98,7 +98,7 @@
     border: 1px solid #000000;
 }
 
-#inputfield3 {
+.inputfield3 {
     box-sizing: border-box;
 
     position: absolute;
@@ -111,7 +111,7 @@
     border-radius: 6px;
 }
 
-#image-preview {
+.image-preview {
     box-sizing: border-box;
 
     position: absolute;
@@ -123,15 +123,68 @@
     border: 1px solid #000000;
 }
 
-#submit-button {
+.submit-button {
     position: absolute;
     left: 6.05%;
-    right: 81.25%;
     top: 85.03%;
-    bottom: 9.77%;
 
     color: white;
 
     background: #000000;
     border-radius: 6px;
+}
+
+@media screen and (max-width: 900px) {
+
+    .textfield1 {
+        left: 38px;
+        top: 482px;
+    }
+
+    .textfield2 {
+        left: 38px;
+        top: 574px;
+    }
+
+    .textfield3 {
+        left: 6.66%;
+right: 79.03%;
+top: 68.61%;
+bottom: 27.65%;
+    }
+
+    .inputfield1 {
+        left: 169px;
+        top: 481px;
+        width: 191px;
+        height: 45px;
+    }
+
+    .inputfield2 {
+        left: 169px;
+        top: 568px;
+        width: 191px;
+        height: 45px;
+    }
+
+    .inputfield3 {
+        left: 169px;
+        top: 660px;
+        width: 130px;
+        height: 40px;
+    }
+
+    .image-preview {
+        left: 4.33%;
+right: 62.4%;
+top: 21.93%;
+bottom: 57.28%;
+    }
+
+    .submit-button {
+        left: 6.66%;
+right: 71.71%;
+top: 82.22%;
+bottom: 13.62%;
+    }
 }
