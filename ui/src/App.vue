@@ -1,22 +1,24 @@
 <template>
 <div id="app">
-  <navbar v-if="this.navtype=='bruckarte'"></navbar>
+  <NavbarAdmin v-if="this.navtype=='bruckarte'"></NavbarAdmin>
   <NavbarBweb v-if="this.navtype=='brucweb'"></NavbarBweb>
+  <Footer v-if="this.navtype=='brucweb'"></Footer>
 <router-view/>
 </div>
 </template>
 
 <script>
-import Navbar from './components/NavbarAndFooter/Navbar.vue'
+import NavbarAdmin from './components/NavbarAndFooter/NavbarAdmin.vue'
 import NavbarBweb from './components/NavbarAndFooter/NavbarBweb.vue'
+import Footer from './components/NavbarAndFooter/Footer.vue'
 
 
 export default {
   name: 'app',
   components: {
-    Navbar,
+    NavbarAdmin,
     NavbarBweb,
-    
+    Footer
 },
   data() {
       return {

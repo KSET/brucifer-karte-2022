@@ -20,6 +20,7 @@ export default {
 .grid-element {
   display: block;
   color: white;
+
   text-align: center;
         background: rgba(0, 0, 0, .3);
         border-radius: 18px;

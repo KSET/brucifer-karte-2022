@@ -1,39 +1,43 @@
 <template>
-  <div id="navbarbweb">
-    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <router-link class="navbar-item" :to="'/'">BRUCOŠIJADA FER-A</router-link>
-        </div>
+  <div id="bw-navbar">
 
-       
-      
+        <router-link id="navbar-title1" to="/bruckarte/home">
+          Brucošijada FER-a
+        </router-link>
 
-      
-      <div class="navbar-end">
+        <router-link 
+        
+        id="navbar-item4"  to="/home">
+          Naslovnica
+        </router-link>
 
-        <!-- odkomentirat ovo kad se sredi nabvbar LP -->
-        <router-link class="navbar-item" :to="'/'">Naslovnica</router-link>
-        <router-link class="navbar-item" :to="'/lineup/'">Izvođači</router-link>
-        <router-link class="navbar-item" :to="'/ulaznice/'">Ulaznice</router-link>
-        <router-link class="navbar-item" :to="'/sponsors/'">Sponzori</router-link>
+        <router-link  id="navbar-item5" to="/lineup">
+          Izvođaći
+        </router-link>
 
-        <router-link class="navbar-item" :to="'/kontakt/'">Konakt</router-link>
-        <router-link class="navbar-item" :to="'/upis/'">Upis brucoša</router-link>
-       
-      </div>
+        <router-link  id="navbar-item6" to="/ulaznice">
+          Ulaznice
+        </router-link>
 
+        <router-link id="navbar-item7" to="/sponsors">
+          Sponzori
+        </router-link>
 
-    </nav>
+        <router-link v-if="privilege == '1'" id="navbar-item8" to="/bruckarte/admin-panel">
+          Kontakt
+        </router-link>
+    
+        <img id="nav-burger" src="../../assets/icons/nav-burger.svg">
   </div>
 </template>
 
 <script>
 import store from '@/store/index.js';
 export default {
-  name: 'NavbarBweb',
+  name: 'Navbar',
   el: '#app',
   components: {
-    
+
   },
   data() {
     return {
@@ -70,45 +74,181 @@ export default {
 
 
 </script>
-<style>
-body {
-  margin: 0;
+<style lang="css">
+@import "@fontsource/antonio";
+
+#bw-navbar{
+  position: absolute;
+width: 100%;
+height: 3.75rem;
+left: 0px;
+top: 0px;
+
+background: #DC5E88;
+}
+
+#navbar-title1{
+position: absolute;
+left: 2.73%;
+right: 68.65%;
+top: 20%;
+bottom: 20%;
+
+font-family: 'Antonio';
+font-style: normal;
+font-weight: 700;
+font-size: 20px;
+line-height: 36px;
+/* identical to box height, or 480% */
+
+text-align: center;
+letter-spacing: -0.022em;
+
+color: #000000;
+}
+
+#navbar-item4{
+position: absolute;
+left: 54.69%;
+right: 39.75%;
+top: 20%;
+bottom: 20%;
+
+font-family: 'Antonio';
+font-style: normal;
+font-weight: 700;
+font-size: 14px;
+line-height: 36px;
+/* identical to box height, or 686% */
+
+text-align: center;
+letter-spacing: -0.022em;
+text-decoration-line: underline;
+
+color: #000000;
+}
+
+#navbar-item5{
+position: absolute;
+left: 64.75%;
+right: 31.35%;
+top: 20%;
+bottom: 20%;
+
+font-family: 'Antonio';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 36px;
+/* identical to box height, or 686% */
+
+text-align: center;
+letter-spacing: -0.022em;
+color: #000000;
+}
+
+#navbar-item6{
+position: absolute;
+left: 73.24%;
+right: 22.75%;
+top: 20%;
+bottom: 20%;
+
+font-family: 'Antonio';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 36px;
+/* identical to box height, or 686% */
+
+text-align: center;
+letter-spacing: -0.022em;
+
+color: #000000;
+
+}
+
+#navbar-item7{
+position: absolute;
+left: 81.84%;
+right: 14.06%;
+top: 20%;
+bottom: 20%;
+
+font-family: 'Antonio';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 36px;
+/* identical to box height, or 686% */
+
+text-align: center;
+letter-spacing: -0.022em;
+
+color: #000000;
+}
+
+#navbar-item8{
+position: absolute;
+left: 90.43%;
+right: 5.86%;
+top: 20%;
+bottom: 20%;
+
+font-family: 'Antonio';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 36px;
+/* identical to box height, or 686% */
+
+text-align: center;
+letter-spacing: -0.022em;
+
+color: #000000;
+color: #000000;
+}
+
+#nav-burger{
+  display: none;
 }
 
 
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #9e9e9e;
-  position: fixed;
-  top: 0;
-  width: 100%;
+@media screen and (max-width: 900px) {
+
+#admin-navbar{
+bottom: 96.15%;
+}
+  
+
+#navbar-item4{
+display: none;
+
 }
 
-li {
-  float: left;
+#navbar-item5{
+display: none;
 }
 
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+#navbar-item6{
+display: none;
 }
 
-li a:hover:not(.active) {
-  background-color: #8e8e8e;
+#navbar-item7{
+display: none;
 }
 
-.active {
-  background-color: #fb8c04;
+#navbar-item8{
+display: none;
 }
 
-.right {
-  float: right;
+#nav-burger{
+  position: absolute;
+width: 32px;
+height: 32px;
+left: 536px;
+top: 19px;
+}
 }
 </style>
 

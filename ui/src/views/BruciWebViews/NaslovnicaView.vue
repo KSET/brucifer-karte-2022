@@ -1,7 +1,6 @@
 <template>
 <div id="home">
-    <br>
-  <h1>naslovnica</h1>
+    <img src="../../assets/images/bgg.svg">
 </div>
     
 </template>

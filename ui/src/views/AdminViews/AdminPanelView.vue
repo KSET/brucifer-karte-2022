@@ -1,7 +1,7 @@
 <template>
     <div id="adminPanel">
+      <br>
       <GridRouterLink></GridRouterLink>
-
       </div>
 </template>
 

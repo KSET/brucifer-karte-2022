@@ -1,9 +1,19 @@
+#textfield0 {
+    position: absolute;
+    left: 6.05%;
+    right: 68.36%;
+    top: 12.11%;
+    bottom: 82.94%;
+
+    border: 1px solid #000000;
+}
+
 #textfield1 {
     position: absolute;
-    width: 5.375rem;
-    height: 2.25rem;
-    left: 3.875rem;
-    top: 14.625rem;
+    left: 6.05%;
+right: 85.55%;
+top: 30.47%;
+bottom: 64.84%;
 
     font-family: 'Montserrat';
     font-style: normal;
@@ -21,10 +31,10 @@
 
 #textfield2 {
     position: absolute;
-    width: 86px;
-    height: 36px;
-    left: 62px;
-    top: 322px;
+    left: 6.05%;
+right: 85.55%;
+top: 41.93%;
+bottom: 53.39%;
 
     font-family: 'Montserrat';
     font-style: normal;
@@ -43,10 +53,10 @@
 
 #textfield3 {
     position: absolute;
-    width: 86px;
-    height: 36px;
-    left: 62px;
-    top: 410px;
+    left: 6.05%;
+right: 85.55%;
+top: 53.39%;
+bottom: 41.93%;
 
     font-family: 'Montserrat';
     font-style: normal;
@@ -65,33 +75,33 @@
 
 #textfield4 {
     position: absolute;
-    width: 86px;
-    height: 36px;
-    left: 62px;
-    top: 498px;
+left: 6.05%;
+right: 85.55%;
+top: 64.84%;
+bottom: 30.47%;
 
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 36px;
-    /* identical to box height, or 225% */
+font-family: 'Montserrat';
+font-style: normal;
+font-weight: 700;
+font-size: 16px;
+line-height: 36px;
+/* identical to box height, or 225% */
 
-    display: flex;
-    align-items: center;
-    letter-spacing: -0.015em;
+display: flex;
+align-items: center;
+letter-spacing: -0.015em;
 
-    color: #000000;
+color: #000000;
 }
 
 #inputfield1 {
     box-sizing: border-box;
 
     position: absolute;
-    width: 332px;
-    height: 45px;
-    left: 290px;
-    top: 229px;
+    left: 28.32%;
+right: 39.26%;
+top: 29.82%;
+bottom: 64.32%;
 
     border: 1px solid #000000;
 }
@@ -100,10 +110,10 @@
     box-sizing: border-box;
 
     position: absolute;
-    width: 332px;
-    height: 45px;
-    left: 290px;
-    top: 317px;
+    left: 28.32%;
+    right: 39.26%;
+    top: 41.28%;
+    bottom: 52.86%;
 
     border: 1px solid #000000;
 }
@@ -112,29 +122,76 @@
     box-sizing: border-box;
 
     position: absolute;
-    width: 332px;
-    height: 45px;
-    left: 290px;
-    top: 405px;
+    left: 28.32%;
+right: 39.26%;
+top: 52.73%;
+bottom: 41.41%;
 
     border: 1px solid #000000;
 }
 
-#btn1 {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    left: 285px;
-    top: 490px;
+#button1-yes {
+    box-sizing: border-box;
 
-    border: 2px;
-    background-color: #ffffffff;
+    position: absolute;
+    left: 28.32%;
+right: 58.98%;
+top: 64.32%;
+bottom: 30.08%;
+
+    background: #000000;
+    border: 1px solid #000000;
+    border-radius: 6px;
+}
+
+#button1-no{
+    box-sizing: border-box;
+
+position: absolute;
+left: 28.32%;
+right: 58.98%;
+top: 64.32%;
+bottom: 30.08%;
+
+border: 1px solid #000000;
+border-radius: 6px;
+
+border: 1px solid #000000;
+border-radius: 6px;
+
+}
+
+#icon1 {
+    position: absolute;
+    left: 7.4%;
+    top: 13.40%;
 }
 
 #search-field {
     position: absolute;
-    width: 262px;
-    height: 38px;
-    left: 62px;
-    top: 108px;
+    left: 10.05%;
+    right: 68.5%;
+    top: 12.2%;
+    bottom: 83%;
+
+    border: 0px;
+}
+
+#line1{
+    box-sizing: border-box;
+
+position: absolute;
+width: 100%;
+right: 0%;
+top: 7.81%;
+bottom: 77.21%;
+
+border-bottom: 1px solid #000000;
+}
+
+#image1{
+    left: 35.61%;
+right: 57.24%;
+top: 57.8%;
+bottom: 37.73%;
 }

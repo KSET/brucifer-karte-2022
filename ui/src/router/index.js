@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 /* Buckarte page Views */
-import Guests from '../views/GuestsView.vue'
-import GuestTag from '../views/GuestTagView.vue'
-import Login from '../views/LoginView.vue'
-import Logout from '../views/LogoutView.vue'
-import GuestAdd from '../views/GuestAddView.vue'
+import Guests from '../views/BruckarteViews/GuestsView.vue'
+import GuestTag from '../views/BruckarteViews/GuestTagView.vue'
+import Login from '../views/BruckarteViews/LoginView.vue'
+import Logout from '../views/BruckarteViews/LogoutView.vue'
+import GuestAdd from '../views/BruckarteViews/GuestAddView.vue'
 
 /* Admin Views */
 import Tags from '../views/AdminViews/TagsView.vue'
