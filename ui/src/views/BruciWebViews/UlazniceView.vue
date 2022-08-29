@@ -33,15 +33,7 @@
 
                 </div>
             </main>
-            <footer>
-            <span>
-                KSET © Copyright 2021. All Rights Reserved.
-            </span>
-                <span style="margin-left: auto"></span>
-                <span style="z-index: 999">
-                <a class="white" href="/pravila">Pravila ponašanja</a>
-            </span>
-            </footer>
+           
         </div>
 </template>
 
@@ -52,6 +44,19 @@ name: 'UlazniceView',
 </script>
 
 <style>
+.page-container{  
+    background-image: url("../../assets/bg/default/bg-desktop.svg");
+  background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #F6BB96;;
+}
 
+@media screen and (max-width: 1280px) {
+#page-container{  
+    background-image: url("../../assets/bg/default/bg-tablet.svg");
+  background-repeat: no-repeat;
+    background-size: cover;
+}
+}
 @import url(../../bruciweb.css);
 </style>

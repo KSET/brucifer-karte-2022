@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 /* Buckarte page Views */
 import Guests from '../views/BruckarteViews/GuestsView.vue'
-import GuestTag from '../views/BruckarteViews/GuestTagView.vue'
+import EntryView from '../views/BruckarteViews/EntryView.vue'
 import Login from '../views/BruckarteViews/LoginView.vue'
 import Logout from '../views/BruckarteViews/LogoutView.vue'
 import GuestAdd from '../views/BruckarteViews/GuestAddView.vue'
@@ -51,10 +51,9 @@ const routes = [
     component : Guests
   },
   {
-    path: '/bruckarte/guest_tag/:slug',
+    path: '/bruckarte/entry',
     name: 'guest_tag',
-    alias: '/guest_tag/guest_tag/:slug',
-    component : GuestTag
+    component : EntryView
   },
   {
     path: '/bruckarte/users',
@@ -174,7 +173,6 @@ router.beforeEach((to, from, next) => {
   var allowedRoutesForprivilege4= ["home","login","logout","guest_tag","guests","",undefined]
 
   if((Date.now()/1000)>store.state.tokenExp && to.name!='logout'){
-    console.log("aj ća")
     next({path: '/bruckarte/logout'});
   }else{
   if((String(to.path).split("/"))[1]=="bruckarte"){

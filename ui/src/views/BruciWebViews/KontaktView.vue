@@ -2,31 +2,30 @@
   <div id="kontakt">
     <br>
     <p>slay</p>
-    <footer></footer>
   </div>
 </template>
 
 <script>
-import Footer from '../../components/NavbarAndFooter/Footer.vue';
 
 export default {
 name: 'KontaktView',
-Footer
+
 }
 </script>
 
 <style>
-
-footery {
-    position: relative;
-    display: flex;
-    align-items: center;
-    height: 110px;
-    padding: 0 calc(var(--padding-percent) * 1vw);
-    color: var(--bruc-white);
-    background-color: var(--bruc-pink);
+#page-container{  
+    background-image: url("../../assets/bg/default/bg-desktop.svg");
+  background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #F6BB96;;
 }
-h6{
-        color:white;
-    }
+
+@media screen and (max-width: 1280px) {
+#page-container{  
+    background-image: url("../../assets/bg/default/bg-tablet.svg");
+  background-repeat: no-repeat;
+    background-size: cover;
+}
+}
 </style>

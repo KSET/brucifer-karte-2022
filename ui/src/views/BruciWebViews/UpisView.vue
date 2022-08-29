@@ -1,19 +1,19 @@
 <template>
     <div id="upis">
         <br>
-        <h>Ime: </h>
+        <h1>Ime: </h1>
         <input type="text" id="inputname" v-model="name" placeholder="Name">
         <br>
         <br>
-        <h>Prezime: </h>
+        <h1>Prezime: </h1>
         <input type="text" id="inputsurname" v-model="surname" placeholder="Surname">
         <br>
         <br>
-        <h>JMBAG: </h>
+        <h1>JMBAG: </h1>
         <input type="text" id="inputjmbag" v-model="jmbag" placeholder="JMBAG">
         <br>
         <br>
-        <h>e-mail: </h>
+        <h1>e-mail: </h1>
         <input type="text" id="inputemail" v-model="email" placeholder="email">
         <br>
         <br>

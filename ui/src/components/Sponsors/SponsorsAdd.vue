@@ -6,14 +6,14 @@
 
     <form @submit="postGuest">
 
-      <h class="textfield1">Ime </h>
+      <h1 class="textfield1">Ime </h1>
       <input class="inputfield1" type="text" v-model="name" placeholder="Name">
 
-      <h class="textfield2">Link </h>
+      <h1 class="textfield2">Link </h1>
       <input class="inputfield2" type="text" v-model="url" placeholder="Url">
 
 
-      <h class="textfield3">Slika </h>
+      <h1 class="textfield3">Slika </h1>
       <input class="inputfield3" type="file" accept="image/*" ref="file" @change="selectImage">
 
       <img class="image-preview"  :src="previewImage" alt="" />

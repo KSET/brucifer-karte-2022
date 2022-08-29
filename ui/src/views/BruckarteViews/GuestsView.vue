@@ -1,19 +1,19 @@
 <template>
   <div class="guestss">
-    <h id="textfield0"></h>
-    <h id="line1"></h>
+    <h1 id="textfield0"></h1>
+    <h1 id="line1"></h1>
     <input id="search-field" @input="searchGuest" type="form"  v-model="search" placeholder="Unesi JMBAG">
     <img id="icon1" src="../../assets/icons/search-icon.svg">
-    <h id="textfield1">Ime </h>
-    <input id="inputfield1" type="text" @input="changevalue"  v-model="name" placeholder="Name">
+    <h1 id="textfield1">Ime </h1>
+    <input id="inputfield1" type="text" @input="changevalue"  v-model="name" >
     
-    <h id="textfield2">Prezime </h>
-    <input id="inputfield2" type="text"  @input="changevalue"  v-model="surname" placeholder="Surname">
+    <h1 id="textfield2">Prezime </h1>
+    <input id="inputfield2" type="text"  @input="changevalue"  v-model="surname">
     
-    <h id="textfield3">JMBAG </h>
-    <input id="inputfield3" readonly  type="text" v-model="jmbag" placeholder="JMBAG">
+    <h1 id="textfield3">JMBAG </h1>
+    <input id="inputfield3" readonly  type="text" v-model="jmbag">
     
-    <h id="textfield4">Karta </h>
+    <h1 id="textfield4">Karta </h1>
     
     <button id="button1-yes" v-if="guest.bought == '1'"  @click="changebought(guest, '0')">
       <img src="../../assets/icons/yes-icon.svg">

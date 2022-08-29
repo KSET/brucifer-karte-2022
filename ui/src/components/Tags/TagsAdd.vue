@@ -1,6 +1,6 @@
 <template>
   <div id="tags-add">
-      <h>Dodaj: </h>
+      <h1>Dodaj: </h1>
       <input type="text" id="inputtagname" v-model="name" placeholder="Tag Name">
       <button @click="postTag" class="btn btn-primary"
                       id="gumb2" >Dodaj</button>

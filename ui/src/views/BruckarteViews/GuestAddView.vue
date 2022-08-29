@@ -6,20 +6,20 @@
             <h1 class="textfield7">Ime: </h1>
             <input class="inputfield7" type="text" @input="changevalue" v-model="name" placeholder="Surname">
 
-            <h class="textfield8">Prezime: </h>
+            <h1 class="textfield8">Prezime: </h1>
             <input class="inputfield8" type="text" @input="changevalue" v-model="surname" placeholder="Surname">
 
-            <h class="textfield9">Tag: </h>
+            <h1 class="textfield9">Tag: </h1>
 
             <select class="inputfield9" v-model="selectedTag" name={{selectedTag}}>
                 <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
             </select>
 
 
-            <h class="textfield10">JMBAG: </h>
+            <h1 class="textfield10">JMBAG: </h1>
             <input class="inputfield10" type="text" v-model="jmbag" placeholder="JMBAG">
 
-            <h class="textfield11">Karta: </h>
+            <h1 class="textfield11">Karta: </h1>
 
             <button class="btn4" v-if="karta == '1'"  type="button" @click="changeKarta()">
                 <img src="../../assets/icons/yes-icon.svg">
@@ -28,7 +28,7 @@
                 <img src="../../assets/icons/no-icon.svg">
             </button>
 
-            <h class="textfield12">Ulaz: </h>
+            <h1 class="textfield12">Ulaz: </h1>
 
             <button v-if="ulaz == '1'" type="button"  class="button5" @click="changeUlaz()">
                 <img src="../../assets/icons/yes-icon.svg">

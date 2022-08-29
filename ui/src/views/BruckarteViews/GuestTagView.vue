@@ -8,7 +8,7 @@
           <div class="card-header">Ulaz</div>
           <div class="card-body">
             <div id="guests-search">
-              <h>Search: </h>
+              <h1>Search: </h1>
               <input @input="searchGuest" type="form" id="searchgumb" v-model="search" placeholder="Name">
               <button @click="searchGuest" class="btn btn-primary" id="gumb2">search</button>
             </div>

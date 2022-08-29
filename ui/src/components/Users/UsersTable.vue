@@ -1,6 +1,6 @@
 <template>
   <div id="users-search">
-    <h>Search:  </h>
+    <h1>Search:  </h1>
       <input @input="searchUser" type="form" id="searchgumb" v-model="search">
       <div class=row>
             <table id="users">

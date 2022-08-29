@@ -2,7 +2,7 @@
   
   <div id="guests-table">
     <div id="guests-search">
-      <h>Search:  </h>
+      <h1>Search:  </h1>
       <input @input="searchGuest" type="form" id="searchgumb" v-model="search">
   </div>
     

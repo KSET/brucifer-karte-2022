@@ -28,7 +28,7 @@
                 <input id="inputfield" type="text" @input="changevalue" v-model="surname">
 
                 <h1 id="textfield">JMBAG </h1>
-                <input id="inputfield" readonly type="text" v-model="jmbag">c
+                <input id="inputfield" readonly type="text" v-model="jmbag">
 
                 <h1 id="textfield">Karta </h1>
                 <button id="button" v-if="guest.bought == '1'" @click="changebought(guest, '0')">

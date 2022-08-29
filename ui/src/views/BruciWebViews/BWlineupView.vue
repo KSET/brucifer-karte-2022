@@ -9,16 +9,13 @@
                 <h3>{{ user.name }}</h3>
             </div>
     </div>
-    <footer></footer>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
-import Footer from '../../components/NavbarAndFooter/Footer.vue';
 export default {
   name: 'UsersTable',
-    Footer,
   props: {
     msg: String
   },
@@ -77,6 +74,20 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Raleway&family=Righteous&display=swap');
+#page-container{  
+    background-image: url("../../assets/bg/default/bg-desktop.svg");
+  background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #F6BB96;;
+}
+
+@media screen and (max-width: 1280px) {
+#page-container{  
+    background-image: url("../../assets/bg/default/bg-tablet.svg");
+  background-repeat: no-repeat;
+    background-size: cover;
+}
+}
 h3,
 h4 {
     font-family: 'Righteous', cursive;
@@ -301,16 +312,8 @@ h4 {
             }
         }
 
-      footer::before {
-    position: absolute;
-    top: -81px;
-    right: 0;
-    left: 0;
-    height: 82px;
-    content: "";
-    background-image: url(../../assets/images/footer/bg.svg);
-    background-repeat: repeat-x;
-}
+    
+
 
 
     </style>

@@ -1,18 +1,18 @@
 <template>
   <div id="bw-navbar">
 
-        <router-link id="navbar-title1" to="/bruckarte/home">
+        <router-link id="navbar-title1" to="/">
           Brucošijada FER-a
         </router-link>
 
         <router-link 
         
-        id="navbar-item4"  to="/home">
+        id="navbar-item4"  to="/">
           Naslovnica
         </router-link>
 
         <router-link  id="navbar-item5" to="/lineup">
-          Izvođaći
+          Izvođači
         </router-link>
 
         <router-link  id="navbar-item6" to="/ulaznice">
@@ -23,7 +23,7 @@
           Sponzori
         </router-link>
 
-        <router-link v-if="privilege == '1'" id="navbar-item8" to="/bruckarte/admin-panel">
+        <router-link  id="navbar-item8" to="/kontakt">
           Kontakt
         </router-link>
     

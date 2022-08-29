@@ -21,7 +21,8 @@ export default {
 position: absolute;
 height: 3.75rem;
 width: 100%;
-bottom: 0%;
+left: 0;
+  bottom: 0;
 
 background: #F6BB96;}
 

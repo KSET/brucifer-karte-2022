@@ -6,11 +6,11 @@
 
     <form @submit="postGuest">
 
-      <h id="textfield1">Ime </h>
+      <h1 id="textfield1">Ime </h1>
       <input id="inputfield1" type="text" v-model="name" placeholder="Name">
 
 
-      <h id="textfield3">Slika </h>
+      <h1 id="textfield3">Slika </h1>
       <input id="inputfield3" type="file" accept="image/*" ref="file" @change="selectImage">
 
 

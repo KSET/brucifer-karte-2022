@@ -1,7 +1,7 @@
 <template>
   <div id="guests-add">
     <form @submit="postGuest">
-      <h>Dodaj na popis: </h>
+      <h1>Dodaj na popis: </h1>
       <input type="text" id="inputname" v-model="name" placeholder="Name">
       <input type="text" id="inputsurname" v-model="surname" placeholder="Surname">
       <select v-model="selectedTag" name={{selectedTag}} id={{selectedTag}}>

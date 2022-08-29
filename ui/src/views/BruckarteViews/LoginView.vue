@@ -50,14 +50,6 @@ export default {
 
         handleCredentialResponse(res) {
             const responsePayload = VueJwtDecode.decode(res.credential);
-            console.log("ID: " + responsePayload.sub);
-            console.log('Full Name: ' + responsePayload.name);
-            console.log('Given Name: ' + responsePayload.given_name);
-            console.log('Family Name: ' + responsePayload.family_name);
-            console.log("Image URL: " + responsePayload.picture);
-            console.log("Email: " + responsePayload.email);
-
-
 
             store.commit('setId', responsePayload.sub)
             store.commit('setName', decodeURIComponent(escape(responsePayload.name)));
@@ -81,7 +73,6 @@ export default {
                         if (element.email == responsePayload.email) {
                             registeredEmail = true
                             store.commit('setPrivilege', element.privilege)
-                            console.log(element.name)
                             if (element.name == "") {
                                 axios.put('http://127.0.0.1:8000/users/' + element.id + '/',
                                     { name: decodeURIComponent(escape(responsePayload.name)) },
@@ -108,8 +99,7 @@ export default {
                         )
                         store.commit('setPrivilege', '0')
                     }
-                    console.log("aghaghga");
-                    this.$router.push({ name: 'home' })
+                    //this.$router.push({ name: ' ' })
                 })
 
 
@@ -128,7 +118,6 @@ export default {
         document.head.appendChild(googleScript);
 
         window.addEventListener('load', () => {
-            console.log(window.google);
             window.google.accounts.id.initialize({
                 client_id: "729300808359-9qt44p6ksjivnbfd981pgjbmkh4ifgcj.apps.googleusercontent.com",
                 /* RESTRIKCIJA DOMENE NA kset.org

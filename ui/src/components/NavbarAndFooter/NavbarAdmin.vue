@@ -1,17 +1,17 @@
 <template>
   <div id="admin-navbar">
 
-        <router-link id="navbar-title" to="/bruckarte/home">
+        <router-link id="navbar-title" to="/bruckarte/">
           #BRUCIFER
         </router-link>
 
         <router-link v-if="privilege == '1' || privilege == '3' || privilege == '4'"
         
-        id="navbar-item1"  to="/bruckarte/guests">
+        class="navbar-item1"  to="/bruckarte/guests">
           Brucoši
         </router-link>
 
-        <router-link v-if="privilege == '1' || privilege == '2' || privilege == '4'" id="navbar-item2" to="/bruckarte/ulaz">
+        <router-link v-if="privilege == '1' || privilege == '2' || privilege == '4'" id="navbar-item2" to="/bruckarte/entry">
           Ulaz
         </router-link>
 
@@ -36,7 +36,7 @@ export default {
   },
   data() {
     return {
-      showNav: false,
+      route: '',
     }
   },
   computed: {
@@ -52,6 +52,10 @@ export default {
       tagsList: ['Brucoši', 'KSET', 'VIP'],
       logoutlist: ['logout']
     }
+  },
+  mounted(){
+    this.route = this.$route.path;
+    console.log(this.route);
   },
   methods: {
     toggleBurger() {
@@ -94,7 +98,7 @@ letter-spacing: -0.015em;
 color: #000000;
 }
 
-#navbar-item1{
+.navbar-item1{
 position: absolute;
 left: 67.38%;
 right: 26.56%;
@@ -155,6 +159,10 @@ left: 94.34%;
 right: 2.54%;
 top: 20%;
 bottom: 26.67%;
+}
+
+.current{
+  font-weight: 800;
 }
 
 @media screen and (max-width: 900px) {
