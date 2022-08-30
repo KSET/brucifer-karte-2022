@@ -14,36 +14,36 @@
             </div>
         </div>
         <div class="grid-item grid1-item2">
-            <button class="person" v-for="guest in guests" :key="guest.id" @click="chooseGuest">
-                <p>{{  guest.name  }} {{ guest.surname }}</p>
+            <button class="person" v-for="guest in guests" :key="guest.id" @click="chooseGuest(guest)">
+                <p>{{  guest.name  }} {{  guest.surname  }}</p>
                 <p>{{  guest.tag  }} </p>
             </button>
         </div>
         <div class="grid-item grid1-item3">
             <div class="grid3-container">
                 <h1 id="textfield">Ime </h1>
-                <input id="inputfield" type="text" @input="changevalue" v-model="name">
+                <input readonly id="inputfield" type="text" @input="changevalue" v-model="name">
 
                 <h1 id="textfield">Prezime </h1>
-                <input id="inputfield" type="text" @input="changevalue" v-model="surname">
+                <input readonly id="inputfield" type="text" @input="changevalue" v-model="surname">
 
-                <h1 id="textfield">JMBAG </h1>
-                <input id="inputfield" readonly type="text" v-model="jmbag">
+                <h1 v-if="this.jmbag != ''" id="textfield">JMBAG </h1>
+                <input v-if="this.jmbag != ''" id="inputfield" readonly type="text" v-model="jmbag">
 
-                <h1 id="textfield">Karta </h1>
-                <button id="button" v-if="guest.bought == '1'" @click="changebought(guest, '0')">
+                <h1 v-if="this.jmbag != ''" id="textfield">Karta </h1>
+                <button v-if="this.jmbag != '' && this.bought == '1'" id="button" @click="changebought(guest, '0')">
                     <img src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button id="button" v-else @click="changebought(guest, '1')">
+                <button id="button" v-if="this.jmbag != '' && this.bought == '0'" @click="changebought(guest, '1')">
                     <img id="image1" src="../../assets/icons/no-icon.svg">
                 </button>
 
                 <h1 id="textfield">Ulaz </h1>
 
-                <button v-if="guest.enetered == '1'" type="button" class="button" @click="changeUlaz()">
+                <button v-if="this.entered == '1'" type="button" class="button" @click="changeEntered(guest, '0')">
                     <img src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button v-else @click="changeUlaz()" type="button" class="button">
+                <button v-else @click="changeEntered(guest, '1')" type="button" class="button">
                     <img src="../../assets/icons/no-icon.svg">
                 </button>
 
@@ -73,6 +73,11 @@ export default {
             guests: [],
             guest: '',
             search: '',
+            name: '',
+            surname: '',
+            jmbag: '',
+            bought: '',
+            entered: '',
 
 
         }
@@ -112,9 +117,25 @@ export default {
                     }
                 })
         },
-        chooseGuest() {
-            console.log(guest.name);
-        }
+        chooseGuest(guest) {
+            console.log(guest);
+            this.guest = guest;
+            this.name = guest.name;
+            this.surname = guest.surname;
+            this.jmbag = guest.jmbag;
+            this.bought = guest.bought;
+            this.entered = guest.entered;
+        },
+        changeEntered(guest, changenum) {
+            axios.put('http://127.0.0.1:8000/guests/' + guest.id + '/',
+                { entered: changenum },
+                { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS } }
+            )
+                .then(() => {
+                    this.entered = changenum;
+                    this.guest.entered = changenum;
+                })
+        },
     }
 }
 </script>
