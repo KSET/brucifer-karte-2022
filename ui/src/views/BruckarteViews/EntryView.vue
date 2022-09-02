@@ -15,7 +15,7 @@
         </div>
         <div class="grid-item grid1-item2">
             <button class="person" v-for="guest in guests" :key="guest.id" @click="chooseGuest(guest)">
-                <p>{{  guest.name  }} {{  guest.surname  }}</p>
+                <p><strong>{{  guest.name  }} {{  guest.surname  }}</strong></p> 
                 <p>{{  guest.tag  }} </p>
             </button>
         </div>
@@ -31,19 +31,19 @@
                 <input v-if="this.jmbag != ''" id="inputfield" readonly type="text" v-model="jmbag">
 
                 <h1 v-if="this.jmbag != ''" id="textfield">Karta </h1>
-                <button v-if="this.jmbag != '' && this.bought == '1'" id="button" @click="changebought(guest, '0')">
+                <button v-if="this.jmbag != '' &&  this.bought == '1'" class="button2-yes" @click="changeBought(guest, '0')">
                     <img src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button id="button" v-if="this.jmbag != '' && this.bought == '0'" @click="changebought(guest, '1')">
+                <button class="button2-no" v-if="this.jmbag != '' && this.bought == '0'" @click="changeBought(guest, '1')">
                     <img id="image1" src="../../assets/icons/no-icon.svg">
                 </button>
 
                 <h1 id="textfield">Ulaz </h1>
 
-                <button v-if="this.entered == '1'" type="button" class="button" @click="changeEntered(guest, '0')">
+                <button v-if="this.entered == '1'" type="button" class="button2-yes" @click="changeEntered(guest, '0')">
                     <img src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button v-else @click="changeEntered(guest, '1')" type="button" class="button">
+                <button v-else @click="changeEntered(guest, '1')" type="button" class="button2-no">
                     <img src="../../assets/icons/no-icon.svg">
                 </button>
 
@@ -94,7 +94,6 @@ export default {
     },
     methods: {
         searchGuest() {
-            console.log(this.selectedTag);
             axios.get('http://127.0.0.1:8000/guests/?search=' + this.search + ' ' + this.selectedTag + "&search_fields=tag&search_fields=name&search_fields=surname",)
                 .then(response => {
                     if (this.search != '' && this.search.length > 2) {
@@ -118,7 +117,6 @@ export default {
                 })
         },
         chooseGuest(guest) {
-            console.log(guest);
             this.guest = guest;
             this.name = guest.name;
             this.surname = guest.surname;
@@ -136,11 +134,22 @@ export default {
                     this.guest.entered = changenum;
                 })
         },
+        changeBought(guest, changenum) {
+            axios.put('http://127.0.0.1:8000/guests/' + guest.id + '/',
+                { bought: changenum },
+                { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS } }
+            )
+                .then(() => {
+                    this.bought = changenum;
+                    this.guest.bought = changenum;
+                })
+        },
     }
 }
 </script>
 
 <style>
+
 .grid1-container {
     display: grid;
     grid-template-columns: auto 34.47%;
@@ -200,6 +209,38 @@ export default {
 
 .person {
     display: block;
+    width: 100%;
+    box-sizing: border-box;
+background-color: white;
+border-bottom: 1px solid #000000;
+}
+
+.menu-item{
+    width: 35%;
+}
+
+.p{
+    font-size: 16px;
+}
+
+.button2-yes {
+    box-sizing: border-box;
+
+    width: 50%;
+
+
+    background: #000000;
     border: 1px solid #000000;
+    border-radius: 6px;
+}
+
+.button2-no{
+    box-sizing: border-box;
+    width: 50%;
+
+
+border: 1px solid #000000;
+border-radius: 6px;
+
 }
 </style>

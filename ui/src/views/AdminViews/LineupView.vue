@@ -1,22 +1,11 @@
 <template>
   <div class="lineupp">
-    <br>
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">Lineup</div>
-          <div class="card-body">
-            <lineup-add></lineup-add>
-            <lineup-table></lineup-table>
-          </div>
-        </div>
-      </div>
-    </div>
+    <h1 class="page-title7">Izvođači</h1>
+    <button class="icon7" @click="this.$router.push({ name: '/bruckarte/lineup-add/0' })">
+    <img  src="../../assets/icons/add-icon.svg" ></button>
+    <lineup-table ></lineup-table>
   </div>
 </template>
-
-
-
 
 <script>
 import LineupAdd from "../../components/Lineup/LineupTable.vue"
@@ -32,5 +21,35 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
+
+.page-title7{
+  position: absolute;
+left: 2.83%;
+right: 68.55%;
+top: 14.71%;
+bottom: 80.6%;
+
+font-family: 'Montserrat';
+font-style: normal;
+font-weight: 700;
+font-size: 32px;
+line-height: 36px;
+/* identical to box height, or 112% */
+
+letter-spacing: -0.015em;
+
+color: #000000;}
+
+.icon7{
+  position: absolute;
+left: 19.73%;
+right: 74.41%;
+top: 13.15%;
+bottom: 79.04%;
+border: 0px;
+    background-color: #ffffffff;
+}
+
+
 </style>

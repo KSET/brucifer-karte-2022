@@ -2,9 +2,11 @@
   <div class="grid">
     <article v-for="sponsor in sponsors" :key="sponsor.id">
     <img v-bind:src="sponsor.image">
-    <div class="text">
-      <h3>{{sponsor.id}} ; {{sponsor.name}}</h3>
-      <button @click="deleteTag(sponsor)" class="btn btn-primary" id="gumbard">  <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
+    <div>
+      <h3> {{sponsor.name}}</h3>
+      <button @click="deleteTag(sponsor)" class="button10" >  <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
+      <button @click="deleteTag(sponsor)" class="button11" >  <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
+      <button @click="deleteTag(sponsor)" class="button12" >  <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
     </div>
     </article>
 
@@ -53,6 +55,9 @@ export default {
 
 <style>
 .grid { 
+  position: absolute;
+  left: 2.83%;
+  top: 26.3%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 20px;
@@ -60,19 +65,26 @@ export default {
   }
 .grid > article {
   border: 1px solid #ccc;
-  box-shadow: 2px 2px 6px 0px  rgba(0,0,0,0.3);
 }
 .grid > article img {
   max-width: 100%;
 }
-.text {
-  padding: 0 20px 20px;
+
+.button10{
+left: 4.1%;
+top: 60.29%;
+
 }
-.text > button {
-  background: gray;
-  border: 0;
-  color: white;
-  padding: 10px;
-  width: 100%;
-  }
+
+.button11{
+
+  bottom:0%;
+  left: 0%;
+}
+
+.button12{
+
+  bottom:90%;
+  left: 90%;
+}
 </style>
