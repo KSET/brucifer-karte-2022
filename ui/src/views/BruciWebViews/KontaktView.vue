@@ -1,5 +1,5 @@
 <template>
-  <div id="kontakt">
+  <div class="page-container">
     <br>
     <p>slay</p>
   </div>
@@ -14,8 +14,11 @@ name: 'KontaktView',
 </script>
 
 <style>
-#page-container{  
-    background-image: url("../../assets/bg/default/bg-desktop.svg");
+.page-container{ 
+  position: absolute;
+  height: 100%;
+  width: 100%;
+    background-image: var(--background-default);;
   background-repeat: no-repeat;
     background-size: cover;
     background-color: #F6BB96;;

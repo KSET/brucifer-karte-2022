@@ -1,4 +1,5 @@
 <template>
+<div class="page-containerr"> 
 <div class="lineup"> 
     <div v-for="user in users" :key="user.id">
             <div class="artist" title="{{ user.name }}">
@@ -8,14 +9,18 @@
                 </div>
                 <h3>{{ user.name }}</h3>
             </div>
-    </div>
-    </div>
+    </div>  </div>
+
+</div>
 </template>
 
 <script>
+import Footer from '../../components/NavbarAndFooter/Footer.vue'
+
 import axios from 'axios'
 export default {
   name: 'UsersTable',
+  components: {Footer},
   props: {
     msg: String
   },
@@ -74,20 +79,15 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Raleway&family=Righteous&display=swap');
-.lineup{  
-    background-image: url("../../assets/bg/default/bg-desktop.svg");
-  background-repeat: no-repeat;
+#page-container{  
+    heigth: 200vh;
+    background-image: var(--background-default);
+  background-repeat: repeat;
     background-size: cover;
     background-color: #F6BB96;
 }
 
-@media screen and (max-width: 1280px) {
-    .lineup{  
-    background-image: url("../../assets/bg/default/bg-tablet.svg");
-  background-repeat: no-repeat;
-    background-size: cover;
-}
-}
+
 h3,
 h4 {
     font-family: 'Righteous', cursive;
@@ -98,8 +98,12 @@ h4 {
         }
 
         .lineup {
+            background-image: var(--background-default);
+            background-size: cover;
+            position:absolute;
+            left: 5.5%;
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             grid-row-gap: 3.45rem;
             grid-column-gap: 5.25rem;
             will-change: grid-row-gap, grid-column-gap;
@@ -141,7 +145,7 @@ h4 {
             font-style: normal;
             font-weight: normal;
             font-size: 2.25rem;
-            color: var(--bruc-white);
+            color: var(--artist-name-color);;
             text-transform: uppercase;
             margin-top: .3em;
             will-change: font-size;
@@ -209,7 +213,7 @@ h4 {
 
         .lineup {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             grid-row-gap: 3.45rem;
             grid-column-gap: 5.25rem;
             will-change: grid-row-gap, grid-column-gap;
@@ -250,7 +254,7 @@ h4 {
             font-style: normal;
             font-weight: normal;
             font-size: 2.25rem;
-            color: var(--bruc-white);
+            color: var(--artist-name-color);;
             text-transform: uppercase;
             margin-top: .3em;
             will-change: font-size;

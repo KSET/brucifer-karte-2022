@@ -10,7 +10,7 @@ name: 'PravilaView',
 
 <style>
 #page-container{  
-    background-image: url("../../assets/bg/default/bg-desktop.svg");
+    background-image: var(--background-default);;
   background-repeat: no-repeat;
     background-size: cover;
     background-color: #F6BB96;;

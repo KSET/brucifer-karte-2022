@@ -116,14 +116,14 @@ bottom: 20%;
 
 font-family: 'Antonio';
 font-style: normal;
-font-weight: 700;
+font-weight: 400;
 font-size: 14px;
 line-height: 36px;
 /* identical to box height, or 686% */
 
 text-align: center;
 letter-spacing: -0.022em;
-text-decoration-line: underline;
+color: #000000;
 
 color: #000000;
 }

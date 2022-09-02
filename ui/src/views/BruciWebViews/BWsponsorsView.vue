@@ -73,20 +73,16 @@ export default {
 
 
 <style>
-:root{  
-    background-image: url("../../assets/bg/default/bg-desktop.svg");
-  background-repeat: no-repeat;
+.sponsors{  
+  position: absolute;
+  height: 100%;
+  width: 100%;
+    background-image: var(--background-default);
     background-size: cover;
-    background-color: #F6BB96;;
+    background-color:  var(--background-color);
 }
 
-@media screen and (max-width: 1280px) {
-  :root{  
-    background-image: url("../../assets/bg/default/bg-tablet.svg");
-  background-repeat: no-repeat;
-    background-size: cover;
-}
-}
+
     .contents {
         padding-top: 3.14159em;
     }
