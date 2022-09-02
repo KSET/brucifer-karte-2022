@@ -1,6 +1,5 @@
 <template>
-<div class="page-container">
-<img src="../../assets/bg/home/bg-desktop.svg">
+<div class="page-container" >
 </div>
 </template>
 
@@ -24,7 +23,7 @@ name: 'Naslovnica',
 </script>
 
 <style>
-.page-containter{  
+:root{  
     background-image: url("../../assets/bg/home/bg-desktop.svg");
     background-repeat: no-repeat;
     background-size: cover;

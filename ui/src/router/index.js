@@ -172,10 +172,11 @@ router.beforeEach((to, from, next) => {
   var allowedRoutesForprivilege3= ["home","login","logout","guests","",undefined]
   var allowedRoutesForprivilege4= ["home","login","logout","guest_tag","guests","",undefined]
 
-  if((Date.now()/1000)>store.state.tokenExp && to.name!='logout'){
-    next({path: '/bruckarte/logout'});
-  }else{
+  
   if((String(to.path).split("/"))[1]=="bruckarte"){
+    if((Date.now()/1000)>store.state.tokenExp && to.name!='logout'){
+      next({path: '/bruckarte/logout'});
+    }else{
     if(store.state.id=='' && to.name!='login'){
       next({path: '/bruckarte/login'});
     }else if((store.state.privilege==0 && to.name!='login')){
@@ -192,10 +193,10 @@ router.beforeEach((to, from, next) => {
       next({path: '/bruckarte/home'});
     }else{
       next();
-    }
+    }}
   }else{
     next();
-  }}
+  }
   
 })
 

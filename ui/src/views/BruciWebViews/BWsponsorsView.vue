@@ -73,7 +73,7 @@ export default {
 
 
 <style>
-#page-container{  
+:root{  
     background-image: url("../../assets/bg/default/bg-desktop.svg");
   background-repeat: no-repeat;
     background-size: cover;
@@ -81,7 +81,7 @@ export default {
 }
 
 @media screen and (max-width: 1280px) {
-#page-container{  
+  :root{  
     background-image: url("../../assets/bg/default/bg-tablet.svg");
   background-repeat: no-repeat;
     background-size: cover;

@@ -74,15 +74,15 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Raleway&family=Righteous&display=swap');
-#page-container{  
+.lineup{  
     background-image: url("../../assets/bg/default/bg-desktop.svg");
   background-repeat: no-repeat;
     background-size: cover;
-    background-color: #F6BB96;;
+    background-color: #F6BB96;
 }
 
 @media screen and (max-width: 1280px) {
-#page-container{  
+    .lineup{  
     background-image: url("../../assets/bg/default/bg-tablet.svg");
   background-repeat: no-repeat;
     background-size: cover;
