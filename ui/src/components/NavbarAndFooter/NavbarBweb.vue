@@ -26,8 +26,11 @@
         <router-link  id="navbar-item8" to="/kontakt">
           Kontakt
         </router-link>
-    
-        <img id="nav-burger" src="../../assets/icons/nav-burger.svg">
+
+        <div v-if="this.showNav==true" class="navi">slay</div>
+
+        <button type="button" @click="changenav">
+        <img id="nav-burger" src="../../assets/icons/nav-burger.svg"></button>
   </div>
 </template>
 
@@ -68,6 +71,10 @@ export default {
         window.location = window.location + '#loaded';
         window.location.reload();
       }
+    },
+    changenav(){
+      this.showNav=!this.showNav;
+      console.log(this.showNav);
     }
   }
 }
@@ -210,7 +217,10 @@ color: #000000;
 }
 
 #nav-burger{
-  display: none;
+}
+
+.navi{
+  height: 100vh;
 }
 
 

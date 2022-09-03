@@ -55,16 +55,7 @@ main {
 }
 
 
-.contents p + h2,
-.contents p + h3,
-.contents p + h4,
-.contents p + h5,
-.contents p + h6,
-.contents p + h1 {
-    margin-top: 6rem;
-    transition: margin-top .3s ease;
-    will-change: margin-top;
-}
+
 
 @media screen and (max-width: 980px) {
     .contents p + h1 {

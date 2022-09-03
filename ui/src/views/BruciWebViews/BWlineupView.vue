@@ -79,7 +79,7 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Raleway&family=Righteous&display=swap');
-#page-container{  
+.page-container{  
     heigth: 200vh;
     background-image: var(--background-default);
   background-repeat: repeat;
@@ -98,6 +98,7 @@ h4 {
         }
 
         .lineup {
+            margin-left: 5%;
             background-image: var(--background-default);
             background-size: cover;
             position:absolute;
