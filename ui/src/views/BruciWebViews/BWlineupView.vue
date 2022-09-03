@@ -101,8 +101,10 @@ h4 {
             background-image: var(--background-default);
             background-size: cover;
             position:absolute;
-            left: 5.5%;
+            justify-content: space-around;
+            width: 100%;
             display: grid;
+            grid-column-start: 5.5%;
             grid-template-columns: repeat(3, minmax(0, 1fr));
             grid-row-gap: 3.45rem;
             grid-column-gap: 5.25rem;
@@ -136,7 +138,7 @@ h4 {
 
         .artist {
             background: rgba(0, 0, 0, .3);
-            border-radius: 18px;
+            
             padding: 15px 30px;
         }
 
@@ -245,7 +247,7 @@ h4 {
 
         .artist {
             background: rgba(0, 0, 0, .3);
-            border-radius: 18px;
+            
             padding: 15px 30px;
         }
 
