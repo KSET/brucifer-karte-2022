@@ -16,7 +16,7 @@ import Vuex from 'vuex';
 import VueNavigationBar from 'vue-navigation-bar';
 import 'vue-navigation-bar/dist/vue-navigation-bar.css';
 import "./../node_modules/bulma/css/bulma.css";
-
+import emailjs from 'emailjs-com';
 
 const app= createApp(App).use(store).use(router)
 
@@ -24,6 +24,7 @@ const app= createApp(App).use(store).use(router)
 app.component('downloadCsv', JsonCSV).component('VueJwtDecode', VueJwtDecode)
 
 app.use(Vuex)
+app.use(emailjs)
 
 app.component('VueNavigationBar', VueNavigationBar);
 

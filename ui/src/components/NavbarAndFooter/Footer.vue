@@ -2,7 +2,7 @@
     <div id="footer">
         <p id="text1"> KSET © Copyright 2022. All Rights Reserved.</p>
 
-        <router-link id="text2" to="/pravila-ponašanja">
+        <router-link id="text2" to="/pravila-ponasanja">
           Pravila ponašanja
         </router-link>
         
@@ -19,10 +19,9 @@ export default {
 
 #footer{
 position: absolute;
-height: 3.75rem;
-width: 100%;
-left: 0;
   bottom: 0;
+  width: 100%;
+  height: 2.5rem;      
 
 background: #F6BB96;}
 

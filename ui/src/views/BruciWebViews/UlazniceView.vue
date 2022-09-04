@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container">
+  <div class="page-containery">
     <main>
       <div class="contents">
         <section>
@@ -50,9 +50,9 @@ export default {
 </script>
 
 <style>
-.page-container {
+.page-containery {
+  display: flex;
   background-image: var(--background-default);
-  ;
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -83,7 +83,6 @@ p {
 }
 
 .contents{
-  margin-top: 5%;
   margin-left: 4.5%;
   margin-right: 4.5%;
 }

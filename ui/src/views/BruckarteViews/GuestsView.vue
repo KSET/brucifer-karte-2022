@@ -32,6 +32,7 @@
 
 
 <script>
+import emailjs from 'emailjs-com';
 import GuestsAdd from '../../components/Guests/GuestsAdd.vue'
 import GuestsTable from '../../components/Guests/GuestsTable.vue'
 import axios from 'axios'
@@ -84,7 +85,22 @@ export default {
       )
         .then(() => {
           guest.bought=changenum;
+          if(changenum==1){
+            this.sendConfMail(guest);
+          }
         })
+    }, 
+    sendConfMail(guest){
+      var jmbagslice = guest.jmbag;
+      if(jmbagslice.slice(0,2)=="00"){
+        jmbagslice= jmbagslice.slice(4,9);
+      }else{
+        jmbagslice=jmbagslice.slice(2,7);
+      }
+
+      var email= guest.name[0].toLowerCase() + guest.surname[0].toLowerCase() + jmbagslice +"@fer.hr";
+
+      console.log(email);
     },
     searchGuest() {
       axios.get('http://127.0.0.1:8000/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=jmbag",)

@@ -29,8 +29,6 @@
 
         <div v-if="this.showNav==true" class="navi">slay</div>
 
-        <button type="button" @click="changenav">
-        <img id="nav-burger" src="../../assets/icons/nav-burger.svg"></button>
   </div>
 </template>
 
@@ -45,7 +43,13 @@ export default {
   data() {
     return {
       showNav: false,
+      page: '',
     }
+  },
+  mounted() {
+    this.page = this.$route.path;
+console.log(this.page);
+
   },
   computed: {
     privilege() {

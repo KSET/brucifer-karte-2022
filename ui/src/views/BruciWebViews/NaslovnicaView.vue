@@ -1,12 +1,16 @@
 <template>
 <div class="page-container">
 <img src="../../assets/bg/home/bg-desktop.svg">
+<Footer></Footer>
 </div>
 </template>
 
 <script>
+  import Footer from '../../components/NavbarAndFooter/Footer.vue'
+
 export default {
 name: 'Naslovnica',
+conponenets:  {Footer},
   props: {
     msg: String
   },
@@ -46,10 +50,13 @@ name: 'Naslovnica',
   --background-home-image : url("../../assets/bg/home/bg-tablet.svg");
 }}
 .page-containter{  
+  position: relative;
     background-image: --background-image;
     background-repeat: no-repeat;
     background-size: cover;
     background-color: #F6BB96;
 }
+
+img{padding-bottom: 2.5rem;}
 
 </style>
