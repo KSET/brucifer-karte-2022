@@ -1,6 +1,5 @@
 <template>
   <div id="admin-navbar">
-
         <router-link id="navbar-title" to="/bruckarte/">
           #BRUCIFER
         </router-link>
@@ -55,7 +54,6 @@ export default {
   },
   mounted(){
     this.route = this.$route.path;
-    console.log(this.route);
   },
   methods: {
     toggleBurger() {
@@ -165,97 +163,7 @@ bottom: 26.67%;
   font-weight: 800;
 }
 
-@media screen and (max-width: 900px) {
 
-#admin-navbar{
-bottom: 96.15%;
-}
-  
-
-#navbar-item1{
-left: 52.42%;
-right: 42.26%;
-top: 2.7%;
-bottom: 0%;
-
-}
-
-#navbar-item2{
-left: 67%;
-top: 2%;
-bottom: 0%;
-}
-
-#navbar-item3{
-left: 80.2%;
-right: 15.81%;
-top: 23%;
-bottom: 96.78%;
-
-
-}
-
-#navbar-icon2{
-left: 92.18%;
-right: 3.83%;
-top: 23%;
-bottom: 16.22%;
-}
-
-#navbar-title{
-position: absolute;
-left: 2.73%;
-right: 68.65%;
-top: 20%;
-bottom: 20%;
-
-font-family: 'Montserrat';
-font-style: normal;
-font-weight: 700;
-font-size: 32px;
-line-height: 36px;
-/* identical to box height, or 112% */
-
-letter-spacing: -0.015em;
-
-color: #000000;
-}
-
-@media screen and (max-width: 414px) {
-
-#admin-navbar{
-bottom: 95.78%;}
-  
-
-#navbar-item1{
-display: none;
-
-}
-
-#navbar-item2{
-display: none;
-}
-
-#navbar-item3{
-left: 80.2%;
-right: 15.81%;
-top: 23%;
-bottom: 96.78%;
-
-
-}
-
-#navbar-icon2{
-left: 92.18%;
-right: 3.83%;
-top: 23%;
-bottom: 16.22%;
-}}
-
-
-
-
-}
 </style>
 
 

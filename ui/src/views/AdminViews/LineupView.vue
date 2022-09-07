@@ -1,8 +1,10 @@
 <template>
   <div class="lineupp">
     <h1 class="page-title7">Izvođači</h1>
-    <button class="icon7" @click="this.$router.push({ name: '/bruckarte/lineup-add/0' })">
-    <img  src="../../assets/icons/add-icon.svg" ></button>
+    <router-link class="icon7" to="/bruckarte/lineup-add/0">
+          <img src="../../assets/icons/add-icon.svg">
+    </router-link>
+
     <lineup-table ></lineup-table>
   </div>
 </template>

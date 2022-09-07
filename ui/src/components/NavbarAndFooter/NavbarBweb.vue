@@ -48,8 +48,6 @@ export default {
   },
   mounted() {
     this.page = this.$route.path;
-console.log(this.page);
-
   },
   computed: {
     privilege() {
@@ -78,7 +76,6 @@ console.log(this.page);
     },
     changenav(){
       this.showNav=!this.showNav;
-      console.log(this.showNav);
     }
   }
 }

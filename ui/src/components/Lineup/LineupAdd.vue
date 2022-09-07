@@ -14,9 +14,9 @@
       <input id="inputfield3" type="file" accept="image/*" ref="file" @change="selectImage">
 
 
-      <img id="image-preview" class="preview my-3" :src="previewImage" alt="" />
+      <img class="image-preview" :src="previewImage" alt="" />
       <button v-if="(this.slug == '0')" id="submit-button" class="btn btn-primary">Dodaj</button>
-      <button v-else id="submit-button" class="btn btn-primary">Spremi promjene</button>
+      <button v-else class="submit-button" >Spremi promjene</button>
     </form>
   </div>
 </template>
@@ -61,7 +61,6 @@ export default {
   },
 
   mounted() {
-    console.log(this.$route.params.slug)
     this.slug = this.$route.params.slug;
     if (this.slug != '0') {
       axios.get('http://127.0.0.1:8000/lineup/?search=' + this.slug,)
@@ -69,11 +68,15 @@ export default {
           this.lineup = response.data;
           this.lineupp = this.lineup[0];
           this.name = this.lineupp.name;
-          this.url = this.lineupp.url;
           this.previewImage = this.lineupp.image;
 
         })
 
+    }else{
+      axios.get('http://127.0.0.1:8000/lineup/',)
+        .then(response => {
+          this.lineup = response.data;
+        })
     }
 
   },
@@ -88,7 +91,7 @@ export default {
     },
     postGuest() {
 
-
+      
       var ids = [];
 
       this.lineup.forEach(element => {
@@ -103,38 +106,26 @@ export default {
       if (this.nextId == '') {
         this.nextId = ids.length;
       }
-      const formData = new FormData();
-      console.log(this.name)
-      console.log(this.url)
-      console.log(formData)
-      formData.append('name', this.name);
-      formData.append('url', this.url);
-
-      console.log(this.currentImage)
-
-      console.log(this.nextId)
-
-      let fd = new FormData();
-      fd.appent("int", this.nextId);
-      fd.append("file", this.currentImage);/* 
-      return axios.post("http://127.0.0.1:8000/lineup/", fd, {
-      headers: {
-        "Content-Type": "multipart/form-data"
-      },
       
-    });*/
+      var formData = new FormData();
+
+      console.log(this.nextId);
+
+      formData.append("id", this.nextId);
+      formData.append("name", this.name);
+      formData.append("slug", "asdasd");
+      //formData.append("image", this.currentImage);
+    
+      console.log(formData.get("id"));
 
       axios.post('http://127.0.0.1:8000/lineup/',
-        { id: this.nextId, name: this.name, url: this.url, image: this.currentImage },
-        { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS }, },
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
+        { formData},
+        { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS }, },{
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }}
       )
         .then(() => {
-          location.reload();
         })
     }
   }
@@ -143,7 +134,17 @@ export default {
 
 
 <style>
+  .image-preview {
+    box-sizing: border-box;
 
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    left: 776px;
+    top: 229px;
+
+    border: 1px solid #000000;
+}
 </style>
 
 
