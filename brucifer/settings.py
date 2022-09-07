@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'bruc.apps.BrucConfig',
     'rest_framework',
     'corsheaders',
+    'django_seed',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True

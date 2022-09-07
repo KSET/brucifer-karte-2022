@@ -1,42 +1,26 @@
 version: '3.3'
 
 services:
-  db:
-    image: postgres
-    container_name: docker-django-vue-db
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: db
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
-
   django:
     build:
       context: .
       dockerfile: Dockerfile     
     container_name: docker-django-vue-backend  
-    environment:
-      POSTGRES_NAME: postgres
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_HOST: db
     volumes:
       - .:/app
+      - .db_data/db.sqlite3:/db.sqlite3
     ports:
-      - "8002:8000"
-    depends_on:
-      - db
+      - "8000:8000"
+
 
   vue:
     build:
-      context: .
-      dockerfile: ui/Dockerfile
+      context: ./ui
+      dockerfile: Dockerfile
     container_name: docker-django-vue-frontend
     volumes:
       - .:/app
     ports:
-      - "8082:8080"
+      - "8080:8080"
     depends_on:
       - django
