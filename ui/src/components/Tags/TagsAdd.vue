@@ -31,7 +31,7 @@ export default {
     }
   },
   created() {
-    console.log(process.env.VUE_APP_AUTH_USER);
+    console.log(process.env.VUE_APP_DJANGO_USER);
     axios.get('http://127.0.0.1:8000/tags/',)
     .then(response => {
       this.tags =response.data;
@@ -55,10 +55,10 @@ export default {
       }
 
 
-      console.log(process.env.VUE_APP_AUTH_USER);
+      console.log(process.env.VUE_APP_DJANGO_USER);
       axios.post('http://127.0.0.1:8000/tags/',
       {id:this.nextId,name:this.name},
-      {auth:{username:process.env.VUE_APP_AUTH_USER,password:process.env.VUE_APP_AUTH_PASS}}
+      {auth:{username:process.env.VUE_APP_DJANGO_USER,password:process.env.VUE_APP_DJANGO_PASS}}
       )
       .then(()=>{
         location.reload();

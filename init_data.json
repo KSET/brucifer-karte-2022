@@ -1,0 +1,21 @@
+[
+    {
+        "model":"bruc.Users",
+        "id":1,
+        "fields":{
+            "name":"Pavle Ergović",
+            "email":"pavle.ergovic@kset.org",
+            "privilege":"1"
+        }
+    },
+    {
+        "model":"bruc.Users",
+        "id":1,
+        "fields":{
+            "name":"Brucifer",
+            "email":"brucifer@kset.org",
+            "privilege":"1"
+        }
+    }
+   
+]
