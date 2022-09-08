@@ -38,7 +38,7 @@ export default {
   },
     deleteTag(tag){
       axios.delete('http://127.0.0.1:8000/lineup/'+tag.id+'/',
-      {auth:{username:process.env.VUE_APP_AUTH_USER,password:process.env.VUE_APP_AUTH_PASS}}
+      {auth:{username:process.env.VUE_APP_DJANGO_USER,password:process.env.VUE_APP_DJANGO_PASS}}
       )
       .then(()=>{
         this.created();

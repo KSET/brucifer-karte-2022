@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile     
-    container_name: docker-django-vue-backend  
+    container_name: brucifer-backend  
     volumes:
       - .:/app
       - .db_data/db.sqlite3:/db.sqlite3
@@ -17,7 +17,7 @@ services:
     build:
       context: ./ui
       dockerfile: Dockerfile
-    container_name: docker-django-vue-frontend
+    container_name: brucifer-frontend
     volumes:
       - .:/app
     ports:

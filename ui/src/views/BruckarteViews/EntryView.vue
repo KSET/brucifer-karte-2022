@@ -127,7 +127,7 @@ export default {
         changeEntered(guest, changenum) {
             axios.put('http://127.0.0.1:8000/guests/' + guest.id + '/',
                 { entered: changenum },
-                { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS } }
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
             )
                 .then(() => {
                     this.entered = changenum;
@@ -137,7 +137,7 @@ export default {
         changeBought(guest, changenum) {
             axios.put('http://127.0.0.1:8000/guests/' + guest.id + '/',
                 { bought: changenum },
-                { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS } }
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
             )
                 .then(() => {
                     this.bought = changenum;

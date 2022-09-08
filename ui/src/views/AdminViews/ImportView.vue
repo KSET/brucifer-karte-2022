@@ -127,7 +127,7 @@ export default {
           this.idsguests.push(String(nextId));
           axios.post('http://127.0.0.1:8000/guests/',
             { id: obj.id, name: obj.name, surname: obj.surname, jmbag: obj.jmbag, tag: obj.tag, bought: obj.bought, entered: obj.entered },
-            { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS } }
+            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
 
           gosti.push(obj);
@@ -184,7 +184,7 @@ export default {
           this.idsusers.push(String(nextId));
           axios.post('http://127.0.0.1:8000/users/',
             { id: obj.id, name: obj.name, email: obj.email, privilege: obj.privilege },
-            { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS } }
+            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
 
           users.push(obj);

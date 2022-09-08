@@ -120,7 +120,7 @@ export default {
 
       axios.post('http://127.0.0.1:8000/lineup/',
         { formData},
-        { auth: { username: process.env.VUE_APP_AUTH_USER, password: process.env.VUE_APP_AUTH_PASS }, },{
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS }, },{
       headers: {
         "Content-Type": "multipart/form-data"
       }}
