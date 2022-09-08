@@ -3,7 +3,7 @@ FROM node:16
 WORKDIR /ui
 
 COPY package*.json ./
-RUN npm install --force
+RUN npm install 
 
 COPY . .
 
