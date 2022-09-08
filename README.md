@@ -1,7 +1,9 @@
 # brucifer-karte
 Brucifer karte 2022 (not finished)
 
-## Prerequisites
+# Local deploy
+
+### Prerequisites
 
 Before getting started you should have the following installed and running:
 
@@ -9,7 +11,7 @@ Before getting started you should have the following installed and running:
 -  Vue CLI 3 - [instructions](https://cli.vuejs.org/guide/installation.html)
 -  Python 3 - [instructions](https://wiki.python.org/moin/BeginnersGuide)
 
-## Setup Template
+### Setup Template
 
 ```
 git clone https://github.com/pavleerg/brucifer-karte.git
@@ -23,7 +25,7 @@ pip install -m ./requirements.txt
 python manage.py migrate
 ```
 
-## Running Development Servers
+### Running Development Servers
 
 ```
 python manage.py runserver
@@ -33,12 +35,15 @@ Open another terminal in the repo directory:
 cd ui
 npm run serve
 ```
+### Adjusting the environment variables in django
 
-## Adjusting the environment variables
+- in the root directory, rename the .env.example to .env and adjust your enivronment variables
 
-- in the ui directory, rename the .env.example to .env and adjust your enivronment variables
+### Adjusting the environment variables in vue
 
-## Adding an admin user to be able to access the site
+- in the ui directory, rename the .env.example to .env and adjust your enivronment variables to the same variables you enetered in the root .env file
+
+### Adding an admin user to be able to access the site
 
 - got to the development server, the rest api service at http://127.0.0.1:8000/
 - click on users
@@ -47,7 +52,28 @@ npm run serve
 - set the privilege to "1" 
 - be sure to set the same email you are gonna use for the google login
 
-## Logging in the app
+### Logging in the app
 
 - go to http://localhost:8080/bruckarte/login/#loaded
 - logg in with the email that you previously added to your admin user
+
+
+# Docker deploy
+### Setup Template
+
+```
+git clone https://github.com/pavleerg/brucifer-karte.git
+cd brucifer-karte
+```
+### Adjusting the environment variables in django
+
+- in the root directory, rename the .env.example to .env and adjust your enivronment variables
+
+### Adjusting the environment variables in vue
+
+- in the ui directory, rename the .env.example to .env and adjust your enivronment variables to the same variables you enetered in the root .env file
+
+### Run docker-compose
+```
+docker-compose up -d --build
+```
