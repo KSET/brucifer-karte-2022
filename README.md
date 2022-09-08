@@ -1,6 +1,8 @@
 # brucifer-karte
 Brucifer karte 2022 (not finished)
 
+##Local deploy
+
 ## Prerequisites
 
 Before getting started you should have the following installed and running:
