@@ -33,10 +33,13 @@ Open another terminal in the repo directory:
 cd ui
 npm run serve
 ```
+## Adjusting the environment variables in django
 
-## Adjusting the environment variables
+- in the root directory, rename the .env.example to .env and adjust your enivronment variables
 
-- in the ui directory, rename the .env.example to .env and adjust your enivronment variables
+## Adjusting the environment variables in vue
+
+- in the ui directory, rename the .env.example to .env and adjust your enivronment variables to the same variables you enetered in the root .env file
 
 ## Adding an admin user to be able to access the site
 
