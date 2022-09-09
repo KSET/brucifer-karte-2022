@@ -98,6 +98,7 @@ export default {
 </script>
 <style>
 .page-title{
+  vertical-align: middle;
   display: inline-block;
   padding-top: 3%;
   padding-bottom: 3%;

@@ -58,7 +58,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 .sidenav {
     border-right: 1px solid #000000;
     margin-top: 3.75rem;

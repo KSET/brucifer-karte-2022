@@ -2,32 +2,35 @@
   <div class="users">
     <Sidebar />
     <div class="admin-page-container">
-      <h1 class="page-title">Korisnici</h1>
-        <h1 >Search: </h1>
-        <input @input="searchUser" type="form" id="searchgumb" v-model="search">
-        <div class=row>
-          <table id="guests">
-            <tbody>
-              <tr v-for="user in users" :key="user.id">
-                <td >{{user.name}} <br> {{user.email}}</td>
-                <td >{{user.privilege}}</td>
-                <td >
-                  <button @click="changeprivilege(user,'1')" class="btn btn-primary" id="gumbar"> 1</button>
-                  <button @click="changeprivilege(user,'2')" class="btn btn-primary" id="gumbar"> 2</button>
-                  <button @click="changeprivilege(user,'3')" class="btn btn-primary" id="gumbar"> 3</button>
-                  <button @click="changeprivilege(user,'4')" class="btn btn-primary" id="gumbar"> 4</button>
-                  <button @click="deleteUser(user)" class="btn btn-primary" id="gumbard">
-                    <font-awesome-icon icon="fa-solid fa-trash-can" />
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <img class="search-icon" src="@/assets/icons/search-icon.svg">
+      <div class="page-header user-page">
+        <h1 class="page-title user-title">Korisnici</h1>
+        <button class="button-icon"> <img class="add-icon user-icon" src="@/assets/icons/add-icon.svg"></button>
+        <input @input="searchUser" type="text" class="user-search" placeholder="Unesi ime ili prezime ili e-mail"
+          v-model="search" style="display: inline-block; ">
+      </div>
+      <div class=row>
+        <table id="guests">
+          <tbody>
+            <tr v-for="user in users" :key="user.id">
+              <td v-bind:style= "[(user.privilege=='0') ? {color:'red'}: { color:'black'}]">{{user.name}} <br> {{user.email}}</td>
+              <td></td>
+              <td><button class="button-priv" v-bind:style= "[(user.privilege=='1') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"  @click="changeprivilege(user,'1')" >Admin</button></td>
+              <td><button class="button-priv" v-bind:style= "[(user.privilege=='2') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]" @click="changeprivilege(user,'2')" >Ulaz</button></td>
+              <td> <button class="button-priv" v-bind:style= "[(user.privilege=='3') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]" @click="changeprivilege(user,'3')" >Karte</button></td>
+              <td><button class="button-priv" v-bind:style= "[(user.privilege=='4') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]" @click="changeprivilege(user,'4')" >Ulaz <br>+Karte</button></td>
+              <td><button class="button-priv" @click="deleteUser(user)" >
+                <img src="@/assets/icons/trash-icon.svg">
+              </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
 
-        </div>
       </div>
     </div>
+  </div>
 
 </template>
 
@@ -94,17 +97,45 @@ export default {
 
 
 <style >
-#guests td,
-#guests th {
-  border: 0px;
+
+.page-header.user-page{
   border-bottom: 0.5px solid black;
-  padding: 8px;
-  text-align: left;
-  vertical-align:middle;
+}
+
+.page-title.user-title {
+  padding-right: 1%;
+  vertical-align: middle;
+}
+
+.user-search {
+  padding-left: 40px;
+  margin-left: 7%;
+  width: 35%;
+  height: 40px;
+  vertical-align: middle;
+  height: 40px;
   font-family: 'Montserrat';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: left;
   font-size: 16px;
+  
+}
+
+.add-icon.user-icon {
+  vertical-align: middle;
+}
+
+.search-icon {
+  position: absolute;
+  top: 8.4%;
+  left: 24.7%;
+}
+
+
+.button-priv{
+  position: relative;
+  border: 0.5px solid black;
+  background-color: white;
+  height: 70px;
+  width: 70px;
+
 }
 </style>

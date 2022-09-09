@@ -2,11 +2,13 @@
   <div class="tagss">
     <Sidebar />
     <div class="admin-page-container">
-      <h1 class="page-title">Tagovi</h1>
-      <form style="display: inline-block; width: 40%" @submit="postTag">
-        <input required type="text" id="inputtagname" v-model="name" placeholder="Unesi ime taga">
-        <button class="button-icon add-icon"> <img class="add-icon" src="@/assets/icons/add-icon.svg"></button>
+      <div class="page-header">
+      <h1 class="page-title" >Tagovi</h1>
+      <form style="display: inline-block; width: 40%; vertical-align: middle;" @submit="postTag">
+        <input required type="text" class="inputtag"  v-model="name" placeholder="Unesi ime taga">
+        <button class="button-icon"> <img class="add-icon" src="@/assets/icons/add-icon.svg"></button>
       </form>
+    </div>
       <tags-table></tags-table>
     </div>
   </div>
@@ -70,21 +72,25 @@ export default {
 </script>
 
 
-<style scoped>
+<style >
 #title0 {
   display: inline-block;
 }
 
-input {
+
+
+.inputtag{
   height: 40px;
-  font-family: 'Montserrat';
-  vertical-align: top;
+  text-align: left;
   width:80%;
+  vertical-align: top;
+  font-family: 'Montserrat';
+  
+  
 font-size: 16px;
-text-align: left;
 }
 
-img{
+.add-icon{
   padding-top: 2px;
   padding-left: 5px;
   height: 40px;

@@ -134,7 +134,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
 #signin_button {
     text-align: center;
     justify-content: center;
