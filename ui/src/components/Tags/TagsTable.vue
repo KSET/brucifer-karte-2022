@@ -1,5 +1,5 @@
 <template>
-  <div id="tags-table">
+  <div class="tags-table">
      <div class=row>
             <table id="guests">
               <thead>
@@ -9,13 +9,13 @@
               <th>Ulaz</th>
               <th>Opcije</th>
               </thead>
-              <tbody>
-                <tr v-for="tag in tags" :key="tag.id">
+              <tbody >
+                <tr style="overflow:auto; height=200px;" v-for="tag in tags" :key="tag.id">
                   <td>{{tag.name}}</td>
                   <td>{{tag.count}}</td>
                   <td>{{tag.bought}}</td>
                   <td>{{tag.entered}}</td>
-                  <td><button @click="deleteTag(tag)"> <img  src="@/assets/icons/trash-icon.svg" ></button>
+                  <td><button class="button-icon" @click="deleteTag(tag)"> <img src="@/assets/icons/trash-icon.svg" ></button>
                   </td>
                 </tr>
               </tbody>
@@ -108,60 +108,22 @@ export default {
 }
 </script>
 <style>
-#guests {
-  font-family: Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-  text-align: center;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+.button-icon{
+  border: 0px;
+  background-color: white;
+  padding: 0px;
+}
+tbody {
+    display: block;
+    height: 500px;
+    overflow: auto;
+}
+thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;/* even columns width , fix width of table too*/
 }
 
-#guests td, #guests th {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-}
-
-#guests tr:nth-child(even){background-color: #f2f2f2;
-font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;}
-
-#guests tr:hover {background-color: #ddd;font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;}
-
-#guests th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: rgba(0, 119, 255, 0.979);
-  color: white;
-  text-align: center;
-}
-#gumbary{
-  margin: 2px;
-  width: 40px;
-  height: 40px;
-  background-color: green;
-  border-color: green;
-}
-#gumbarn{
-  margin: 2px;
-  width: 40px;
-  height: 40px;
-  background-color: red;
-  border-color: red;
-}
 </style>
 
 

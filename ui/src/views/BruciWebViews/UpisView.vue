@@ -56,7 +56,6 @@ export default {
             axios.get('http://127.0.0.1:8000/guests/?search=' + this.jmbag + '&search_fields=jmbag',)
                 .then(response => {
                     this.chosenguest = response.data;
-                    console.log(response.data.length);
                     if (response.data.length == 0) {
                         window.alert("kriv jmbag");
                     } else {

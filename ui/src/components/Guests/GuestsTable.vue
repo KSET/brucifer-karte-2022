@@ -61,12 +61,10 @@ export default {
     }
   },
   mounted(){    
-    console.log(this.$privilege)
     this.created();
   },
   methods:{
     loggg(){
-      console.log(document.getElementById("contentedit").getAttribute('value'))
     },
     created() {
     axios.get('http://127.0.0.1:8000/guests/?search=Brucoši&search_fields=tag',)

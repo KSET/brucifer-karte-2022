@@ -97,9 +97,11 @@ export default {
 }
 </script>
 <style>
-.page-title {
+.page-title{
+  display: inline-block;
   padding-top: 3%;
   padding-bottom: 3%;
+  padding-right: 5%;
 
   font-family: 'Montserrat';
   font-style: normal;
@@ -147,12 +149,16 @@ color: #000000;
   border-bottom: 0.5px solid black;
   padding: 8px;
   text-align: left;
+  vertical-align:middle;
   font-family: 'Montserrat';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: left;
   font-size: 16px;
 }
+#guests tr {overflow:auto;}
+
+
 
 #guests tr:nth-child(even) {
   background-color: white;

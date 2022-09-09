@@ -6,7 +6,6 @@
                 <div class="card">
                     <div class="card-header">Login</div>
                     <div class="card-body">
-
                         <div id="signin_button"></div>
                     </div>
                 </div>
@@ -99,7 +98,7 @@ export default {
                         )
                         store.commit('setPrivilege', '0')
                     }
-                    //this.$router.push({ name: ' ' })
+                    this.$router.push({ name: 'home' })
                 })
 
 

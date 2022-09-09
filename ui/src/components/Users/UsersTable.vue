@@ -57,7 +57,6 @@ export default {
     axios.get('http://127.0.0.1:8000/users/',)
     .then(response => {
       this.users =response.data;
-      console.log(this.users);
 
     })},
     changeprivilege(user,changenum){

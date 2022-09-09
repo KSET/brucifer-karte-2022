@@ -61,7 +61,6 @@ export default {
   },
   methods: {
     loggg() {
-      console.log(document.getElementById("contentedit").getAttribute('value'))
     },
     created() {
       axios.get('http://127.0.0.1:8000/guests/?search=Brucoši&search_fields=tag',)
@@ -100,7 +99,6 @@ export default {
 
       var email= guest.name[0].toLowerCase() + guest.surname[0].toLowerCase() + jmbagslice +"@fer.hr";
 
-      console.log(email);
     },
     searchGuest() {
       axios.get('http://127.0.0.1:8000/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=jmbag",)

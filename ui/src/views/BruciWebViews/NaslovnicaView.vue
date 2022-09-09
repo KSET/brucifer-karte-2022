@@ -22,7 +22,6 @@ conponenets:  {Footer},
   },
   mounted(){
     this.w=window.innerWidth;
-    console.log(this.w>1280);
   },
 }
 </script>
@@ -57,6 +56,5 @@ conponenets:  {Footer},
     background-color: #F6BB96;
 }
 
-img{padding-bottom: 2.5rem;}
 
 </style>

@@ -1,36 +1,36 @@
 <template>
     <div class="sidenav">
-        <GridRouterLinkElement class="sidebar-element"   :name="'Tagovi'" :link="'/bruckarte/tags'"></GridRouterLinkElement>
-        <GridRouterLinkElement class="sidebar-element"  :name="'Privilegije'" :link="'/bruckarte/privileges'"></GridRouterLinkElement>
-        <GridRouterLinkElement class="sidebar-element"  :name="'Korisnici'" :link="'/bruckarte/users'"></GridRouterLinkElement>
-        <GridRouterLinkElement class="sidebar-element"  :name="'Uvoz'" :link="'/bruckarte/import'"></GridRouterLinkElement>
-        <GridRouterLinkElement class="sidebar-element"  :name="'Izvoz'" :link="'/bruckarte/export'"></GridRouterLinkElement>
+        <RouterElement class="sidebar-element"   :name="'Tagovi'" :link="'/bruckarte/tags'"></RouterElement>
+        <RouterElement class="sidebar-element"  :name="'Privilegije'" :link="'/bruckarte/privileges'"></RouterElement>
+        <RouterElement class="sidebar-element"  :name="'Korisnici'" :link="'/bruckarte/users'"></RouterElement>
+        <RouterElement class="sidebar-element"  :name="'Uvoz'" :link="'/bruckarte/import'"></RouterElement>
+        <RouterElement class="sidebar-element"  :name="'Izvoz'" :link="'/bruckarte/export'"></RouterElement>
         <button class="dropdown-btn" >Izvođači 
             <img class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdown">
         </button>
         <div class="dropdown-container">
-            <GridRouterLinkElement class="sidebar-element"  :name="'Pregled Izvođača'" :link="'/bruckarte/lineup'"></GridRouterLinkElement>
-            <GridRouterLinkElement class="sidebar-element"  :name="'Dodavanje Izvođača'" :link="'/bruckarte/lineup-add/0'"></GridRouterLinkElement>
+            <RouterElement class="sidebar-element"  :name="'Pregled Izvođača'" :link="'/bruckarte/lineup'"></RouterElement>
+            <RouterElement class="sidebar-element"  :name="'Dodavanje Izvođača'" :link="'/bruckarte/lineup-add/0'"></RouterElement>
         </div>
         <button class="dropdown-btn" @click="toggleDropdown">Sponzori
             <img class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdown">
         </button>
         <div class="dropdown-container">
-            <GridRouterLinkElement class="sidebar-element"  :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors'"></GridRouterLinkElement>
-            <GridRouterLinkElement class="sidebar-element"  :name="'Dodavanje Sponzora'" :link="'/bruckarte/sponsors-add/0'"></GridRouterLinkElement>
+            <RouterElement class="sidebar-element"  :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors'"></RouterElement>
+            <RouterElement class="sidebar-element"  :name="'Dodavanje Sponzora'" :link="'/bruckarte/sponsors-add/0'"></RouterElement>
 
         </div>
-        <GridRouterLinkElement class="sidebar-element"  :name="'Dodaj Gosta'" :link="'/bruckarte/guests-add'"></GridRouterLinkElement>
-        <GridRouterLinkElement class="sidebar-element"  :name="'Kontakt'" :link="'/bruckarte/sponsors'"></GridRouterLinkElement>
+        <RouterElement class="sidebar-element"  :name="'Dodaj Gosta'" :link="'/bruckarte/guests-add'"></RouterElement>
+        <RouterElement class="sidebar-element"  :name="'Kontakt'" :link="'/bruckarte/sponsors'"></RouterElement>
     </div>
 </template>
 
 <script>
-import GridRouterLinkElement from './GridRouterLinkElement.vue';
+import RouterElement from './RouterElement.vue';
 
 export default {
     name: "GridRouterLink",
-    components: { GridRouterLinkElement, GridRouterLinkElement },
+    components: { RouterElement },
     data() {
         return {
             linkNames: ['Tags', 'Privileges', 'Users'],

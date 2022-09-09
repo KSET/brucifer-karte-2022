@@ -180,16 +180,16 @@ router.beforeEach((to, from, next) => {
     if(store.state.id=='' && to.name!='login'){
       next({path: '/bruckarte/login'});
     }else if((store.state.privilege==0 && to.name!='login')){
-      window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku(?)");
-      next({path: '/bruckarte/home'});
+      window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku");
+      next({path: '/bruckarte/login'});
     }else if((store.state.privilege==2 && !allowedRoutesForprivilege2.includes(to.name))){
-        window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku(?)");
+        window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku");
         next({path: '/bruckarte/home'});
     }else if((store.state.privilege==3 && !allowedRoutesForprivilege3.includes(to.name))){
-        window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku(?)");
+        window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku");
         next({path: '/bruckarte/home'});
     }else if((store.state.privilege==4 && !allowedRoutesForprivilege4.includes(to.name))){
-      window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku(?)");
+      window.alert("Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku");
       next({path: '/bruckarte/home'});
     }else{
       next();
