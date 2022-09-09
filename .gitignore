@@ -1,10 +1,6 @@
 ui/node_modules/*
 ui/package-lock.json
 ui/.env
-<<<<<<< HEAD
-
-/.env
-=======
 ./node_modules/*
 package-lock.json
->>>>>>> b1e33f8fefcb728dfa09c847729c5af359646d39
+.env
