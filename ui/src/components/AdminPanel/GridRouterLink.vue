@@ -1,12 +1,27 @@
 <template>
-    <div class="grid">
-        <GridRouterLinkElement :name="'Tagovi'" :link="'/bruckarte/tags'"></GridRouterLinkElement>
-        <GridRouterLinkElement :name="'Privilegije'" :link="'/bruckarte/privileges'"></GridRouterLinkElement>
-        <GridRouterLinkElement :name="'Korisnici'" :link="'/bruckarte/users'"></GridRouterLinkElement>
-        <GridRouterLinkElement :name="'Uvoz'" :link="'/bruckarte/import'"></GridRouterLinkElement>
-        <GridRouterLinkElement :name="'Izvoz'" :link="'/bruckarte/export'"></GridRouterLinkElement>
-        <GridRouterLinkElement :name="'Izvođači'" :link="'/bruckarte/lineup'"></GridRouterLinkElement>
-        <GridRouterLinkElement :name="'Sponzori'" :link="'/bruckarte/sponsors'"></GridRouterLinkElement>
+    <div class="sidenav">
+        <GridRouterLinkElement class="sidebar-element"   :name="'Tagovi'" :link="'/bruckarte/tags'"></GridRouterLinkElement>
+        <GridRouterLinkElement class="sidebar-element"  :name="'Privilegije'" :link="'/bruckarte/privileges'"></GridRouterLinkElement>
+        <GridRouterLinkElement class="sidebar-element"  :name="'Korisnici'" :link="'/bruckarte/users'"></GridRouterLinkElement>
+        <GridRouterLinkElement class="sidebar-element"  :name="'Uvoz'" :link="'/bruckarte/import'"></GridRouterLinkElement>
+        <GridRouterLinkElement class="sidebar-element"  :name="'Izvoz'" :link="'/bruckarte/export'"></GridRouterLinkElement>
+        <button class="dropdown-btn" >Izvođači 
+            <img class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdown">
+        </button>
+        <div class="dropdown-container">
+            <GridRouterLinkElement class="sidebar-element"  :name="'Pregled Izvođača'" :link="'/bruckarte/lineup'"></GridRouterLinkElement>
+            <GridRouterLinkElement class="sidebar-element"  :name="'Dodavanje Izvođača'" :link="'/bruckarte/lineup-add/0'"></GridRouterLinkElement>
+        </div>
+        <button class="dropdown-btn" @click="toggleDropdown">Sponzori
+            <img class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdown">
+        </button>
+        <div class="dropdown-container">
+            <GridRouterLinkElement class="sidebar-element"  :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors'"></GridRouterLinkElement>
+            <GridRouterLinkElement class="sidebar-element"  :name="'Dodavanje Sponzora'" :link="'/bruckarte/sponsors-add/0'"></GridRouterLinkElement>
+
+        </div>
+        <GridRouterLinkElement class="sidebar-element"  :name="'Dodaj Gosta'" :link="'/bruckarte/guests-add'"></GridRouterLinkElement>
+        <GridRouterLinkElement class="sidebar-element"  :name="'Kontakt'" :link="'/bruckarte/sponsors'"></GridRouterLinkElement>
     </div>
 </template>
 
@@ -22,44 +37,112 @@ export default {
             linkURLs: ['/tags', '/privileges', '/users']
         }
     },
+    methods: {
+        toggleDropdown() {
+            var dropdown = document.getElementsByClassName("dropdown-btn");
+            var i;
+
+            for (i = 0; i < dropdown.length; i++) {
+                dropdown[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var dropdownContent = this.nextElementSibling;
+                    if (dropdownContent.style.display === "block") {
+                        dropdownContent.style.display = "none";
+                    } else {
+                        dropdownContent.style.display = "block";
+                    }
+                });
+            }
+        }
+    }
 }
 </script>
 
 <style lang="scss" scoped>
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    grid-gap: 20px;
-    align-items: stretch;
+.sidenav {
+    border-right: 1px solid #000000;
+    margin-top: 3.75rem;
+    width: 25%;
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: white;
+    overflow-x: hidden;
+    padding-top: 20px;
 }
 
-.sponsor {
-    background: rgba(0, 0, 0, .3);
-    border-radius: 18px;
-    padding: 30px;
+/* Style the sidenav links and the dropdown button */
+.sidebar-element{
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    display: block;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+    display: block;
+    height: 50px;
+    text-align: left;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 36px;
+    border-bottom: black;
+    border-bottom: 1px solid #000000;
+}
+.dropdown-btn {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+    display: block;
+    height: 50px;
+    text-align: left;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 36px;
+    border-bottom: black;
+    border-bottom: 1px solid #000000;
 }
 
-@media screen and (max-width: 1400px) {
-    .grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+/* On mouse-over */
+.sidenav a:hover,
+.dropdown-btn:hover {
+    color: darkgray;
 }
 
-@media screen and (max-width: 980px) {
-    .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+/* Main content */
+
+/* Add an active class to the active dropdown button */
+.active {
+    background-color: gray;
+    color: white;
 }
 
-@media screen and (max-width: 635px) {
-    .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+.dropdown-container {
+    display: none;
+    background-color: white;
+    padding-left: 8px;
 }
 
-@media screen and (max-width: 350px) {
-    .grid {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
-    }
+/* Optional: Style the caret down icon */
+.dropdown-icon {
+    float: right;
+    padding-right: 2%;
+    padding-top: 2%;
 }
 </style>

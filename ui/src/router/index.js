@@ -5,7 +5,7 @@ import Guests from '../views/BruckarteViews/GuestsView.vue'
 import EntryView from '../views/BruckarteViews/EntryView.vue'
 import Login from '../views/BruckarteViews/LoginView.vue'
 import Logout from '../views/BruckarteViews/LogoutView.vue'
-import GuestAdd from '../views/BruckarteViews/GuestAddView.vue'
+
 
 /* Admin Views */
 import Tags from '../views/AdminViews/TagsView.vue'
@@ -18,6 +18,7 @@ import Sponsors from '../views/AdminViews/SponsorsView.vue'
 import AdminPanel from '../views/AdminViews/AdminPanelView.vue'
 import LineupAdd from '../views/AdminViews/LineupAddView.vue'
 import SponsorsAdd from '../views/AdminViews/SponsorsAddView.vue'
+import GuestAdd from '../views/AdminViews/GuestAddView.vue'
 
 /* BruciWeb Views */
 import Bwlineup from '../views/BruciWebViews/BWlineupView.vue'
@@ -33,11 +34,10 @@ import store from '@/store/index.js';
 
 
 const routes = [
-  /* obrisat ako se odluci da nista nece biti na homa page{
+  {
     path: '/bruckarte/',
     name: 'home',
-    component: HomeView
-  },*/
+  },
 
   /* Bruckarte Views setup */
   {

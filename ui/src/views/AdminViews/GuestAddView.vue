@@ -1,53 +1,56 @@
 <template>
     <div class="guests-add">
+        <Sidebar />
+        <div class="admin-page-container">
+            <h1 class="page-title">Dodavanje Gosta</h1>            <form @submit="postGuest">
+                <h1 class="textfield7">Ime: </h1>
+                <input class="inputfield7" type="text" @input="changevalue" v-model="name" placeholder="Surname">
 
-        <h2 class="page-title">Dodavanje gosta</h2>
-        <form @submit="postGuest">
-            <h1 class="textfield7">Ime: </h1>
-            <input class="inputfield7" type="text" @input="changevalue" v-model="name" placeholder="Surname">
+                <h1 class="textfield8">Prezime: </h1>
+                <input class="inputfield8" type="text" @input="changevalue" v-model="surname" placeholder="Surname">
 
-            <h1 class="textfield8">Prezime: </h1>
-            <input class="inputfield8" type="text" @input="changevalue" v-model="surname" placeholder="Surname">
+                <h1 class="textfield9">Tag: </h1>
 
-            <h1 class="textfield9">Tag: </h1>
-
-            <select class="inputfield9" v-model="selectedTag" name={{selectedTag}}>
-                <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
-            </select>
+                <select class="inputfield9" v-model="selectedTag" name={{selectedTag}}>
+                    <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
+                </select>
 
 
-            <h1 class="textfield10">JMBAG: </h1>
-            <input class="inputfield10" type="text" v-model="jmbag" placeholder="JMBAG">
+                <h1 class="textfield10">JMBAG: </h1>
+                <input class="inputfield10" type="text" v-model="jmbag" placeholder="JMBAG">
 
-            <h1 class="textfield11">Karta: </h1>
+                <h1 class="textfield11">Karta: </h1>
 
-            <button class="btn4" v-if="karta == '1'"  type="button" @click="changeKarta()">
-                <img src="../../assets/icons/yes-icon.svg">
-            </button>
-            <button class="btn4" v-else @click="changeKarta()" type="button" >
-                <img src="../../assets/icons/no-icon.svg">
-            </button>
+                <button class="btn4" v-if="karta == '1'" type="button" @click="changeKarta()">
+                    <img src="../../assets/icons/yes-icon.svg">
+                </button>
+                <button class="btn4" v-else @click="changeKarta()" type="button">
+                    <img src="../../assets/icons/no-icon.svg">
+                </button>
 
-            <h1 class="textfield12">Ulaz: </h1>
+                <h1 class="textfield12">Ulaz: </h1>
 
-            <button v-if="ulaz == '1'" type="button"  class="button5" @click="changeUlaz()">
-                <img src="../../assets/icons/yes-icon.svg">
-            </button>
-            <button v-else @click="changeUlaz()" type="button"  class="button5">
-                <img src="../../assets/icons/no-icon.svg">
-            </button>
-            <button class="submit-button2">Dodaj</button>
-        </form>
+                <button v-if="ulaz == '1'" type="button" class="button5" @click="changeUlaz()">
+                    <img src="../../assets/icons/yes-icon.svg">
+                </button>
+                <button v-else @click="changeUlaz()" type="button" class="button5">
+                    <img src="../../assets/icons/no-icon.svg">
+                </button>
+                <button class="submit-button2">Dodaj</button>
+            </form>
+        </div>
     </div>
 </template>
 
 <script>
+import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+
 import axios from 'axios'
 
 export default {
     name: 'GuestsAdd',
     components: {
-
+        Sidebar
     },
     props: {
         msg: String

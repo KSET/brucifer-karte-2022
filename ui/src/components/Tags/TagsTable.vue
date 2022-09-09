@@ -3,11 +3,11 @@
      <div class=row>
             <table id="guests">
               <thead>
-              <th>Name</th>
-              <th>Count</th>
-              <th>Bought</th>
-              <th>Entered</th>
-              <th>Options</th>
+              <th>Ime</th>
+              <th>Broj</th>
+              <th>Karta</th>
+              <th>Ulaz</th>
+              <th>Opcije</th>
               </thead>
               <tbody>
                 <tr v-for="tag in tags" :key="tag.id">
@@ -15,7 +15,7 @@
                   <td>{{tag.count}}</td>
                   <td>{{tag.bought}}</td>
                   <td>{{tag.entered}}</td>
-                  <td><button @click="deleteTag(tag)" class="btn btn-primary" id="gumbard"> <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
+                  <td><button @click="deleteTag(tag)"> <img  src="@/assets/icons/trash-icon.svg" ></button>
                   </td>
                 </tr>
               </tbody>

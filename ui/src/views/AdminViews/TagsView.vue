@@ -1,36 +1,35 @@
 <template>
   <div class="tagss">
-    <br>
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">Tags</div>
-          <div class="card-body">
-            <tags-add></tags-add>
-            <tags-table></tags-table>
-          </div>
-        </div>
-      </div>
+    <Sidebar />
+    <div class="admin-page-container">
+      <h1 class="page-title">Tagovi</h1>
+      <tags-add></tags-add>
+      <tags-table></tags-table>
     </div>
   </div>
+
 </template>
 
 
 
 
 <script>
-import TagsTable from '../../components/Tags/TagsTable.vue'
+import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+
+import TagsTable from '@/components/Tags/TagsTable.vue'
 import store from '@/store/index.js';
 import TagsAdd from '@/components/Tags/TagsAdd.vue';
 export default {
   name: 'SponsorsView',
   components: {
     TagsTable,
-    TagsAdd
+    TagsAdd,
+    Sidebar
   }
 }
 </script>
 
 
 <style scoped>
+
 </style>

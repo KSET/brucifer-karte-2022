@@ -68,6 +68,7 @@ export default {
 <style lang="scss">
 #admin-navbar{
   position: absolute;
+  display: flex;
 width: 100%;
 height: 3.75rem;
 left: 0px;

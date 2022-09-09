@@ -1,38 +1,35 @@
 <template>
   <div class="import">
-    <br>
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">Import</div>
-          <div class="card-body">
-            <section>
-              <input class="btn btn-primary" type="file" @change="importGuests" />
-            </section>
-            <section>
-              <br>
-              <h1>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećem
-                redu</h1>
-              <h1>Imena polja mogu biti: name surname jmbag email tag bought entered</h1>
-              <h1>Tablica ne mora sadržavati sva imena polja, redoslijed stupaca nije bitan</h1>
-              <h1>Ukoliko se polje tag kod nekog gosta ostavi prazno, tag će automatski biti Brucoši</h1>
-              <h1>Ukoliko se polja bought i entered kod nekog gosta ostave prazna, bit će postavljena na 0</h1>
-              <br>
-              <button type="submit" onclick="window.open('../assets/import_example.xlsx')">Download!</button>
+    <Sidebar />
+    <div class="admin-page-container">
+      <h1 class="page-title">Uvoz Gostiju</h1>
 
-              <a class="btn btn-primary" href="../assets/import_example.xlsx" download="import_example.xlsx">Download
-                example</a>
-            </section>
-            <section>
-              <input class="btn btn-primary" type="file" @change="importUsers" />
-            </section>
-          </div>
-        </div>
-      </div>
+      <section>
+        <input class="btn btn-primary" type="file" @change="importGuests" />
+      </section>
+      <section>
+        <br>
+        <h1>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećem
+          redu</h1>
+        <h1>Imena polja mogu biti: name surname jmbag email tag bought entered</h1>
+        <h1>Tablica ne mora sadržavati sva imena polja, redoslijed stupaca nije bitan</h1>
+        <h1>Ukoliko se polje tag kod nekog gosta ostavi prazno, tag će automatski biti Brucoši</h1>
+        <h1>Ukoliko se polja bought i entered kod nekog gosta ostave prazna, bit će postavljena na 0</h1>
+        <br>
+        <button type="submit" onclick="window.open('../assets/import_example.xlsx')">Download!</button>
+
+        <a class="btn btn-primary" href="../assets/import_example.xlsx" download="import_example.xlsx">Download
+          example</a>
+      </section>
+      <section>
+        <input class="btn btn-primary" type="file" @change="importUsers" />
+      </section>
     </div>
   </div>
+
 </template>
 <script>
+import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
 import { XlsxRead, XlsxJson } from "../../../node_modules/vue3-xlsx/dist/vue3-xlsx.cjs.prod.js";
 import readXlsxFile from 'read-excel-file';
@@ -41,7 +38,8 @@ import axios from 'axios';
 export default {
   components: {
     XlsxRead,
-    XlsxJson
+    XlsxJson,
+    Sidebar
   },
   data() {
     return {
@@ -202,4 +200,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>

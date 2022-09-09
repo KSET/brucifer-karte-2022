@@ -1,14 +1,19 @@
 <template>
-    <div id="adminPanel">
+  <div id="adminPanel">
+    <Sidebar />
+    <div class="admin-page-container">
       <br>
       <GridRouterLink></GridRouterLink>
-      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import GridRouterLink from '@/components/AdminPanel/GridRouterLink.vue';
+import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+
 export default {
-    components:{GridRouterLink}
+  components: { Sidebar }
 }
 </script>
 

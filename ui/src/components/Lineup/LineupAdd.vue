@@ -1,8 +1,8 @@
 <template>
   <div id="lineup-add">
     <br>
-    <h1 v-if="(this.slug == '0')" id="page-title">Dodavanje izvođača</h1>
-    <h1 v-else id="page-title">Uređivanje izvođača</h1>
+    <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje izvođača</h1>
+    <h1 v-else class="page-title">Uređivanje izvođača</h1>
 
     <form @submit="postGuest">
 

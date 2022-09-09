@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import Footer from '../../components/NavbarAndFooter/Footer.vue'
+import Footer from '@/components/NavbarAndFooter/Footer.vue'
 
 import axios from 'axios'
 export default {
