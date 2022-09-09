@@ -2,25 +2,31 @@
     <div>
         <Sidebar />
         <div class="admin-page-container">
-            <div id="lineup-add">
-       
-                <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje izvođača</h1>
+            <div class="lineup-add">
+                
+                <h1 v-if="(this.slug == '0')" class="page-title lineup-title">Dodavanje izvođača</h1>
+
+
                 <h1 v-else class="page-title">Uređivanje izvođača</h1>
 
                 <form @submit="postGuest">
-
-                    <h1 id="textfield">Ime </h1>
-                    <input id="inputfield" type="text" v-model="name" placeholder="Name">
-
-
-                    <h1 id="textfield">Slika </h1>
-                    <input id="inputfield" type="file" accept="image/*" ref="file" @change="selectImage">
+                    <div class="grid-container">
+                    <h1 class="textfield">Ime </h1>
+                    <input required class="inputfield" type="text" v-model="name">
 
 
-                    <img class="image-preview" :src="previewImage" alt="" />
-                    <button v-if="(this.slug == '0')" id="submit-button" class="btn btn-primary">Dodaj</button>
-                    <button v-else class="submit-button">Spremi promjene</button>
+                    <h1 class="textfield">Slika </h1>
+                    <input required class="inputfield" type="file" accept="image/*" ref="file" @change="selectImage">
+                
+                    
+                    
+                    <button v-if="(this.slug == '0')" class="button submit" >Dodaj</button>
+                    <button v-else class="button submit">Spremi promjene</button>
+                    
+                    <button v-if="(this.slug == '0')" class="button deletey" >Delete</button>
+                </div>
                 </form>
+                <img class="image-preview" :src="previewImage" alt="" />
             </div>
         </div>
     </div>
@@ -83,7 +89,6 @@ export default {
     },
     methods: {
         selectImage(e) {
-            //this.currentImage = this.$refs.file.files.item(0);
             this.currentImage = this.$refs.file.files.item(0);
             this.previewImage = URL.createObjectURL(this.currentImage);
             this.progress = 0;
@@ -137,16 +142,45 @@ export default {
 
 <style>
 
-form{
-    display: grid;
+.button.submit{
+    margin-top: 50%;
+    width: 130px;
+    background: #000000;
+border-radius: 6px;
+color: white;
+}
+
+.button.deletey{
+    margin-top: 6%;
+    width: 130px;
+background: #FFFFFF;
+border: 1px solid #000000;
+border-radius: 6px;
+}
+
+.page-title.lineup-title{
+    padding-bottom: 10%;
 }
 
 .textfield{
-
+    font-family: 'Montserrat';
+font-style: normal;
+font-weight: 700;
+font-size: 16px;
 }
 
 .inputfield{
-    
+    height: 40px;
+    width: 50%;
+}
+
+.grid-container{
+    left: 6%;
+    display: grid;
+    grid-template-columns: 10% auto;
+    padding: 10px;
+    grid-gap: 6%;
+    row-gap: 30px;
 }
 
 .image-preview {
@@ -156,7 +190,7 @@ form{
     width: 200px;
     height: 200px;
     left: 776px;
-    top: 229px;
+    top: 3350px;
 
     border: 1px solid #000000;
 }
