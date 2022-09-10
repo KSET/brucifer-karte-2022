@@ -8,10 +8,10 @@
             <form @submit="postGuest">
                 <div class="grid-container">
                     <h1 class="textfield">Ime: </h1>
-                    <input class="inputfield" type="text" @input="changevalue" v-model="name" placeholder="Surname">
+                    <input class="inputfield" type="text" @input="changevalue" v-model="name">
 
                     <h1 class="textfield">Prezime: </h1>
-                    <input class="inputfield" type="text" @input="changevalue" v-model="surname" placeholder="Surname">
+                    <input class="inputfield" type="text" @input="changevalue" v-model="surname" >
 
                     <h1 class="textfield">Tag: </h1>
 
@@ -21,7 +21,7 @@
 
 
                     <h1 class="textfield">JMBAG: </h1>
-                    <input class="inputfield" type="text" v-model="jmbag" placeholder="JMBAG">
+                    <input class="inputfield" type="text" v-model="jmbag" >
 
                     <h1 class="textfield">Karta: </h1>
 

@@ -8,6 +8,7 @@ color: white;
 }
 
 .button.change{
+    border: 1px solid #000000;
     width: 130px;
     background: #000000;
 border-radius: 6px;
@@ -31,9 +32,11 @@ border-radius: 6px;
 font-style: normal;
 font-weight: 700;
 font-size: 16px;
+vertical-align: middle;
 }
 
 .inputfield{
+    
     height: 40px;
     width: 50%;
 }

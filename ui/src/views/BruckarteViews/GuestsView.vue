@@ -1,28 +1,33 @@
 <template>
   <div class="guestss">
-    <h1 id="textfield0"></h1>
-    <h1 id="line1"></h1>
-    <input id="search-field" @input="searchGuest" type="form"  v-model="search" placeholder="Unesi JMBAG">
-    <img id="icon1" src="../../assets/icons/search-icon.svg">
-    <h1 id="textfield1">Ime </h1>
-    <input id="inputfield1" type="text" @input="changevalue"  v-model="name" >
+    <div class="header guests">
+    <h1 class="textfield"></h1>
+    <h1 class="line1"></h1>
+    <input class="inputfield search" @input="searchGuest" type="form"  v-model="search" placeholder="Unesi JMBAG">
+    <img class="icon1" src="../../assets/icons/search-icon.svg">
+    <h1 class="textfield">{{this.nomatch}} </h1>
+  </div>
+
+  <div class="grid-container guests">
+    <h1 class="textfield">Ime </h1>
+    <input class="inputfield" type="text" @input="changevalue"  v-model="name" >
     
-    <h1 id="textfield2">Prezime </h1>
-    <input id="inputfield2" type="text"  @input="changevalue"  v-model="surname">
+    <h1 class="textfield">Prezime </h1>
+    <input class="inputfield" type="text"  @input="changevalue"  v-model="surname">
     
-    <h1 id="textfield3">JMBAG </h1>
-    <input id="inputfield3" readonly  type="text" v-model="jmbag">
+    <h1 class="textfield">JMBAG </h1>
+    <input class="inputfield" readonly  type="text" v-model="jmbag">
     
-    <h1 id="textfield4">Karta </h1>
+    <h1 class="textfield">Karta </h1>
     
-    <button id="button1-yes" v-if="guest.bought == '1'"  @click="changebought(guest, '0')">
+    <button class="button change" v-if="guest.bought == '1'"  @click="changebought(guest, '0')">
       <img src="../../assets/icons/yes-icon.svg">
     </button> 
-    <button id="button1-no" v-else @click="changebought(guest, '1')" >
-      <img id="image1" src="../../assets/icons/no-icon.svg">
+    <button class="button change" v-else @click="changebought(guest, '1') " style="background-color: white;" >
+      <img class="image1" src="../../assets/icons/no-icon.svg">
     </button>
     
-
+  </div>
 
   </div>
 
@@ -57,6 +62,8 @@ export default {
       bought: '',
       entered: '',
       deleted: '',
+      nomatch: '',
+      
     }
   },
   methods: {
@@ -105,16 +112,19 @@ export default {
         .then(response => {
           this.guests = response.data;
           if (this.guests.length == 1) {
+            this.nomatch="";
             this.guest = this.guests[0];
             this.name = this.guest.name;
             this.surname = this.guest.surname;
             this.jmbag = this.guest.jmbag;
           } else if (this.guests.length == 0) {
-            this.name = "NO MATCH!";
+            this.nomatch="JMBAG nije pronađen!";
+            this.name = "";
             this.surname = '';
             this.jmbag = '';
           }
           else {
+            this.nomatch="";
             this.name = '';
             this.surname = '';
             this.jmbag = '';
@@ -131,6 +141,27 @@ export default {
 </script>
 
 <style lang="scss" scope>
-@import '../../assets/scss/GuestsView.scss';
+@import '../../assets/scss/Admin-scss/gird-view.scss';
+
+
+.header.guests{
+  height: 7.188rem;
+  width: 100%;
+  border-bottom: 1px solid black;
+}
+
+.inputfield.search{
+  margin-top: 2.5%;
+  margin-left: 4%;
+  width: 20%;
+  padding-left: 3%;
+}
+
+.grid-container.guests{
+  margin-top: 3.5%;
+  margin-left: 5%;
+  row-gap: 45%;
+
+}
 </style>
 

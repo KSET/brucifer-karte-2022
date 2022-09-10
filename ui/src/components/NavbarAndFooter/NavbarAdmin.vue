@@ -4,34 +4,33 @@
           #BRUCIFER
         </router-link>
 
-        <router-link v-if="privilege == '1' || privilege == '3' || privilege == '4'"
-        
-        class="navbar-item1"  to="/bruckarte/guests">
-          Brucoši
-        </router-link>
+        <div class="routes">
 
-        <router-link v-if="privilege == '1' || privilege == '2' || privilege == '4'" id="navbar-item2" to="/bruckarte/entry">
-          Ulaz
-        </router-link>
+        <RouterElement v-if="privilege == '1' || privilege == '3' || privilege == '4'" class="navbar-element" :name="'Brucoši'" :link="'/bruckarte/guests'"></RouterElement>
 
-        <router-link v-if="privilege == '1'" id="navbar-item3" to="/bruckarte/admin-panel">
+        <RouterElement v-if="privilege == '1' || privilege == '2' || privilege == '4'" class="navbar-element" :name="'Ulaz'" :link="'/bruckarte/entry'"></RouterElement>
+
+
+        <router-link v-if="privilege == '1'" class="navbar-element" to="/bruckarte/admin-panel">
           <img src="../../assets/icons/nav-burger.svg">
         </router-link>
 
-        <router-link id="navbar-icon2" to="/bruckarte/logout">
+        <router-link class="navbar-element" to="/bruckarte/logout">
           <img src="../../assets/icons/logout-icon.svg">
-        </router-link>
+        </router-link></div>
 
   </div>
 </template>
 
 <script>
 import store from '@/store/index.js';
+import RouterElement from '@/components/AdminPanel/RouterElement.vue'
+
 export default {
   name: 'Navbar',
   el: '#app',
   components: {
-
+    RouterElement
   },
   data() {
     return {
@@ -97,74 +96,39 @@ letter-spacing: -0.015em;
 color: #000000;
 }
 
-.navbar-item1{
-position: absolute;
-left: 67.38%;
-right: 26.56%;
-top: 16.67%;
-bottom: 23.33%;
+.routes{
+  position: absolute;
+  right: 0%;
+  display: block;
+        text-align: center;
+        color: white;
 
-font-family: 'Montserrat';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-line-height: 36px;
-/* identical to box height, or 225% */
-
-display: flex;
-align-items: center;
-text-align: center;
-letter-spacing: -0.015em;
-
-color: #000000;
+        overflow: none;
+        float:right;
+        box-sizing: border-box;
 }
 
-#navbar-item2{
-position: absolute;
-left: 76.46%;
-right: 17.48%;
-top: 20%;
-bottom: 20%;
+.navbar-element{
+    text-decoration: none;
+    margin-left: 7%;
+    font-size: 20px;
+    display: inline-block;
+    
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
 
-font-family: 'Montserrat';
-font-style: normal;
-font-weight: 700;
-font-size: 16px;
-line-height: 36px;
-/* identical to box height, or 225% */
-
-display: flex;
-align-items: center;
-text-align: center;
-letter-spacing: -0.015em;
-
-color: #000000;
+    height: 60px;
+    text-align: left;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 36px;
+    border-bottom: black;
 }
-
-#navbar-item3{
-position: absolute;
-left: 86.91%;
-right: 9.96%;
-top: 20%;
-bottom: 26.67%;
-
-background: #FFFFFF;
-
-}
-
-#navbar-icon2{
-position: absolute;
-left: 94.34%;
-right: 2.54%;
-top: 20%;
-bottom: 26.67%;
-}
-
-.current{
-  font-weight: 800;
-}
-
-
 </style>
 
 
