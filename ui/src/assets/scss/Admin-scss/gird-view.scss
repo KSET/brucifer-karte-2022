@@ -1,0 +1,60 @@
+
+.button.submit{
+    margin-top: 50%;
+    width: 130px;
+    background: #000000;
+border-radius: 6px;
+color: white;
+}
+
+.button.change{
+    width: 130px;
+    background: #000000;
+border-radius: 6px;
+color: white;
+}
+
+.button.deletey{
+    margin-top: 6%;
+    width: 130px;
+background: #FFFFFF;
+border: 1px solid #000000;
+border-radius: 6px;
+}
+
+.page-title.lineup-title{
+    padding-bottom: 10%;
+}
+
+.textfield{
+    font-family: 'Montserrat';
+font-style: normal;
+font-weight: 700;
+font-size: 16px;
+}
+
+.inputfield{
+    height: 40px;
+    width: 50%;
+}
+
+.grid-container{
+    left: 6%;
+    display: grid;
+    grid-template-columns: 10% auto;
+    padding: 10px;
+    grid-gap: 6%;
+    row-gap: 30px;
+}
+
+.image-preview {
+    box-sizing: border-box;
+
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    left: 776px;
+    top: 3350px;
+
+    border: 1px solid #000000;
+}

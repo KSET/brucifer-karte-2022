@@ -18,5 +18,6 @@ export default {
 </script>
 
 <style lang="scss" scope>
-@import '../../assets/scss/Admin-scss/SponsorsAddView.scss';
+@import '../../assets/scss/Admin-scss/gird-view.scss';
+
 </style>

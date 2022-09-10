@@ -13,8 +13,8 @@ import Users from '../views/AdminViews/UsersView.vue'
 import Privileges from '../views/AdminViews/PrivilegesView.vue'
 import Import from '../views/AdminViews/ImportView.vue'
 import Export from '../views/AdminViews/ExportView.vue'
-import Lineup from '../views/AdminViews/LineupView.vue'
-import Sponsors from '../views/AdminViews/SponsorsView.vue'
+import LineupList from '../views/AdminViews/LineupListView.vue'
+import SponsorsList from '../views/AdminViews/SponsorsListView.vue'
 import AdminPanel from '../views/AdminViews/AdminPanelView.vue'
 import LineupAdd from '../views/AdminViews/LineupAddView.vue'
 import SponsorsAdd from '../views/AdminViews/SponsorsAddView.vue'
@@ -87,14 +87,19 @@ const routes = [
     component : Logout
   },
   {
-    path: '/bruckarte/lineup',
+    path: '/bruckarte/lineup-list',
     name: 'lineup',
-    component : Lineup
+    component : LineupList
   },
   {
-    path: '/bruckarte/sponsors',
+    path: '/bruckarte/sponsors/:slug',
     name: 'sponsors',
-    component : Sponsors
+    component : SponsorsList
+  },
+  {
+    path: '/bruckarte/sponsors-list',
+    name: 'sponsors',
+    component : SponsorsList
   },
   {
     path: '/bruckarte/guests-add',

@@ -121,6 +121,9 @@ export default {
             this.bought='0';
           }
         })
+    },
+    sendMail() {
+      
     }
   }
 

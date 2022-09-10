@@ -3,31 +3,44 @@
     <Sidebar />
     <div class="admin-page-container">
       <h1 class="page-title">Uvoz Gostiju</h1>
+      <br>
+      <label for="file-upload" class="button-upload ">
+        Odaberi CSV
+      </label>
+      <input id="file-upload" type="file" @change="importGuests" />
+      <button class="button-upload white">Preuzmi  CSV template</button>
+     
+      <div class="list">
+        <ul>
+          <li>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećemredu
+          </li>
+          <li>Imena polja mogu biti: name surname jmbag email tag bought entered</li>
+          <li>Tablica ne mora sadržavati sva imena polja, redoslijed stupaca nije bitan</li>
+          <li>Ukoliko se polje tag kod nekog gosta ostavi prazno, tag će automatski biti Brucoši</li>
+          <li>Ukoliko se polja bought i entered kod nekog gosta ostave prazna, bit će postavljena na 0</li>
+        </ul>
+      </div>
+      <h1 class="page-title">Uvoz Korisnika</h1>
+      <br>
+      <label for="file-upload" class="button-upload ">
+        Odaberi CSV
+      </label>
+      <input id="file-upload" type="file" @change="importUsers" />
 
-      <section>
-        <input class="btn btn-primary" type="file" @change="importGuests" />
-      </section>
-      <section>
-        <br>
-        <h1>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećem
-          redu</h1>
-        <h1>Imena polja mogu biti: name surname jmbag email tag bought entered</h1>
-        <h1>Tablica ne mora sadržavati sva imena polja, redoslijed stupaca nije bitan</h1>
-        <h1>Ukoliko se polje tag kod nekog gosta ostavi prazno, tag će automatski biti Brucoši</h1>
-        <h1>Ukoliko se polja bought i entered kod nekog gosta ostave prazna, bit će postavljena na 0</h1>
-        <br>
-        <button type="submit" onclick="window.open('../assets/import_example.xlsx')">Download!</button>
-
-        <a class="btn btn-primary" href="../assets/import_example.xlsx" download="import_example.xlsx">Download
-          example</a>
-      </section>
-      <section>
-        <input class="btn btn-primary" type="file" @change="importUsers" />
-      </section>
+      <button class="button-upload white">Preuzmi  CSV template</button>
+     
+      <div class="list">
+      <ul>
+        <li>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećem redu.
+        </li>
+        <li>Imena polja mogu biti: name, email, privilege.</li>
+        <li>Mogće vrijednosti privilege su cijeli brojevi izmešu 0 i 4 s uključivim granicama.</li>
+      </ul></div>
     </div>
   </div>
 
 </template>
+
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
@@ -200,5 +213,47 @@ export default {
 </script>
 
 <style >
+.button-upload {
+  display: inline-block;
+  margin-right: 33px;
+  color: white;
+  height: 40px;
+  width: 130px;
+  background: #000000;
+  border-radius: 6px;
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 230%;
+  text-align: center;
+  vertical-align: top;
+}
+.button-upload.white{
+  line-height: 0%;
+  width: 200px;
+  color: black;
+  background: white;
+}
 
+
+input[type="file"] {
+  display: none;
+
+}
+.list{
+  margin-top: 2.5%;
+  margin-bottom: 2.5%;
+}
+
+ul {
+ 
+}
+
+li {
+    font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+}
 </style>

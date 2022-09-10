@@ -3,7 +3,7 @@
         <div class="grid-item grid1-item1">
             <div class="grid2-container">
                 <div class="grid-item grid-item2">
-                    <input id="search-field2" class="inputfield" @input="searchGuest" type="form" v-model="search"
+                    <input  class="inputfield" @input="searchGuest" type="form" v-model="search"
                         placeholder="Unesi Ime">
                 </div>
                 <div class="grid-item grid-item3">
@@ -14,41 +14,42 @@
             </div>
         </div>
         <div class="grid-item grid1-item2">
-            <button class="person" v-for="guest in guests" :key="guest.id" @click="chooseGuest(guest)">
+            <button class="person" v-for="guest in guests" :key="guest.class" @click="chooseGuest(guest)">
                 <p><strong>{{  guest.name  }} {{  guest.surname  }}</strong></p> 
                 <p>{{  guest.tag  }} </p>
             </button>
         </div>
         <div class="grid-item grid1-item3">
             <div class="grid3-container">
-                <h1 id="textfield">Ime </h1>
-                <input readonly id="inputfield" type="text" @input="changevalue" v-model="name">
+                <h1 class="textfield">Ime </h1>
+                <input readonly class="inputfield" type="text" @input="changevalue" v-model="name">
 
-                <h1 id="textfield">Prezime </h1>
-                <input readonly id="inputfield" type="text" @input="changevalue" v-model="surname">
+                <h1 class="textfield">Prezime </h1>
+                <input readonly class="inputfield" type="text" @input="changevalue" v-model="surname">
 
-                <h1 v-if="this.jmbag != ''" id="textfield">JMBAG </h1>
-                <input v-if="this.jmbag != ''" id="inputfield" readonly type="text" v-model="jmbag">
+                <h1 v-if="this.jmbag != ''" class="textfield">JMBAG </h1>
+                <input v-if="this.jmbag != ''" class="inputfield" readonly type="text" v-model="jmbag">
 
-                <h1 v-if="this.jmbag != ''" id="textfield">Karta </h1>
-                <button v-if="this.jmbag != '' &&  this.bought == '1'" class="button2-yes" @click="changeBought(guest, '0')">
-                    <img src="../../assets/icons/yes-icon.svg">
+                <h1 v-if="this.jmbag != ''" class="textfield">Karta </h1>
+
+                <button disabled v-if="this.jmbag != '' &&  this.bought == '1'" class="button2-yes" @click="changeBought(guest, '0')">
+                    <img  class="va" src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button class="button2-no" v-if="this.jmbag != '' && this.bought == '0'" @click="changeBought(guest, '1')">
-                    <img id="image1" src="../../assets/icons/no-icon.svg">
+                <button disabled class="button2-no" v-if="this.jmbag != '' && this.bought == '0'" @click="changeBought(guest, '1')">
+                    <img class="va"  src="../../assets/icons/no-icon.svg">
                 </button>
 
-                <h1 id="textfield">Ulaz </h1>
+                <h1 class="textfield">Ulaz </h1>
 
                 <button v-if="this.entered == '1'" type="button" class="button2-yes" @click="changeEntered(guest, '0')">
-                    <img src="../../assets/icons/yes-icon.svg">
+                    <img class="va" src="../../assets/icons/yes-icon.svg">
                 </button>
                 <button v-else @click="changeEntered(guest, '1')" type="button" class="button2-no">
-                    <img src="../../assets/icons/no-icon.svg">
+                    <img class="va" src="../../assets/icons/no-icon.svg">
                 </button>
 
-                <h1 id="textfield">Potvrda </h1>
-                <h1 id="textfield">kod123456789 </h1>
+                <h1 v-if="this.jmbag != ''" class="textfield">Potvrda </h1>
+                <h1 v-if="this.jmbag != ''" class="textfield">kod123456789 </h1>
             </div>
         </div>
     </div>
@@ -68,6 +69,7 @@ export default {
         return {
             items: [],
             selectedTag: '',
+            id: '',
             bought: '',
             entered: '',
             guests: [],
@@ -101,6 +103,9 @@ export default {
                         if (this.guests.length == 1) {
                             this.guest = this.guests[0];
                             this.name = this.guest.name;
+                            this.id = this.guest.id;
+                            this.bought = this.guest.bought;
+                            this.entered = this.guest.entered;
                             this.surname = this.guest.surname;
                             this.jmbag = this.guest.jmbag;
                         } else if (this.guests.length == 0) {
@@ -119,6 +124,8 @@ export default {
         chooseGuest(guest) {
             this.guest = guest;
             this.name = guest.name;
+            this.id = guest.id;
+
             this.surname = guest.surname;
             this.jmbag = guest.jmbag;
             this.bought = guest.bought;
@@ -186,6 +193,10 @@ export default {
 .inputfield {
     left: 6%;
     width: 25.6%;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
 }
 
 .textfield {
@@ -242,5 +253,10 @@ border-bottom: 1px solid #000000;
 border: 1px solid #000000;
 border-radius: 6px;
 
+}
+
+.va{
+position: relative;
+top:-6%;
 }
 </style>

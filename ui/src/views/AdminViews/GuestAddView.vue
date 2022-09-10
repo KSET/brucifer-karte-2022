@@ -2,42 +2,48 @@
     <div class="guests-add">
         <Sidebar />
         <div class="admin-page-container">
-            <h1 class="page-title">Dodavanje Gosta</h1>            <form @submit="postGuest">
-                <h1 class="textfield7">Ime: </h1>
-                <input class="inputfield7" type="text" @input="changevalue" v-model="name" placeholder="Surname">
 
-                <h1 class="textfield8">Prezime: </h1>
-                <input class="inputfield8" type="text" @input="changevalue" v-model="surname" placeholder="Surname">
+            <h1 class="page-title">Dodavanje Gosta</h1>
 
-                <h1 class="textfield9">Tag: </h1>
+            <form @submit="postGuest">
+                <div class="grid-container">
+                    <h1 class="textfield">Ime: </h1>
+                    <input class="inputfield" type="text" @input="changevalue" v-model="name" placeholder="Surname">
 
-                <select class="inputfield9" v-model="selectedTag" name={{selectedTag}}>
-                    <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
-                </select>
+                    <h1 class="textfield">Prezime: </h1>
+                    <input class="inputfield" type="text" @input="changevalue" v-model="surname" placeholder="Surname">
+
+                    <h1 class="textfield">Tag: </h1>
+
+                    <select class="inputfield" v-model="selectedTag" name={{selectedTag}}>
+                        <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
+                    </select>
 
 
-                <h1 class="textfield10">JMBAG: </h1>
-                <input class="inputfield10" type="text" v-model="jmbag" placeholder="JMBAG">
+                    <h1 class="textfield">JMBAG: </h1>
+                    <input class="inputfield" type="text" v-model="jmbag" placeholder="JMBAG">
 
-                <h1 class="textfield11">Karta: </h1>
+                    <h1 class="textfield">Karta: </h1>
 
-                <button class="btn4" v-if="karta == '1'" type="button" @click="changeKarta()">
-                    <img src="../../assets/icons/yes-icon.svg">
-                </button>
-                <button class="btn4" v-else @click="changeKarta()" type="button">
-                    <img src="../../assets/icons/no-icon.svg">
-                </button>
+                    <button class="button change" v-if="karta == '1'"  type="button" @click="changeKarta()">
+                        <img src="../../assets/icons/yes-icon.svg">
+                    </button>
+                    <button class="button change" v-else @click="changeKarta()" style="background-color: white;" type="button ">
+                        <img src="../../assets/icons/no-icon.svg">
+                    </button>
 
-                <h1 class="textfield12">Ulaz: </h1>
+                    <h1 class="textfield">Ulaz: </h1>
 
-                <button v-if="ulaz == '1'" type="button" class="button5" @click="changeUlaz()">
-                    <img src="../../assets/icons/yes-icon.svg">
-                </button>
-                <button v-else @click="changeUlaz()" type="button" class="button5">
-                    <img src="../../assets/icons/no-icon.svg">
-                </button>
-                <button class="submit-button2">Dodaj</button>
+                    <button v-if="ulaz == '1'" type="button" class="button change" @click="changeUlaz()">
+                        <img src="../../assets/icons/yes-icon.svg">
+                    </button>
+                    <button v-else @click="changeUlaz()" type="button" style="background-color: white;" class="button change">
+                        <img src="../../assets/icons/no-icon.svg">
+                    </button>
+                    <button class="button submit">Dodaj</button>
+                </div>
             </form>
+
         </div>
     </div>
 </template>
@@ -144,5 +150,5 @@ export default {
 </script>
 
 <style lang="scss" scope>
-@import '../../assets/scss/GuestAddView.scss';
+@import '../../assets/scss/Admin-scss/gird-view.scss';
 </style>

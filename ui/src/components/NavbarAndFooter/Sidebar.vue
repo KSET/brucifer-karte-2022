@@ -4,12 +4,19 @@
         <RouterElement class="sidebar-element" :name="'Privilegije'" :link="'/bruckarte/privileges'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Korisnici'" :link="'/bruckarte/users'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Uvoz'" :link="'/bruckarte/import'"></RouterElement>
-        <RouterElement class="sidebar-element" :name="'Izvoz'" :link="'/bruckarte/export'"></RouterElement>
+        <button class="sidebar-element" @click="exportCSV">
+        <download-csv   :data=this.users separator-excel=true encoding='utf-8
+        '
+        name="export.csv">
+
+        Izvoz
+      </download-csv></button>
+
         <button class="dropdown-btn">Izvođači
             <img class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdown">
         </button>
         <div class="dropdown-container">
-            <RouterElement class="sidebar-element" :name="'Pregled Izvođača'" :link="'/bruckarte/lineup'">
+            <RouterElement class="sidebar-element" :name="'Pregled Izvođača'" :link="'/bruckarte/lineup-list'">
             </RouterElement>
             <RouterElement class="sidebar-element" :name="'Dodavanje Izvođača'" :link="'/bruckarte/lineup-add/0'">
             </RouterElement>
@@ -18,7 +25,7 @@
             <img class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdown">
         </button>
         <div class="dropdown-container">
-            <RouterElement class="sidebar-element" :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors'">
+            <RouterElement class="sidebar-element" :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors-list'">
             </RouterElement>
             <RouterElement class="sidebar-element" :name="'Dodavanje Sponzora'" :link="'/bruckarte/sponsors-add/0'">
             </RouterElement>
@@ -30,15 +37,17 @@
 </template>
 
 <script>
+import axios from 'axios'
 import RouterElement from '@/components/AdminPanel/RouterElement.vue'
-
+import JsonCSV from 'vue-json-csv'
 export default {
     name: "GridRouterLink",
-    components: { RouterElement },
+    components: { RouterElement,JsonCSV },
     data() {
         return {
             linkNames: ['Tags', 'Privileges', 'Users'],
-            linkURLs: ['/tags', '/privileges', '/users']
+            linkURLs: ['/tags', '/privileges', '/users'],
+            users: [],
         }
     },
     methods: {
@@ -57,6 +66,12 @@ export default {
                     }
                 });
             }
+        },
+        exportCSV(){
+            axios.get('http://127.0.0.1:8000/guests/',)
+      .then(response => {
+        this.users = response.data;
+      })
         }
     }
 }

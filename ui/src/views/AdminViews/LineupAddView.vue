@@ -7,7 +7,7 @@
                 <h1 v-if="(this.slug == '0')" class="page-title lineup-title">Dodavanje izvođača</h1>
 
 
-                <h1 v-else class="page-title">Uređivanje izvođača</h1>
+                <h1 v-else class="page-title lineup-title">Uređivanje izvođača</h1>
 
                 <form @submit="postGuest">
                     <div class="grid-container">
@@ -16,7 +16,7 @@
 
 
                     <h1 class="textfield">Slika </h1>
-                    <input required class="inputfield" type="file" accept="image/*" ref="file" @change="selectImage">
+                    <input class="inputfield" type="file" accept="image/*" ref="file" @change="selectImage">
                 
                     
                     
@@ -34,6 +34,7 @@
 
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+import axios from 'axios';
 
 import LineupAdd from '@/components/Lineup/LineupAdd.vue';
 export default {
@@ -141,59 +142,7 @@ export default {
 
 
 <style>
-
-.button.submit{
-    margin-top: 50%;
-    width: 130px;
-    background: #000000;
-border-radius: 6px;
-color: white;
-}
-
-.button.deletey{
-    margin-top: 6%;
-    width: 130px;
-background: #FFFFFF;
-border: 1px solid #000000;
-border-radius: 6px;
-}
-
-.page-title.lineup-title{
-    padding-bottom: 10%;
-}
-
-.textfield{
-    font-family: 'Montserrat';
-font-style: normal;
-font-weight: 700;
-font-size: 16px;
-}
-
-.inputfield{
-    height: 40px;
-    width: 50%;
-}
-
-.grid-container{
-    left: 6%;
-    display: grid;
-    grid-template-columns: 10% auto;
-    padding: 10px;
-    grid-gap: 6%;
-    row-gap: 30px;
-}
-
-.image-preview {
-    box-sizing: border-box;
-
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    left: 776px;
-    top: 3350px;
-
-    border: 1px solid #000000;
-}
+@import '../../assets/scss/Admin-scss/gird-view.scss';
 </style>
 
 
