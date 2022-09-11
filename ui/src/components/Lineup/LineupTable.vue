@@ -65,6 +65,7 @@ export default {
 
 <style>
 .grid {
+  height: 74vh;
   display: block;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 20px;

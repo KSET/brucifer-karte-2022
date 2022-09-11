@@ -1,12 +1,24 @@
 <template>
   <div class="grid">
-    <article v-for="sponsor in sponsors" :key="sponsor.id">
-    <img v-bind:src="sponsor.image">
-    <div class="text">
-      <h3>{{sponsor.id}} ; {{sponsor.name}}</h3>
-      <button @click="deleteTag(sponsor)" class="btn btn-primary" id="gumbard">  <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
+    <div class="card" ref="" v-for="sponsor in sponsors" :key="sponsor.id">
+
+      <img class="ccard-img" v-bind:src="sponsor.image">
+      <div class="ccard-body">
+        <h3 class="name"> {{sponsor.name}}</h3>
+
+        <div class="ccard-buttons">
+          <button @click="deleteTag(sponsor)" class="ccard-button" >
+            <img src="../../assets/icons/arrow-left-icon.svg">
+          </button>
+          <button @click="deleteTag(sponsor)" class="ccard-button" style="padding-bottom: 5px;">
+            <img src="../../assets/icons/edit-icon.svg">
+          </button>
+          <button @click="deleteTag(sponsor)" class="ccard-button">
+            <img src="../../assets/icons/arrow-right-icon.svg">
+          </button>
+        </div>
+      </div>
     </div>
-    </article>
 
   </div>
 </template>
@@ -14,61 +26,87 @@
 <script>
 import axios from 'axios'
 export default {
-  name: 'LineupTable',
+  name: 'SponsorsTable',
   props: {
     msg: String
   },
-  data(){
-    return{
+  data() {
+    return {
       sponsors: [],
     }
-    
+
   },
-  mounted(){
+  mounted() {
     this.created();
   },
-  methods:{
+  methods: {
     created() {
-    axios.get('http://127.0.0.1:8000/sponsors/',)
-    .then(response => {
-      this.sponsors =response.data;  
-      });
-  },
-    deleteTag(tag){
-      axios.delete('http://127.0.0.1:8000/sponsors/'+tag.id+'/',
-      {auth:{username:process.env.VUE_APP_DJANGO_USER,password:process.env.VUE_APP_DJANGO_PASS}}
-      )
-      .then(()=>{
-        this.created();
-      })
+      axios.get('http://127.0.0.1:8000/sponsors/',)
+        .then(response => {
+          this.sponsors = response.data;
+        });
     },
+    deleteTag(tag) {
+      axios.delete('http://127.0.0.1:8000/sponsors/' + tag.id + '/',
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      )
+        .then(() => {
+          this.created();
+        })
+    },
+    getAp(elementName) {
+
+
+    }
   }
 
 }
 </script>
 
 <style>
-.grid { 
-  display: grid;
+.grid {
+  height: 74vh;
+  display: block;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 20px;
   align-items: stretch;
-  }
-.grid > article {
-  border: 1px solid #ccc;
-  box-shadow: 2px 2px 6px 0px  rgba(0,0,0,0.3);
+  overflow: auto;
 }
-.grid > article img {
-  max-width: 100%;
+
+.name {
+  position: relative;
+  width:100%;
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 36px;
+  /* identical to box height, or 257% */
+
+  text-align: center;
+  align-items: center;
+  letter-spacing: -0.015em;
+  vertical-align: bottom;
 }
-.text {
-  padding: 0 20px 20px;
+
+.ccard-body {
+  background-color: #D9D9D9;
 }
-.text > button {
-  background: gray;
-  border: 0;
-  color: white;
-  padding: 10px;
-  width: 100%;
-  }
+
+.ccard-img{
+  position: relative;
+  width:150%;
+}
+
+.ccard-buttons{
+  display: grid;
+  margin: 1%;
+  column-gap: 20%;
+  grid-template-columns: 19% 20% 19%;
+}
+
+.ccard-button{
+  border: 0px;
+  background-color: #D9D9D9;
+}
 </style>

@@ -174,6 +174,7 @@ export default {
     font-size: 28px;
     /* Increased text to enable scrolling */
     padding: 10px 10px;
-    height: 100%;
+    height: 91vh;
+    overflow: hidden;
 }
 </style>
