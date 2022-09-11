@@ -39,6 +39,7 @@ export default {
 <style>
 #app {
   margin-top: 60px;
+  
  
 }
 

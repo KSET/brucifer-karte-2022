@@ -1,14 +1,24 @@
 <template>
   <div class="grid">
-    <article v-for="sponsor in sponsors" :key="sponsor.id">
-    <img v-bind:src="sponsor.image">
-    <div>
-      <h3> {{sponsor.name}}</h3>
-      <button @click="deleteTag(sponsor)" class="button10" >  <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
-      <button @click="deleteTag(sponsor)" class="button11" >  <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
-      <button @click="deleteTag(sponsor)" class="button12" >  <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
+    <div class="card" ref="" v-for="sponsor in sponsors" :key="sponsor.id">
+
+      <img class="ccard-img" v-bind:src="sponsor.image">
+      <div class="ccard-body">
+        <h3 class="name"> {{sponsor.name}}</h3>
+
+        <div class="ccard-buttons">
+          <button @click="deleteTag(sponsor)" class="ccard-button" >
+            <img src="../../assets/icons/arrow-left-icon.svg">
+          </button>
+          <button @click="deleteTag(sponsor)" class="ccard-button" style="padding-bottom: 5px;">
+            <img src="../../assets/icons/edit-icon.svg">
+          </button>
+          <button @click="deleteTag(sponsor)" class="ccard-button">
+            <img src="../../assets/icons/arrow-right-icon.svg">
+          </button>
+        </div>
+      </div>
     </div>
-    </article>
 
   </div>
 </template>
@@ -20,33 +30,33 @@ export default {
   props: {
     msg: String
   },
-  data(){
-    return{
+  data() {
+    return {
       sponsors: [],
     }
-    
+
   },
-  mounted(){
+  mounted() {
     this.created();
   },
-  methods:{
+  methods: {
     created() {
-    axios.get('http://127.0.0.1:8000/lineup/',)
-    .then(response => {
-      this.sponsors =response.data;  
-      });
-  },
-    deleteTag(tag){
-      axios.delete('http://127.0.0.1:8000/lineup/'+tag.id+'/',
-      {auth:{username:process.env.VUE_APP_DJANGO_USER,password:process.env.VUE_APP_DJANGO_PASS}}
-      )
-      .then(()=>{
-        this.created();
-      })
+      axios.get('http://127.0.0.1:8000/lineup/',)
+        .then(response => {
+          this.sponsors = response.data;
+        });
     },
-    getAp(elementName){
-    
-    
+    deleteTag(tag) {
+      axios.delete('http://127.0.0.1:8000/lineup/' + tag.id + '/',
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      )
+        .then(() => {
+          this.created();
+        })
+    },
+    getAp(elementName) {
+
+
     }
   }
 
@@ -54,37 +64,48 @@ export default {
 </script>
 
 <style>
-.grid { 
-  position: absolute;
-  left: 2.83%;
-  top: 26.3%;
-  display: grid;
+.grid {
+  display: block;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 20px;
   align-items: stretch;
-  }
-.grid > article {
-  border: 1px solid #ccc;
-}
-.grid > article img {
-  max-width: 100%;
+  overflow: auto;
 }
 
-.button10{
-left: 4.1%;
-top: 60.29%;
+.name {
+  position: relative;
+  width:100%;
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 36px;
+  /* identical to box height, or 257% */
 
+  text-align: center;
+  align-items: center;
+  letter-spacing: -0.015em;
+  vertical-align: bottom;
 }
 
-.button11{
-
-  bottom:0%;
-  left: 0%;
+.ccard-body {
+  background-color: #D9D9D9;
 }
 
-.button12{
+.ccard-img{
+  position: relative;
+  width:150%;
+}
 
-  bottom:90%;
-  left: 90%;
+.ccard-buttons{
+  display: grid;
+  margin: 1%;
+  column-gap: 20%;
+  grid-template-columns: 19% 20% 19%;
+}
+
+.ccard-button{
+  border: 0px;
+  background-color: #D9D9D9;
 }
 </style>

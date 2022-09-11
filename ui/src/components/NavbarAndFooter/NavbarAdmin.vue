@@ -66,12 +66,11 @@ export default {
 </script>
 <style lang="scss">
 #admin-navbar{
-  position: absolute;
-  display: flex;
-width: 100%;
-height: 3.75rem;
-left: 0px;
-top: 0px;
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%; /* Full width */
+  height: 3.75rem;
 
 background: #FFFFFF;
 border-bottom: 1px solid #000000;
@@ -97,22 +96,15 @@ color: #000000;
 }
 
 .routes{
+  margin-right: 2%;
   position: absolute;
+  overflow: hidden;
   right: 0%;
-  display: block;
-        text-align: center;
-        color: white;
-
-        overflow: none;
-        float:right;
-        box-sizing: border-box;
 }
 
 .navbar-element{
-    text-decoration: none;
-    margin-left: 7%;
+    padding-left: 70px;
     font-size: 20px;
-    display: inline-block;
     
     border: none;
     background: none;
@@ -124,7 +116,7 @@ color: #000000;
     text-align: left;
     font-family: 'Montserrat';
     font-style: normal;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 16px;
     line-height: 36px;
     border-bottom: black;
