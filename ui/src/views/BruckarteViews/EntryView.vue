@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="grid-item grid1-item2">
-            <button class="person" v-for="guest in guests" :key="guest.class" @click="chooseGuest(guest)">
+            <button class="person" v-bind:style= "[(this.id==guest.id) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]" v-for="guest in guests" :key="guest.class" @click="chooseGuest(guest)">
                 <p><strong>{{  guest.name  }} {{  guest.surname  }}</strong></p> 
                 <p>{{  guest.tag  }} </p>
             </button>
@@ -163,7 +163,7 @@ export default {
     grid-template-rows: auto 70.76%;
     padding: 10px;
     width: 100vw;
-    height: 90vh;
+    height: 87vh;
 }
 
 .grid3-container {
@@ -172,6 +172,7 @@ export default {
     grid-template-columns: 23.6% auto;
     padding: 10px;
     grid-gap: 6%;
+
 
 }
 
@@ -188,6 +189,8 @@ export default {
 .grid1-item2 {
     grid-row: span 2;
     border-left: 1px solid #000000;
+    overflow: auto;
+    margin-right: 5px;
 }
 
 .inputfield {
