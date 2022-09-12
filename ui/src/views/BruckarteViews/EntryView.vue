@@ -7,7 +7,7 @@
                         placeholder="Unesi Ime">
                 </div>
                 <div class="grid-item grid-item3">
-                    <select class="inputfield" v-model="selectedTag" name={{selectedTag}} @select="searchGuest">
+                    <select class="inputfield" v-model="selectedTag" name={{selectedTag}} @updated="searchGuest">
                         <option v-for="(item, i) in items" :key="i" class="menu-item">{{  item  }}</option>
                     </select>
                 </div>

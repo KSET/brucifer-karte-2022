@@ -1,19 +1,19 @@
 <template>
   <div class="grid">
-    <div class="card" ref="" v-for="sponsor in sponsors" :key="sponsor.id">
+    <div class="card" ref="" v-for="lineup in lineups" :key="lineup.id">
 
-      <img class="ccard-img" v-bind:src="sponsor.image">
+      <img class="ccard-img" v-bind:src="lineup.image">
       <div class="ccard-body">
-        <h3 class="name"> {{sponsor.name}}</h3>
+        <h3 class="name"> {{lineup.name}}</h3>
 
         <div class="ccard-buttons">
-          <button @click="deleteTag(sponsor)" class="ccard-button" >
+          <button @click="deleteTag(lineup)" class="ccard-button" >
             <img src="../../assets/icons/arrow-left-icon.svg">
           </button>
-          <button @click="deleteTag(sponsor)" class="ccard-button" style="padding-bottom: 5px;">
+          <button @click="deleteTag(lineup)" class="ccard-button" style="padding-bottom: 5px;">
             <img src="../../assets/icons/edit-icon.svg">
           </button>
-          <button @click="deleteTag(sponsor)" class="ccard-button">
+          <button @click="deleteTag(lineup)" class="ccard-button">
             <img src="../../assets/icons/arrow-right-icon.svg">
           </button>
         </div>
@@ -32,7 +32,8 @@ export default {
   },
   data() {
     return {
-      sponsors: [],
+      lineups: [],
+      lineup: '',
     }
 
   },
@@ -43,7 +44,7 @@ export default {
     created() {
       axios.get('http://127.0.0.1:8000/lineup/',)
         .then(response => {
-          this.sponsors = response.data;
+          this.lineups = response.data;
         });
     },
     deleteTag(tag) {
@@ -66,10 +67,9 @@ export default {
 <style>
 .grid {
   height: 74vh;
-  display: block;
+  display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 20px;
-  align-items: stretch;
   overflow: auto;
 }
 
