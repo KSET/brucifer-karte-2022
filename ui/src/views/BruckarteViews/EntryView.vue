@@ -22,17 +22,17 @@
         <div class="grid-item grid1-item3">
             <div class="grid3-container">
                 <h1 class="textfield">Ime </h1>
-                <input readonly class="inputfield" type="text" @input="changevalue" v-model="name">
+                <input readonly class="inputfield" :disabled="this.id==''" type="text" @input="changevalue" v-model="name">
 
                 <h1 class="textfield">Prezime </h1>
-                <input readonly class="inputfield" type="text" @input="changevalue" v-model="surname">
+                <input readonly class="inputfield" :disabled="this.id==''" type="text" @input="changevalue" v-model="surname">
 
                 <h1 v-if="this.jmbag != ''" class="textfield">JMBAG </h1>
                 <input v-if="this.jmbag != ''" class="inputfield" readonly type="text" v-model="jmbag">
 
                 <h1 v-if="this.jmbag != ''" class="textfield">Karta </h1>
 
-                <button disabled v-if="this.jmbag != '' &&  this.bought == '1'" class="button2-yes" @click="changeBought(guest, '0')">
+                <button disabled v-if="this.jmbag != '' &&  this.bought == '1'"  class="button2-yes" @click="changeBought(guest, '0')">
                     <img  class="va" src="../../assets/icons/yes-icon.svg">
                 </button>
                 <button disabled class="button2-no" v-if="this.jmbag != '' && this.bought == '0'" @click="changeBought(guest, '1')">
@@ -41,10 +41,10 @@
 
                 <h1 class="textfield">Ulaz </h1>
 
-                <button v-if="this.entered == '1'" type="button" class="button2-yes" @click="changeEntered(guest, '0')">
+                <button v-if="this.entered == '1'" type="button" :disabled="this.id==''" class="button2-yes" @click="changeEntered(guest, '0')">
                     <img class="va" src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button v-else @click="changeEntered(guest, '1')" type="button" class="button2-no">
+                <button v-else @click="changeEntered(guest, '1')" :disabled="this.id==''" type="button" class="button2-no">
                     <img class="va" src="../../assets/icons/no-icon.svg">
                 </button>
 

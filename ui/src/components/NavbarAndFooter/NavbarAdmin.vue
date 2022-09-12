@@ -6,16 +6,16 @@
 
         <div class="routes">
 
-        <RouterElement v-if="privilege == '1' || privilege == '3' || privilege == '4'" class="navbar-element" :name="'Brucoši'" :link="'/bruckarte/guests'"></RouterElement>
+        <RouterElement v-if="privilege == '1' || privilege == '3' || privilege == '4'" class="navbar-element hide" :name="'Brucoši'" :link="'/bruckarte/guests'"></RouterElement>
 
-        <RouterElement v-if="privilege == '1' || privilege == '2' || privilege == '4'" class="navbar-element" :name="'Ulaz'" :link="'/bruckarte/entry'"></RouterElement>
+        <RouterElement v-if="privilege == '1' || privilege == '2' || privilege == '4'" class="navbar-element hide" :name="'Ulaz'" :link="'/bruckarte/entry'"></RouterElement>
 
 
         <router-link v-if="privilege == '1'" class="navbar-element" to="/bruckarte/admin-panel">
           <img src="../../assets/icons/nav-burger.svg">
         </router-link>
 
-        <router-link class="navbar-element" to="/bruckarte/logout">
+        <router-link class="navbar-element hide" to="/bruckarte/logout">
           <img src="../../assets/icons/logout-icon.svg">
         </router-link></div>
 
@@ -120,6 +120,12 @@ color: #000000;
     font-size: 16px;
     line-height: 36px;
     border-bottom: black;
+}
+
+@media screen and (max-width: 980px) {
+    .navbar-element.hide {
+        display: none;
+    }
 }
 </style>
 

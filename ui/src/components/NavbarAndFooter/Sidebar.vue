@@ -177,4 +177,16 @@ export default {
     height: 91vh;
     overflow: hidden;
 }
+
+@media screen and (max-width: 980px) {
+    .sidenav {
+        display: none;
+    }
+
+    .admin-page-container {
+        position: relative;
+
+    margin-left: 1%;
+}
+}
 </style>

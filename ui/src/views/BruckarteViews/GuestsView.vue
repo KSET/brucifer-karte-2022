@@ -10,20 +10,20 @@
 
   <div class="grid-container guests">
     <h1 class="textfield">Ime </h1>
-    <input class="inputfield" type="text" @input="changevalue"  v-model="name" >
+    <input class="inputfield" :disabled="this.id==''" type="text" @input="changevalue"  v-model="name" >
     
     <h1 class="textfield">Prezime </h1>
-    <input class="inputfield" type="text"  @input="changevalue"  v-model="surname">
+    <input class="inputfield" :disabled="this.id==''" type="text"  @input="changevalue"  v-model="surname">
     
     <h1 class="textfield">JMBAG </h1>
     <input class="inputfield" readonly  type="text" v-model="jmbag">
     
     <h1 class="textfield">Karta </h1>
     
-    <button class="button change" v-if="guest.bought == '1'"  @click="changebought(guest, '0')">
+    <button class="button change" :disabled="this.id==''" v-if="guest.bought == '1'"  @click="changebought(guest, '0')">
       <img src="../../assets/icons/yes-icon.svg">
     </button> 
-    <button class="button change" v-else @click="changebought(guest, '1') " style="background-color: white;" >
+    <button class="button change" :disabled="this.id==''" v-else @click="changebought(guest, '1') " style="background-color: white;" >
       <img class="image1" src="../../assets/icons/no-icon.svg">
     </button>
     
@@ -114,17 +114,20 @@ export default {
           if (this.guests.length == 1) {
             this.nomatch="";
             this.guest = this.guests[0];
+            this.id=this.guest.id;
             this.name = this.guest.name;
             this.surname = this.guest.surname;
             this.jmbag = this.guest.jmbag;
           } else if (this.guests.length == 0) {
             this.nomatch="JMBAG nije pronađen!";
+            this.id="";
             this.name = "";
             this.surname = '';
             this.jmbag = '';
           }
           else {
             this.nomatch="";
+            this.id = '';
             this.name = '';
             this.surname = '';
             this.jmbag = '';
