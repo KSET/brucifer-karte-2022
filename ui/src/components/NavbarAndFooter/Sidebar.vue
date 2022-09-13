@@ -178,7 +178,7 @@ export default {
     overflow: hidden;
 }
 
-@media screen and (max-width: 980px) {
+@media screen and (max-width: 600px) {
     .sidenav {
         display: none;
     }
