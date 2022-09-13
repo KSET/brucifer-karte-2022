@@ -24,6 +24,7 @@ class Users(models.Model):
 
 class Tags(models.Model):
     id=models.CharField(max_length=50, primary_key=True, default=0, blank=False)
+    slug=models.CharField(max_length=200, default='', blank=True)
     name=models.CharField(max_length=49, default='', blank=True)
     count=models.CharField(max_length=50, default='0', blank=True)
     bought=models.CharField(max_length=50, default='0', blank=True)
@@ -32,6 +33,7 @@ class Tags(models.Model):
 class Lineup(models.Model):
     id=models.CharField(max_length=50, primary_key=True, default=0, blank=False)
     slug=models.CharField(max_length=200, default='', blank=True)
+    order=models.CharField(max_length=200, default='', blank=True)
     name=models.CharField(max_length=49, default='', blank=True)
     image = models.ImageField(upload_to='uploads/lineup', blank=True, null=True)
 
@@ -50,7 +52,7 @@ class Lineup(models.Model):
  
 class Sponsors(models.Model):
     id=models.CharField(max_length=50, primary_key=True, default=0, blank=False)
-    slug=models.CharField(max_length=200, default='', blank=True)
+    order=models.CharField(max_length=200, default='', blank=True)
     name=models.CharField(max_length=49, default='', blank=True)
     url=models.CharField(max_length=400, default='0', blank=True)
     image = models.ImageField(upload_to='uploads/sponsors', blank=True, null=True)

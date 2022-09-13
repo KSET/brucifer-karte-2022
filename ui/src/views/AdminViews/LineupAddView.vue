@@ -10,12 +10,14 @@
                 <h1 v-else class="page-title lineup-title">Uređivanje izvođača</h1>
 
                 <form @submit="postGuest">
-                    <div class="grid-container">
+                    <div class="ggrid-container llineup">
                     <h1 class="textfield">Ime </h1>
                     <input required class="inputfield" type="text" v-model="name">
 
+                    <img class="image-preview" :src="previewImage" alt="" />
 
                     <h1 class="textfield">Slika </h1>
+                   
                     <input class="inputfield" type="file" accept="image/*" ref="file" @change="selectImage">
                 
                     
@@ -26,7 +28,7 @@
                     <button v-if="(this.slug == '0')" class="button deletey" >Delete</button>
                 </div>
                 </form>
-                <img class="image-preview" :src="previewImage" alt="" />
+                
             </div>
         </div>
     </div>
@@ -143,6 +145,15 @@ export default {
 
 <style>
 @import '../../assets/scss/Admin-scss/gird-view.scss';
+
+.ggrid-container.llineup{
+    left: 6%;
+    display: grid;
+    grid-template-columns: 10% auto;
+    padding: 10px;
+    row-gap: 30px;
+}
+
 </style>
 
 

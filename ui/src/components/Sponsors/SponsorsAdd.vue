@@ -5,6 +5,7 @@
     <h1 v-else id="page-title1">Uređivanje sponzora</h1>
 
     <form @submit="postGuest">
+      <div class="grid-container">
 
       <h1 class="textfield1">Ime </h1>
       <input class="inputfield1" type="text" v-model="name" placeholder="Name">
@@ -19,6 +20,8 @@
       <img class="image-preview"  :src="previewImage" alt="" />
       <button v-if="(this.slug == '0')" class="submit-button">Dodaj</button>
       <button v-else class="submit-button">Spremi promjene</button>
+    </div>
+
     </form>
   </div>
 </template>

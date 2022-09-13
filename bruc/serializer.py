@@ -20,12 +20,12 @@ class UsersSerializer(serializers.HyperlinkedModelSerializer):
 class LineupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Lineup
-        fields = ["id","slug","name","image"]
+        fields = ["id","slug","order","name","image"]
 
 class SponsorsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sponsors
-        fields = ["id","slug","name","url","image","email","guestCap"]
+        fields = ["id","slug","order","name","url","image","email","guestCap"]
 
 class DynamicSearchFilter(filters.SearchFilter):
     def get_search_fields(self, view, request):

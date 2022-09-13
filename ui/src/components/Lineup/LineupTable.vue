@@ -43,79 +43,61 @@ export default {
   },
   methods: {
     created() {
-      axios.get('http://127.0.0.1:8000/lineup/',)
+      axios.get('http://127.0.0.1:8000/lineup/?ordering=slug',)
         .then(response => {
           this.lineups = response.data;
         });
-    },
-    deleteTag(tag) {
-      axios.delete('http://127.0.0.1:8000/lineup/' + tag.id + '/',
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
-        .then(() => {
-          this.created();
-        })
     },
     editlineup(lineup) {
       this.$router.push({ path: '/bruckarte/lineup-add/' + lineup.slug });
     },
     changelineuporder(lineup, direction) {
+      console.log(this.lineups);
+      console.log(this.lineups.length);
+
+      var nextlineupobj = (this.lineups.indexOf(lineup));
+
+      console.log((lineup.id != this.lineups[this.lineups.length - 1].id));
       if (direction == "f") {
-        console.log(this.lineups);
-        console.log(this.lineups.length);
-
-        var nextlineupobj = (this.lineups.indexOf(lineup));
-
-        console.log((lineup.id != this.lineups[this.lineups.length - 1].id));
         if (lineup.id != this.lineups[this.lineups.length - 1].id) {
-          var nextlineup = this.lineups[nextlineupobj + 1].id;
+          var nextlineup = this.lineups[nextlineupobj + 1];
         }
       } else {
-        if (lineup.id != 0) {
-          var nextlineup = this.lineups[nextlineupobj - 1].id;
+        if (lineup.slug != "00") {
+          var nextlineup = this.lineups[nextlineupobj - 1];
         }
       }
-      axios.put('http://127.0.0.1:8000/lineup/' + nextlineup + '/',
-        { id: "1000000" },
+
+      axios.put('http://127.0.0.1:8000/lineup/' + nextlineup.id + '/',
+        { slug: "1000000" },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
-        axios.delete('http://127.0.0.1:8000/lineup/' + nextlineup + '/',
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-              )
-                .then(() => {
+
           console.log("req1-pass");
 
           axios.put('http://127.0.0.1:8000/lineup/' + lineup.id + '/',
-            { id: nextlineup },
+            { slug: nextlineup.slug },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
             .then(() => {
             })
-              console.log("req2-pass");
-              axios.delete('http://127.0.0.1:8000/lineup/' + lineup.id + '/',
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-              )
-                .then(() => {
-                  console.log("req3-pass");
+          console.log("req2-pass");
 
-                  axios.put('http://127.0.0.1:8000/lineup/' + 1000000 + '/',
-                    { id: lineup.id },
-                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-                  )
-                    .then(() => {
-                      axios.delete('http://127.0.0.1:8000/lineup/' + 1000000 + '/',
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-              )
-                .then(() => {
-                      console.log("req4-pass");
+          console.log("req3-pass");
 
-                      this.created();
-                    })
-                })
+          axios.put('http://127.0.0.1:8000/lineup/' + nextlineup.id + '/',
+            { slug: lineup.slug },
+            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+          )
+            .then(() => {
+
+              console.log("req4-pass");
+
+              this.created();
             })
+
         })
-      })
 
     }
   }
