@@ -129,13 +129,6 @@ export default {
             if (this.nextId == '') {
                 this.nextId = ids.length;
             }
-            console.log(this.nextId);
-            console.log(this.name)
-            console.log(this.surname)
-            console.log(this.jmbag)
-            console.log(this.selectedTag)
-            console.log(this.karta)
-            console.log(this.ulaz)
 
             axios.post('http://127.0.0.1:8000/guests/',
                 { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },

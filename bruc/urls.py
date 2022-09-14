@@ -1,8 +1,8 @@
 
 from django.urls import path, include
 
-from rest_framework import routers
-from .views import ContactViewSet, GuestsViewSet, TagsViewSet, UsersViewSet, LineupViewSet, SponsorsViewSet
+from rest_framework import routers, views
+from .views import ContactViewSet, GuestsViewSet, TagsViewSet, UsersViewSet, LineupViewSet, SponsorsViewSet,send_mail
 
 router = routers.DefaultRouter()
 router.register('guests', GuestsViewSet)
@@ -16,5 +16,6 @@ router.register('contact', ContactViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
 ]

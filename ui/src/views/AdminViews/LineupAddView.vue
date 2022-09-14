@@ -1,64 +1,66 @@
 <template>
-    <div>
-        <div class="row">
-            <div class="col-8">
-                <label class="btn btn-default p-0">
-                    <label for="file-upload" class="button-upload ">
+
+
+    <div id="sponsors-add">
+        <Sidebar />
+        <div class="admin-page-container">
+            <div class="header">
+                <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje izvođača</h1>
+                <h1 v-else class="page-title">Uređivanje izvođača</h1>
+            </div>
+            <form class="lineup-form" @submit="postLineup">
+                <div class="grid-container">
+
+                    <h1 class="textfield">Ime </h1>
+                    <input class="inputfield" type="text" v-model="name" placeholder="Name">
+
+                    <h1 class="textfield">Slika </h1>
+                    <label for="file-upload" class="button white">
                         Odaberi CSV
                     </label>
-                    <input id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" /> </label>
-            </div>
+                    <input id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
 
-            <div class="col-4">
-                <button class="btn btn-success btn-sm float-right" :disabled="!currentImage" @click="upload">
-                    Upload
-                </button>
-            </div>
-        </div>
+                    <button v-if="(this.slug == '0')" class="button submit">Dodaj</button>
+                    <button v-else class="button submit">Spremi promjene</button>
+                </div>
+            </form>
+            <img class="image-preview" :src="previewImage" alt="" />
 
-        <div v-if="currentImage" class="progress">
-            <div class="progress-bar progress-bar-info" role="progressbar" :aria-valuenow="progress" aria-valuemin="0"
-                aria-valuemax="100" :style="{ width: progress + '%' }">
-                {{ progress }}%
-            </div>
-        </div>
-
-        <div v-if="previewImage">
-            <div>
-                <img class="preview my-3" :src="previewImage" alt="" />
-            </div>
-        </div>
-
-        <div v-if="message" class="alert alert-secondary" role="alert">
-            {{ message }}
-        </div>
-
-        <div class="card mt-3">
-            <div class="card-header">List of Images</div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item" v-for="(image, index) in imageInfos" :key="index">
-                    <a :href="image.url">{{ image.name }}</a>
-                </li>
-            </ul>
         </div>
     </div>
+
+
 </template>
   
 <script>
 import axios from 'axios'
+import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
 export default {
     name: "upload-image",
+    components: { Sidebar },
     data() {
         return {
             currentImage: undefined,
             previewImage: undefined,
-
+            slug: '0',
             progress: 0,
             message: "",
 
-            imageInfos: [],
+            lineups: [],
+            name:'',
+            id:'',
+            len:'',
+            nextId:'',
+            nextOrder:'',
         };
+    },
+    created() {
+        axios.get('http://127.0.0.1:8000/lineup/',)
+            .then(response => {
+                this.lineups = response.data;
+                this.len = this.lineups.length;
+            })
     },
     methods: {
         selectImage() {
@@ -68,12 +70,30 @@ export default {
             this.message = "";
         },
 
-        upload() {
-            this.progress = 0;
+        postLineup() {
+            var ids = [];
+
+            this.lineups.forEach(element => {
+                ids.push(element.id);
+                ids.push(element.order);
+
+            });
+            for (let index = 0; index < ids.length; index++) {
+                if (ids.includes(String(index)) == false) {
+                    this.nextId = index;
+                    break;
+                }
+            }
+            if (this.nextId == '') {
+                this.nextId = ids.length;
+            }
+
+            console.log(this.lineups[this.lineups.length-1].order[0])
 
             let formData = new FormData();
 
-            formData.append("id", 555);
+            formData.append("id", this.nextId);
+            formData.append("name", this.name);
 
             formData.append("image", this.currentImage);
 
@@ -103,7 +123,8 @@ export default {
 </script>
   
 <style scoped>
-.preview {
-    max-width: 200px;
+.lineup-form {
+    display: inline-block;
+    width: 70%;
 }
 </style>

@@ -7,6 +7,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .serializer import GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer,DynamicSearchFilter
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import BadHeaderError, send_mail
+from django.http import HttpResponse, HttpResponseRedirect
 
 # Create your views here.
 
@@ -48,13 +50,18 @@ class ContactViewSet(viewsets.ModelViewSet):
     serializer_class = ContactSerializer
     
     
-def my_mail(request):  
+def send_mail(request):  
     subject = request.POST.get('subject', '')
     msg = request.POST.get('message', '')
     to = request.POST.get('to_mail', '')
-    res     = send_mail(subject, msg, settings.EMAIL_HOST_USER, [to])  
-    if(res == 1):  
-        msg = "Mail Sent Successfully."  
-    else:  
-        msg = "Mail Sending Failed."  
-    return HttpResponse(msg)  
+    
+    if subject and msg and settings.EMAIL_HOST_USER:
+        try:
+            send_mail(subject, msg, settings.EMAIL_HOST_USER, [to])
+        except BadHeaderError:
+            return HttpResponse('Invalid header found.')
+        return HttpResponseRedirect('/contact/thanks/')
+    else:
+        # In reality we'd use a form class
+        # to get proper validation errors.
+        return HttpResponse('Make sure all fields are entered and valid.')
