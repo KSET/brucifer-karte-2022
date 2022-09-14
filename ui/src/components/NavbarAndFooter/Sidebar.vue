@@ -32,7 +32,7 @@
 
         </div>
         <RouterElement class="sidebar-element" :name="'Dodaj Gosta'" :link="'/bruckarte/guests-add'"></RouterElement>
-        <RouterElement class="sidebar-element" :name="'Kontakt'" :link="'/bruckarte/sponsors'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Kontakt'" :link="'/bruckarte/band-kontakt'"></RouterElement>
     </div>
 </template>
 

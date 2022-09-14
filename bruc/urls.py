@@ -2,7 +2,7 @@
 from django.urls import path, include
 
 from rest_framework import routers
-from .views import GuestsViewSet, TagsViewSet, UsersViewSet, LineupViewSet, SponsorsViewSet
+from .views import ContactViewSet, GuestsViewSet, TagsViewSet, UsersViewSet, LineupViewSet, SponsorsViewSet
 
 router = routers.DefaultRouter()
 router.register('guests', GuestsViewSet)
@@ -10,6 +10,7 @@ router.register('tags', TagsViewSet)
 router.register('users', UsersViewSet)
 router.register('lineup', LineupViewSet)
 router.register('sponsors', SponsorsViewSet)
+router.register('contact', ContactViewSet)
 
 
 

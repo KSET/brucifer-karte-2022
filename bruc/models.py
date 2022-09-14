@@ -52,6 +52,7 @@ class Lineup(models.Model):
  
 class Sponsors(models.Model):
     id=models.CharField(max_length=50, primary_key=True, default=0, blank=False)
+    slug=models.CharField(max_length=200, default='', blank=True)
     order=models.CharField(max_length=200, default='', blank=True)
     name=models.CharField(max_length=49, default='', blank=True)
     url=models.CharField(max_length=400, default='0', blank=True)
@@ -73,3 +74,8 @@ class Sponsors(models.Model):
         storage.delete(path)
           
 
+class Contact(models.Model):
+    id=models.CharField(max_length=50, primary_key=True, default=0, blank=False)
+    bandName=models.CharField(max_length=49, default='', blank=True)
+    bookerName=models.CharField(max_length=50, default='0', blank=True)
+    bookerPhone=models.CharField(max_length=50, default='0', blank=True)

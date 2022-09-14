@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     created() {
-      axios.get('http://127.0.0.1:8000/lineup/?ordering=slug',)
+      axios.get('http://127.0.0.1:8000/lineup/?ordering=order',)
         .then(response => {
           this.lineups = response.data;
         });
@@ -63,13 +63,13 @@ export default {
           var nextlineup = this.lineups[nextlineupobj + 1];
         }
       } else {
-        if (lineup.slug != "00") {
+        if (lineup.order != "00") {
           var nextlineup = this.lineups[nextlineupobj - 1];
         }
       }
 
       axios.put('http://127.0.0.1:8000/lineup/' + nextlineup.id + '/',
-        { slug: "1000000" },
+        { order: "1000000" },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
@@ -77,7 +77,7 @@ export default {
           console.log("req1-pass");
 
           axios.put('http://127.0.0.1:8000/lineup/' + lineup.id + '/',
-            { slug: nextlineup.slug },
+            { order: nextlineup.order },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
             .then(() => {
@@ -87,7 +87,7 @@ export default {
           console.log("req3-pass");
 
           axios.put('http://127.0.0.1:8000/lineup/' + nextlineup.id + '/',
-            { slug: lineup.slug },
+            { order: lineup.order },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
             .then(() => {

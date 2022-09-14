@@ -2,7 +2,6 @@
     <div>
         <Sidebar />
         <div class="admin-page-container">
-            <div class="lineup-add">
                 
                 <h1 v-if="(this.slug == '0')" class="page-title lineup-title">Dodavanje izvođača</h1>
 
@@ -31,7 +30,6 @@
                 
             </div>
         </div>
-    </div>
 </template>
 
 <script>

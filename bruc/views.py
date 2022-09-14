@@ -2,9 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import filters
 from rest_framework import routers, serializers, viewsets
-from .models import Guests, Tags, Users, Lineup, Sponsors
+from .models import Guests, Tags, Users, Lineup, Sponsors, Contact
 from django_filters.rest_framework import DjangoFilterBackend
-from .serializer import GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, DynamicSearchFilter
+from .serializer import GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer,DynamicSearchFilter
 
 # Create your views here.
 
@@ -30,7 +30,7 @@ class LineupViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.OrderingFilter]
 
     search_fields = ['slug']
-    ordering_fields = ['slug']
+    ordering_fields = ['order']
 
 
 class SponsorsViewSet(viewsets.ModelViewSet):
@@ -40,9 +40,9 @@ class SponsorsViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.OrderingFilter]
 
     search_fields = ['slug']
-    ordering_fields = ['slug']
+    ordering_fields = ['order']
 
-
-
-    
+class ContactViewSet(viewsets.ModelViewSet):
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializer
     

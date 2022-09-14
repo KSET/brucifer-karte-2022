@@ -19,6 +19,8 @@ import AdminPanel from '../views/AdminViews/AdminPanelView.vue'
 import LineupAdd from '../views/AdminViews/LineupAddView.vue'
 import SponsorsAdd from '../views/AdminViews/SponsorsAddView.vue'
 import GuestAdd from '../views/AdminViews/GuestAddView.vue'
+import BandKontakt from '../views/AdminViews/BandKontaktView.vue'
+
 
 /* BruciWeb Views */
 import Bwlineup from '../views/BruciWebViews/BWlineupView.vue'
@@ -120,6 +122,10 @@ const routes = [
     path: '/bruckarte/sponsors-add/:slug',
     name: 'sponsors-add',
     component : SponsorsAdd
+  },{
+    path: '/bruckarte/band-kontakt',
+    name: 'band-kontakt',
+    component : BandKontakt
   },
   
   /* Brucweb Views setup */
