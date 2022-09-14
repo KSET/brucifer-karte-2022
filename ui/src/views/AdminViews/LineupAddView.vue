@@ -1,157 +1,109 @@
 <template>
     <div>
-        <Sidebar />
-        <div class="admin-page-container">
-                
-                <h1 v-if="(this.slug == '0')" class="page-title lineup-title">Dodavanje izvođača</h1>
+        <div class="row">
+            <div class="col-8">
+                <label class="btn btn-default p-0">
+                    <label for="file-upload" class="button-upload ">
+                        Odaberi CSV
+                    </label>
+                    <input id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" /> </label>
+            </div>
 
-
-                <h1 v-else class="page-title lineup-title">Uređivanje izvođača</h1>
-
-                <form @submit="postGuest">
-                    <div class="ggrid-container llineup">
-                    <h1 class="textfield">Ime </h1>
-                    <input required class="inputfield" type="text" v-model="name">
-
-                    <img class="image-preview" :src="previewImage" alt="" />
-
-                    <h1 class="textfield">Slika </h1>
-                   
-                    <input class="inputfield" type="file" accept="image/*" ref="file" @change="selectImage">
-                
-                    
-                    
-                    <button v-if="(this.slug == '0')" class="button submit" >Dodaj</button>
-                    <button v-else class="button submit">Spremi promjene</button>
-                    
-                    <button v-if="(this.slug == '0')" class="button deletey" >Delete</button>
-                </div>
-                </form>
-                
+            <div class="col-4">
+                <button class="btn btn-success btn-sm float-right" :disabled="!currentImage" @click="upload">
+                    Upload
+                </button>
             </div>
         </div>
+
+        <div v-if="currentImage" class="progress">
+            <div class="progress-bar progress-bar-info" role="progressbar" :aria-valuenow="progress" aria-valuemin="0"
+                aria-valuemax="100" :style="{ width: progress + '%' }">
+                {{ progress }}%
+            </div>
+        </div>
+
+        <div v-if="previewImage">
+            <div>
+                <img class="preview my-3" :src="previewImage" alt="" />
+            </div>
+        </div>
+
+        <div v-if="message" class="alert alert-secondary" role="alert">
+            {{ message }}
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">List of Images</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item" v-for="(image, index) in imageInfos" :key="index">
+                    <a :href="image.url">{{ image.name }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </template>
-
+  
 <script>
-import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
-import axios from 'axios';
+import axios from 'axios'
 
-import LineupAdd from '@/components/Lineup/LineupAdd.vue';
 export default {
-    components: { LineupAdd, Sidebar }
-    ,
+    name: "upload-image",
     data() {
         return {
-            items: ['Brucoši', 'KSET', 'VIP'],
-            lineup: [],
-            slug: 0,
-            lineupp: '',
-            id: '',
-            name: '',
-            surname: '',
-            jmbag: '',
-            phone: '',
-            tag: '',
-            bought: '',
-            entered: '',
-            url: '',
-            img: '',
-            nextId: '',
-            services: ['Brucoši', 'KSET', 'VIP'],
-            selectedTag: '',
             currentImage: undefined,
             previewImage: undefined,
+
             progress: 0,
             message: "",
+
             imageInfos: [],
-
-        }
-    },
-
-    mounted() {
-        this.slug = this.$route.params.slug;
-        if (this.slug != '0') {
-            axios.get('http://127.0.0.1:8000/lineup/?search=' + this.slug,)
-                .then(response => {
-                    this.lineup = response.data;
-                    this.lineupp = this.lineup[0];
-                    this.name = this.lineupp.name;
-                    this.previewImage = this.lineupp.image;
-
-                })
-
-        } else {
-            axios.get('http://127.0.0.1:8000/lineup/',)
-                .then(response => {
-                    this.lineup = response.data;
-                })
-        }
-
+        };
     },
     methods: {
-        selectImage(e) {
+        selectImage() {
             this.currentImage = this.$refs.file.files.item(0);
             this.previewImage = URL.createObjectURL(this.currentImage);
             this.progress = 0;
             this.message = "";
-            //console.log(this.currentImage)
         },
-        postGuest() {
 
+        upload() {
+            this.progress = 0;
 
-            var ids = [];
+            let formData = new FormData();
 
-            this.lineup.forEach(element => {
-                ids.push(element.id);
-            });
-            for (let index = 0; index < ids.length; index++) {
-                if (ids.includes(String(index)) == false) {
-                    this.nextId = index;
-                    break;
-                }
-            }
-            if (this.nextId == '') {
-                this.nextId = ids.length;
-            }
+            formData.append("id", 555);
 
-            var formData = new FormData();
+            formData.append("image", this.currentImage);
 
-            console.log(this.nextId);
-
-            formData.append("id", this.nextId);
-            formData.append("name", this.name);
-            formData.append("slug", "asdasd");
-            //formData.append("image", this.currentImage);
-
-            console.log(formData.get("id"));
-
-            axios.post('http://127.0.0.1:8000/lineup/',
-                { formData },
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS }, }, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            }
+            axios.post("http://127.0.0.1:8000/lineup/", formData,
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                },
             )
-                .then(() => {
+                .then((response) => {
+                    this.message = response.data.message;
                 })
-        }
-    }
-}
+                .then((images) => {
+                    this.imageInfos = images.data;
+                })
+                .catch((err) => {
+                    this.progress = 0;
+                    this.message = "Could not upload the image! " + err;
+                    this.currentImage = undefined;
+                });
+        },
+    },
+
+};
 </script>
-
-
-<style>
-@import '../../assets/scss/Admin-scss/gird-view.scss';
-
-.ggrid-container.llineup{
-    left: 6%;
-    display: grid;
-    grid-template-columns: 10% auto;
-    padding: 10px;
-    row-gap: 30px;
+  
+<style scoped>
+.preview {
+    max-width: 200px;
 }
-
 </style>
-
-

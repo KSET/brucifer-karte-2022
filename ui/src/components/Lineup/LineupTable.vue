@@ -7,13 +7,13 @@
         <h3 class="name"> {{lineup.name}}</h3>
 
         <div class="ccard-buttons">
-          <button @click="changelineuporder(lineup, 'b')" class="ccard-button">
+          <button @click="changelineuporder(lineup, 'b')" id="b4" class="ccard-button">
             <img src="../../assets/icons/arrow-left-icon.svg">
           </button>
           <button @click="editlineup(lineup)" class="ccard-button" style="padding-bottom: 5px;">
             <img src="../../assets/icons/edit-icon.svg">
           </button>
-          <button @click="changelineuporder(lineup, 'f')" class="ccard-button">
+          <button @click="changelineuporder(lineup, 'f')" id="next" class="ccard-button">
             <img src="../../assets/icons/arrow-right-icon.svg">
           </button>
         </div>
@@ -52,6 +52,10 @@ export default {
       this.$router.push({ path: '/bruckarte/lineup-add/' + lineup.slug });
     },
     changelineuporder(lineup, direction) {
+      document.querySelector('#next').disabled = true;
+      document.querySelector('#b4').disabled = true;
+
+
       console.log(this.lineups);
       console.log(this.lineups.length);
 
@@ -90,10 +94,11 @@ export default {
             { order: lineup.order },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
-            .then(() => {
+            .finally(() => {
 
               console.log("req4-pass");
-
+              document.querySelector('#next').disabled = false;
+              document.querySelector('#b4').disabled = false;
               this.created();
             })
 
