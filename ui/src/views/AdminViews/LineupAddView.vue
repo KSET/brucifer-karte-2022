@@ -16,7 +16,7 @@
 
                     <h1 class="textfield">Slika </h1>
                     <label for="file-upload" class="button white">
-                        Odaberi CSV
+                        Odaberi PNG
                     </label>
                     <input id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
 
@@ -48,19 +48,40 @@ export default {
             message: "",
 
             lineups: [],
-            name:'',
-            id:'',
-            len:'',
-            nextId:'',
-            nextOrder:'',
+            name: '',
+            id: '',
+            len: '',
+            nextId: '',
+            nextOrder: '',
+            order: '',
         };
     },
-    created() {
-        axios.get('http://127.0.0.1:8000/lineup/',)
-            .then(response => {
-                this.lineups = response.data;
-                this.len = this.lineups.length;
-            })
+
+
+    mounted() {
+        this.slug = this.$route.params.slug;
+        if (this.slug != '0') {
+            axios.get('http://127.0.0.1:8000/lineup/?search=' + this.slug,)
+                .then(response => {
+                    this.lineup = response.data;
+                    this.lineupp = this.lineup[0];
+                    this.name = this.lineupp.name;
+                    this.previewImage = this.lineupp.image;
+                    this.id = this.lineupp.id;
+                    this.order = this.lineupp.order;
+                    this.currentImage = this.lineupp.image;
+
+
+
+                })
+
+        } else {
+            axios.get('http://127.0.0.1:8000/lineup/',)
+                .then(response => {
+                    this.lineup = response.data;
+                })
+        }
+
     },
     methods: {
         selectImage() {
@@ -71,31 +92,57 @@ export default {
         },
 
         postLineup() {
-            var ids = [];
-
-            this.lineups.forEach(element => {
-                ids.push(element.id);
-                ids.push(element.order);
-
-            });
-            for (let index = 0; index < ids.length; index++) {
-                if (ids.includes(String(index)) == false) {
-                    this.nextId = index;
-                    break;
-                }
-            }
-            if (this.nextId == '') {
-                this.nextId = ids.length;
-            }
-
-            console.log(this.lineups[this.lineups.length-1].order[0])
 
             let formData = new FormData();
 
-            formData.append("id", this.nextId);
+            formData.append("image", this.currentImage);
+
             formData.append("name", this.name);
 
-            formData.append("image", this.currentImage);
+            if (this.slug == "0") {
+
+
+                formData.append("id", this.id);
+                formData.append("order", this.order);
+                formData.append("slug", this.slug);
+
+                axios.delete("http://127.0.0.1:8000/lineup/" + this.id + '/',
+                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                )
+            } else {
+                var ids = [];
+
+                this.lineups.forEach(element => {
+                    ids.push(element.id);
+
+                });
+                for (let index = 0; index < ids.length; index++) {
+                    if (ids.includes(String(index)) == false) {
+                        this.nextId = index;
+                        break;
+                    }
+                }
+                if (this.nextId == '') {
+                    this.nextId = ids.length;
+                }
+
+                console.log(this.lineups[this.lineups.length - 1].order)
+
+                var lastOrder = this.lineups[this.lineups.length - 1].order;
+
+                if (lastOrder[0] == "0") {
+                    this.nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
+                } else {
+                    this.nextOrder = (parseInt(lastOrder) + 1).toString();
+
+                }
+
+                console.log(this.nextOrder)
+
+                formData.append("id", this.nextId);
+                formData.append("order", this.nextOrder);
+
+            }
 
             axios.post("http://127.0.0.1:8000/lineup/", formData,
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
@@ -105,17 +152,6 @@ export default {
                     }
                 },
             )
-                .then((response) => {
-                    this.message = response.data.message;
-                })
-                .then((images) => {
-                    this.imageInfos = images.data;
-                })
-                .catch((err) => {
-                    this.progress = 0;
-                    this.message = "Could not upload the image! " + err;
-                    this.currentImage = undefined;
-                });
         },
     },
 

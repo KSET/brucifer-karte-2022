@@ -27,15 +27,15 @@
                 <h1 class="textfield">Prezime </h1>
                 <input readonly class="inputfield" :disabled="this.id==''" type="text" @input="changevalue" v-model="surname">
 
-                <h1 v-if="this.jmbag != ''" class="textfield">JMBAG </h1>
-                <input v-if="this.jmbag != ''" class="inputfield" readonly type="text" v-model="jmbag">
+                <h1 v-if="this.tag == 'Brucoši'" class="textfield">JMBAG </h1>
+                <input v-if="this.tag == 'Brucoši'" class="inputfield" readonly type="text" v-model="jmbag">
 
-                <h1 v-if="this.jmbag != ''" class="textfield">Karta </h1>
+                <h1 v-if="this.tag == 'Brucoši'" class="textfield">Karta </h1>
 
-                <button disabled v-if="this.jmbag != '' &&  this.bought == '1'"  class="button2-yes" @click="changeBought(guest, '0')">
+                <button disabled v-if="this.tag == 'Brucoši' &&  this.bought == '1'"  class="button2-yes" @click="changeBought(guest, '0')">
                     <img  class="va" src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button disabled class="button2-no" v-if="this.jmbag != '' && this.bought == '0'" @click="changeBought(guest, '1')">
+                <button disabled class="button2-no" v-if="this.tag == 'Brucoši' && this.bought == '0'" @click="changeBought(guest, '1')">
                     <img class="va"  src="../../assets/icons/no-icon.svg">
                 </button>
 
@@ -48,8 +48,8 @@
                     <img class="va" src="../../assets/icons/no-icon.svg">
                 </button>
 
-                <h1 v-if="this.jmbag != ''" class="textfield">Potvrda </h1>
-                <h1 v-if="this.jmbag != ''" class="textfield">kod123456789 </h1>
+                <h1 v-if="this.tag == 'Brucoši'" class="textfield">Potvrda </h1>
+                <h1 v-if="this.tag == 'Brucoši'" class="textfield">kod123456789 </h1>
             </div>
         </div>
     </div>
@@ -80,6 +80,8 @@ export default {
             jmbag: '',
             bought: '',
             entered: '',
+            tag: '',
+
 
 
         }
@@ -108,10 +110,14 @@ export default {
                             this.entered = this.guest.entered;
                             this.surname = this.guest.surname;
                             this.jmbag = this.guest.jmbag;
+                            this.tag = this.guest.tag;
+
                         } else if (this.guests.length == 0) {
                             this.name = "NO MATCH!";
                             this.surname = '';
                             this.jmbag = '';
+                            this.tag = '';
+
                         }
                     } else {
                         if (this.search != '') {
@@ -130,6 +136,8 @@ export default {
             this.jmbag = guest.jmbag;
             this.bought = guest.bought;
             this.entered = guest.entered;
+            this.tag = guest.tag;
+
         },
         changeEntered(guest, changenum) {
             axios.put('http://127.0.0.1:8000/guests/' + guest.id + '/',
