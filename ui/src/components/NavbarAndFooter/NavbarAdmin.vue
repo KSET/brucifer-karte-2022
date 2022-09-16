@@ -90,6 +90,12 @@ export default {
 .navbar.bw{
   font-family: 'Antonio';
 font-style: normal;
+font-weight: 400;
+font-size: 14px;
+/* identical to box height, or 686% */
+
+text-align: center;
+letter-spacing: -0.022em;font-style: normal;
   background: #DC5E88;
 
 }
@@ -97,7 +103,6 @@ font-style: normal;
 .navbar-title {
   position: absolute;
   left: 2.73%;
-  right: 68.65%;
   top: 20%;
   bottom: 20%;
 
@@ -116,12 +121,15 @@ font-style: normal;
   margin-right: 2%;
   position: absolute;
   overflow: hidden;
+  vertical-align: top;
   right: 0%;
+  top:0%;
 }
 
 .navbar-element {
+  font-family: inherit;
   margin-left: 70px;
-  font-size: 20px;
+  vertical-align: middle;
 
   border: none;
   background: none;
@@ -134,7 +142,6 @@ font-style: normal;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
-  line-height: 36px;
   border-bottom: black;
 }
 

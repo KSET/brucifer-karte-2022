@@ -1,40 +1,47 @@
 <template>
-<div class="page-container">
-<img src="../../assets/bg/home/bg-desktop.svg">
-<Footer></Footer>
-</div>
+  <div class="page-container">
+    <div class="homepage">
+      <div class="image-container">
+        <div class="image-sizer"></div>
+        <div class="image-frame"></div>
+      </div>
+
+    </div>
+    <Footer></Footer>
+
+  </div>
 </template>
 
 <script>
-  import Footer from '@/components/NavbarAndFooter/Footer.vue'
+import Footer from '@/components/NavbarAndFooter/Footer.vue'
 
 export default {
-name: 'Naslovnica',
-conponenets:  {Footer},
+  name: 'Naslovnica',
+  components: { Footer },
   props: {
     msg: String
   },
-  data(){
-    return{
-      w:'',
+  data() {
+    return {
+      w: '',
     }
-    
+
   },
-  mounted(){
-    this.w=window.innerWidth;
+  mounted() {
   },
 }
 </script>
 
 <style>
-:root{
+:root {
   /* BACKGROUND IMAGES
   --background-image -> homepage images
   var(--background-default); -> default images on other pages
   */
 
-  --background-image : url("../../assets/bg/home/bg-desktop.svg");
-  --background-default : url("../../assets/bg/default/bg-desktop.svg");
+  --background-image: url("../../assets/bg/home/bg-desktop.svg");
+  --background-default: url("../../assets/bg/default/bg-desktop.svg");
+  --background-image-aspect-ratio: calc(1080 / 1920);
 
   /* COLORS */
 
@@ -44,17 +51,39 @@ conponenets:  {Footer},
   --artist-name-color: #FAFAFB;
 
 }
+
 @media screen and (max-width: 1280px) {
-:root{  
-  --background-home-image : url("../../assets/bg/home/bg-tablet.svg");
-}}
-.page-containter{  
+  :root {
+    --background-image-aspect-ratio: calc(962 / 601);
+
+    --background-image: url("../../assets/bg/home/bg-tablet.svg");
+  }
+}
+
+.page-container {
   position: relative;
-    background-image: --background-image;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-color: #F6BB96;
+  background-color: #F6BB96;
+  min-height: 93vh;
+}
+
+.bw-page-container {
+  position: relative;
+  background-image: var(--background-default);
+  background-repeat: repeat;
+  background-size: cover;
+  background-color: #F6BB96;
+  min-height: 93vh;
+  padding-bottom: 60px;
 }
 
 
+.homepage {
+  /* Footer height */
+  background-image: var(--background-image);
+  background-repeat: no-repeat;
+  background-size: cover;
+
+}
+
+@import url(../../bruciweb.css);
 </style>

@@ -1,34 +1,42 @@
 <template>
-  <div class="page-container">
-    <br>
-    <p>slay</p>
+  <div class="bw-page-container">
+    <div class="contents">
+      <section>
+        <h1 class="bwh1">PR &amp; MARKETING:
+        </h1>
+
+        <p>
+          Antica Župić
+          <br><br>
+          <a href="mailto:antica.zupic@kset.org" rel="nofollow noopener">antica.zupic@kset.org</a>
+        </p>
+
+        <h1 class="bwh1">PRESS:
+        </h1>
+
+        <p>
+          Antica Župić
+          <br><br>
+          <a href="mailto:antica.zupic@kset.org" rel="nofollow noopener">antica.zupic@kset.org</a>
+        </p>
+
+      </section>
+
+    </div>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
+import Footer from '@/components/NavbarAndFooter/Footer.vue'
 
 export default {
-name: 'KontaktView',
+  name: 'KontaktView',
+  components: { Footer }
 
 }
 </script>
 
 <style>
-.page-container{ 
-  position: absolute;
-  height: 100%;
-  width: 100%;
-    background-image: var(--background-default);;
-  background-repeat: no-repeat;
-    background-size: cover;
-    background-color: #F6BB96;;
-}
 
-@media screen and (max-width: 1280px) {
-#page-container{  
-    background-image: url("../../assets/bg/default/bg-tablet.svg");
-  background-repeat: no-repeat;
-    background-size: cover;
-}
-}
 </style>

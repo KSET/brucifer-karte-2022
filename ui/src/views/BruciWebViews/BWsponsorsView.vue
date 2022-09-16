@@ -1,71 +1,55 @@
 <template>
-<div class="sponsors"> 
-  <br>
-    <div v-for="user in users" :key="user.id">
-            <div class="artist" title="{{ user.name }}">
-                <div class="image-container">
-                    <div class="image-sizer"></div>
-                    <img class="image-frame" v-bind:src="user.image">
-                </div>
-            </div>
+  <div class="bw-page-container">
+    <div class="sponsors">
+      <div v-for="user in users" :key="user.id">
+        <div href="{{ user.url }}" rel="nofollow referrer noopener external" target="_blank" referrerpolicy="origin"
+          class="artist" title="{{ user.name }}">
+          <div class="image-container">
+            <div class="image-sizer2"></div>
+            <img class="image-frame2" v-bind:src="user.image">
+          </div>
+        </div>
+      </div>
     </div>
-    </div>
+    <Footer></Footer>
+  </div>
 </template>
 
 <script>
+import Footer from '@/components/NavbarAndFooter/Footer.vue'
+
 import axios from 'axios'
 export default {
   name: 'UsersTable',
+  components: {Footer}, 
   props: {
     msg: String
   },
-  data(){
-    return{
+  data() {
+    return {
       users: [],
-      id:'',
-      name:'',
-      email:'',
-      privilege:'',
+      id: '',
+      name: '',
+      email: '',
+      privilege: '',
     }
-    
+
   },
-  mounted(){
+  mounted() {
     this.created();
   },
-  
-  methods:{
+
+  methods: {
     created() {
-    axios.get('http://127.0.0.1:8000/sponsors/',)
-    .then(response => {
-      this.users =response.data;
+      axios.get('http://127.0.0.1:8000/sponsors/',)
+        .then(response => {
+          this.users = response.data;
 
 
-    })},
-    changeprivilege(user,changenum){
-      axios.put('http://127.0.0.1:8000/users/'+user.id+'/',
-      {privilege:changenum},
-      {auth:{username:process.env.VUE_APP_DJANGO_USER,password:process.env.VUE_APP_DJANGO_PASS}}
-      )
-      .then(()=>{
-        this.created();
-      })
-    },
-    deleteUser(user){
-      axios.delete('http://127.0.0.1:8000/users/'+user.id+'/',
-      {auth:{username:process.env.VUE_APP_DJANGO_USER,password:process.env.VUE_APP_DJANGO_PASS}}
-      )
-      .then(()=>{
-        this.created();
-      })
-    },
-    searchUser(){
-      axios.get('http://127.0.0.1:8000/users/?search='+this.search,)
-    .then(response => {
-      this.users =response.data;
-    })
+        })
     }
   }
-   
+
 }
 
 
@@ -73,78 +57,64 @@ export default {
 
 
 <style>
-.sponsors{  
-  position: absolute;
-  height: 100%;
-  width: 100%;
-    background-image: var(--background-default);
-    background-size: cover;
-    background-color:  var(--background-color);
+
+
+.sponsors {
+  padding: 3.14159em;
+
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-gap: 3.14159em;
 }
 
+.image-container {
+  position: relative;
+}
 
-    .contents {
-        padding-top: 3.14159em;
-    }
+.image-container .image-sizer {
+  padding-bottom: calc(0.86 * 100%);
+  transition: padding-bottom .3s ease;
+  will-change: padding-bottom;
+}
 
-    .sponsors {
-        display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        grid-gap: 3.14159em;
-    }
+.image-container .image-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+}
 
-    .image-container {
-        position: relative;
-    }
+.sponsor {
+  background: rgba(0, 0, 0, .3);
+  border-radius: 18px;
+  padding: 30px;
+}
 
-    .image-container .image-sizer {
-        padding-bottom: calc(0.86 * 100%);
-        transition: padding-bottom .3s ease;
-        will-change: padding-bottom;
-    }
+@media screen and (max-width: 1400px) {
+  .sponsors {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
 
-    .image-container .image-frame {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: contain;
-    }
+@media screen and (max-width: 980px) {
+  .sponsors {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
 
-    .sponsor {
-        background: rgba(0, 0, 0, .3);
-        border-radius: 18px;
-        padding: 30px;
-    }
+@media screen and (max-width: 635px) {
+  .sponsors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 
-    @media screen and (max-width: 1400px) {
-        .sponsors {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-        }
-    }
-
-    @media screen and (max-width: 980px) {
-        .sponsors {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-    }
-
-    @media screen and (max-width: 635px) {
-        .sponsors {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-    }
-
-    @media screen and (max-width: 350px) {
-        .sponsors {
-            grid-template-columns: repeat(1, minmax(0, 1fr));
-        }
-    }
-    h6{
-        color:white;
-    }
-
+@media screen and (max-width: 350px) {
+  .sponsors {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
 </style>

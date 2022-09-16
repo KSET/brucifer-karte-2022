@@ -2,7 +2,6 @@
 <div id="app">
   <NavbarAdmin v-if="this.navtype=='bruckarte'"></NavbarAdmin>
   <NavbarBweb v-if="this.navtype=='brucweb'"></NavbarBweb>
-  <Footer v-if="this.navtype=='brucweb'"></Footer>
 <router-view/>
 </div>
 </template>
@@ -37,11 +36,6 @@ export default {
 </script>
 
 <style>
-#app {
-
-}
-
-
 
 @import '~bootstrap/dist/css/bootstrap.css'
 </style>

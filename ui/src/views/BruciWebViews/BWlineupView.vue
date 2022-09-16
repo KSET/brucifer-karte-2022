@@ -1,18 +1,17 @@
 <template>
-    <div class="page-containerr">
-
+    <div class="bw-page-container">
             <div class="lineup">
                 <div v-for="user in users" :key="user.id">
                     <div class="artist" title="{{ user.name }}">
                         <div class="image-container">
-                            <div class="image-sizer"></div>
-                            <img class="image-frame" v-bind:src="user.image">
+                            <div class="image-sizer2"></div>
+                            <img class="image-frame2" v-bind:src="user.image">
                         </div>
                         <h3>{{ user.name }}</h3>
                     </div>
                 </div>
         </div>
-
+        <Footer></Footer>
     </div>
 </template>
 
@@ -82,17 +81,18 @@ export default {
 
 <style>
 @import "@fontsource/antonio";
-
-.page-containerr {
-    padding: 3.14159em;
+.bw-page-container{
+    position: relative;
     background-image: var(--background-default);
     background-repeat: repeat;
     background-size: cover;
     background-color: #F6BB96;
+    min-height: 100vh;
+    padding-bottom: 60px;
 }
-
-
         .lineup {
+            padding: 3.14159em;
+
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
             grid-row-gap: 3.45rem;
@@ -107,13 +107,13 @@ export default {
             position: relative;
         }
 
-        .image-container .image-sizer {
+        .image-container .image-sizer2 {
             padding-bottom: calc(0.86 * 100%);
             transition: padding-bottom .3s ease;
             will-change: padding-bottom;
         }
 
-        .image-container .image-frame {
+        .image-container .image-frame2 {
             position: absolute;
             top: 0;
             left: 0;

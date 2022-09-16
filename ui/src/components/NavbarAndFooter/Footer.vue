@@ -1,5 +1,5 @@
 <template>
-    <div id="footer">
+    <div class="footery">
         <p id="text1"> KSET © Copyright 2022. All Rights Reserved.</p>
 
         <router-link id="text2" to="/pravila-ponasanja">
@@ -17,11 +17,12 @@ export default {
 
 <style>
 
-#footer{
+.footery{
 position: absolute;
+padding: 0px;
   bottom: 0;
   width: 100%;
-  height: 2.5rem;      
+  height: 60px;      
 
 background: #F6BB96;}
 

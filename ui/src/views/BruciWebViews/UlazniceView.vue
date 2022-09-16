@@ -1,9 +1,9 @@
 <template>
-  <div class="page-containery">
-    <main>
+  <div class="bw-page-container">
+    <div>
       <div class="contents">
         <section>
-          <h1 id="ulaznice">ULAZNICE</h1>
+          <h1 class="bwh1">ULAZNICE</h1>
 
           <p>Ulaznice po redovnoj cijeni od 70 kuna u prodaji su od 29. rujna do 12. studenog ili do isteka zaliha.
             Ulaznice se mogu kupiti u KSET-u, glazbenoj knjižari Rockmark te u Dirty Old Shopu.</p>
@@ -13,7 +13,7 @@
             stranici.</p>
           
           <br>
-          <h1 id="pravila-ponašanja">PRAVILA PONAŠANJA</h1>
+          <h1 class="bwh1">PRAVILA PONAŠANJA</h1>
 
           <p>Kupljena ulaznica omogućava jedan ulazak u prostor održavanja događaja. Ponovni ulazak nakon izlaska iz
             prostora radi sigurnosnih razloga nije moguć.</p>
@@ -39,25 +39,24 @@
         </section>
 
       </div>
-    </main>
+    </div>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
+  import Footer from '@/components/NavbarAndFooter/Footer.vue'
+
 export default {
   name: 'UlazniceView',
+  components:{Footer},
 }
 </script>
 
 <style>
-.page-containery {
-  display: flex;
-  background-image: var(--background-default);
-  background-repeat: no-repeat;
-  background-size: cover;
-}
 
-h1 {
+
+.bwh1 {
   
   font-family: 'Antonio';
   font-style: normal;
@@ -83,8 +82,9 @@ p {
 }
 
 .contents{
-  margin-left: 4.5%;
-  margin-right: 4.5%;
+  padding-top: 4.5%;
+  padding-left: 4.5%;
+  padding-right: 4.5%;
 }
 
 @media screen and (max-width: 1280px) {

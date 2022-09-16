@@ -29,7 +29,6 @@ import Kontakt from '../views/BruciWebViews/KontaktView.vue'
 import Ulaznice from '../views/BruciWebViews/UlazniceView.vue'
 import Pravila from '../views/BruciWebViews/PravilaView.vue'
 import Naslovnica from '../views/BruciWebViews/NaslovnicaView.vue'
-import Upis from '../views/BruciWebViews/UpisView.vue'
 
 import store from '@/store/index.js';
 
@@ -159,14 +158,7 @@ const routes = [
     name: 'naslovnica',
     component : Naslovnica
   },
-  {
-    path: '/upis',
-    name: 'upis',
-    component : Upis
-  },
-  
-  
-  
+
 ]
 
 
