@@ -16,15 +16,15 @@ import Vuex from 'vuex';
 import VueNavigationBar from 'vue-navigation-bar';
 import 'vue-navigation-bar/dist/vue-navigation-bar.css';
 import "./../node_modules/bulma/css/bulma.css";
-import emailjs from 'emailjs-com';
+import VueCountdown from '@chenfengyuan/vue-countdown';
 
 const app= createApp(App).use(store).use(router)
 
 
-app.component('downloadCsv', JsonCSV).component('VueJwtDecode', VueJwtDecode)
+app.component('downloadCsv', JsonCSV).component('VueJwtDecode', VueJwtDecode);
+app.component(VueCountdown.name, VueCountdown);
 
 app.use(Vuex)
-app.use(emailjs)
 
 app.component('VueNavigationBar', VueNavigationBar);
 

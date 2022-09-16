@@ -41,7 +41,7 @@ export default {
 
     methods: {
         created() {
-            axios.get('http://127.0.0.1:8000/lineup/',)
+            axios.get('http://127.0.0.1:8000/lineup/?ordering=order',)
                 .then(response => {
                     this.users = response.data;
 

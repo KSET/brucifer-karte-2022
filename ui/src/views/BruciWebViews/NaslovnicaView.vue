@@ -1,11 +1,14 @@
 <template>
   <div class="page-container">
+    <vue-countdown :time=this.time v-slot="{ days, hours, minutes, seconds }">
+  Time Remaining：{{ days }} days, {{ hours }} hours, {{ minutes }} minutes, {{ seconds }} seconds.
+</vue-countdown>
     <div class="homepage">
       <div class="image-container">
         <div class="image-sizer"></div>
         <div class="image-frame"></div>
       </div>
-
+    
     </div>
     <Footer></Footer>
 
@@ -23,11 +26,14 @@ export default {
   },
   data() {
     return {
-      w: '',
+      time: '',
     }
 
   },
   mounted() {
+    var seconds = new Date().getTime() / 1000;
+    this.time=(1668283200-(seconds))*1000;
+    console.log(seconds);
   },
 }
 </script>
