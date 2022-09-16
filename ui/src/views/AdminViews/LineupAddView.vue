@@ -8,7 +8,7 @@
                 <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje izvođača</h1>
                 <h1 v-else class="page-title">Uređivanje izvođača</h1>
             </div>
-            <form class="lineup-form" @submit="postLineup">
+            <form class="lineup-form" @submit="checkLineup">
                 <div class="grid-container">
 
                     <h1 class="textfield">Ime </h1>
@@ -78,7 +78,7 @@ export default {
         } else {
             axios.get('http://127.0.0.1:8000/lineup/',)
                 .then(response => {
-                    this.lineup = response.data;
+                    this.lineups = response.data;
                 })
         }
 
@@ -90,8 +90,18 @@ export default {
             this.progress = 0;
             this.message = "";
         },
-
-        postLineup() {
+        postLineup(formdata) {
+            console.log("gaas")
+            axios.post("http://127.0.0.1:8000/lineup/", formData,
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                },
+            )
+        }
+        , checkLineup() {
 
             let formData = new FormData();
 
@@ -99,16 +109,20 @@ export default {
 
             formData.append("name", this.name);
 
-            if (this.slug == "0") {
-
+            if (this.slug != "0") {
 
                 formData.append("id", this.id);
                 formData.append("order", this.order);
                 formData.append("slug", this.slug);
 
-                axios.delete("http://127.0.0.1:8000/lineup/" + this.id + '/',
-                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                )
+                axios.put("http://127.0.0.1:8000/lineup/", formData,
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                },
+            )
             } else {
                 var ids = [];
 
@@ -131,7 +145,12 @@ export default {
                 var lastOrder = this.lineups[this.lineups.length - 1].order;
 
                 if (lastOrder[0] == "0") {
-                    this.nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
+                    if (lastOrder == "09") {
+                        this.nextOrder = "10"
+                    }
+                    else {
+                        this.nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
+                    }
                 } else {
                     this.nextOrder = (parseInt(lastOrder) + 1).toString();
 
@@ -141,17 +160,12 @@ export default {
 
                 formData.append("id", this.nextId);
                 formData.append("order", this.nextOrder);
-
+                this.postLineup(formData);
             }
+            console.log("adksad")
 
-            axios.post("http://127.0.0.1:8000/lineup/", formData,
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
-                },
-            )
+            
+
         },
     },
 

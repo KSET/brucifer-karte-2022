@@ -1,23 +1,25 @@
 <template>
-  <div id="admin-navbar">
-        <router-link id="navbar-title" to="/bruckarte/">
-          #BRUCIFER
-        </router-link>
+  <div class="navbar admin">
+    <router-link class="navbar-title" to="/bruckarte/">
+      #BRUCIFER
+    </router-link>
 
-        <div class="routes">
+    <div class="routes">
 
-        <RouterElement v-if="privilege == '1' || privilege == '3' || privilege == '4'" class="navbar-element hide" :name="'Brucoši'" :link="'/bruckarte/guests'"></RouterElement>
+      <RouterElement v-if="privilege == '1' || privilege == '3' || privilege == '4'" class="navbar-element hide"
+        :name="'Brucoši'" :link="'/bruckarte/guests'"></RouterElement>
 
-        <RouterElement v-if="privilege == '1' || privilege == '2' || privilege == '4'" class="navbar-element hide" :name="'Ulaz'" :link="'/bruckarte/entry'"></RouterElement>
+      <RouterElement v-if="privilege == '1' || privilege == '2' || privilege == '4'" class="navbar-element hide"
+        :name="'Ulaz'" :link="'/bruckarte/entry'"></RouterElement>
 
+      <router-link v-if="privilege == '1'" class="navbar-element" to="/bruckarte/admin-panel">
+        <img src="../../assets/icons/nav-burger.svg">
+      </router-link>
 
-        <router-link v-if="privilege == '1'" class="navbar-element" to="/bruckarte/admin-panel">
-          <img src="../../assets/icons/nav-burger.svg">
-        </router-link>
-
-        <router-link class="navbar-element hide" to="/bruckarte/logout">
-          <img src="../../assets/icons/logout-icon.svg">
-        </router-link></div>
+      <router-link v-if="privilege != '' && privilege != '0'" class="navbar-element hide" to="/bruckarte/logout">
+        <img src="../../assets/icons/logout-icon.svg">
+      </router-link>
+    </div>
 
   </div>
 </template>
@@ -51,13 +53,13 @@ export default {
       logoutlist: ['logout']
     }
   },
-  mounted(){
+  mounted() {
     this.route = this.$route.path;
   },
   methods: {
     toggleBurger() {
-      
-      
+
+
     }
   }
 }
@@ -65,67 +67,81 @@ export default {
 
 </script>
 <style lang="scss">
-#admin-navbar{
+.navbar {
   overflow: hidden;
-  position: fixed; /* Set the navbar to fixed position */
-  top: 0; /* Position the navbar at the top of the page */
-  width: 100%; /* Full width */
+  position: absolute;
+  /* Set the navbar to fixed position */
+  top: 0px;
+  /* Position the navbar at the top of the page */
+  width: 100%;
+  /* Full width */
   height: 3.75rem;
 
-background: #FFFFFF;
-border-bottom: 1px solid #000000;
+  
 }
 
-#navbar-title{
-position: absolute;
-left: 2.73%;
-right: 68.65%;
-top: 20%;
-bottom: 20%;
+.navbar.admin{
+  background: #FFFFFF;
+  border-bottom: 1px solid #000000;
 
-font-family: 'Montserrat';
+  font-family: 'Montserrat';
+  font-style: normal;
+}
+.navbar.bw{
+  font-family: 'Antonio';
 font-style: normal;
-font-weight: 700;
-font-size: 32px;
-line-height: 36px;
-/* identical to box height, or 112% */
+  background: #DC5E88;
 
-letter-spacing: -0.015em;
-
-color: #000000;
 }
 
-.routes{
+.navbar-title {
+  position: absolute;
+  left: 2.73%;
+  right: 68.65%;
+  top: 20%;
+  bottom: 20%;
+
+  
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 36px;
+  /* identical to box height, or 112% */
+
+  letter-spacing: -0.015em;
+
+  color: #000000;
+}
+
+.routes {
   margin-right: 2%;
   position: absolute;
   overflow: hidden;
   right: 0%;
 }
 
-.navbar-element{
-    padding-left: 70px;
-    font-size: 20px;
-    
-    border: none;
-    background: none;
-    text-align: left;
-    cursor: pointer;
-    outline: none;
+.navbar-element {
+  margin-left: 70px;
+  font-size: 20px;
 
-    height: 60px;
-    text-align: left;
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 36px;
-    border-bottom: black;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+
+  height: 60px;
+  text-align: left;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 36px;
+  border-bottom: black;
 }
 
 @media screen and (max-width: 980px) {
-    .navbar-element.hide {
-        display: none;
-    }
+  .navbar-element.hide {
+    display: none;
+  }
 }
 </style>
 

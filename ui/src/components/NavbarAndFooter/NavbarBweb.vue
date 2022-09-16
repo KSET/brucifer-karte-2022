@@ -1,48 +1,41 @@
 <template>
-  <div id="bw-navbar">
-
-        <router-link id="navbar-title1" to="/">
-          Brucošijada FER-a
+  <div class="navbar bw">
+        <router-link class="navbar-title" to="/">
+          BRUCOŠIJADA FER-A
         </router-link>
+        <div class="routes">
 
-        <router-link 
-        
-        id="navbar-item4"  to="/">
-          Naslovnica
-        </router-link>
+        <RouterElement class="navbar-element hide"
+        :name="'Naslovnica'" :link="'/'"></RouterElement>
 
-        <router-link  id="navbar-item5" to="/lineup">
-          Izvođači
-        </router-link>
+        <RouterElement class="navbar-element hide"
+        :name="'Izvođači'" :link="'/lineup'"></RouterElement>
 
-        <router-link  id="navbar-item6" to="/ulaznice">
-          Ulaznice
-        </router-link>
+        <RouterElement class="navbar-element hide"
+        :name="'Ulaznice'" :link="'/ulaznice'"></RouterElement>
 
-        <router-link id="navbar-item7" to="/sponsors">
-          Sponzori
-        </router-link>
+        <RouterElement class="navbar-element hide"
+        :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
 
-        <router-link  id="navbar-item8" to="/kontakt">
-          Kontakt
-        </router-link>
+        <RouterElement class="navbar-element hide"
+        :name="'Kontakt'" :link="'/kontakt'"></RouterElement>
 
-        <div v-if="this.showNav==true" class="navi">slay</div>
-
+      </div>
   </div>
 </template>
 
 <script>
 import store from '@/store/index.js';
+import RouterElement from '@/components/AdminPanel/RouterElement.vue'
+
 export default {
   name: 'Navbar',
   el: '#app',
   components: {
-
+    RouterElement
   },
   data() {
     return {
-      showNav: false,
       page: '',
     }
   },
@@ -95,172 +88,7 @@ top: 0px;
 background: #DC5E88;
 }
 
-#navbar-title1{
-position: absolute;
-left: 2.73%;
-right: 68.65%;
-top: 20%;
-bottom: 20%;
 
-font-family: 'Antonio';
-font-style: normal;
-font-weight: 700;
-font-size: 20px;
-line-height: 36px;
-/* identical to box height, or 480% */
-
-text-align: center;
-letter-spacing: -0.022em;
-
-color: #000000;
-}
-
-#navbar-item4{
-position: absolute;
-left: 54.69%;
-right: 39.75%;
-top: 20%;
-bottom: 20%;
-
-font-family: 'Antonio';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 36px;
-/* identical to box height, or 686% */
-
-text-align: center;
-letter-spacing: -0.022em;
-color: #000000;
-
-color: #000000;
-}
-
-#navbar-item5{
-position: absolute;
-left: 64.75%;
-right: 31.35%;
-top: 20%;
-bottom: 20%;
-
-font-family: 'Antonio';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 36px;
-/* identical to box height, or 686% */
-
-text-align: center;
-letter-spacing: -0.022em;
-color: #000000;
-}
-
-#navbar-item6{
-position: absolute;
-left: 73.24%;
-right: 22.75%;
-top: 20%;
-bottom: 20%;
-
-font-family: 'Antonio';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 36px;
-/* identical to box height, or 686% */
-
-text-align: center;
-letter-spacing: -0.022em;
-
-color: #000000;
-
-}
-
-#navbar-item7{
-position: absolute;
-left: 81.84%;
-right: 14.06%;
-top: 20%;
-bottom: 20%;
-
-font-family: 'Antonio';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 36px;
-/* identical to box height, or 686% */
-
-text-align: center;
-letter-spacing: -0.022em;
-
-color: #000000;
-}
-
-#navbar-item8{
-position: absolute;
-left: 90.43%;
-right: 5.86%;
-top: 20%;
-bottom: 20%;
-
-font-family: 'Antonio';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 36px;
-/* identical to box height, or 686% */
-
-text-align: center;
-letter-spacing: -0.022em;
-
-color: #000000;
-color: #000000;
-}
-
-#nav-burger{
-}
-
-.navi{
-  height: 100vh;
-}
-
-
-@media screen and (max-width: 900px) {
-
-#admin-navbar{
-bottom: 96.15%;
-}
-  
-
-#navbar-item4{
-display: none;
-
-}
-
-#navbar-item5{
-display: none;
-}
-
-#navbar-item6{
-display: none;
-}
-
-#navbar-item7{
-display: none;
-}
-
-#navbar-item8{
-display: none;
-}
-
-#nav-burger{
-  position: absolute;
-width: 32px;
-height: 32px;
-left: 536px;
-top: 19px;
-}
-}
 </style>
 
 
