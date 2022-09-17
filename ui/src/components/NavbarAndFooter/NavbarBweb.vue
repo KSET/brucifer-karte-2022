@@ -15,27 +15,34 @@
 
       <RouterElement class="navbar-element hide" :name="'Kontakt'" :link="'/kontakt'"></RouterElement>
 
-      <button class="navbar-element" to="/bruckarte/admin-panel">
-        <img src="../../assets/icons/nav-burger.svg">
-      </button>
+      <div id="nav-icon3" @click="toggleNav">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
 
       <div id="myNav" class="overlay">
-        <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&times;</a>
         <div class="overlay-content">
-          <a href="lineup">Izvođači</a>
-          <RouterElement class="oberlay-elem" :name="'Naslovnica'" :link="'/'"></RouterElement>
+          <RouterElement class=" overlay-element" :name="'Naslovnica'" :link="'/'" @click="toggleNav()">
+          </RouterElement>
 
-          <RouterElement class="navbar-element " :name="'Izvođači'" :link="'/lineup'"></RouterElement>
+          <RouterElement class="overlay-element " :name="'Izvođači'" :link="'/lineup'" @click="toggleNav()">
+          </RouterElement>
 
-          <RouterElement class="navbar-element " :name="'Ulaznice'" :link="'/ulaznice'"></RouterElement>
+          <RouterElement class="overlay-element " :name="'Ulaznice'" :link="'/ulaznice'" @click="toggleNav()">
+          </RouterElement>
 
-          <RouterElement class="navbar-element " :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
+          <RouterElement class="overlay-element " :name="'Sponzori'" :link="'/sponsors'" @click="toggleNav()">
+          </RouterElement>
 
-          <RouterElement class="navbar-element " :name="'Kontakt'" :link="'/kontakt'"></RouterElement>
+          <RouterElement class="overlay-element " :name="'Kontakt'" :link="'/kontakt'" @click="toggleNav()">
+          </RouterElement>
+
+
         </div>
       </div>
 
-      <span style="font-size:30px;cursor:pointer" @click="openNav()">&#9776; open</span>
     </div>
   </div>
 </template>
@@ -52,46 +59,24 @@ export default {
   },
   data() {
     return {
-      page: '',
+      showNav: false,
     }
   },
-  mounted() {
-    this.page = this.$route.path;
-  },
-  computed: {
-    privilege() {
-      return store.state.privilege;
-    },
-    name() {
-      return store.state.name;
-    }
-  },
-  data() {
-    return {
-      tagsList: ['Brucoši', 'KSET', 'VIP'],
-      logoutlist: ['logout']
-    }
+  created() {
+    this.showNav = false;
+
   },
   methods: {
-    openNav() {
-      document.getElementById("myNav").style.width = "100%";
-    },
-    closeNav() {
-      document.getElementById("myNav").style.width = "0%";
-    },
-    toggleBurger() {
-      $(".navbar-burger").toggleClass("is-active");
-      $(".navbar-menu").toggleClass("is-active");
-    },
-    refresh() {
-      if (!window.location.hash) {
-        window.location = window.location + '#loaded';
-        window.location.reload();
+    toggleNav() {
+      document.getElementById("nav-icon3").classList.toggle('open');
+      if(this.showNav){
+        document.getElementById("myNav").style.height = "0%";
+      }else{
+        document.getElementById("myNav").style.height = "100%";
       }
-    },
-    changenav() {
       this.showNav = !this.showNav;
-    }
+    },
+    
   }
 }
 
@@ -102,37 +87,48 @@ export default {
 
 
 .overlay {
-  height: 100%;
-  width: 0;
+  height: 0%;
+  width: 100%;
   position: fixed;
-  z-index: 1;
+  z-index: -1;
   top: 0;
   left: 0;
-  background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: #DC5E88;
   overflow-x: hidden;
   transition: 0.5s;
 }
 
 .overlay-content {
   position: relative;
-  top: 25%;
+  top: 17%;
   width: 100%;
   text-align: center;
   margin-top: 30px;
 }
 
-.overlay.elem {
-  padding: 8px;
+.overlay-element {
+  width: 100%;
+  padding: 5%;
   text-decoration: none;
   font-size: 36px;
-  color: #818181;
+  color: black;
   display: block;
   transition: 0.3s;
+
+  font-family: inherit;
+
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+
+  height: 60px;
+  font-style: normal;
+  font-weight: 500;
 }
 
-.overlay-elem:hover,
-.overlay-elem:focus {
+.overlay-element:hover,
+.overlay-element:focus {
   color: #f1f1f1;
 }
 
@@ -144,7 +140,7 @@ export default {
 }
 
 @media screen and (max-height: 450px) {
-  .overlay-elem {
+  .overlay-element {
     font-size: 20px
   }
 
@@ -153,6 +149,86 @@ export default {
     top: 15px;
     right: 35px;
   }
+}
+
+
+#nav-icon1, #nav-icon2, #nav-icon3, #nav-icon4 {
+  width: 32px;
+  height: 20px;
+  position: relative;
+  margin: 20px;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: .5s ease-in-out;
+  -moz-transition: .5s ease-in-out;
+  -o-transition: .5s ease-in-out;
+  transition: .5s ease-in-out;
+  cursor: pointer;
+}
+
+#nav-icon1 span, #nav-icon3 span, #nav-icon4 span {
+  display: block;
+  position: absolute;
+  height: 6px;
+  width: 100%;
+  background: black;
+  border-radius: 6px;
+  opacity: 1;
+  left: 0;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: .25s ease-in-out;
+  -moz-transition: .25s ease-in-out;
+  -o-transition: .25s ease-in-out;
+  transition: .25s ease-in-out;
+}
+
+#nav-icon1 span:nth-child(1) {
+  top: 0px;
+}
+
+
+#nav-icon3 span:nth-child(1) {
+  top: 0px;
+}
+
+#nav-icon3 span:nth-child(2),
+#nav-icon3 span:nth-child(3) {
+  top: 10px;
+}
+
+#nav-icon3 span:nth-child(4) {
+  top: 20px;
+}
+
+#nav-icon3.open span:nth-child(1) {
+  top: 10px;
+  width: 0%;
+  left: 50%;
+}
+
+#nav-icon3.open span:nth-child(2) {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+#nav-icon3.open span:nth-child(3) {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+#nav-icon3.open span:nth-child(4) {
+  top: 10px;
+  width: 0%;
+  left: 50%;
 }
 </style>
 

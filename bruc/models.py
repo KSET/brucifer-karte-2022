@@ -34,6 +34,7 @@ class Lineup(models.Model):
     id=models.CharField(max_length=50, primary_key=True, default=0, blank=False)
     slug=models.CharField(max_length=200, default='', blank=True)
     order=models.CharField(max_length=200, default='', blank=True)
+    visible=models.CharField(max_length=200, default='', blank=True)
     name=models.CharField(max_length=49, default='', blank=True)
     image = models.ImageField(upload_to='uploads/lineup', blank=True, null=True)
 

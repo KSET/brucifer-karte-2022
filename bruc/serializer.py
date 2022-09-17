@@ -20,7 +20,7 @@ class UsersSerializer(serializers.HyperlinkedModelSerializer):
 class LineupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Lineup
-        fields = ["id","slug","order","name","image"]
+        fields = ["id","slug","order","visible","name","image"]
 
 class SponsorsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
