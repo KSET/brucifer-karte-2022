@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
-    <vue-countdown :time=this.time v-slot="{ days, hours, minutes, seconds }">
-  Time Remaining：{{ days }} days, {{ hours }} hours, {{ minutes }} minutes, {{ seconds }} seconds.
+    <vue-countdown class="countdown-timer" :time=this.time :transform="transformSlotProps" v-slot="{ days, hours, minutes, seconds }">
+  {{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}
 </vue-countdown>
     <div class="homepage">
       <div class="image-container">
@@ -35,6 +35,17 @@ export default {
     this.time=(1668283200-(seconds))*1000;
     console.log(seconds);
   },
+  methods :{
+    transformSlotProps(props) {
+      const formattedProps = {};
+
+      Object.entries(props).forEach(([key, value]) => {
+        formattedProps[key] = value < 10 ? `0${value}` : String(value);
+      });
+
+      return formattedProps;
+    }
+  }
 }
 </script>
 
@@ -56,12 +67,20 @@ export default {
   --background--color: white;
   --artist-name-color: #FAFAFB;
 
+  /* COUNTDOWN */
+
+  --countdown-right-offset: 7vw;
+  --countdown-font-size: 8.5vw;
+  --countdown-top-offset: 16%;
+
 }
 
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 980PX) {
   :root {
     --background-image-aspect-ratio: calc(962 / 601);
-
+    --countdown-right-offset: 9vw;
+    --countdown-font-size: 8vw;
+    --countdown-top-offset: 86.5%;
     --background-image: url("../../assets/bg/home/bg-tablet.svg");
   }
 }
@@ -90,6 +109,32 @@ export default {
   background-size: cover;
 
 }
+
+.countdown-timer {
+        position: absolute;
+        font-family: 'Antonio';
+        top: 0;
+        width: 100%;
+        right: 0;
+        padding-right: var(--countdown-right-offset);
+        text-align: right;
+        font-size: var(--countdown-font-size);
+        color:white;
+        text-shadow: .062em 0 black;
+        pointer-events: none;
+        user-select: none;
+        padding-bottom: min(
+                calc(var(--background-image-aspect-ratio) * 100%),
+                calc(100vh - var(--topbar-height) - var(--footer-height) - var(--countdown-font-size) - var(--countdown-top-offset))
+        );
+        overflow: hidden;
+    }
+
+    .countdown-timer::before {
+        content: "";
+        display: block;
+        padding-top: var(--countdown-top-offset);
+    }
 
 @import url(../../bruciweb.css);
 </style>
