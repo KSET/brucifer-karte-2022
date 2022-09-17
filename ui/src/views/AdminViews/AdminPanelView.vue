@@ -1,9 +1,6 @@
 <template>
   <div id="adminPanel">
-    <Sidebar />
-    <div class="admin-page-container">
       <Sidebar></Sidebar>
-    </div>
   </div>
 </template>
 

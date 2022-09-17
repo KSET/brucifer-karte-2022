@@ -16,6 +16,15 @@
             "email":"brucifer@kset.org",
             "privilege":"1"
         }
+    },
+    {
+        "model":"bruc.Lineup",
+        "id":314159,
+        "fields":{
+            "name":"LINEUP_VISIBILITY",
+            "slug":"0",
+            "visible":"0"
+        }
     }
    
 ]

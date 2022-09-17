@@ -139,10 +139,5 @@ export default {
     padding-left: 8px;
 }
 
-/* Optional: Style the caret down icon */
-.dropdown-icon {
-    float: right;
-    padding-right: 2%;
-    padding-top: 2%;
-}
+
 </style>

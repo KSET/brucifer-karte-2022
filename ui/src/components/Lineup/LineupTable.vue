@@ -46,6 +46,7 @@ export default {
       axios.get('http://127.0.0.1:8000/lineup/?ordering=order',)
         .then(response => {
           this.lineups = response.data;
+          this.lineups.splice(this.lineups.length-1,1);
         });
     },
     editlineup(lineup) {

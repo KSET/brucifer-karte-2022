@@ -7,7 +7,7 @@
 
       <RouterElement class="navbar-element hide" :name="'Naslovnica'" :link="'/'"></RouterElement>
 
-      <RouterElement class="navbar-element hide" :name="'Izvođači'" :link="'/lineup'"></RouterElement>
+      <RouterElement v-if="this.visible=='1'" class="navbar-element hide" :name="'Izvođači'" :link="'/lineup'"></RouterElement>
 
       <RouterElement class="navbar-element hide" :name="'Ulaznice'" :link="'/ulaznice'"></RouterElement>
 
@@ -22,12 +22,12 @@
         <span></span>
       </div>
 
-      <div id="myNav" class="overlay">
-        <div class="overlay-content">
+      <div id="myNav" class="overlay bw">
+        <div class="overlay-content bw">
           <RouterElement class=" overlay-element" :name="'Naslovnica'" :link="'/'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement class="overlay-element " :name="'Izvođači'" :link="'/lineup'" @click="toggleNav()">
+          <RouterElement v-if="this.visible=='1'" class="overlay-element " :name="'Izvođači'" :link="'/lineup'" @click="toggleNav()">
           </RouterElement>
 
           <RouterElement class="overlay-element " :name="'Ulaznice'" :link="'/ulaznice'" @click="toggleNav()">
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import store from '@/store/index.js';
+import axios from 'axios';
 import RouterElement from '@/components/AdminPanel/RouterElement.vue'
 
 export default {
@@ -60,23 +60,29 @@ export default {
   data() {
     return {
       showNav: false,
+      visible: '1',
     }
   },
   created() {
     this.showNav = false;
-
+    axios.get('http://127.0.0.1:8000/lineup/?ordering=order',)
+      .then(response => {
+        var users = response.data;
+        this.visible= users[users.length - 1].visible;
+        console.log(this.visible);
+      })
   },
   methods: {
     toggleNav() {
       document.getElementById("nav-icon3").classList.toggle('open');
-      if(this.showNav){
+      if (this.showNav) {
         document.getElementById("myNav").style.height = "0%";
-      }else{
+      } else {
         document.getElementById("myNav").style.height = "100%";
       }
       this.showNav = !this.showNav;
     },
-    
+
   }
 }
 
@@ -98,13 +104,28 @@ export default {
   transition: 0.5s;
 }
 
+.overlay.bw{
+  background-color: #DC5E88;
+
+}
+
+.overlay.admin{
+  background-color: white;
+
+}
+
 .overlay-content {
   position: relative;
-  top: 17%;
   width: 100%;
   text-align: center;
   margin-top: 30px;
 }
+
+.overlay-content.bw{
+  top: 17%;
+}
+
+
 
 .overlay-element {
   width: 100%;
@@ -152,7 +173,10 @@ export default {
 }
 
 
-#nav-icon1, #nav-icon2, #nav-icon3, #nav-icon4 {
+#nav-icon1,
+#nav-icon2,
+#nav-icon3,
+#nav-icon4 {
   width: 32px;
   height: 20px;
   position: relative;
@@ -168,7 +192,9 @@ export default {
   cursor: pointer;
 }
 
-#nav-icon1 span, #nav-icon3 span, #nav-icon4 span {
+#nav-icon1 span,
+#nav-icon3 span,
+#nav-icon4 span {
   display: block;
   position: absolute;
   height: 6px;

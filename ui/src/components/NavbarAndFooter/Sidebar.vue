@@ -5,32 +5,39 @@
         <RouterElement class="sidebar-element" :name="'Korisnici'" :link="'/bruckarte/users'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Uvoz'" :link="'/bruckarte/import'"></RouterElement>
         <button class="sidebar-element" @click="exportCSV">
-        <download-csv   :data=this.users separator-excel=true encoding='utf-8
-        '
-        name="export.csv">
+            <download-csv :data=this.users separator-excel=true encoding='utf-8
+        ' name="export.csv">
 
-        Izvoz
-      </download-csv></button>
+                Izvoz
+            </download-csv>
+        </button>
 
-        <button class="dropdown-btn">Izvođači
-            <img class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdown">
-        </button>
-        <div class="dropdown-container">
-            <RouterElement class="sidebar-element" :name="'Pregled Izvođača'" :link="'/bruckarte/lineup-list'">
+        <div class="sidbar-element" style="border-bottom: 1px solid black;" v-bind:style= "[(showDropdownLineup) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]">
+            <RouterElement class="sidebar-element" style="display: inline-block; width: 90%; border-bottom: none;"
+                :name="'Izvođači'">
             </RouterElement>
-            <RouterElement class="sidebar-element" :name="'Dodavanje Izvođača'" :link="'/bruckarte/lineup-add/0'">
-            </RouterElement>
-        </div>
-        <button class="dropdown-btn" @click="toggleDropdown">Sponzori
-            <img class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdown">
-        </button>
-        <div class="dropdown-container">
-            <RouterElement class="sidebar-element" :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors-list'">
-            </RouterElement>
-            <RouterElement class="sidebar-element" :name="'Dodavanje Sponzora'" :link="'/bruckarte/sponsors-add/0'">
-            </RouterElement>
+            <img v-if="this.showDropdownLineup==false" class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownLineup">
+            <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownLineup">
 
         </div>
+        <RouterElement id="dpL1" class="sidebar-element" :name="'Pregled Izvođača'" :link="'/bruckarte/lineup-list'">
+        </RouterElement>
+        <RouterElement id="dpL2" class="sidebar-element" :name="'Dodavanje Izvođača'" :link="'/bruckarte/lineup-add/0'">
+        </RouterElement>
+
+        <div class="sidbar-element" style="border-bottom: 1px solid black;" v-bind:style= "[(showDropdownSponsors) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]">
+            <RouterElement class="sidebar-element" style="display: inline-block; width: 90%; border-bottom: none;"
+                :name="'Sponzori'">
+            </RouterElement>
+            <img v-if="this.showDropdownSponsors==false" class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownSponsors">
+            <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownSponsors">
+
+        </div>
+            <RouterElement id="dpS1" class="sidebar-element" :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors-list'">
+            </RouterElement>
+            <RouterElement id="dpS2" class="sidebar-element" :name="'Dodavanje Sponzora'" :link="'/bruckarte/sponsors-add/0'">
+            </RouterElement>
+
         <RouterElement class="sidebar-element" :name="'Dodaj Gosta'" :link="'/bruckarte/guests-add'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Kontakt'" :link="'/bruckarte/band-kontakt'"></RouterElement>
     </div>
@@ -42,36 +49,53 @@ import RouterElement from '@/components/AdminPanel/RouterElement.vue'
 import JsonCSV from 'vue-json-csv'
 export default {
     name: "GridRouterLink",
-    components: { RouterElement,JsonCSV },
+    components: { RouterElement, JsonCSV },
     data() {
         return {
+            showDropdownLineup: false,
+            showDropdownSponsors: false,
+
             linkNames: ['Tags', 'Privileges', 'Users'],
             linkURLs: ['/tags', '/privileges', '/users'],
             users: [],
         }
     },
+    mounted() {
+        document.getElementById("dpL1").style.display = "none";
+        document.getElementById("dpL2").style.display = "none";
+        document.getElementById("dpS1").style.display = "none";
+        document.getElementById("dpS2").style.display = "none";
+    },
     methods: {
-        toggleDropdown() {
-            var dropdown = document.getElementsByClassName("dropdown-btn");
-            var i;
+        toggleDropdownLineup() {
+            this.showDropdownLineup = !this.showDropdownLineup;
+            if (this.showDropdownLineup) {
+                console.log(this.showDropdownLineup);
 
-            for (i = 0; i < dropdown.length; i++) {
-                dropdown[i].addEventListener("click", function () {
-                    this.classList.toggle("active");
-                    var dropdownContent = this.nextElementSibling;
-                    if (dropdownContent.style.display === "block") {
-                        dropdownContent.style.display = "none";
-                    } else {
-                        dropdownContent.style.display = "block";
-                    }
-                });
+                document.getElementById("dpL1").style.display = "block";
+                document.getElementById("dpL2").style.display = "block";
+            } else {
+                document.getElementById("dpL1").style.display = "none";
+                document.getElementById("dpL2").style.display = "none";
             }
         },
-        exportCSV(){
+        toggleDropdownSponsors() {
+            this.showDropdownSponsors = !this.showDropdownSponsors;
+            if (this.showDropdownSponsors) {
+                console.log(this.showDropdownSponsors);
+
+                document.getElementById("dpS1").style.display = "block";
+                document.getElementById("dpS2").style.display = "block";
+            } else {
+                document.getElementById("dpS1").style.display = "none";
+                document.getElementById("dpS2").style.display = "none";
+            }
+        },
+        exportCSV() {
             axios.get('http://127.0.0.1:8000/guests/',)
-      .then(response => {
-        this.users = response.data;
-      })
+                .then(response => {
+                    this.users = response.data;
+                })
         }
     }
 }
@@ -161,9 +185,6 @@ export default {
 
 /* Optional: Style the caret down icon */
 .dropdown-icon {
-    float: right;
-    padding-right: 2%;
-    padding-top: 2%;
 }
 
 .admin-page-container {
@@ -186,7 +207,7 @@ export default {
     .admin-page-container {
         position: relative;
 
-    margin-left: 1%;
-}
+        margin-left: 1%;
+    }
 }
 </style>

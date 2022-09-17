@@ -44,8 +44,12 @@ export default {
             axios.get('http://127.0.0.1:8000/lineup/?ordering=order',)
                 .then(response => {
                     this.users = response.data;
-
-
+                    console.log(this.users[this.users.length-1]);
+                    if(this.users[this.users.length-1].visible=="0"){
+                        this.users=[];
+                    }else{
+                    this.users.splice(this.users.length-1,1);
+                }
                 })
         },
         changeprivilege(user, changenum) {
