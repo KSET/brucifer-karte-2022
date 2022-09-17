@@ -9,12 +9,15 @@
           <img src="../../assets/icons/add-icon.svg">
         </router-link>
 
-        <h1 class="textfield" style="display: inline;">Prikaz lineupa na brucwebu</h1>
+        <div class="switchdiv">
 
-        <label class="switch">
-          <input type="checkbox">
-          <span class="slider round"></span>
-        </label>
+          <h1 class="textfield" style="display: inline;">Prikaz lineupa na brucwebu </h1>
+
+          <label class="switch" @click="toggleVisibility">
+            <input id="switch" type="checkbox" @input="changeVisible">
+            <span class="slider round"></span>
+          </label>
+        </div>
       </div>
 
       <lineup-table></lineup-table>
@@ -26,21 +29,72 @@
 import LineupTable from '@/components/Lineup/LineupTable.vue'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
-import store from '@/store/index.js';
+import axios from 'axios'
 export default {
   name: 'SponsorsView',
   components: {
     LineupTable,
     Sidebar
+  },
+  data() {
+    return {
+      isVisible: '',
+    }
+  },
+  created() {
+    axios.get('http://127.0.0.1:8000/lineup/?ordering=order',)
+      .then(response => {
+        this.isVisible = response.data[response.data.length - 1].visible;
+        if (this.isVisible == '1') {
+          document.getElementById("switch").checked = true;
+        } else {
+          document.getElementById("switch").checked = false;
+        }
+
+      })
+  },
+  methods: {
+    changeVisible() {
+      if (this.isVisible == 1) {
+        var changenum = '0';
+        this.isVisible = '0';
+      } else {
+        var changenum = '1';
+        this.isVisible = '1';
+      }
+
+      console.log(this.isVisible);
+      axios.put('http://127.0.0.1:8000/lineup/314159/',
+        { visible: changenum },
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      )
+        .then(() => {
+        })
+
+
+    }
   }
+
+
 }
 </script>
 
 <style >
+.switchdiv {
+  display: inline;
+  margin-right: 2%;
+  position: absolute;
+  overflow: hidden;
+  vertical-align: middle;
+  right: 0%;
+  top: 3%;
+
+
+  margin-top: auto;
+}
+
 .switch {
-  float: right;
   position: relative;
-  display: flow;
   vertical-align: middle;
   width: 60px;
   height: 34px;

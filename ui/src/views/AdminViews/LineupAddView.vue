@@ -54,24 +54,71 @@ export default {
             nextId: '',
             nextOrder: '',
             order: '',
+            formData: '',
         };
     },
-
-
     mounted() {
+
         this.slug = this.$route.params.slug;
         if (this.slug != '0') {
             axios.get('http://127.0.0.1:8000/lineup/?search=' + this.slug,)
                 .then(response => {
                     this.lineup = response.data;
+
+                    this.lineup.forEach(element => {
+                        if (element.id == 1500) {
+                            this.lineup.forEach(elementy => {
+                                console.log(elementy.id);
+                                console.log(element.order);
+
+                                if (elementy.id == element.order) {
+                                    axios.delete("http://127.0.0.1:8000/lineup/" + elementy.id + "/",
+                                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                                    {
+                                        headers: {
+                                            "Content-Type": "multipart/form-data"
+                                        }
+                                    },
+                                )
+                                }
+                            });
+                            axios.put("http://127.0.0.1:8000/lineup/" + 1515 + "/", { id: element.order },
+                                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                                {
+                                    headers: {
+                                        "Content-Type": "multipart/form-data"
+                                    }
+                                },
+                            ).then(() => {
+                                console.log("request pass3");
+                                axios.delete("http://127.0.0.1:8000/lineup/" + 1500 + "/",
+                                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                                    {
+                                        headers: {
+                                            "Content-Type": "multipart/form-data"
+                                        }
+                                    },
+                                )
+                            })
+                        }
+                        if(element.id==1515){
+                            axios.delete("http://127.0.0.1:8000/lineup/" + 1515 + "/",
+                                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                                    {
+                                        headers: {
+                                            "Content-Type": "multipart/form-data"
+                                        }
+                                    },
+                                )
+                        }
+                    });
+
                     this.lineupp = this.lineup[0];
                     this.name = this.lineupp.name;
                     this.previewImage = this.lineupp.image;
                     this.id = this.lineupp.id;
                     this.order = this.lineupp.order;
                     this.currentImage = this.lineupp.image;
-
-
 
                 })
 
@@ -104,25 +151,41 @@ export default {
         , checkLineup() {
 
             let formData = new FormData();
-
+            console.log(this.currentImage);
             formData.append("image", this.currentImage);
 
             formData.append("name", this.name);
 
             if (this.slug != "0") {
 
-                formData.append("id", this.id);
+                formData.append("id", "1515");
                 formData.append("order", this.order);
                 formData.append("slug", this.slug);
 
-                axios.put("http://127.0.0.1:8000/lineup/", formData,
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
-                },
-            )
+                /* iz nekog nepoznatog razloga ne mogu napraviti axios.put sa formdata, pa u ova 4 requesta realiziram put zahtjev*/
+                axios.put("http://127.0.0.1:8000/lineup/" + this.id + "/", { id: '1500', order: this.id },
+                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
+                    },
+
+                ).then(() => {
+                    console.log("request pass1");
+                    axios.post("http://127.0.0.1:8000/lineup/", formData,
+                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        },
+                    ).then(() => {
+                        console.log("request pass2");
+
+                    })
+                })
+
             } else {
                 var ids = [];
 
@@ -164,7 +227,7 @@ export default {
             }
             console.log("adksad")
 
-            
+
 
         },
     },

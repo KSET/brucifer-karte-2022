@@ -69,7 +69,6 @@ export default {
       .then(response => {
         var users = response.data;
         this.visible= users[users.length - 1].visible;
-        console.log(this.visible);
       })
   },
   methods: {
