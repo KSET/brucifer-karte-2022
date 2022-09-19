@@ -12,6 +12,8 @@ export default createStore({
       privilege: '',
       tokenExp: 10000000000000000,
 
+      fformData:'',
+
       updateData: [],
   },
   plugins: [createPersistedState()],
@@ -34,21 +36,11 @@ export default createStore({
     setupdateData (state, value) {
       state.updateData = value.slice();
     }
+    ,
+    setfformData (state, value) {
+      state.fformData = value
+    }
   }
 });
 
 
-/*
-export default createStore({
-  state: {
-    count: 0
-  },
-  plugins: [createPersistedState()],
-  mutations: {
-    increment: state => state.count++,
-    decrement: state => state.count--,
-    setto (state, set) {
-      state.count = set
-    }
-  }
-});*/

@@ -60,74 +60,91 @@ export default {
         };
     },
     computed: {
-    fformData() {
-      return store.state.formData;
+        updateData() {
+            return store.state.updateData;
+        },
+        setfformData(){
+            return store.state.fformData;
+        }
     },
-  },
     mounted() {
+        this.slug = this.$route.params.slug;
+        console.log(this.updateData[0]);
         console.log(this.fformData);
 
-        axios.post("http://127.0.0.1:8000/lineup/", this.fformData,
-                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data"
-                            
-                        }
-                    },)
+        if (this.updateData != []) {
 
+            let formData = new FormData();
+
+            formData.append("image", this.updateData[0]);
+
+
+            formData.append("name", this.updateData[1]);
+            formData.append("id", "555");
+            formData.append("order", this.updateData[3]);
+            formData.append("slug", this.updateData[4]);
+
+            axios.post("http://127.0.0.1:8000/lineup/", formData,
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+
+                    }
+                },)
+        }
         if (this.slug != '0') {
             axios.get('http://127.0.0.1:8000/lineup/?search=' + this.slug,)
                 .then(response => {
                     this.lineup = response.data;
-/*
-                    this.lineup.forEach(element => {
-                        if (element.id == 1500) {
-                            this.lineup.forEach(elementy => {
-                                console.log(elementy.id);
-                                console.log(element.order);
-
-                                if (elementy.id == element.order) {
-                                    axios.delete("http://127.0.0.1:8000/lineup/" + elementy.id + "/",
-                                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                                    {
-                                        headers: {
-                                            "Content-Type": "multipart/form-data"
-                                        }
-                                    },
-                                )
-                                }
-                            });
-                            axios.put("http://127.0.0.1:8000/lineup/" + 1515 + "/", { id: element.order },
-                                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                                {
-                                    headers: {
-                                        "Content-Type": "multipart/form-data"
-                                    }
-                                },
-                            ).then(() => {
-                                console.log("request pass3");
-                                axios.delete("http://127.0.0.1:8000/lineup/" + 1500 + "/",
-                                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                                    {
-                                        headers: {
-                                            "Content-Type": "multipart/form-data"
-                                        }
-                                    },
-                                )
-                            })
-                        }
-                        if(element.id==1515){
-                            axios.delete("http://127.0.0.1:8000/lineup/" + 1515 + "/",
-                                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                                    {
-                                        headers: {
-                                            "Content-Type": "multipart/form-data"
-                                        }
-                                    },
-                                )
-                        }
-                    });*/
+                    /*
+                                        this.lineup.forEach(element => {
+                                            if (element.id == 1500) {
+                                                this.lineup.forEach(elementy => {
+                                                    console.log(elementy.id);
+                                                    console.log(element.order);
+                    
+                                                    if (elementy.id == element.order) {
+                                                        axios.delete("http://127.0.0.1:8000/lineup/" + elementy.id + "/",
+                                                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                                                        {
+                                                            headers: {
+                                                                "Content-Type": "multipart/form-data"
+                                                            }
+                                                        },
+                                                    )
+                                                    }
+                                                });
+                                                axios.put("http://127.0.0.1:8000/lineup/" + 1515 + "/", { id: element.order },
+                                                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                                                    {
+                                                        headers: {
+                                                            "Content-Type": "multipart/form-data"
+                                                        }
+                                                    },
+                                                ).then(() => {
+                                                    console.log("request pass3");
+                                                    axios.delete("http://127.0.0.1:8000/lineup/" + 1500 + "/",
+                                                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                                                        {
+                                                            headers: {
+                                                                "Content-Type": "multipart/form-data"
+                                                            }
+                                                        },
+                                                    )
+                                                })
+                                            }
+                                            if(element.id==1515){
+                                                axios.delete("http://127.0.0.1:8000/lineup/" + 1515 + "/",
+                                                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                                                        {
+                                                            headers: {
+                                                                "Content-Type": "multipart/form-data"
+                                                            }
+                                                        },
+                                                    )
+                                            }
+                                        });*/
 
                     this.lineupp = this.lineup[0];
                     this.name = this.lineupp.name;
@@ -154,8 +171,7 @@ export default {
             this.message = "";
         },
         postLineup(formdata) {
-            console.log("gaas")
-            axios.post("http://127.0.0.1:8000/lineup/", formData,
+            axios.post("http://127.0.0.1:8000/lineup/", formdata,
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                 {
                     headers: {
@@ -167,28 +183,51 @@ export default {
         , checkLineup() {
 
             let formData = new FormData();
-            console.log(this.currentImage);
+            let updateData=[];
+            formData.append("image", this.currentImage);
+            updateData.push(this.currentImage);
+
+
+
 
             formData.append("name", this.name);
+            updateData.push(this.name);
+
 
             if (this.slug != "0") {
 
-                formData.append("id", "1511515");
+                formData.append("id", this.id);
+                updateData.push(this.id);
                 formData.append("order", this.order);
+                updateData.push(this.order);
                 formData.append("slug", this.slug);
-                store.commit('setFormData',formData );
+                updateData.push(this.slug);
 
-                /* iz nekog nepoznatog razloga ne mogu napraviti axios.put sa formdata, pa u ova 4 requesta realiziram put zahtjev*/
+                store.commit('setupdateData', updateData);
+                store.dispatch('storePost',formData);
+                console.log("fja");
+
+                console.log(formData.get("image"));
+
+                axios.post("http://127.0.0.1:8000/lineup/", formData,
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+
+                    }
+                },)
+
                 axios.put("http://127.0.0.1:8000/lineup/" + this.id + "/", formData,
                     { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                     {
                         headers: {
                             "Content-Type": "multipart/form-data"
-                            
+
                         }
                     },
 
-                ).then(() => {
+                )/*.then(() => {
                     console.log("request pass1");
                     axios.post("http://127.0.0.1:8000/lineup/", formData,
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
@@ -202,7 +241,7 @@ export default {
 
                     })
                 })
-
+*/
             } else {
                 var ids = [];
 
