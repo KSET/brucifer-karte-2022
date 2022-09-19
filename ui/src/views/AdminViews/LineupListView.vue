@@ -44,7 +44,11 @@ export default {
   created() {
     axios.get('http://127.0.0.1:8000/lineup/?ordering=order',)
       .then(response => {
-        this.isVisible = response.data[response.data.length - 1].visible;
+        if(response.data==0){
+          this.visible=0;
+        }else{
+          this.isVisible = response.data[response.data.length - 1].visible;
+        }
         if (this.isVisible == '1') {
           document.getElementById("switch").checked = true;
         } else {

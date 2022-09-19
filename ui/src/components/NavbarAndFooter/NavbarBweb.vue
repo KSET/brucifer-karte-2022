@@ -68,7 +68,11 @@ export default {
     axios.get('http://127.0.0.1:8000/lineup/?ordering=order',)
       .then(response => {
         var users = response.data;
-        this.visible= users[users.length - 1].visible;
+        if(users.length==0){
+          this.visible=0;
+        }else{
+          this.visible= users[users.length - 1].visible;
+        }
       })
   },
   methods: {

@@ -12,7 +12,7 @@
                 <div class="grid-container">
 
                     <h1 class="textfield">Ime </h1>
-                    <input class="inputfield" type="text" v-model="name" placeholder="Name">
+                    <input required class="inputfield" type="text" v-model="name" placeholder="Name">
 
                     <h1 class="textfield">Slika </h1>
                     <label for="file-upload" class="button white">
@@ -66,7 +66,7 @@ export default {
             axios.get('http://127.0.0.1:8000/lineup/?search=' + this.slug,)
                 .then(response => {
                     this.lineup = response.data;
-                 
+
 
                     this.lineupp = this.lineup[0];
                     this.name = this.lineupp.name;
@@ -78,7 +78,7 @@ export default {
                 })
 
         } else {
-            axios.get('http://127.0.0.1:8000/lineup/',)
+            axios.get('http://127.0.0.1:8000/lineup/?ordering=order',)
                 .then(response => {
                     this.lineups = response.data;
                 })
@@ -102,7 +102,7 @@ export default {
                 formData.append("order", this.order);
                 formData.append("slug", this.slug);
 
-                if(this.currentImage instanceof File){
+                if (this.currentImage instanceof File) {
                     formData.append("image", this.currentImage);
 
                 }
@@ -118,59 +118,65 @@ export default {
 
                 )
             } else {
-                if(this.lineups.length==0){
-                var ids = [];
+                console.log(this.lineups.length);
+                if (this.lineups.length != 0) {
+                    var ids = [];
 
-                this.lineups.forEach(element => {
-                    ids.push(element.id);
+                    this.lineups.forEach(element => {
+                        ids.push(element.id);
 
-                });
-                for (let index = 0; index < ids.length; index++) {
-                    if (ids.includes(String(index)) == false) {
-                        this.nextId = index;
-                        break;
+                    });
+                    for (let index = 0; index < ids.length; index++) {
+                        if (ids.includes(String(index)) == false) {
+                            this.nextId = index;
+                            break;
+                        }
                     }
-                }
-                if (this.nextId == '') {
-                    this.nextId = ids.length;
-                }
-
-                var lastOrder = this.lineups[this.lineups.length - 1].order;
-
-                if (lastOrder[0] == "0") {
-                    if (lastOrder == "09") {
-                        this.nextOrder = "10"
+                    if (this.nextId == '') {
+                        this.nextId = ids.length;
                     }
-                    else {
-                        this.nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
+
+                    var lastOrder = this.lineups[this.lineups.length - 2].order;
+
+                    if (lastOrder[0] == "0") {
+                        if (lastOrder == "09") {
+                            this.nextOrder = "10"
+                        }
+                        else {
+                            this.nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
+                        }
+                    } else {
+                        this.nextOrder = (parseInt(lastOrder) + 1).toString();
+
                     }
+
+
                 } else {
-                    this.nextOrder = (parseInt(lastOrder) + 1).toString();
-
+                    this.nextId = 0;
+                    this.nextOrder = "00";
                 }
-                this.nextId=0;
-                this.nextOrder="00";
-            
-            }
+                let r = (Math.random() + 1).toString(36).substring(7);
 
 
                 formData.append("id", this.nextId);
                 formData.append("order", this.nextOrder);
                 formData.append("image", this.currentImage);
+                formData.append("slug", r);
+
                 formData.append("visible", "0");
 
 
                 axios.post("http://127.0.0.1:8000/lineup/", formData,
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
-                },
-            )
+                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
+                    },
+                )
             }
 
-            
+
 
         },
     },
