@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import GridRouterLink from '@/components/AdminPanel/GridRouterLink.vue';
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
 export default {

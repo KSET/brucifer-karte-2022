@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import LineupTable from '@/components/Lineup/LineupTable.vue'
+import LineupTable from '@/components/AdminPanel/LineupTable.vue'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
 import axios from 'axios'

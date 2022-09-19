@@ -38,8 +38,8 @@
 
 <script>
 import emailjs from 'emailjs-com';
-import GuestsAdd from '@/components/Guests/GuestsAdd.vue'
-import GuestsTable from '@/components/Guests/GuestsTable.vue'
+import GuestsAdd from '@/components/Bruckarte/GuestsAdd.vue'
+import GuestsTable from '@/components/Bruckarte/GuestsTable.vue'
 import axios from 'axios'
 export default {
   name: 'GuestsView',

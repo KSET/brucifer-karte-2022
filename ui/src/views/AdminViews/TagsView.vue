@@ -20,7 +20,7 @@
 
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
-import TagsTable from '@/components/Tags/TagsTable.vue'
+import TagsTable from '@/components/AdminPanel/TagsTable.vue'
 import axios from 'axios';
 export default {
   name: 'TagsView',
