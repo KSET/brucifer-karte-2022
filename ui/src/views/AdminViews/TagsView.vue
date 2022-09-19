@@ -4,7 +4,7 @@
     <div class="admin-page-container">
       <div class="page-header">
       <h1 class="page-title" >Tagovi</h1>
-      <form style="display: inline-block; width: 40%; vertical-align: middle;" @submit="postTag">
+      <form style="display: inline-block;  vertical-align: middle;" @submit="postTag">
         <input required type="text" class="inputtag"  v-model="name" placeholder="Unesi ime taga">
         <button class="button-icon"> <img class="add-icon" src="@/assets/icons/add-icon.svg"></button>
       </form>

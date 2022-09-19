@@ -30,11 +30,11 @@
 
       <div id="myNav" class="overlay admin">
         <div class="overlay-content admin">
-          <RouterElement class="overlay-element" :name="'Tagovi'" :link="'/bruckarte/tags'"></RouterElement>
-          <RouterElement class="overlay-element" :name="'Privilegije'" :link="'/bruckarte/privileges'"></RouterElement>
-          <RouterElement class="overlay-element" :name="'Korisnici'" :link="'/bruckarte/users'"></RouterElement>
-          <RouterElement class="overlay-element" :name="'Uvoz'" :link="'/bruckarte/import'"></RouterElement>
-          <button class="overlay-element" @click="exportCSV">
+          <RouterElement class="overlay-element" @click="toggleNav()" :name="'Tagovi'" :link="'/bruckarte/tags'"></RouterElement>
+          <RouterElement class="overlay-element" @click="toggleNav()" :name="'Privilegije'" :link="'/bruckarte/privileges'"></RouterElement>
+          <RouterElement class="overlay-element" @click="toggleNav()" :name="'Korisnici'" :link="'/bruckarte/users'"></RouterElement>
+          <RouterElement class="overlay-element" @click="toggleNav()" :name="'Uvoz'" :link="'/bruckarte/import'"></RouterElement>
+          <button class="overlay-element" @click="toggleNav()" >
             <download-csv :data=this.users separator-excel=true encoding='utf-8
         ' name="export.csv">
 
@@ -42,25 +42,32 @@
             </download-csv>
           </button>
 
-          <button class="dropdown-btn">Izvođači
-            <img class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdown">
-          </button>
-          <div class="dropdown-container">
-            <RouterElement class="overlay-element" :name="'Pregled Izvođača'" :link="'/bruckarte/lineup-list'">
+          <div class="sidbar-element">
+            <RouterElement class="overlay-element" @click="toggleNav()" style="display: inline-block; width: 30%; border-bottom: none; text-align: right;"
+                :name="'Izvođači'">
             </RouterElement>
-            <RouterElement class="overlay-element" :name="'Dodavanje Izvođača'" :link="'/bruckarte/lineup-add/0'">
+            <img v-if="this.showDropdownLineup==false" class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownLineup">
+            <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownLineup">
+
+        </div>
+        <RouterElement id="dpL1" class="overlay-element" @click="toggleNav()" :name="'Pregled Izvođača'" :link="'/bruckarte/lineup-list'">
+        </RouterElement>
+        <RouterElement id="dpL2" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Izvođača'" :link="'/bruckarte/lineup-add/0'">
+        </RouterElement>
+
+        <div class="sidbar-element" >
+            <RouterElement class="overlay-element" @click="toggleNav()" style="display: inline-block; width: 30%; border-bottom: none; text-align: right;"
+                :name="'Sponzori'">
             </RouterElement>
-          </div>
-          <button class="dropdown-btn" @click="toggleDropdown">Sponzori
-            <img class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdown">
-          </button>
-          <div class="dropdown-container">
-            <RouterElement class="overlay-element" :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors-list'">
+            <img v-if="this.showDropdownSponsors==false" class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownSponsors">
+            <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownSponsors">
+
+        </div>
+            <RouterElement id="dpS1" class="overlay-element" @click="toggleNav()" :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors-list'">
             </RouterElement>
-            <RouterElement class="overlay-element" :name="'Dodavanje Sponzora'" :link="'/bruckarte/sponsors-add/0'">
+            <RouterElement id="dpS2" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Sponzora'" :link="'/bruckarte/sponsors-add/0'">
             </RouterElement>
 
-          </div>
           <RouterElement class="overlay-element" :name="'Dodaj Gosta'" :link="'/bruckarte/guests-add'"></RouterElement>
           <RouterElement class="overlay-element" :name="'Kontakt'" :link="'/bruckarte/band-kontakt'"></RouterElement>
         </div>
@@ -82,6 +89,8 @@ export default {
   data() {
     return {
       route: '',
+      showDropdownLineup: false,
+      showDropdownSponsors: false,
     }
   },
   computed: {
@@ -92,15 +101,12 @@ export default {
       return store.state.name;
     }
   },
-  data() {
-    return {
-      showNav: false,
-      tagsList: ['Brucoši', 'KSET', 'VIP'],
-      logoutlist: ['logout']
-    }
-  },
   mounted() {
     this.route = this.$route.path;
+    document.getElementById("dpL1").style.display = "none";
+    document.getElementById("dpL2").style.display = "none";
+    document.getElementById("dpS1").style.display = "none";
+    document.getElementById("dpS2").style.display = "none";
   },
   methods: {
     toggleNav() {
@@ -112,6 +118,30 @@ export default {
       }
       this.showNav = !this.showNav;
     },
+    toggleDropdownLineup() {
+            this.showDropdownLineup = !this.showDropdownLineup;
+            if (this.showDropdownLineup) {
+                console.log(this.showDropdownLineup);
+
+                document.getElementById("dpL1").style.display = "block";
+                document.getElementById("dpL2").style.display = "block";
+            } else {
+                document.getElementById("dpL1").style.display = "none";
+                document.getElementById("dpL2").style.display = "none";
+            }
+        },
+        toggleDropdownSponsors() {
+            this.showDropdownSponsors = !this.showDropdownSponsors;
+            if (this.showDropdownSponsors) {
+                console.log(this.showDropdownSponsors);
+
+                document.getElementById("dpS1").style.display = "block";
+                document.getElementById("dpS2").style.display = "block";
+            } else {
+                document.getElementById("dpS1").style.display = "none";
+                document.getElementById("dpS2").style.display = "none";
+            }
+        },
   }
 }
 
@@ -198,10 +228,51 @@ export default {
   border-bottom: black;
 }
 
+.page-title{
+  vertical-align: middle;
+  display: inline-block;
+  padding-top: 3%;
+  padding-bottom: 3%;
+  padding-right: 5%;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 36px;
+  /* identical to box height, or 112% */
+
+  letter-spacing: -0.015em;
+
+  color: #000000;
+}
+
+.textfield {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
 @media screen and (max-width: 980px) {
   .navbar-element.hide {
     display: none;
   }
+  .textfield{
+  font-size: 14px;
+}
+
+}
+
+@media screen and (max-width: 400px) {
+  .page-title {
+  font-size: 16px;
+}
+
+.textfield{
+  font-size: 12px;
+}
 }
 </style>
 

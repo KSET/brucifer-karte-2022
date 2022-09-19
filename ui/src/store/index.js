@@ -11,6 +11,8 @@ export default createStore({
       email: '',
       privilege: '',
       tokenExp: 10000000000000000,
+
+      updateData: [],
   },
   plugins: [createPersistedState()],
   mutations: {
@@ -28,6 +30,9 @@ export default createStore({
     },
     setTokenExp (state, value) {
       state.tokenExp = value
+    },
+    setupdateData (state, value) {
+      state.updateData = value.slice();
     }
   }
 });

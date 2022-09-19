@@ -210,21 +210,6 @@ export default {
     font-size: 16px;
 }
 
-.textfield {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 36px;
-    /* identical to box height, or 225% */
-
-    display: flex;
-    align-items: center;
-    letter-spacing: -0.015em;
-
-    color: #000000;
-}
-
 #inputfield {
     width: 50.6%;
 }

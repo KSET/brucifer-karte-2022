@@ -97,24 +97,7 @@ export default {
 }
 </script>
 <style>
-.page-title{
-  vertical-align: middle;
-  display: inline-block;
-  padding-top: 3%;
-  padding-bottom: 3%;
-  padding-right: 5%;
 
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 36px;
-  /* identical to box height, or 112% */
-
-  letter-spacing: -0.015em;
-
-  color: #000000;
-}
 
 .text1{
   padding-bottom: 3%;

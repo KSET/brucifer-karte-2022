@@ -35,6 +35,8 @@
 <script>
 import axios from 'axios'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+import store from '@/store/index.js';
+
 
 export default {
     name: "upload-image",
@@ -57,14 +59,28 @@ export default {
             formData: '',
         };
     },
+    computed: {
+    fformData() {
+      return store.state.formData;
+    },
+  },
     mounted() {
+        console.log(this.fformData);
 
-        this.slug = this.$route.params.slug;
+        axios.post("http://127.0.0.1:8000/lineup/", this.fformData,
+                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                            
+                        }
+                    },)
+
         if (this.slug != '0') {
             axios.get('http://127.0.0.1:8000/lineup/?search=' + this.slug,)
                 .then(response => {
                     this.lineup = response.data;
-
+/*
                     this.lineup.forEach(element => {
                         if (element.id == 1500) {
                             this.lineup.forEach(elementy => {
@@ -111,7 +127,7 @@ export default {
                                     },
                                 )
                         }
-                    });
+                    });*/
 
                     this.lineupp = this.lineup[0];
                     this.name = this.lineupp.name;
@@ -152,22 +168,23 @@ export default {
 
             let formData = new FormData();
             console.log(this.currentImage);
-            formData.append("image", this.currentImage);
 
             formData.append("name", this.name);
 
             if (this.slug != "0") {
 
-                formData.append("id", "1515");
+                formData.append("id", "1511515");
                 formData.append("order", this.order);
                 formData.append("slug", this.slug);
+                store.commit('setFormData',formData );
 
                 /* iz nekog nepoznatog razloga ne mogu napraviti axios.put sa formdata, pa u ova 4 requesta realiziram put zahtjev*/
-                axios.put("http://127.0.0.1:8000/lineup/" + this.id + "/", { id: '1500', order: this.id },
+                axios.put("http://127.0.0.1:8000/lineup/" + this.id + "/", formData,
                     { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                     {
                         headers: {
                             "Content-Type": "multipart/form-data"
+                            
                         }
                     },
 
