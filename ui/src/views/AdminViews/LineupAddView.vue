@@ -8,14 +8,14 @@
                 <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje izvođača</h1>
                 <h1 v-else class="page-title">Uređivanje izvođača</h1>
             </div>
-            <form class="lineup-form" @submit="checkLineup">
+            <form class="lineup-form" @submit="postLineup">
                 <div class="grid-container">
 
                     <h1 class="textfield">Ime </h1>
-                    <input required class="inputfield" type="text" v-model="name" placeholder="Name">
+                    <input required class="inputfield" type="text" v-model="name">
 
                     <h1 class="textfield">Slika </h1>
-                    <label for="file-upload" class="button white">
+                    <label for="file-upload" class="button white" style="margin-top: 0px;">
                         Odaberi PNG
                     </label>
                     <input id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
@@ -29,6 +29,11 @@
 
                     <button v-if="(this.slug == '0')" class="button submit">Dodaj</button>
                     <button v-else class="button submit">Spremi promjene</button>
+
+                    <button v-if="(this.slug != '0')" class="button submit" style="background-color: white;"
+                        @click="deleteLineup">
+                        <img class="va" src="../../assets/icons/trash-icon.svg">
+                    </button>
                 </div>
             </form>
             <img class="image-preview" :src="previewImage" alt="" />
@@ -74,8 +79,9 @@ export default {
             axios.get('http://127.0.0.1:8000/lineup/?search=' + this.slug,)
                 .then(response => {
                     this.lineup = response.data;
-
-
+                    if (this.lineup.length == 0) {
+                        this.$router.push({ path: '/bruckarte/lineup-add/0' });
+                    }
                     this.lineupp = this.lineup[0];
                     this.name = this.lineupp.name;
                     this.previewImage = this.lineupp.image;
@@ -85,10 +91,10 @@ export default {
 
                     this.visible = this.lineupp.visible;
                     if (this.visible == '1') {
-          document.getElementById("switchLineup").checked = true;
-        } else {
-          document.getElementById("switchLineup").checked = false;
-        }
+                        document.getElementById("switchLineup").checked = true;
+                    } else {
+                        document.getElementById("switchLineup").checked = false;
+                    }
 
                 })
 
@@ -96,6 +102,7 @@ export default {
             axios.get('http://127.0.0.1:8000/lineup/?ordering=order',)
                 .then(response => {
                     this.lineups = response.data;
+
                 })
         }
 
@@ -106,16 +113,28 @@ export default {
             this.previewImage = URL.createObjectURL(this.currentImage);
             this.progress = 0;
             this.message = "";
-        }
-        , checkLineup() {
+        },
+        deleteLineup() {
+            axios.delete("http://127.0.0.1:8000/lineup/" + this.id + "/",
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+
+                    }
+                },
+
+            )
+        },
+        postLineup() {
 
             let formData = new FormData();
             formData.append("name", this.name);
-            if(document.getElementById("switchLineup").checked==true){
-                    formData.append("visible", "1");
-                }else{
-                    formData.append("visible", "0");
-                }
+            if (document.getElementById("switchLineup").checked == true) {
+                formData.append("visible", "1");
+            } else {
+                formData.append("visible", "0");
+            }
 
             if (this.slug != "0") {
 
@@ -123,7 +142,7 @@ export default {
                 formData.append("order", this.order);
                 formData.append("slug", this.slug);
 
-                
+
                 if (this.currentImage instanceof File) {
                     formData.append("image", this.currentImage);
                 }
@@ -135,12 +154,10 @@ export default {
                             "Content-Type": "multipart/form-data"
 
                         }
-                    },
-
-                )
+                    })
             } else {
                 console.log(this.lineups.length);
-                if (this.lineups.length != 0) {
+                if (this.lineups.length != 1) {
                     var ids = [];
 
                     this.lineups.forEach(element => {

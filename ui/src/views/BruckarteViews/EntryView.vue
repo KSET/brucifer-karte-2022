@@ -20,7 +20,7 @@
             </button>
         </div>
         <div class="grid-item grid1-item3">
-            <div class="grid3-container">
+            <div class="grid-container">
                 <h1 class="textfield">Ime </h1>
                 <input readonly class="inputfield" :disabled="this.id==''" type="text" @input="changevalue" v-model="name">
 

@@ -2,8 +2,8 @@
   <div id="guests-add">
     <form @submit="postGuest">
       <h1>Dodaj na popis: </h1>
-      <input type="text" id="inputname" v-model="name" placeholder="Name">
-      <input type="text" id="inputsurname" v-model="surname" placeholder="Surname">
+      <input type="text" id="inputname" v-model="name">
+      <input type="text" id="inputsurname" v-model="surname" >
       <select v-model="selectedTag" name={{selectedTag}} id={{selectedTag}}>
         <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
       </select>

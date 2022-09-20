@@ -50,9 +50,9 @@
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownLineup">
 
         </div>
-        <RouterElement id="dpL1" class="overlay-element" @click="toggleNav()" :name="'Pregled Izvođača'" :link="'/bruckarte/lineup-list'">
+        <RouterElement id="dpL11" class="overlay-element" @click="toggleNav()" :name="'Pregled Izvođača'" :link="'/bruckarte/lineup-list'">
         </RouterElement>
-        <RouterElement id="dpL2" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Izvođača'" :link="'/bruckarte/lineup-add/0'">
+        <RouterElement id="dpL21" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Izvođača'" :link="'/bruckarte/lineup-add/0'">
         </RouterElement>
 
         <div class="sidbar-element" >
@@ -63,13 +63,13 @@
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownSponsors">
 
         </div>
-            <RouterElement id="dpS1" class="overlay-element" @click="toggleNav()" :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors-list'">
+            <RouterElement id="dpS11" class="overlay-element" @click="toggleNav()" :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors-list'">
             </RouterElement>
-            <RouterElement id="dpS2" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Sponzora'" :link="'/bruckarte/sponsors-add/0'">
+            <RouterElement id="dpS21" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Sponzora'" :link="'/bruckarte/sponsors-add/0'">
             </RouterElement>
 
-          <RouterElement class="overlay-element" :name="'Dodaj Gosta'" :link="'/bruckarte/guests-add'"></RouterElement>
-          <RouterElement class="overlay-element" :name="'Kontakt'" :link="'/bruckarte/band-kontakt'"></RouterElement>
+          <RouterElement class="overlay-element" :name="'Dodaj Gosta'" @click="toggleNav()" :link="'/bruckarte/guests-add'"></RouterElement>
+          <RouterElement class="overlay-element" :name="'Kontakt'" @click="toggleNav()" :link="'/bruckarte/band-kontakt'"></RouterElement>
         </div>
       </div>
     </div>
@@ -103,10 +103,10 @@ export default {
   },
   mounted() {
     this.route = this.$route.path;
-    document.getElementById("dpL1").style.display = "none";
-    document.getElementById("dpL2").style.display = "none";
-    document.getElementById("dpS1").style.display = "none";
-    document.getElementById("dpS2").style.display = "none";
+    document.getElementById("dpL11").style.display = "none";
+    document.getElementById("dpL21").style.display = "none";
+    document.getElementById("dpS11").style.display = "none";
+    document.getElementById("dpS21").style.display = "none";
   },
   methods: {
     toggleNav() {
@@ -123,11 +123,11 @@ export default {
             if (this.showDropdownLineup) {
                 console.log(this.showDropdownLineup);
 
-                document.getElementById("dpL1").style.display = "block";
-                document.getElementById("dpL2").style.display = "block";
+                document.getElementById("dpL11").style.display = "block";
+                document.getElementById("dpL21").style.display = "block";
             } else {
-                document.getElementById("dpL1").style.display = "none";
-                document.getElementById("dpL2").style.display = "none";
+                document.getElementById("dpL11").style.display = "none";
+                document.getElementById("dpL21").style.display = "none";
             }
         },
         toggleDropdownSponsors() {
@@ -135,11 +135,11 @@ export default {
             if (this.showDropdownSponsors) {
                 console.log(this.showDropdownSponsors);
 
-                document.getElementById("dpS1").style.display = "block";
-                document.getElementById("dpS2").style.display = "block";
+                document.getElementById("dpS11").style.display = "block";
+                document.getElementById("dpS21").style.display = "block";
             } else {
-                document.getElementById("dpS1").style.display = "none";
-                document.getElementById("dpS2").style.display = "none";
+                document.getElementById("dpS11").style.display = "none";
+                document.getElementById("dpS21").style.display = "none";
             }
         },
   }
@@ -253,6 +253,7 @@ export default {
     font-weight: 700;
     font-size: 16px;
     vertical-align: middle;
+    
 }
 
 @media screen and (max-width: 980px) {
