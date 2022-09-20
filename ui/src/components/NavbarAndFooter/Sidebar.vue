@@ -70,8 +70,6 @@ export default {
         toggleDropdownLineup() {
             this.showDropdownLineup = !this.showDropdownLineup;
             if (this.showDropdownLineup) {
-                console.log(this.showDropdownLineup);
-
                 document.getElementById("dpL1").style.display = "block";
                 document.getElementById("dpL2").style.display = "block";
             } else {
@@ -82,8 +80,6 @@ export default {
         toggleDropdownSponsors() {
             this.showDropdownSponsors = !this.showDropdownSponsors;
             if (this.showDropdownSponsors) {
-                console.log(this.showDropdownSponsors);
-
                 document.getElementById("dpS1").style.display = "block";
                 document.getElementById("dpS2").style.display = "block";
             } else {

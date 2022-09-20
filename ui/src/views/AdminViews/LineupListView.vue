@@ -66,8 +66,6 @@ export default {
         var changenum = '1';
         this.isVisible = '1';
       }
-
-      console.log(this.isVisible);
       axios.put('http://127.0.0.1:8000/lineup/314159/',
         { visible: changenum },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }

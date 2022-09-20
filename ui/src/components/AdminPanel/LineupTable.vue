@@ -56,13 +56,7 @@ export default {
       document.querySelector('#next').disabled = true;
       document.querySelector('#b4').disabled = true;
 
-
-      console.log(this.lineups);
-      console.log(this.lineups.length);
-
       var nextlineupobj = (this.lineups.indexOf(lineup));
-
-      console.log((lineup.id != this.lineups[this.lineups.length - 1].id));
       if (direction == "f") {
         if (lineup.id != this.lineups[this.lineups.length - 1].id) {
           var nextlineup = this.lineups[nextlineupobj + 1];
@@ -79,25 +73,17 @@ export default {
       )
         .then(() => {
 
-          console.log("req1-pass");
-
           axios.put('http://127.0.0.1:8000/lineup/' + lineup.id + '/',
             { order: nextlineup.order },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
             .then(() => {
             })
-          console.log("req2-pass");
-
-          console.log("req3-pass");
-
           axios.put('http://127.0.0.1:8000/lineup/' + nextlineup.id + '/',
             { order: lineup.order },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
             .finally(() => {
-
-              console.log("req4-pass");
               document.querySelector('#next').disabled = false;
               document.querySelector('#b4').disabled = false;
               this.created();

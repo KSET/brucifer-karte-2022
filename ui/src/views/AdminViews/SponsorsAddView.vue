@@ -158,7 +158,6 @@ export default {
                         }
                     })
             } else {
-                console.log(this.sponsorss.length);
                 if (this.sponsorss.length != 0) {
                     var ids = [];
 

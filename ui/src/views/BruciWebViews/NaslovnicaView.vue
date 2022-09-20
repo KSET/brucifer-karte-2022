@@ -33,7 +33,6 @@ export default {
   mounted() {
     var seconds = new Date().getTime() / 1000;
     this.time=(1668283200-(seconds))*1000;
-    console.log(seconds);
   },
   methods :{
     transformSlotProps(props) {

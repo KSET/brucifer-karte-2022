@@ -121,8 +121,6 @@ export default {
     toggleDropdownLineup() {
             this.showDropdownLineup = !this.showDropdownLineup;
             if (this.showDropdownLineup) {
-                console.log(this.showDropdownLineup);
-
                 document.getElementById("dpL11").style.display = "block";
                 document.getElementById("dpL21").style.display = "block";
             } else {
@@ -133,8 +131,6 @@ export default {
         toggleDropdownSponsors() {
             this.showDropdownSponsors = !this.showDropdownSponsors;
             if (this.showDropdownSponsors) {
-                console.log(this.showDropdownSponsors);
-
                 document.getElementById("dpS11").style.display = "block";
                 document.getElementById("dpS21").style.display = "block";
             } else {

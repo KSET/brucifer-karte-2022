@@ -156,7 +156,6 @@ export default {
                         }
                     })
             } else {
-                console.log(this.lineups.length);
                 if (this.lineups.length != 1) {
                     var ids = [];
 

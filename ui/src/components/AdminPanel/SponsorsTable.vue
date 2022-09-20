@@ -52,12 +52,8 @@ export default {
       this.$router.push({ path: '/bruckarte/sponsors-add/' + sponsor.slug });
     },
     changesponsororder(sponsor, direction) {
-      console.log(this.sponsors);
-      console.log(this.sponsors.length);
-
       var nextsponsorobj = (this.sponsors.indexOf(sponsor));
 
-      console.log((sponsor.id != this.sponsors[this.sponsors.length - 1].id));
       if (direction == "f") {
         if (sponsor.id != this.sponsors[this.sponsors.length - 1].id) {
           var nextsponsor = this.sponsors[nextsponsorobj + 1];
@@ -73,27 +69,17 @@ export default {
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
-
-          console.log("req1-pass");
-
           axios.put('http://127.0.0.1:8000/sponsors/' + sponsor.id + '/',
             { order: nextsponsor.order },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
             .then(() => {
             })
-          console.log("req2-pass");
-
-          console.log("req3-pass");
-
           axios.put('http://127.0.0.1:8000/sponsors/' + nextsponsor.id + '/',
             { order: sponsor.order },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
             .then(() => {
-
-              console.log("req4-pass");
-
               this.created();
             })
 
