@@ -117,7 +117,8 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: red;
+  background-color:#D9D9D9;
+;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -135,7 +136,7 @@ export default {
 }
 
 input:checked+.slider {
-  background-color: green;
+  background-color: black;
 }
 
 input:focus+.slider {

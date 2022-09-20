@@ -20,6 +20,13 @@
                     </label>
                     <input id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
 
+                    <h1 class="textfield">Prikaz na brucwebu </h1>
+
+                    <label class="switch">
+                        <input id="switchLineup" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+
                     <button v-if="(this.slug == '0')" class="button submit">Dodaj</button>
                     <button v-else class="button submit">Spremi promjene</button>
                 </div>
@@ -55,6 +62,7 @@ export default {
             nextId: '',
             nextOrder: '',
             order: '',
+            visible: '',
             formData: '',
         };
     },
@@ -74,6 +82,13 @@ export default {
                     this.id = this.lineupp.id;
                     this.order = this.lineupp.order;
                     this.currentImage = this.lineupp.image;
+
+                    this.visible = this.lineupp.visible;
+                    if (this.visible == '1') {
+          document.getElementById("switchLineup").checked = true;
+        } else {
+          document.getElementById("switchLineup").checked = false;
+        }
 
                 })
 
@@ -96,15 +111,21 @@ export default {
 
             let formData = new FormData();
             formData.append("name", this.name);
+            if(document.getElementById("switchLineup").checked==true){
+                    formData.append("visible", "1");
+                }else{
+                    formData.append("visible", "0");
+                }
+
             if (this.slug != "0") {
 
                 formData.append("id", this.id);
                 formData.append("order", this.order);
                 formData.append("slug", this.slug);
 
+                
                 if (this.currentImage instanceof File) {
                     formData.append("image", this.currentImage);
-
                 }
 
                 axios.put("http://127.0.0.1:8000/lineup/" + this.id + "/", formData,
@@ -163,7 +184,6 @@ export default {
                 formData.append("image", this.currentImage);
                 formData.append("slug", r);
 
-                formData.append("visible", "0");
 
 
                 axios.post("http://127.0.0.1:8000/lineup/", formData,
