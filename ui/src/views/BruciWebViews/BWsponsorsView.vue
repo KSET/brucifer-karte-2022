@@ -2,8 +2,11 @@
   <div class="bw-page-container">
     <div class="sponsors">
       <div v-for="user in users" :key="user.id">
-        <a href="{{ user.url }}" rel="nofollow referrer noopener external" target="_blank" referrerpolicy="origin"
-          class="artist" title="{{ user.name }}">
+        <a :href="user.url" target="_blank">WordPress Homepage</a>
+
+
+        <a  v-bind:href="user.url"  rel="noreferrer noopener" target="_blank"
+          class="sponsor" >
           <div class="image-container">
             <div class="image-sizer2"></div>
             <img class="image-frame2" v-bind:src="user.image">
