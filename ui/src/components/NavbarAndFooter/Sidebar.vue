@@ -199,11 +199,15 @@ export default {
     .sidenav {
         display: none;
     }
-
     .admin-page-container {
         position: relative;
-
         margin-left: 1%;
+    }
+}
+@media screen and (max-width: 400px) {
+    .admin-page-container {
+        position: relative;
+        margin-left: 15%;
     }
 }
 </style>
