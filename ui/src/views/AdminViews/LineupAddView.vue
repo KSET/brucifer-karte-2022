@@ -1,13 +1,13 @@
 <template>
-
-
-    <div id="sponsors-add">
+    <div id="lineup-add">
         <Sidebar />
         <div class="admin-page-container">
             <div class="header">
                 <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje izvođača</h1>
                 <h1 v-else class="page-title">Uređivanje izvođača</h1>
             </div>
+            <img class="image-preview hidedesktop" style="display: block; margin-bottom: 5%;" :src="previewImage" alt="" />
+
             <form class="lineup-form" @submit="postLineup">
                 <div class="grid-container">
 
@@ -36,7 +36,7 @@
                     </button>
                 </div>
             </form>
-            <img class="image-preview" :src="previewImage" alt="" />
+            <img class="image-preview hidetablet" :src="previewImage" alt="" />
 
         </div>
     </div>
@@ -225,4 +225,9 @@ export default {
     display: inline-block;
     width: 70%;
 }
+
+@media screen and (max-width: 400px) {
+  .lineup-form {
+    width: 100%;
+}}
 </style>

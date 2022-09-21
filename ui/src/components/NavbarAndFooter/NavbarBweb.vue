@@ -180,6 +180,7 @@ export default {
 #nav-icon2,
 #nav-icon3,
 #nav-icon4 {
+  display: inline-block;
   width: 32px;
   height: 20px;
   position: relative;

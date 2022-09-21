@@ -203,11 +203,7 @@ export default {
 
 .inputfield {
     left: 6%;
-    width: 25.6%;
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 16px;
+        
 }
 
 #inputfield {

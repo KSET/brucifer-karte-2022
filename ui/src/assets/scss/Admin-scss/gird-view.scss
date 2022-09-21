@@ -22,7 +22,7 @@
     border-radius: 6px;
 }
 
-.button{
+.button {
     width: 130px;
 
 }
@@ -31,11 +31,34 @@
     padding-bottom: 10%;
 }
 
-
-
 .inputfield {
     height: 40px;
     width: 50%;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+@media screen and (max-width: 400px) {
+    .lineup-form {
+        width: 100%;
+    }
+    .button.submit {
+        font-size: 15px;
+    }
+    
+    .button.change {
+        font-size: 15px;
+    }
+    
+    .button.white {
+       font-size: 15px;
+    }
+    .inputfield{
+        font-size: 12px;
+
+    }
 }
 
 .grid-container {
@@ -44,7 +67,7 @@
     grid-template-columns: 15% auto;
     padding: 10px;
     grid-gap: 15%;
-    row-gap:  15%;
+    row-gap: 15%;
     align-items: center;
 }
 
@@ -52,7 +75,7 @@
 
     width: 200px;
     height: 200px;
-  
+
 
     border: 1px solid #000000;
 }
