@@ -6,7 +6,7 @@
                 <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje izvođača</h1>
                 <h1 v-else class="page-title">Uređivanje izvođača</h1>
             </div>
-            <img class="image-preview hidedesktop" style="display: block; margin-bottom: 5%;" :src="previewImage" alt="" />
+            <img class="image-preview hidedesktop" style="display: block; margin-bottom: 5%; margin-left: 5%;" :src="previewImage" alt="" />
 
             <form class="lineup-form" @submit="postLineup">
                 <div class="grid-container">
@@ -194,7 +194,6 @@ export default {
                 }
                 let r = (Math.random() + 1).toString(36).substring(7);
 
-
                 formData.append("id", this.nextId);
                 formData.append("order", this.nextOrder);
                 formData.append("image", this.currentImage);
@@ -225,6 +224,10 @@ export default {
     display: inline-block;
     width: 70%;
 }
+
+@media screen and (max-width: 900px) {
+  .lineup-form {
+margin-left: 5%;}}
 
 @media screen and (max-width: 400px) {
   .lineup-form {

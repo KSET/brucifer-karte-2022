@@ -17,6 +17,22 @@ class GuestsViewSet(viewsets.ModelViewSet):
     serializer_class = GuestsSerializer
     filter_backends = [DynamicSearchFilter]
 
+    def send_mail(request):  
+        subject = request.POST.get('subject', '')
+        msg = request.POST.get('message', '')
+        to = request.POST.get('to_mail', '')
+        
+        if subject and msg and settings.EMAIL_HOST_USER:
+            try:
+                send_mail(subject, msg, settings.EMAIL_HOST_USER, [to])
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            return HttpResponseRedirect('/contact/thanks/')
+        else:
+            # In reality we'd use a form class
+            # to get proper validation errors.
+            return HttpResponse('Make sure all fields are entered and valid.')
+
 class TagsViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
@@ -50,18 +66,3 @@ class ContactViewSet(viewsets.ModelViewSet):
     serializer_class = ContactSerializer
     
     
-def send_mail(request):  
-    subject = request.POST.get('subject', '')
-    msg = request.POST.get('message', '')
-    to = request.POST.get('to_mail', '')
-    
-    if subject and msg and settings.EMAIL_HOST_USER:
-        try:
-            send_mail(subject, msg, settings.EMAIL_HOST_USER, [to])
-        except BadHeaderError:
-            return HttpResponse('Invalid header found.')
-        return HttpResponseRedirect('/contact/thanks/')
-    else:
-        # In reality we'd use a form class
-        # to get proper validation errors.
-        return HttpResponse('Make sure all fields are entered and valid.')

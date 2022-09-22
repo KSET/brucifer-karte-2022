@@ -1,6 +1,6 @@
 <template>
-    <div class="grid1-container">
-        <div class="grid-item grid1-item1">
+    <div class="grid1-container" id="flex">
+        <div class="grid-item grid1-item1" id="a">
             <div class="grid2-container">
                 <div class="grid-item grid-item2">
                     <input  class="inputfield" @input="searchGuest" type="form" v-model="search"
@@ -13,22 +13,19 @@
                 </div>
             </div>
         </div>
-        <div class="grid-item grid1-item2">
+        <div class="grid-item grid1-item2" id="b">
             <button class="person" v-bind:style= "[(this.id==guest.id) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]" v-for="guest in guests" :key="guest.class" @click="chooseGuest(guest)">
                 <p><strong>{{  guest.name  }} {{  guest.surname  }}</strong></p> 
                 <p>{{  guest.tag  }} </p>
             </button>
         </div>
-        <div class="grid-item grid1-item3">
+        <div class="grid-item grid1-item3" id="c">
             <div class="grid-container">
                 <h1 class="textfield">Ime </h1>
                 <input readonly class="inputfield" :disabled="this.id==''" type="text" @input="changevalue" v-model="name">
 
                 <h1 class="textfield">Prezime </h1>
                 <input readonly class="inputfield" :disabled="this.id==''" type="text" @input="changevalue" v-model="surname">
-
-                <h1 v-if="this.tag == 'Brucoši'" class="textfield">JMBAG </h1>
-                <input v-if="this.tag == 'Brucoši'" class="inputfield" readonly type="text" v-model="jmbag">
 
                 <h1 v-if="this.tag == 'Brucoši'" class="textfield">Karta </h1>
 
@@ -251,4 +248,51 @@ border-radius: 6px;
 position: relative;
 top:-6%;
 }
+
+@media screen and (max-width: 980px) {
+  .hidedesktop {
+    display: inline-block !important;
+  }
+
+  .hidetablet {
+    display: none;
+  }
+
+  .textfield {
+    font-size: 14px;
+  }
+
+}
+
+@media screen and (max-width: 400px) {
+    .grid1-container {
+display: block !important;}
+.grid1-container {
+    display: block !important;
+}
+
+.grid3-container {
+    display: block !important;
+
+
+}
+
+.grid-item {
+    display: block !important;
+}
+
+.grid1-item1 {
+    border-bottom: 1px solid #000000;
+}
+
+.grid1-item2 {
+    display: block !important;
+}
+#flex { display: flex !important; flex-direction: column; }
+#a { order: 1; }
+#b { order: 3; }
+#c { order: 2; }
+}
+
+
 </style>

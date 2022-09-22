@@ -20,7 +20,7 @@
         <img src="../../assets/icons/logout-icon.svg">
       </router-link>
 
-      <div id="nav-icon3" class="navbar-element hidedesktop" @click="toggleNav">
+      <div id="nav-icon3" v-if="privilege != ''" class="navbar-element hidedesktop" @click="toggleNav">
         <span></span>
         <span></span>
         <span></span>
@@ -264,15 +264,13 @@ export default {
 }
 
 
-@media screen and (max-width: 1600px) {
-  .hidedesktop {
-    display:none;
+.hidedesktop {
+    display:none !important;
   }
-}
 
 @media screen and (max-width: 980px) {
   .hidedesktop {
-    display: inline-block;
+    display: inline-block !important;
   }
 
   .hidetablet {

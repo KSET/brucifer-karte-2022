@@ -5,17 +5,17 @@
     </router-link>
     <div class="routes">
 
-      <RouterElement class="navbar-element hide" :name="'Naslovnica'" :link="'/'"></RouterElement>
+      <RouterElement class="navbar-element hidetablet" :name="'Naslovnica'" :link="'/'"></RouterElement>
 
-      <RouterElement v-if="this.visible=='1'" class="navbar-element hide" :name="'Izvođači'" :link="'/lineup'"></RouterElement>
+      <RouterElement v-if="this.visible=='1'" class="navbar-element hidetablet" :name="'Izvođači'" :link="'/lineup'"></RouterElement>
 
-      <RouterElement class="navbar-element hide" :name="'Ulaznice'" :link="'/ulaznice'"></RouterElement>
+      <RouterElement class="navbar-element hidetablet" :name="'Ulaznice'" :link="'/ulaznice'"></RouterElement>
 
-      <RouterElement class="navbar-element hide" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
+      <RouterElement class="navbar-element hidetablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
 
-      <RouterElement class="navbar-element hide" :name="'Kontakt'" :link="'/kontakt'"></RouterElement>
+      <RouterElement class="navbar-element hidetablet" :name="'Kontakt'" :link="'/kontakt'"></RouterElement>
 
-      <div id="nav-icon3" @click="toggleNav">
+      <div id="nav-icon3" class="hidedesktop" @click="toggleNav">
         <span></span>
         <span></span>
         <span></span>
@@ -259,6 +259,42 @@ export default {
   top: 10px;
   width: 0%;
   left: 50%;
+}
+
+.hidedesktop {
+    display:none !important;
+  }
+
+@media screen and (max-width: 980px) {
+  .hidedesktop {
+    display: inline-block !important;
+  }
+
+  .hidetablet {
+    display: none;
+  }
+
+  .textfield {
+    font-size: 14px;
+  }
+
+}
+
+@media screen and (max-width: 400px) {
+  .lineup-form {
+    width: 100%;
+}
+  .hidemobile {
+    display: none;
+  }
+
+  .page-title {
+    font-size: 16px;
+  }
+
+  .textfield {
+    font-size: 12px;
+  }
 }
 </style>
 
