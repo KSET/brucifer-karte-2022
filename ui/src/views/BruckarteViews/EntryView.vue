@@ -3,8 +3,8 @@
         <div class="grid-item grid1-item1" id="a">
             <div class="grid2-container">
                 <div class="grid-item grid-item2">
-                    <input  class="inputfield" @input="searchGuest" type="form" v-model="search"
-                        placeholder="Unesi Ime">
+                    <input class="nosubmit search" @input="searchGuest" type="form" v-model="search" placeholder="Unesi Ime">
+
                 </div>
                 <div class="grid-item grid-item3">
                     <select class="inputfield" v-model="selectedTag" name={{selectedTag}} @updated="searchGuest">
@@ -264,7 +264,7 @@ top:-6%;
 
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 550px) {
     .grid1-container {
 display: block !important;}
 .grid1-container {

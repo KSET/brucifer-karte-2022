@@ -147,7 +147,7 @@ export default {
             transition-property: font-size;
         }
 
-        @media screen and (max-width: 1400px) {
+        @media screen and (max-width: 1550px) {
             .lineup {
                 grid-template-columns: repeat(3, minmax(0, 1fr));
                 grid-column-gap: 3rem;

@@ -32,7 +32,7 @@
 }
 
 .inputfield {
-    height: 40px;
+    height: 39px;
     width: 50%;
     font-family: 'Montserrat';
     font-style: normal;
@@ -40,7 +40,7 @@
     font-size: 16px;
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 550px) {
     .lineup-form {
         width: 100%;
     }

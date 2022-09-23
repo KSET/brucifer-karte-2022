@@ -94,7 +94,7 @@ export default {
   padding: 30px;
 }
 
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 1550px) {
   .sponsors {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }

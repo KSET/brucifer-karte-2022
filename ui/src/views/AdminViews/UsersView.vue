@@ -2,28 +2,39 @@
   <div class="users">
     <Sidebar />
     <div class="admin-page-container">
-      <img class="search-icon" src="@/assets/icons/search-icon.svg">
       <div class="page-header user-page">
         <h1 class="page-title user-title">Korisnici</h1>
         <button class="button-icon"> <img class="add-icon user-icon" src="@/assets/icons/add-icon.svg"></button>
-        <input @input="searchUser" type="text" class="user-search" placeholder="Unesi ime ili prezime ili e-mail"
-          v-model="search" style="display: inline-block; ">
-      </div>
+        <input @input="searchUser" type="text" class="nosubmit search"  placeholder="Unesi ime/prezime/email"
+          v-model="search" style="display: inline-block; margin-top: 0px; width: 12rem; position: relative;">
+
+        </div>
       <div class=row>
         <table id="guests">
           <tbody>
-            <tr v-for="user in users" :key="user.id">
-              <td v-bind:style= "[(user.privilege=='0') ? {color:'red'}: { color:'black'}]">{{user.name}} <br> {{user.email}}</td>
-              <td></td>
-              <td><button class="button-priv" v-bind:style= "[(user.privilege=='1') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"  @click="changeprivilege(user,'1')" >Admin</button></td>
-              <td><button class="button-priv" v-bind:style= "[(user.privilege=='2') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]" @click="changeprivilege(user,'2')" >Ulaz</button></td>
-              <td> <button class="button-priv" v-bind:style= "[(user.privilege=='3') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]" @click="changeprivilege(user,'3')" >Karte</button></td>
-              <td><button class="button-priv" v-bind:style= "[(user.privilege=='4') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]" @click="changeprivilege(user,'4')" >Ulaz <br>+Karte</button></td>
-              <td><button class="button-priv" @click="deleteUser(user)" >
-                <img src="@/assets/icons/trash-icon.svg">
-              </button>
-              </td>
-            </tr>
+            <div class="users-container" v-for="user in users" :key="user.id">
+              <div class="users-element hidedesktop hidetablett showmobile"><button class="button-priv" style="border: none; opacity: 0.25;" @click="deleteUser(user)">
+                  <img src="@/assets/icons/trash-icon.svg"></button></div>
+              <div class="users-element userinfo" style="flex: 2;"
+                v-bind:style="[(user.privilege=='0') ? {color:'red'}: { color:'black'}]">{{user.name}} <br>
+                {{user.email}}</div>
+              <div class="users-element"><button class="button-priv"
+                  v-bind:style="[(user.privilege=='1') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
+                  @click="changeprivilege(user,'1')">Admin</button></div>
+              <div class="users-element"><button class="button-priv"
+                  v-bind:style="[(user.privilege=='2') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
+                  @click="changeprivilege(user,'2')">Ulaz</button></div>
+              <div class="users-element"> <button class="button-priv"
+                  v-bind:style="[(user.privilege=='3') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
+                  @click="changeprivilege(user,'3')">Karte</button></div>
+              <div class="users-element"><button class="button-priv"
+                  v-bind:style="[(user.privilege=='4') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
+                  @click="changeprivilege(user,'4')">Ulaz <br>+Karte</button></div>
+              <div class="users-element hidemobile"><button class="button-priv" @click="deleteUser(user)">
+                  <img src="@/assets/icons/trash-icon.svg">
+                </button>
+              </div>
+            </div>
           </tbody>
         </table>
 
@@ -97,8 +108,7 @@ export default {
 
 
 <style >
-
-.page-header.user-page{
+.page-header.user-page {
   border-bottom: 0.5px solid black;
 }
 
@@ -116,7 +126,7 @@ export default {
   height: 40px;
   font-family: 'Montserrat';
   font-size: 16px;
-  
+
 }
 
 .add-icon.user-icon {
@@ -130,12 +140,70 @@ export default {
 }
 
 
-.button-priv{
+.button-priv {
   position: relative;
   border: 0.5px solid black;
   background-color: white;
   height: 70px;
   width: 70px;
 
+}
+
+.users-element {
+
+  border: 0px;
+  border-bottom: 0.5px solid black;
+  padding: 8px;
+  text-align: left;
+  vertical-align: middle;
+  font-family: 'Montserrat';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: left;
+  font-size: 16px;
+  flex: 1;
+}
+
+.users-container {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch !important;
+  width: 100%;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: white;
+  color: black;
+}
+@media screen and (max-width: 980px) {
+  .hidetablett{
+    display: none !important;
+  }
+}
+@media screen and (max-width: 550px) {
+  .users-container {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .button-priv {
+
+    height: 38px;
+    width: 38px;
+    font-size: 8px;
+    ;
+
+  }
+
+  .userinfo {
+    grid-column: 2/5;
+    display: block;
+    text-align: left;
+    font-size: 12px;
+  }
+
+  .hidetablett{
+    display: block !important;
+  }
 }
 </style>

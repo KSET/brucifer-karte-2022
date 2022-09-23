@@ -229,7 +229,7 @@ export default {
   .lineup-form {
 margin-left: 5%;}}
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 550px) {
   .lineup-form {
     width: 100%;
 }}

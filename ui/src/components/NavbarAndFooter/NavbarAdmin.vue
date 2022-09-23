@@ -268,9 +268,6 @@ export default {
 }
 
 
-.hidedesktop {
-    display:none !important;
-  }
 
 @media screen and (max-width: 980px) {
   .hidedesktop {
@@ -287,9 +284,12 @@ export default {
 
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 550px) {
   .lineup-form {
     width: 100%;
+}
+.hidetablet{
+  display: none !important;
 }
   .hidemobile {
     display: none;
