@@ -20,7 +20,7 @@
         <img src="../../assets/icons/logout-icon.svg">
       </router-link>
 
-      <div id="nav-icon3" v-if="privilege != ''" class="navbar-element hidedesktop" @click="toggleNav">
+      <div id="nav-icon3" style="  margin-left: 70px;" v-if="privilege != ''" class="navbar-element hidedesktop" @click="toggleNav">
         <span></span>
         <span></span>
         <span></span>
@@ -29,6 +29,10 @@
 
       <div id="myNav" class="overlay admin">
         <div class="overlay-content admin">
+          <RouterElement class="overlay-element hidetablet showmobile" @click="toggleNav()" :name="'Brucoši'" :link="'/bruckarte/guests'">
+          </RouterElement>
+          <RouterElement class="overlay-element hidetablet showmobile" @click="toggleNav()" :name="'Ulaz'" :link="'/bruckarte/entry'">
+          </RouterElement>
           <RouterElement class="overlay-element" @click="toggleNav()" :name="'Tagovi'" :link="'/bruckarte/tags'">
           </RouterElement>
           <RouterElement class="overlay-element" @click="toggleNav()" :name="'Privilegije'"
@@ -45,9 +49,9 @@
             </download-csv>
           </button>
 
-          <div class="sidbar-element">
-            <RouterElement class="overlay-element" @click="toggleNav()"
-              style="display: inline-block; width: 30%; border-bottom: none; text-align: right;" :name="'Izvođači'">
+          <div class="sidbar-element"  @click="toggleDropdownLineup">
+            <RouterElement class="overlay-element" 
+              style="display: inline-block; width: 30%; border-bottom: none; text-align: right;" :name="'Izvođači'" >
             </RouterElement>
             <img v-if="this.showDropdownLineup==false" class="dropdown-icon"
               src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownLineup">
@@ -61,8 +65,8 @@
             :link="'/bruckarte/lineup-add/0'">
           </RouterElement>
 
-          <div class="sidbar-element">
-            <RouterElement class="overlay-element" @click="toggleNav()"
+          <div class="sidbar-element" @click="toggleDropdownSponsors">
+            <RouterElement class="overlay-element" 
               style="display: inline-block; width: 30%; border-bottom: none; text-align: right;" :name="'Sponzori'">
             </RouterElement>
             <img v-if="this.showDropdownSponsors==false" class="dropdown-icon"
@@ -297,6 +301,9 @@ export default {
 
   .textfield {
     font-size: 12px;
+  }
+  .showmobile{
+    display: block !important;
   }
 }
 </style>

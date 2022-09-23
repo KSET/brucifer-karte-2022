@@ -1,10 +1,11 @@
 <template>
   <div class="grid">
-    <div class="card" ref="" v-for="sponsor in sponsors" :key="sponsor.id">
+    <div class="card" style="height: 40%;" ref="" v-for="sponsor in sponsors" :key="sponsor.id">
 
       <img class="ccard-img" v-bind:src="sponsor.image">
       <div class="ccard-body">
-        <h3 class="name"> {{sponsor.name}} <br> {{sponsor.url}}</h3>
+        <h3 class="name"> {{sponsor.name}} </h3>
+          <a class="name" :href="sponsor.url" target="_blank">{{sponsor.url}}</a>
 
         <div class="ccard-buttons">
           <button @click="changesponsororder(sponsor, 'b')" class="ccard-button">
@@ -93,7 +94,7 @@ export default {
 
 <style>
 .grid {
-  height: 74vh;
+  height: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 20px;
@@ -107,7 +108,6 @@ export default {
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
-  line-height: 36px;
   /* identical to box height, or 257% */
 
   text-align: center;
@@ -135,5 +135,8 @@ export default {
 .ccard-button {
   border: 0px;
   background-color: #D9D9D9;
+}
+.card{
+  height: 40%;
 }
 </style>

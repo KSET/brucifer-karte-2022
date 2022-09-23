@@ -17,7 +17,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
     serializer_class = GuestsSerializer
     filter_backends = [DynamicSearchFilter]
 
-    def send_mail(request):  
+    '''def send_mail(request):  
         subject = request.POST.get('subject', '')
         msg = request.POST.get('message', '')
         to = request.POST.get('to_mail', '')
@@ -31,7 +31,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
         else:
             # In reality we'd use a form class
             # to get proper validation errors.
-            return HttpResponse('Make sure all fields are entered and valid.')
+            return HttpResponse('Make sure all fields are entered and valid.')'''
 
 class TagsViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()

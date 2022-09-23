@@ -136,7 +136,7 @@ export default {
             formData.append("email", this.email);
             formData.append("guestCap", this.guestCap);
 
-            
+         
 
             if (this.slug != "0") {
 

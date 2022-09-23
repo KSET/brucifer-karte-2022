@@ -1,6 +1,6 @@
 <template>
   <div class="grid">
-    <div class="card" ref="" v-for="lineup in lineups" :key="lineup.id">
+    <div class="card" style="height: 40%; border: none;" v-for="lineup in lineups" :key="lineup.id">
 
       <img class="ccard-img" v-bind:src="lineup.image" v-bind:style= "[(lineup.visible=='0') ? {opacity:'0.25'}: { opacity:'1'}]">
       <div class="ccard-body" >
