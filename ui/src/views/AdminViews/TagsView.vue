@@ -86,6 +86,10 @@ export default {
   vertical-align: top;
   font-family: 'Montserrat';
   
+  height: 39px;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
   
 font-size: 16px;
 }

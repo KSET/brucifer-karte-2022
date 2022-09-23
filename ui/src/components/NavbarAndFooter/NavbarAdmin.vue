@@ -15,33 +15,33 @@
       <router-link v-if="privilege == '1'" class="navbar-element hidetablet" to="/bruckarte/admin-panel">
         <img src="../../assets/icons/nav-burger.svg">
       </router-link>
-
-      <router-link v-if="privilege != '' && privilege != '0'" class="navbar-element hidetablet" to="/bruckarte/logout">
-        <img src="../../assets/icons/logout-icon.svg">
-      </router-link>
-
       <div id="nav-icon3" style="  margin-left: 70px;" v-if="privilege != ''" class="navbar-element hidedesktop" @click="toggleNav">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
       </div>
+      <router-link v-if="privilege != '' && privilege != '0'" class="navbar-element lg" to="/bruckarte/logout">
+        <img src="../../assets/icons/logout-icon.svg">
+      </router-link>
+
+      
 
       <div id="myNav" class="overlay admin">
         <div class="overlay-content admin">
-          <RouterElement class="overlay-element hidetablet showmobile" @click="toggleNav()" :name="'Brucoši'" :link="'/bruckarte/guests'">
+          <RouterElement class="overlay-element hidetablet showmobile" v-if="privilege == '1' || privilege == '3' || privilege == '4'" @click="toggleNav()" :name="'Brucoši'" :link="'/bruckarte/guests'">
           </RouterElement>
-          <RouterElement class="overlay-element hidetablet showmobile" @click="toggleNav()" :name="'Ulaz'" :link="'/bruckarte/entry'">
+          <RouterElement class="overlay-element hidetablet showmobile" v-if="privilege == '1' || privilege == '2' || privilege == '4'" @click="toggleNav()" :name="'Ulaz'" :link="'/bruckarte/entry'">
           </RouterElement>
-          <RouterElement class="overlay-element" @click="toggleNav()" :name="'Tagovi'" :link="'/bruckarte/tags'">
+          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Tagovi'" :link="'/bruckarte/tags'">
           </RouterElement>
-          <RouterElement class="overlay-element" @click="toggleNav()" :name="'Privilegije'"
+          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Privilegije'"
             :link="'/bruckarte/privileges'"></RouterElement>
-          <RouterElement class="overlay-element" @click="toggleNav()" :name="'Korisnici'" :link="'/bruckarte/users'">
+          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Korisnici'" :link="'/bruckarte/users'">
           </RouterElement>
-          <RouterElement class="overlay-element" @click="toggleNav()" :name="'Uvoz'" :link="'/bruckarte/import'">
+          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Uvoz'" :link="'/bruckarte/import'">
           </RouterElement>
-          <button class="overlay-element" @click="toggleNav()">
+          <button class="overlay-element" v-if="privilege == '1'" @click="toggleNav()">
             <download-csv :data=this.users separator-excel=true encoding='utf-8
         ' name="export.csv">
 
@@ -49,7 +49,7 @@
             </download-csv>
           </button>
 
-          <div class="sidbar-element"  @click="toggleDropdownLineup">
+          <div class="sidbar-element" v-if="privilege == '1'"  @click="toggleDropdownLineup">
             <RouterElement class="overlay-element" 
               style="display: inline-block; width: 30%; border-bottom: none; text-align: right;" :name="'Izvođači'" >
             </RouterElement>
@@ -65,11 +65,11 @@
             :link="'/bruckarte/lineup-add/0'">
           </RouterElement>
 
-          <div class="sidbar-element" @click="toggleDropdownSponsors">
+          <div class="sidbar-element" v-if="privilege == '1'" @click="toggleDropdownSponsors">
             <RouterElement class="overlay-element" 
               style="display: inline-block; width: 30%; border-bottom: none; text-align: right;" :name="'Sponzori'">
             </RouterElement>
-            <img v-if="this.showDropdownSponsors==false" class="dropdown-icon"
+            <img v-if="this.showDropdownSponsors==false" class="dropdown-icon" style="display: inline-block"
               src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownSponsors">
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownSponsors">
 
@@ -81,9 +81,9 @@
             :link="'/bruckarte/sponsors-add/0'">
           </RouterElement>
 
-          <RouterElement class="overlay-element" :name="'Dodaj Gosta'" @click="toggleNav()"
+          <RouterElement class="overlay-element" v-if="privilege == '1'" :name="'Dodaj Gosta'" @click="toggleNav()"
             :link="'/bruckarte/guests-add'"></RouterElement>
-          <RouterElement class="overlay-element" :name="'Kontakt'" @click="toggleNav()"
+          <RouterElement class="overlay-element" v-if="privilege == '1'" :name="'Kontakt'" @click="toggleNav()"
             :link="'/bruckarte/band-kontakt'"></RouterElement>
         </div>
       </div>
@@ -304,6 +304,15 @@ export default {
   }
   .showmobile{
     display: block !important;
+  }
+
+  .dropdown-icon{
+    padding-left: 40px;
+    padding-bottom: 10px,
+  }
+  .navbar-element.lg{
+    margin-left: 10px;    
+
   }
 }
 </style>

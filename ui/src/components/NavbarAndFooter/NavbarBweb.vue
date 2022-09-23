@@ -173,6 +173,10 @@ export default {
     top: 15px;
     right: 35px;
   }
+
+  .overlay-element.LS{
+    width: 5%;
+  }
 }
 
 

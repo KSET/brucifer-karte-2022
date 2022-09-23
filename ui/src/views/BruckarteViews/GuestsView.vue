@@ -2,10 +2,10 @@
   <div class="guestss">
     <div class="header guests">
 
-        <input class="nosubmit search" @input="searchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
+      <input class="nosubmit search" @input="searchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
 
 
-      <h1 class="textfield">{{this.nomatch}} </h1>
+      <h1 class="textfield" style="display: inline-block; margin-left: 12rem">{{this.nomatch}} </h1>
     </div>
 
     <div class="grid-container guests">
@@ -29,6 +29,8 @@
         <img class="image1" src="../../assets/icons/no-icon.svg">
       </button>
 
+      <h1 class="textfield">Potvrda </h1>
+      <h1 class="textfield">{{guest.confCode}} </h1>
     </div>
 
   </div>
@@ -87,12 +89,20 @@ export default {
       }
     },
     changebought(guest, changenum) {
+      if (changenum == 1) {
+        var confCode = (Math.random() + 1).toString(36).substring(7) + (Math.random() + 1).toString(36).substring(7);
+
+      } else {
+        var confCode = "";
+      }
       axios.put('http://127.0.0.1:8000/guests/' + guest.id + '/',
-        { bought: changenum },
+        { bought: changenum, confCode: confCode },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
           guest.bought = changenum;
+          guest.confCode = confCode;
+
           if (changenum == 1) {
             this.sendConfMail(guest);
           }
@@ -166,8 +176,7 @@ export default {
 .grid-container.guests {
   margin-top: 3.5%;
   margin-left: 5%;
-  row-gap: 45%;
-
+  row-gap: 30%;
 }
 
 .container {
@@ -225,11 +234,11 @@ form.nosubmit {
 
 input.nosubmit {
   left: 6%;
-    width: 40.6%;
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 16px;
+  width: 40.6%;
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
   border: 1px solid #555;
   padding: 9px 4px 9px 40px;
   background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat 13px center;
@@ -237,12 +246,13 @@ input.nosubmit {
 
 @media screen and (max-width: 980px) {
   .nosubmit.search {
- width: 40%;
- font-size: 12px;
-}
-.inputfield{
-  width: 80% !important;
-}
+    width: 40%;
+    font-size: 12px;
+  }
+
+  .inputfield {
+    width: 80% !important;
+  }
 }
 </style>
 

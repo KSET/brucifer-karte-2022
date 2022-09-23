@@ -6,7 +6,7 @@
         <h1 class="page-title user-title">Korisnici</h1>
         <button class="button-icon"> <img class="add-icon user-icon" src="@/assets/icons/add-icon.svg"></button>
         <input @input="searchUser" type="text" class="nosubmit search"  placeholder="Unesi ime/prezime/email"
-          v-model="search" style="display: inline-block; margin-top: 0px; width: 12rem; position: relative;">
+          v-model="search" style="display: inline-block; margin-top: 0px; position: relative;">
 
         </div>
       <div class=row>
