@@ -8,7 +8,7 @@
         Odaberi CSV
       </label>
       <input id="file-upload" type="file" @change="importGuests" />
-      <button class="button-upload white">Preuzmi  CSV template</button>
+      <button class="button-upload white" @click="exportExample(1)">Preuzmi  CSV template</button>
      
       <div class="list">
         <ul>
@@ -27,7 +27,7 @@
       </label>
       <input id="file-uploadd" type="file" @change="importUsers" />
 
-      <button class="button-upload white">Preuzmi  CSV template</button>
+      <button class="button-upload white" @click="exportExample(2)">Preuzmi  CSV template</button>
      
       <div class="list">
       <ul>
@@ -35,6 +35,8 @@
         </li>
         <li>Imena polja mogu biti: name, email, privilege.</li>
         <li>Mogće vrijednosti privilege su cijeli brojevi izmešu 0 i 4 s uključivim granicama.</li>
+        <li>Polje name može se ostaviti prazno, taj podatadak će se sam updeatati kada se korisnik prijavi</li>
+
       </ul></div>
     </div>
   </div>
@@ -43,7 +45,7 @@
 
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
-
+import * as XLSX from 'xlsx'
 import { XlsxRead, XlsxJson } from "../../../node_modules/vue3-xlsx/dist/vue3-xlsx.cjs.prod.js";
 import readXlsxFile from 'read-excel-file';
 import axios from 'axios';
@@ -86,6 +88,96 @@ export default {
       })
   },
   methods: {
+    exportExample(version){
+      if(version==1){
+        var filename = 'import_example_guests.xlsx';
+        var data = [{
+      "name": "",
+      "surname": "",
+      "tag": "",
+      "jmbag": 23945624
+    },
+    {
+      "name": "",
+      "surname": "",
+      "tag": "",
+      "jmbag": 23495862
+    },
+    {
+      "name": "",
+      "surname": "",
+      "tag": "",
+      "jmbag": 13659968
+    },
+    {
+      "name": "",
+      "surname": "",
+      "tag": "",
+      "jmbag": 36594856
+    },
+    {
+      "name": "Ivan",
+      "surname": "Svetić",
+      "tag": "VIP",
+      "jmbag": ""
+    },
+    {
+      "name": "Maja",
+      "surname": "Kovačević",
+      "tag": "VIP",
+      "jmbag": ""
+    },
+    {
+      "name": "Petar",
+      "surname": "Penić",
+      "tag": "KSET",
+      "jmbag": ""
+    },
+    {
+      "name": "Tena",
+      "surname": "Botas",
+      "tag": "KSET",
+      "jmbag": ""}];
+      }else{
+        var filename = 'import_example_users.xlsx';
+        var data = [
+    {
+      "name": "",
+      "email": "toni.batos@kset.org",
+      "privilege": 3
+    },
+    {
+      "name": "Zrika Petrović",
+      "email": "zrinka.petrovic@kset.org",
+      "privilege": 1
+    },
+    {
+      "name": "",
+      "email": "alen.ivic@kset.org",
+      "privilege": 2
+    },
+    {
+      "name": "Korina Ban",
+      "email": "korina.ban@kset.org",
+      "privilege": 2
+    },
+    {
+      "name": "",
+      "email": "tin.tinović@gmail.com",
+      "privilege": 2
+    },
+    {
+      "name": "Marija Erić",
+      "email": "marija.eric@kset.org",
+      "privilege": 1
+    }
+  ]
+      }
+          var ws = XLSX.utils.json_to_sheet(data);
+          var wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "People");
+          XLSX.writeFile(wb, filename);
+    },
     importGuests(event) {
       this.file = event.target.files ? event.target.files[0] : null;
       readXlsxFile(this.file).then((rows) => {
