@@ -181,6 +181,7 @@ export default {
     importGuests(event) {
       this.file = event.target.files ? event.target.files[0] : null;
       readXlsxFile(this.file).then((rows) => {
+      
 
         const gosti = [];
 
@@ -231,15 +232,18 @@ export default {
           axios.post(process.env.VUE_APP_BASE_URL+':8000/guests/',
             { id: obj.id, name: obj.name, surname: obj.surname, jmbag: obj.jmbag, tag: obj.tag, bought: obj.bought, entered: obj.entered },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-          )
+          ).catch(function (error) {
+    window.alert("IMPORT NEUSPJEŠAN ZA NEKE GOSTE");
+  });
 
           gosti.push(obj);
         }
 
+        
 
 
-
-      })
+      }
+      )
 
 
     },
@@ -288,7 +292,9 @@ export default {
           axios.post(process.env.VUE_APP_BASE_URL+':8000/users/',
             { id: obj.id, name: obj.name, email: obj.email, privilege: obj.privilege },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-          )
+          ).catch(function (error) {
+    window.alert("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE");
+  });
 
           users.push(obj);
         }
