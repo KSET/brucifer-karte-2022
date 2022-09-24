@@ -54,13 +54,13 @@ export default {
   
   methods:{
     created() {
-    axios.get('http://127.0.0.1:8000/users/',)
+    axios.get(process.env.VUE_APP_BASE_URL+':8000/users/',)
     .then(response => {
       this.users =response.data;
 
     })},
     changeprivilege(user,changenum){
-      axios.put('http://127.0.0.1:8000/users/'+user.id+'/',
+      axios.put(process.env.VUE_APP_BASE_URL+':8000/users/'+user.id+'/',
       {privilege:changenum},
       {auth:{username:process.env.VUE_APP_DJANGO_USER,password:process.env.VUE_APP_DJANGO_PASS}}
       )
@@ -69,7 +69,7 @@ export default {
       })
     },
     deleteUser(user){
-      axios.delete('http://127.0.0.1:8000/users/'+user.id+'/',
+      axios.delete(process.env.VUE_APP_BASE_URL+':8000/users/'+user.id+'/',
       {auth:{username:process.env.VUE_APP_DJANGO_USER,password:process.env.VUE_APP_DJANGO_PASS}}
       )
       .then(()=>{
@@ -77,7 +77,7 @@ export default {
       })
     },
     searchUser(){
-      axios.get('http://127.0.0.1:8000/users/?search='+this.search,)
+      axios.get(process.env.VUE_APP_BASE_URL+':8000/users/?search='+this.search,)
     .then(response => {
       this.users =response.data;
     })

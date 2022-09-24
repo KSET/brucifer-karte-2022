@@ -65,7 +65,7 @@ export default {
     };
   },
   mounted() {
-    axios.get('http://127.0.0.1:8000/guests/',)
+    axios.get(process.env.VUE_APP_BASE_URL+':8000/guests/',)
       .then(response => {
         this.guests = response.data;
         this.len = this.guests.length;
@@ -73,7 +73,7 @@ export default {
         this.guests.forEach(element => {
           this.idsguests.push(element.id);
         });
-        axios.get('http://127.0.0.1:8000/users/',)
+        axios.get(process.env.VUE_APP_BASE_URL+':8000/users/',)
           .then(response => {
             this.users = response.data;
             this.len = this.guests.length;
@@ -136,7 +136,7 @@ export default {
           }
 
           this.idsguests.push(String(nextId));
-          axios.post('http://127.0.0.1:8000/guests/',
+          axios.post(process.env.VUE_APP_BASE_URL+':8000/guests/',
             { id: obj.id, name: obj.name, surname: obj.surname, jmbag: obj.jmbag, tag: obj.tag, bought: obj.bought, entered: obj.entered },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
@@ -193,7 +193,7 @@ export default {
 
 
           this.idsusers.push(String(nextId));
-          axios.post('http://127.0.0.1:8000/users/',
+          axios.post(process.env.VUE_APP_BASE_URL+':8000/users/',
             { id: obj.id, name: obj.name, email: obj.email, privilege: obj.privilege },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )

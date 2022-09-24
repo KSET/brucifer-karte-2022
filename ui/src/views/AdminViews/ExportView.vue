@@ -36,7 +36,7 @@ export default {
 
   },
   created() {
-    axios.get('http://127.0.0.1:8000/guests/',)
+    axios.get(process.env.VUE_APP_BASE_URL+':8000/guests/',)
       .then(response => {
         this.users = response.data;
       })

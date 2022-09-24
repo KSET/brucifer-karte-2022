@@ -84,7 +84,7 @@ export default {
         this.slug = this.$route.params.slug;
 
         if (this.slug != '0') {
-            axios.get('http://127.0.0.1:8000/sponsors/?search=' + this.slug,)
+            axios.get(process.env.VUE_APP_BASE_URL+':8000/sponsors/?search=' + this.slug,)
                 .then(response => {
                     this.sponsors = response.data;
                     if (this.sponsors.length == 0) {
@@ -105,7 +105,7 @@ export default {
                 })
 
         } else {
-            axios.get('http://127.0.0.1:8000/sponsors/?ordering=order',)
+            axios.get(process.env.VUE_APP_BASE_URL+':8000/sponsors/?ordering=order',)
                 .then(response => {
                     this.sponsorss = response.data;
 

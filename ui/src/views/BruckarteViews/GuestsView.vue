@@ -74,7 +74,7 @@ export default {
     loggg() {
     },
     created() {
-      axios.get('http://127.0.0.1:8000/guests/?search=Brucoši&search_fields=tag',)
+      axios.get(process.env.VUE_APP_BASE_URL+':8000/guests/?search=Brucoši&search_fields=tag',)
 
         .then(response => {
           this.guests = response.data;
@@ -82,7 +82,7 @@ export default {
     },
     changevalue() {
       if (this.guest != '') {
-        axios.put('http://127.0.0.1:8000/guests/' + this.guest.id + '/',
+        axios.put(process.env.VUE_APP_BASE_URL+':8000/guests/' + this.guest.id + '/',
           { name: this.name, surname: this.surname },
           { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
         )
@@ -95,7 +95,7 @@ export default {
       } else {
         var confCode = "";
       }
-      axios.put('http://127.0.0.1:8000/guests/' + guest.id + '/',
+      axios.put(process.env.VUE_APP_BASE_URL+':8000/guests/' + guest.id + '/',
         { bought: changenum, confCode: confCode },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
@@ -121,7 +121,7 @@ export default {
 
     },
     searchGuest() {
-      axios.get('http://127.0.0.1:8000/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=jmbag",)
+      axios.get(process.env.VUE_APP_BASE_URL+':8000/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=jmbag",)
         .then(response => {
           this.guests = response.data;
           if (this.guests.length == 1) {

@@ -57,7 +57,7 @@ export default {
 
 
 
-            axios.get('http://127.0.0.1:8000/users/',)
+            axios.get(process.env.VUE_APP_BASE_URL+':8000/users/',)
                 .then(response => {
                     this.users = response.data;
 
@@ -73,7 +73,7 @@ export default {
                             registeredEmail = true
                             store.commit('setPrivilege', element.privilege)
                             if (element.name == "") {
-                                axios.put('http://127.0.0.1:8000/users/' + element.id + '/',
+                                axios.put(process.env.VUE_APP_BASE_URL+':8000/users/' + element.id + '/',
                                     { name: decodeURIComponent(escape(responsePayload.name)) },
                                     { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                                 )
@@ -92,7 +92,7 @@ export default {
                     }
 
                     if (!registeredEmail) {
-                        axios.post('http://127.0.0.1:8000/users/',
+                        axios.post(process.env.VUE_APP_BASE_URL+':8000/users/',
                             { id: nextId, name: decodeURIComponent(escape(responsePayload.name)), email: responsePayload.email, privilege: '0' },
                             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                         )

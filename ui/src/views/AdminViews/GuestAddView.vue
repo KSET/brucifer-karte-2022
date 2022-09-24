@@ -85,11 +85,11 @@ export default {
     },
 
     created() {
-        axios.get('http://127.0.0.1:8000/guests/',)
+        axios.get(process.env.VUE_APP_BASE_URL+':8000/guests/',)
             .then(response => {
                 this.guests = response.data;
                 this.len = this.guests.length;
-                axios.get('http://127.0.0.1:8000/tags/',)
+                axios.get(process.env.VUE_APP_BASE_URL+':8000/tags/',)
                     .then(response => {
                         var itemss = response.data;
                         itemss.forEach(element => {
@@ -130,7 +130,7 @@ export default {
                 this.nextId = ids.length;
             }
 
-            axios.post('http://127.0.0.1:8000/guests/',
+            axios.post(process.env.VUE_APP_BASE_URL+':8000/guests/',
                 { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
             )

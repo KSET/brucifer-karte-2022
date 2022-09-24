@@ -41,7 +41,7 @@ export default {
 
   methods: {
     created() {
-      axios.get('http://127.0.0.1:8000/sponsors/?ordering=order',)
+      axios.get(process.env.VUE_APP_BASE_URL+':8000/sponsors/?ordering=order',)
         .then(response => {
           this.users = response.data;
 

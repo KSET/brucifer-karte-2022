@@ -57,11 +57,11 @@ export default {
   },
   methods:{
     created() {
-    axios.get('http://127.0.0.1:8000/tags/',)
+    axios.get(process.env.VUE_APP_BASE_URL+':8000/tags/',)
     .then(response => {
       this.tags =response.data;
       this.tags.forEach(element => {
-        axios.get('http://127.0.0.1:8000/guests/?search='+element.name+'&search_fields=tag',)
+        axios.get(process.env.VUE_APP_BASE_URL+':8000/guests/?search='+element.name+'&search_fields=tag',)
     .then(response => {
       this.numc=0;
       this.numb=0;
@@ -79,7 +79,7 @@ export default {
       });
        if(String(this.numc)!=String(element.count) || this.numb!=element.bought || this.nume!=element.entered){
           
-          axios.put('http://127.0.0.1:8000/tags/'+element.id+'/',
+          axios.put(process.env.VUE_APP_BASE_URL+':8000/tags/'+element.id+'/',
               {count:this.numc,bought:this.numb,entered:this.nume},
               {auth:{username:process.env.VUE_APP_DJANGO_USER,password:process.env.VUE_APP_DJANGO_PASS}}
           
@@ -96,7 +96,7 @@ export default {
 
   },
     deleteTag(tag){
-      axios.delete('http://127.0.0.1:8000/tags/'+tag.id+'/',
+      axios.delete(process.env.VUE_APP_BASE_URL+':8000/tags/'+tag.id+'/',
       {auth:{username:process.env.VUE_APP_DJANGO_USER,password:process.env.VUE_APP_DJANGO_PASS}}
       )
       .then(()=>{

@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     created() {
-      axios.get('http://127.0.0.1:8000/sponsors/?ordering=order',)
+      axios.get(process.env.VUE_APP_BASE_URL+':8000/sponsors/?ordering=order',)
         .then(response => {
           this.sponsors = response.data;
         });
@@ -65,18 +65,18 @@ export default {
         }
       }
 
-      axios.put('http://127.0.0.1:8000/sponsors/' + nextsponsor.id + '/',
+      axios.put(process.env.VUE_APP_BASE_URL+':8000/sponsors/' + nextsponsor.id + '/',
         { order: "1000000" },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
-          axios.put('http://127.0.0.1:8000/sponsors/' + sponsor.id + '/',
+          axios.put(process.env.VUE_APP_BASE_URL+':8000/sponsors/' + sponsor.id + '/',
             { order: nextsponsor.order },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
             .then(() => {
             })
-          axios.put('http://127.0.0.1:8000/sponsors/' + nextsponsor.id + '/',
+          axios.put(process.env.VUE_APP_BASE_URL+':8000/sponsors/' + nextsponsor.id + '/',
             { order: sponsor.order },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
