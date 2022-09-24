@@ -32,6 +32,9 @@
                 <input readonly class="inputfield span3" :disabled="this.id==''" type="text" @input="changevalue"
                     v-model="surname">
 
+                <h1 v-if="this.tag == 'Brucoši'" class="textfield span2">JMBAG </h1>
+                <input v-if="this.tag == 'Brucoši'" class="inputfield span3" readonly type="text" v-model="jmbag">
+
                 <h1 v-if="this.tag == 'Brucoši'" class="textfield">Karta </h1>
 
                 <button disabled v-if="this.tag == 'Brucoši' &&  this.bought == '1'" class="bttn button2-yes"
@@ -42,7 +45,7 @@
                     @click="changeBought(guest, '1')">
                     <img class="va" src="../../assets/icons/no-icon.svg">
                 </button>
-<br v-if="this.tag == 'Brucoši'">
+                <br v-if="this.tag == 'Brucoši'">
                 <h1 class="textfield">Ulaz </h1>
 
                 <button v-if="this.entered == '1'" type="button" :disabled="this.id==''" class="bttn button2-yes"
@@ -54,7 +57,7 @@
                     <img class="va" src="../../assets/icons/no-icon.svg">
                 </button>
 
-                <h1 v-if="this.tag == 'Brucoši'" class="textfield span2">Potvrda </h1>
+                <h1 v-if="this.tag == 'Brucoši'" class="textfield span2" style="padding-bottom:16px">Potvrda </h1>
                 <h1 v-if="this.tag == 'Brucoši'" class="textfield span3">{{this.confCode}} </h1>
             </div>
         </div>
@@ -214,7 +217,7 @@ export default {
 
 .grid1-item3 {
     border-bottom: 1px solid #000000;
-    overflow:visible;
+    overflow: visible;
 }
 
 .inputfield {
@@ -281,7 +284,8 @@ export default {
 .grid1-item {
     width: 60% !important;
 }
-.grid-container2{
+
+.grid-container2 {
     left: 6%;
     display: grid;
     grid-template-columns: 15% auto;
@@ -387,26 +391,29 @@ export default {
     .va {
         width: 19px;
         height: 19px;
-        margin-top: 4px;
+        margin-top: 3px;
         vertical-align: top;
     }
 
-    .span2{
+    .span2 {
         grid-column: 1/2;
     }
 
-    .span3{
+    .span3 {
         grid-column: 3/6;
+        height: 35px !important;
     }
 
-    .grid-container2{
+    .grid-container2 {
         left: 6%;
-    display: grid;
-    grid-template-columns: 5% 1% 5% 10% 30%;
-    padding: 10px;
-    grid-gap: 15%;
-    row-gap: 10%;
-    align-items: center;
+        display: grid;
+        grid-template-columns: 5% 1% 5% 10% 30%;
+        padding: 10px;
+        padding-top: 3px;
+
+        grid-gap: 15%;
+        row-gap: 5%;
+        align-items: center;
     }
 }
 </style>

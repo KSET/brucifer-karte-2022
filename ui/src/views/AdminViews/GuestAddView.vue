@@ -6,7 +6,7 @@
             <h1 class="page-title">Dodavanje Gosta</h1>
 
             <form @submit="postGuest">
-                <div class="grid-container">
+                <div class="grid-container" style="row-gap: 10%;">
                     <h1 class="textfield">Ime: </h1>
                     <input class="inputfield" type="text" @input="changevalue" v-model="name">
 

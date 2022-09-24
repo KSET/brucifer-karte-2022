@@ -15,7 +15,8 @@
       <router-link v-if="privilege == '1'" class="navbar-element hidetablet" to="/bruckarte/admin-panel">
         <img src="../../assets/icons/nav-burger.svg">
       </router-link>
-      <div id="nav-icon3" style="  margin-left: 70px;" v-if="privilege != ''" class="navbar-element hidedesktop" @click="toggleNav">
+      <div id="nav-icon3" style="  margin-left: 70px;" v-if="privilege != ''" class="navbar-element hidedesktop"
+        @click="toggleNav">
         <span></span>
         <span></span>
         <span></span>
@@ -25,33 +26,38 @@
         <img src="../../assets/icons/logout-icon.svg">
       </router-link>
 
-      
+
 
       <div id="myNav" class="overlay admin">
         <div class="overlay-content admin">
-          <RouterElement class="overlay-element hidetablet showmobile" v-if="privilege == '1' || privilege == '3' || privilege == '4'" @click="toggleNav()" :name="'Brucoši'" :link="'/bruckarte/guests'">
+          <RouterElement class="overlay-element hidetablet showmobile"
+            v-if="privilege == '1' || privilege == '3' || privilege == '4'" @click="toggleNav()" :name="'Brucoši'"
+            :link="'/bruckarte/guests'">
           </RouterElement>
-          <RouterElement class="overlay-element hidetablet showmobile" v-if="privilege == '1' || privilege == '2' || privilege == '4'" @click="toggleNav()" :name="'Ulaz'" :link="'/bruckarte/entry'">
+          <RouterElement class="overlay-element hidetablet showmobile"
+            v-if="privilege == '1' || privilege == '2' || privilege == '4'" @click="toggleNav()" :name="'Ulaz'"
+            :link="'/bruckarte/entry'">
           </RouterElement>
-          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Tagovi'" :link="'/bruckarte/tags'">
+          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Tagovi'"
+            :link="'/bruckarte/tags'">
           </RouterElement>
           <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Privilegije'"
             :link="'/bruckarte/privileges'"></RouterElement>
-          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Korisnici'" :link="'/bruckarte/users'">
+          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Korisnici'"
+            :link="'/bruckarte/users'">
           </RouterElement>
-          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Uvoz'" :link="'/bruckarte/import'">
+          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Uvoz'"
+            :link="'/bruckarte/import'">
           </RouterElement>
-          <button class="overlay-element" v-if="privilege == '1'" @click="toggleNav()">
-            <download-csv :data=this.users separator-excel=true encoding='utf-8
-        ' name="export.csv">
 
-              Izvoz
-            </download-csv>
+          <button class="overlay-element" v-if="privilege == '1'" @click="ExportData()">
+            Izvoz
           </button>
 
-          <div class="sidbar-element" v-if="privilege == '1'"  @click="toggleDropdownLineup">
-            <RouterElement class="overlay-element" 
-              style="display: inline-block; width: 30%; border-bottom: none; text-align: right;" :name="'Izvođači'" >
+
+          <div class="sidbar-element" v-if="privilege == '1'" @click="toggleDropdownLineup">
+            <RouterElement class="overlay-element"
+              style="display: inline-block; width: 30%; border-bottom: none; text-align: right;" :name="'Izvođači'">
             </RouterElement>
             <img v-if="this.showDropdownLineup==false" class="dropdown-icon"
               src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownLineup">
@@ -66,7 +72,7 @@
           </RouterElement>
 
           <div class="sidbar-element" v-if="privilege == '1'" @click="toggleDropdownSponsors">
-            <RouterElement class="overlay-element" 
+            <RouterElement class="overlay-element"
               style="display: inline-block; width: 30%; border-bottom: none; text-align: right;" :name="'Sponzori'">
             </RouterElement>
             <img v-if="this.showDropdownSponsors==false" class="dropdown-icon" style="display: inline-block"
@@ -94,6 +100,8 @@
 <script>
 import store from '@/store/index.js';
 import RouterElement from '@/components/AdminPanel/RouterElement.vue'
+import * as XLSX from 'xlsx'
+import axios from 'axios'
 
 export default {
   name: 'Navbar',
@@ -124,6 +132,19 @@ export default {
     document.getElementById("dpS21").style.display = "none";
   },
   methods: {
+    ExportData() {
+      var filename = 'export_guests.xlsx';
+      axios.get('http://127.0.0.1:8000/guests/',)
+        .then(response => {
+          var data = response.data;
+          var ws = XLSX.utils.json_to_sheet(data);
+          var wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "People");
+          XLSX.writeFile(wb, filename);
+        });
+
+
+    },
     toggleNav() {
       document.getElementById("nav-icon3").classList.toggle('open');
       if (this.showNav) {
@@ -267,7 +288,9 @@ export default {
 
 }
 
-
+.showmobile {
+    display: none !important;
+  }
 
 @media screen and (max-width: 980px) {
   .hidedesktop {
@@ -281,16 +304,21 @@ export default {
   .textfield {
     font-size: 14px;
   }
+  .showmobile {
+    display: none !important;
+  }
 
 }
 
 @media screen and (max-width: 550px) {
   .lineup-form {
     width: 100%;
-}
-.hidetablet{
-  display: none !important;
-}
+  }
+
+  .hidetablet {
+    display: none !important;
+  }
+
   .hidemobile {
     display: none;
   }
@@ -302,16 +330,18 @@ export default {
   .textfield {
     font-size: 12px;
   }
-  .showmobile{
-    display: block !important;
+
+  .showmobile {
+    display: inline-block !important;
   }
 
-  .dropdown-icon{
+  .dropdown-icon {
     padding-left: 40px;
     padding-bottom: 10px,
   }
-  .navbar-element.lg{
-    margin-left: 10px;    
+
+  .navbar-element.lg {
+    margin-left: 10px;
 
   }
 }

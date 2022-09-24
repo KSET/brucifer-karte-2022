@@ -30,7 +30,7 @@
                     <button v-if="(this.slug == '0')" class="button submit">Dodaj</button>
                     <button v-else class="button submit">Spremi promjene</button>
 
-                    <button v-if="(this.slug != '0')" class="button submit" style="background-color: white;"
+                    <button v-if="(this.slug != '0')" class="button submit" style="background-color: white; margin-left: 40px;"
                         @click="deleteLineup">
                         <img class="va" src="../../assets/icons/trash-icon.svg">
                     </button>
@@ -232,5 +232,10 @@ margin-left: 5%;}}
 @media screen and (max-width: 550px) {
   .lineup-form {
     width: 100%;
-}}
+}
+.button.submit{
+    width: 130px;
+height: 40px;
+}
+}
 </style>

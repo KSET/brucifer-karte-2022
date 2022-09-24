@@ -4,12 +4,8 @@
         <RouterElement class="sidebar-element" :name="'Privilegije'" :link="'/bruckarte/privileges'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Korisnici'" :link="'/bruckarte/users'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Uvoz'" :link="'/bruckarte/import'"></RouterElement>
-        <button class="sidebar-element" @click="exportCSV">
-            <download-csv :data=this.users separator-excel=true encoding='utf-8
-        ' name="export.csv">
-
-                Izvoz
-            </download-csv>
+        <button class="sidebar-element" @click="ExportData">
+            Izvoz
         </button>
 
         <div class="sidbar-element" style="border-bottom: 1px solid black;" v-bind:style= "[(showDropdownLineup) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]">
@@ -46,10 +42,10 @@
 <script>
 import axios from 'axios'
 import RouterElement from '@/components/AdminPanel/RouterElement.vue'
-import JsonCSV from 'vue-json-csv'
+import * as XLSX from 'xlsx'
 export default {
     name: "GridRouterLink",
-    components: { RouterElement, JsonCSV },
+    components: { RouterElement },
     data() {
         return {
             showDropdownLineup: false,
@@ -87,12 +83,19 @@ export default {
                 document.getElementById("dpS2").style.display = "none";
             }
         },
-        exportCSV() {
-            axios.get('http://127.0.0.1:8000/guests/',)
-                .then(response => {
-                    this.users = response.data;
-                })
-        }
+        ExportData() {
+      var filename = 'export_guests.xlsx';
+      axios.get('http://127.0.0.1:8000/guests/',)
+        .then(response => {
+          var data = response.data;
+          var ws = XLSX.utils.json_to_sheet(data);
+          var wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "People");
+          XLSX.writeFile(wb, filename);
+        });
+
+
+    }
     }
 }
 </script>

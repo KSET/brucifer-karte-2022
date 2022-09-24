@@ -22,10 +22,10 @@
       </div>
       <h1 class="page-title">Uvoz Korisnika</h1>
       <br>
-      <label for="file-upload" class="button-upload ">
+      <label for="file-uploadd" class="button-upload ">
         Odaberi CSV
       </label>
-      <input id="file-upload" type="file" @change="importUsers" />
+      <input id="file-uploadd" type="file" @change="importUsers" />
 
       <button class="button-upload white">Preuzmi  CSV template</button>
      
@@ -121,7 +121,7 @@ export default {
             }
           }
           if (nextId == '') {
-            nextId = idsguests.length;
+            nextId = this.idsguests.length;
           }
 
           obj["id"] = nextId;

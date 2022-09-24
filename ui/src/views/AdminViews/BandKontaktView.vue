@@ -6,10 +6,10 @@
         <div>
           <h1 class="page-title lineup-title">Dodavanje izvođača</h1>
 
+          <img v-if="this.showContactForm==false" style="margin-top: 15px;" class="dropdown-icon showmobile" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleContactForm">
+            <img v-else class="dropdown-icon  showmobile" style="margin-top: 15px;" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleContactForm">
 
-
-
-          <form @submit="postBandContact">
+          <form id="hid" @submit="postBandContact" class="inputfields">
 
             <h1 class="textfield">Ime Benda </h1>
             <input required class="inputfield kontakt" type="text" v-model="bandName">
@@ -33,8 +33,8 @@
                 <th>Kontakt</th>
                 <th>Opcije</th>
               </thead>
-              <tbody>
-                <tr style="overflow:auto; height=200px;" v-for="bandcontact in bandcontacts" :key="bandcontact.id">
+              <tbody style="overflow:auto;" class="tbody" id="tbody">
+                <tr  v-for="bandcontact in bandcontacts" :key="bandcontact.id">
                   <td>{{bandcontact.bandName}}</td>
                   <td>{{bandcontact.bookerName}}</td>
                   <td>{{bandcontact.bookerPhone}}</td>
@@ -74,9 +74,13 @@ export default {
       bandName: '',
       bookeraName: '',
       bookerPhone: '',
+      nextId:'',
+      showContactForm:true,
     }
   },
   mounted() {
+    document.getElementById("hid").style.display = "block";
+
     this.created();
   },
 
@@ -88,6 +92,19 @@ export default {
           this.len = this.bandcontacts.length;
         })
     },
+    toggleContactForm(){
+      this.showContactForm = !this.showContactForm;
+            if (this.showContactForm) {
+                document.getElementById("hid").style.display = "block";
+                document.getElementById("tbody").style.height = "250px";
+
+            } else {
+                document.getElementById("hid").style.display = "none";
+                document.getElementById("tbody").style.height = "100%";
+
+            }
+    },
+
     postBandContact() {
 
       var ids = [];
@@ -127,6 +144,7 @@ export default {
 </script>
 
 <style>
+  
 .grid-container-contact {
   display: grid;
   grid-template-columns: 30% 40%;
@@ -138,6 +156,7 @@ export default {
 .kontakt-table {
   position: relative;
   width: 100%;
+  padding-left: 5px;
 }
 
 .inputfield.kontakt {
@@ -145,5 +164,36 @@ export default {
   margin-bottom: 30px;
   display: block;
   width: 90%;
+}
+
+@media screen and (max-width: 550px) {
+    .grid-container-contact{
+      display: flex !important;
+      flex-direction: column;
+    }
+    .inputfield.kontakt {
+  margin: 2px;
+}
+.page-title.lineup-title{
+  padding-bottom: 5px;
+}
+.tbody{
+  position: relative;
+  height: 250px;
+}
+   
+
+
+@media screen and (max-width: 550px) {
+
+
+  .page-title {
+    font-size: 16px;
+  }
+
+  .textfield {
+    font-size: 12px;
+  }
+}
 }
 </style>

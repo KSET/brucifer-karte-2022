@@ -8,14 +8,17 @@
                 <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje sponzora</h1>
                 <h1 v-else class="page-title">Uređivanje sponzora</h1>
             </div>
+            <img class="image-preview hidedesktop" style="display: block; margin-bottom: 5%; margin-left: 5%;"
+                :src="previewImage" alt="" />
+
             <form class="sponsors-form" @submit="postSponsors">
                 <div class="grid-container">
 
                     <h1 class="textfield">Ime </h1>
-                    <input required class="inputfield" type="text" v-model="name" >
-                    
+                    <input required class="inputfield" type="text" v-model="name">
+
                     <h1 class="textfield">Link </h1>
-                    <input required class="inputfield" type="text" v-model="url" >
+                    <input required class="inputfield" type="text" v-model="url">
 
 
                     <h1 class="textfield">Slika </h1>
@@ -25,20 +28,21 @@
                     <input id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
 
                     <h1 class="textfield">E-mail </h1>
-                    <input required class="inputfield" type="text" v-model="email" >
+                    <input required class="inputfield" type="text" v-model="email">
 
                     <h1 class="textfield">Broj uzvanika </h1>
-                    <input required class="inputfield" type="text" v-model="guestCap" >
+                    <input required class="inputfield" type="text" v-model="guestCap">
 
                     <button v-if="(this.slug == '0')" class="button submit" style=" margin-top: 0px">Dodaj</button>
                     <button v-else class="button submit" style=" margin-top: 0px">Spremi promjene</button>
 
-                    <button v-if="(this.slug != '0')" class="button submit" style="background-color: white; margin-top: 0px" @click="deleteSponsors">
-                    <img  class="va" src="../../assets/icons/trash-icon.svg">
-                </button>
+                    <button v-if="(this.slug != '0')" class="button submit"
+                        style="background-color: white; margin-top: 0px; margin-left: 70px;" @click="deleteSponsors">
+                        <img class="va" src="../../assets/icons/trash-icon.svg">
+                    </button>
                 </div>
             </form>
-            <img class="image-preview" :src="previewImage" alt="" />
+            <img class="image-preview hidetablet" :src="previewImage" alt="" />
 
         </div>
     </div>
@@ -68,10 +72,10 @@ export default {
             len: '',
             nextId: '',
             nextOrder: '',
-            url:'',
+            url: '',
             order: '',
-            email:'',
-            guestCap:'',
+            email: '',
+            guestCap: '',
             formData: '',
         };
     },
@@ -83,8 +87,8 @@ export default {
             axios.get('http://127.0.0.1:8000/sponsors/?search=' + this.slug,)
                 .then(response => {
                     this.sponsors = response.data;
-                    if(this.sponsors.length==0){
-                        this.$router.push({ path: '/bruckarte/sponsors-add/0'});
+                    if (this.sponsors.length == 0) {
+                        this.$router.push({ path: '/bruckarte/sponsors-add/0' });
                     }
 
                     this.sponsorsInstance = this.sponsors[0];
@@ -104,7 +108,7 @@ export default {
             axios.get('http://127.0.0.1:8000/sponsors/?ordering=order',)
                 .then(response => {
                     this.sponsorss = response.data;
-                    
+
                 })
         }
 
@@ -116,17 +120,17 @@ export default {
             this.progress = 0;
             this.message = "";
         },
-        deleteSponsors(){
+        deleteSponsors() {
             axios.delete("http://127.0.0.1:8000/sponsors/" + this.id + "/",
-                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data"
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
 
-                        }
-                    },
+                    }
+                },
 
-                )
+            )
         },
         postSponsors() {
 
@@ -136,7 +140,7 @@ export default {
             formData.append("email", this.email);
             formData.append("guestCap", this.guestCap);
 
-         
+
 
             if (this.slug != "0") {
 
@@ -144,7 +148,7 @@ export default {
                 formData.append("order", this.order);
                 formData.append("slug", this.slug);
 
-                
+
                 if (this.currentImage instanceof File) {
                     formData.append("image", this.currentImage);
                 }
@@ -226,5 +230,16 @@ export default {
 .sponsors-form {
     display: inline-block;
     width: 70%;
+}
+
+@media screen and (max-width: 550px) {
+    .grid-container {
+        row-gap: 5%;
+    }
+
+    .button.submit {
+        width: 130px;
+        height: 40px;
+    }
 }
 </style>
