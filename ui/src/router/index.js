@@ -5,6 +5,8 @@ import Guests from '../views/BruckarteViews/GuestsView.vue'
 import EntryView from '../views/BruckarteViews/EntryView.vue'
 import Login from '../views/BruckarteViews/LoginView.vue'
 import Logout from '../views/BruckarteViews/LogoutView.vue'
+import PageNotFound from '../views/BruckarteViews/PageNotFound.vue'
+
 
 
 /* Admin Views */
@@ -12,7 +14,6 @@ import Tags from '../views/AdminViews/TagsView.vue'
 import Users from '../views/AdminViews/UsersView.vue'
 import Privileges from '../views/AdminViews/PrivilegesView.vue'
 import Import from '../views/AdminViews/ImportView.vue'
-import Export from '../views/AdminViews/ExportView.vue'
 import LineupList from '../views/AdminViews/LineupListView.vue'
 import SponsorsList from '../views/AdminViews/SponsorsListView.vue'
 import AdminPanel from '../views/AdminViews/AdminPanelView.vue'
@@ -29,6 +30,8 @@ import Kontakt from '../views/BruciWebViews/KontaktView.vue'
 import Ulaznice from '../views/BruciWebViews/UlazniceView.vue'
 import Pravila from '../views/BruciWebViews/PravilaView.vue'
 import Naslovnica from '../views/BruciWebViews/NaslovnicaView.vue'
+import BWPageNotFound from '../views/BruciWebViews/BWPageNotFound.vue'
+
 
 import store from '@/store/index.js';
 
@@ -72,11 +75,6 @@ const routes = [
     component : Import
   }
   ,
-  {
-    path: '/bruckarte/export',
-    name: 'export',
-    component : Export
-  },
   {
     path: '/bruckarte/login',
     name: 'login',
@@ -125,6 +123,10 @@ const routes = [
     path: '/bruckarte/band-kontakt',
     name: 'band-kontakt',
     component : BandKontakt
+  },{
+    path: '/bruckarte/page-not-found',
+    name: 'PageNotFound',
+    component : PageNotFound
   },
   
   /* Brucweb Views setup */
@@ -158,6 +160,8 @@ const routes = [
     name: 'naslovnica',
     component : Naslovnica
   },
+  { path: '/:pathMatch(.*)*', component: BWPageNotFound },
+
 
 ]
 
