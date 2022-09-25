@@ -43,10 +43,10 @@ export default {
   },
   methods: {
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL+':8000/lineup/?ordering=order',)
+      axios.get(process.env.VUE_APP_BASE_URL + ':8000/lineup/?ordering=order',)
         .then(response => {
           this.lineups = response.data;
-          this.lineups.splice(this.lineups.length-1,1);
+          this.lineups.splice(this.lineups.length - 1, 1);
         });
     },
     editlineup(lineup) {

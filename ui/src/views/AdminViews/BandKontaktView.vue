@@ -6,8 +6,10 @@
         <div>
           <h1 class="page-title lineup-title">Dodavanje izvođača</h1>
 
-          <img v-if="this.showContactForm==false" style="margin-top: 15px;" class="dropdown-icon showmobile" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleContactForm">
-            <img v-else class="dropdown-icon  showmobile" style="margin-top: 15px;" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleContactForm">
+          <img v-if="this.showContactForm==false" style="margin-top: 15px;" class="dropdown-icon showmobile"
+            src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleContactForm">
+          <img v-else class="dropdown-icon  showmobile" style="margin-top: 15px;"
+            src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleContactForm">
 
           <form id="hid" @submit="postBandContact" class="inputfields">
 
@@ -34,7 +36,7 @@
                 <th>Opcije</th>
               </thead>
               <tbody style="overflow:auto;" class="tbody" id="tbody">
-                <tr  v-for="bandcontact in bandcontacts" :key="bandcontact.id">
+                <tr v-for="bandcontact in bandcontacts" :key="bandcontact.id">
                   <td>{{bandcontact.bandName}}</td>
                   <td>{{bandcontact.bookerName}}</td>
                   <td>{{bandcontact.bookerPhone}}</td>
@@ -74,8 +76,8 @@ export default {
       bandName: '',
       bookeraName: '',
       bookerPhone: '',
-      nextId:'',
-      showContactForm:true,
+      nextId: '',
+      showContactForm: true,
     }
   },
   mounted() {
@@ -86,23 +88,23 @@ export default {
 
   methods: {
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL+':8000/contact/',)
+      axios.get(process.env.VUE_APP_BASE_URL + ':8000/contact/',)
         .then(response => {
           this.bandcontacts = response.data;
           this.len = this.bandcontacts.length;
         })
     },
-    toggleContactForm(){
+    toggleContactForm() {
       this.showContactForm = !this.showContactForm;
-            if (this.showContactForm) {
-                document.getElementById("hid").style.display = "block";
-                document.getElementById("tbody").style.height = "250px";
+      if (this.showContactForm) {
+        document.getElementById("hid").style.display = "block";
+        document.getElementById("tbody").style.height = "250px";
 
-            } else {
-                document.getElementById("hid").style.display = "none";
-                document.getElementById("tbody").style.height = "100%";
+      } else {
+        document.getElementById("hid").style.display = "none";
+        document.getElementById("tbody").style.height = "100%";
 
-            }
+      }
     },
 
     postBandContact() {
@@ -122,7 +124,7 @@ export default {
       }
 
 
-      axios.post(process.env.VUE_APP_BASE_URL+':8000/contact/',
+      axios.post(process.env.VUE_APP_BASE_URL + ':8000/contact/',
         { id: this.nextId, bandName: this.bandName, bookerName: this.bookerName, bookerPhone: this.bookerPhone },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
@@ -131,7 +133,7 @@ export default {
 
     },
     deleteBandContact(bandcontact) {
-      axios.delete(process.env.VUE_APP_BASE_URL+':8000/contact/' + bandcontact.id + '/',
+      axios.delete(process.env.VUE_APP_BASE_URL + ':8000/contact/' + bandcontact.id + '/',
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
@@ -144,7 +146,6 @@ export default {
 </script>
 
 <style>
-  
 .grid-container-contact {
   display: grid;
   grid-template-columns: 30% 40%;
@@ -167,33 +168,36 @@ export default {
 }
 
 @media screen and (max-width: 550px) {
-    .grid-container-contact{
-      display: flex !important;
-      flex-direction: column;
+  .grid-container-contact {
+    display: flex !important;
+    flex-direction: column;
+  }
+
+  .inputfield.kontakt {
+    margin: 2px;
+  }
+
+  .page-title.lineup-title {
+    padding-bottom: 5px;
+  }
+
+  .tbody {
+    position: relative;
+    height: 250px;
+  }
+
+
+
+  @media screen and (max-width: 550px) {
+
+
+    .page-title {
+      font-size: 16px;
     }
-    .inputfield.kontakt {
-  margin: 2px;
-}
-.page-title.lineup-title{
-  padding-bottom: 5px;
-}
-.tbody{
-  position: relative;
-  height: 250px;
-}
-   
 
-
-@media screen and (max-width: 550px) {
-
-
-  .page-title {
-    font-size: 16px;
+    .textfield {
+      font-size: 12px;
+    }
   }
-
-  .textfield {
-    font-size: 12px;
-  }
-}
 }
 </style>

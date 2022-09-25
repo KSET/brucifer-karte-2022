@@ -42,11 +42,11 @@ export default {
     }
   },
   created() {
-    axios.get(process.env.VUE_APP_BASE_URL+':8000/lineup/?ordering=order',)
+    axios.get(process.env.VUE_APP_BASE_URL + ':8000/lineup/?ordering=order',)
       .then(response => {
-        if(response.data==0){
-          this.visible=0;
-        }else{
+        if (response.data == 0) {
+          this.visible = 0;
+        } else {
           this.isVisible = response.data[response.data.length - 1].visible;
         }
         if (this.isVisible == '1') {
@@ -66,7 +66,7 @@ export default {
         var changenum = '1';
         this.isVisible = '1';
       }
-      axios.put(process.env.VUE_APP_BASE_URL+':8000/lineup/314159/',
+      axios.put(process.env.VUE_APP_BASE_URL + ':8000/lineup/314159/',
         { visible: changenum },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
@@ -115,8 +115,8 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color:#D9D9D9;
-;
+  background-color: #D9D9D9;
+  ;
   -webkit-transition: .4s;
   transition: .4s;
 }

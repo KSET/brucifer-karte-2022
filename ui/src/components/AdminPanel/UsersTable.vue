@@ -1,33 +1,35 @@
 <template>
   <div id="users-search">
-    <h1>Search:  </h1>
-      <input @input="searchUser" type="form" id="searchgumb" v-model="search">
-      <div class=row>
-            <table id="users">
-              <thead>
-              <th>Name</th>
-              <th>Email</th>
-              <th>privilege</th>
-              <th>Options</th>
-              </thead>
-              <tbody>
-                <tr  v-for="user in users" :key="user.id">
-                  <td v-if="user.email!=''">{{user.name}}</td>
-                  <td v-if="user.email!=''">{{user.email}}</td>
-                  <td v-if="user.email!=''">{{user.privilege}}</td>
-                  <td v-if="user.email!=''">
-                    <button @click="changeprivilege(user,'1')" class="btn btn-primary" id="gumbar"> 1</button>
-                    <button @click="changeprivilege(user,'2')" class="btn btn-primary" id="gumbar"> 2</button>
-                    <button @click="changeprivilege(user,'3')" class="btn btn-primary" id="gumbar"> 3</button>
-                    <button @click="changeprivilege(user,'4')" class="btn btn-primary" id="gumbar"> 4</button>
-                    <button @click="deleteUser(user)" class="btn btn-primary" id="gumbard">  <font-awesome-icon icon="fa-solid fa-trash-can" /></button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-        
-      
-  </div>
+    <h1>Search: </h1>
+    <input @input="searchUser" type="form" id="searchgumb" v-model="search">
+    <div class=row>
+      <table id="users">
+        <thead>
+          <th>Name</th>
+          <th>Email</th>
+          <th>privilege</th>
+          <th>Options</th>
+        </thead>
+        <tbody>
+          <tr v-for="user in users" :key="user.id">
+            <td v-if="user.email!=''">{{user.name}}</td>
+            <td v-if="user.email!=''">{{user.email}}</td>
+            <td v-if="user.email!=''">{{user.privilege}}</td>
+            <td v-if="user.email!=''">
+              <button @click="changeprivilege(user,'1')" class="btn btn-primary" id="gumbar"> 1</button>
+              <button @click="changeprivilege(user,'2')" class="btn btn-primary" id="gumbar"> 2</button>
+              <button @click="changeprivilege(user,'3')" class="btn btn-primary" id="gumbar"> 3</button>
+              <button @click="changeprivilege(user,'4')" class="btn btn-primary" id="gumbar"> 4</button>
+              <button @click="deleteUser(user)" class="btn btn-primary" id="gumbard">
+                <font-awesome-icon icon="fa-solid fa-trash-can" />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+
+    </div>
   </div>
 </template>
 
@@ -38,52 +40,53 @@ export default {
   props: {
     msg: String
   },
-  data(){
-    return{
+  data() {
+    return {
       users: [],
-      id:'',
-      name:'',
-      email:'',
-      privilege:'',
+      id: '',
+      name: '',
+      email: '',
+      privilege: '',
     }
-    
+
   },
-  mounted(){
+  mounted() {
     this.created();
   },
-  
-  methods:{
-    created() {
-    axios.get(process.env.VUE_APP_BASE_URL+':8000/users/',)
-    .then(response => {
-      this.users =response.data;
 
-    })},
-    changeprivilege(user,changenum){
-      axios.put(process.env.VUE_APP_BASE_URL+':8000/users/'+user.id+'/',
-      {privilege:changenum},
-      {auth:{username:process.env.VUE_APP_DJANGO_USER,password:process.env.VUE_APP_DJANGO_PASS}}
-      )
-      .then(()=>{
-        this.created();
-      })
+  methods: {
+    created() {
+      axios.get(process.env.VUE_APP_BASE_URL + ':8000/users/',)
+        .then(response => {
+          this.users = response.data;
+
+        })
     },
-    deleteUser(user){
-      axios.delete(process.env.VUE_APP_BASE_URL+':8000/users/'+user.id+'/',
-      {auth:{username:process.env.VUE_APP_DJANGO_USER,password:process.env.VUE_APP_DJANGO_PASS}}
+    changeprivilege(user, changenum) {
+      axios.put(process.env.VUE_APP_BASE_URL + ':8000/users/' + user.id + '/',
+        { privilege: changenum },
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
-      .then(()=>{
-        this.created();
-      })
+        .then(() => {
+          this.created();
+        })
     },
-    searchUser(){
-      axios.get(process.env.VUE_APP_BASE_URL+':8000/users/?search='+this.search,)
-    .then(response => {
-      this.users =response.data;
-    })
+    deleteUser(user) {
+      axios.delete(process.env.VUE_APP_BASE_URL + ':8000/users/' + user.id + '/',
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      )
+        .then(() => {
+          this.created();
+        })
+    },
+    searchUser() {
+      axios.get(process.env.VUE_APP_BASE_URL + ':8000/users/?search=' + this.search,)
+        .then(response => {
+          this.users = response.data;
+        })
     }
   }
-   
+
 }
 
 
@@ -97,15 +100,20 @@ export default {
   text-align: center;
 }
 
-#users td, #users th {
+#users td,
+#users th {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
 }
 
-#users tr:nth-child(even){background-color: #f2f2f2;}
+#users tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
 
-#users tr:hover {background-color: #ddd;}
+#users tr:hover {
+  background-color: #ddd;
+}
 
 #users th {
   padding-top: 12px;
@@ -115,7 +123,8 @@ export default {
   color: white;
   text-align: center;
 }
-#gumbard{
+
+#gumbard {
   padding: 0px;
   background-color: #FFAE42;
   border-color: #FFAE42;
@@ -124,7 +133,7 @@ export default {
   height: 40px;
 }
 
-#gumbar{
+#gumbar {
   padding: 0px;
   background-color: #111;
   border-color: #111;

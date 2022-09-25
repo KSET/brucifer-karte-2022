@@ -3,7 +3,7 @@
     <form @submit="postGuest">
       <h1>Dodaj na popis: </h1>
       <input type="text" id="inputname" v-model="name">
-      <input type="text" id="inputsurname" v-model="surname" >
+      <input type="text" id="inputsurname" v-model="surname">
       <select v-model="selectedTag" name={{selectedTag}} id={{selectedTag}}>
         <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
       </select>
@@ -18,7 +18,7 @@ import axios from 'axios'
 export default {
   name: 'GuestsAdd',
   components: {
-    
+
   },
   props: {
     msg: String
@@ -44,7 +44,7 @@ export default {
   },
 
   created() {
-    axios.get(process.env.VUE_APP_BASE_URL+':8000/guests/',)
+    axios.get(process.env.VUE_APP_BASE_URL + ':8000/guests/',)
       .then(response => {
         this.guests = response.data;
         this.len = this.guests.length;
@@ -65,8 +65,8 @@ export default {
       if (this.nextId == '') {
         this.nextId = ids.length;
       }
-      
-      axios.post(process.env.VUE_APP_BASE_URL+':8000/guests/',
+
+      axios.post(process.env.VUE_APP_BASE_URL + ':8000/guests/',
         { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: '0', entered: '0' },
         { auth: { username: process.env.AUTH_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )

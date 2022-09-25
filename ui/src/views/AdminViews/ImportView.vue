@@ -8,8 +8,8 @@
         Odaberi CSV
       </label>
       <input id="file-upload" type="file" @change="importGuests" />
-      <button class="button-upload white" @click="exportExample(1)">Preuzmi  CSV template</button>
-     
+      <button class="button-upload white" @click="exportExample(1)">Preuzmi CSV template</button>
+
       <div class="list">
         <ul>
           <li>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećemredu
@@ -27,17 +27,18 @@
       </label>
       <input id="file-uploadd" type="file" @change="importUsers" />
 
-      <button class="button-upload white" @click="exportExample(2)">Preuzmi  CSV template</button>
-     
-      <div class="list">
-      <ul>
-        <li>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećem redu.
-        </li>
-        <li>Imena polja mogu biti: name, email, privilege.</li>
-        <li>Mogće vrijednosti privilege su cijeli brojevi izmešu 0 i 4 s uključivim granicama.</li>
-        <li>Polje name može se ostaviti prazno, taj podatadak će se sam updeatati kada se korisnik prijavi</li>
+      <button class="button-upload white" @click="exportExample(2)">Preuzmi CSV template</button>
 
-      </ul></div>
+      <div class="list">
+        <ul>
+          <li>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećem redu.
+          </li>
+          <li>Imena polja mogu biti: name, email, privilege.</li>
+          <li>Mogće vrijednosti privilege su cijeli brojevi izmešu 0 i 4 s uključivim granicama.</li>
+          <li>Polje name može se ostaviti prazno, taj podatadak će se sam updeatati kada se korisnik prijavi</li>
+
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -67,7 +68,7 @@ export default {
     };
   },
   mounted() {
-    axios.get(process.env.VUE_APP_BASE_URL+':8000/guests/',)
+    axios.get(process.env.VUE_APP_BASE_URL + ':8000/guests/',)
       .then(response => {
         this.guests = response.data;
         this.len = this.guests.length;
@@ -75,7 +76,7 @@ export default {
         this.guests.forEach(element => {
           this.idsguests.push(element.id);
         });
-        axios.get(process.env.VUE_APP_BASE_URL+':8000/users/',)
+        axios.get(process.env.VUE_APP_BASE_URL + ':8000/users/',)
           .then(response => {
             this.users = response.data;
             this.len = this.guests.length;
@@ -88,100 +89,101 @@ export default {
       })
   },
   methods: {
-    exportExample(version){
-      if(version==1){
+    exportExample(version) {
+      if (version == 1) {
         var filename = 'import_example_guests.xlsx';
         var data = [{
-      "name": "",
-      "surname": "",
-      "tag": "",
-      "jmbag": 23945624
-    },
-    {
-      "name": "",
-      "surname": "",
-      "tag": "",
-      "jmbag": 23495862
-    },
-    {
-      "name": "",
-      "surname": "",
-      "tag": "",
-      "jmbag": 13659968
-    },
-    {
-      "name": "",
-      "surname": "",
-      "tag": "",
-      "jmbag": 36594856
-    },
-    {
-      "name": "Ivan",
-      "surname": "Svetić",
-      "tag": "VIP",
-      "jmbag": ""
-    },
-    {
-      "name": "Maja",
-      "surname": "Kovačević",
-      "tag": "VIP",
-      "jmbag": ""
-    },
-    {
-      "name": "Petar",
-      "surname": "Penić",
-      "tag": "KSET",
-      "jmbag": ""
-    },
-    {
-      "name": "Tena",
-      "surname": "Botas",
-      "tag": "KSET",
-      "jmbag": ""}];
-      }else{
+          "name": "",
+          "surname": "",
+          "tag": "",
+          "jmbag": 23945624
+        },
+        {
+          "name": "",
+          "surname": "",
+          "tag": "",
+          "jmbag": 23495862
+        },
+        {
+          "name": "",
+          "surname": "",
+          "tag": "",
+          "jmbag": 13659968
+        },
+        {
+          "name": "",
+          "surname": "",
+          "tag": "",
+          "jmbag": 36594856
+        },
+        {
+          "name": "Ivan",
+          "surname": "Svetić",
+          "tag": "VIP",
+          "jmbag": ""
+        },
+        {
+          "name": "Maja",
+          "surname": "Kovačević",
+          "tag": "VIP",
+          "jmbag": ""
+        },
+        {
+          "name": "Petar",
+          "surname": "Penić",
+          "tag": "KSET",
+          "jmbag": ""
+        },
+        {
+          "name": "Tena",
+          "surname": "Botas",
+          "tag": "KSET",
+          "jmbag": ""
+        }];
+      } else {
         var filename = 'import_example_users.xlsx';
         var data = [
-    {
-      "name": "",
-      "email": "toni.batos@kset.org",
-      "privilege": 3
-    },
-    {
-      "name": "Zrika Petrović",
-      "email": "zrinka.petrovic@kset.org",
-      "privilege": 1
-    },
-    {
-      "name": "",
-      "email": "alen.ivic@kset.org",
-      "privilege": 2
-    },
-    {
-      "name": "Korina Ban",
-      "email": "korina.ban@kset.org",
-      "privilege": 2
-    },
-    {
-      "name": "",
-      "email": "tin.tinović@gmail.com",
-      "privilege": 2
-    },
-    {
-      "name": "Marija Erić",
-      "email": "marija.eric@kset.org",
-      "privilege": 1
-    }
-  ]
+          {
+            "name": "",
+            "email": "toni.batos@kset.org",
+            "privilege": 3
+          },
+          {
+            "name": "Zrika Petrović",
+            "email": "zrinka.petrovic@kset.org",
+            "privilege": 1
+          },
+          {
+            "name": "",
+            "email": "alen.ivic@kset.org",
+            "privilege": 2
+          },
+          {
+            "name": "Korina Ban",
+            "email": "korina.ban@kset.org",
+            "privilege": 2
+          },
+          {
+            "name": "",
+            "email": "tin.tinović@gmail.com",
+            "privilege": 2
+          },
+          {
+            "name": "Marija Erić",
+            "email": "marija.eric@kset.org",
+            "privilege": 1
+          }
+        ]
       }
-          var ws = XLSX.utils.json_to_sheet(data);
-          var wb = XLSX.utils.book_new();
-          XLSX.utils.book_append_sheet(wb, ws, "People");
-          XLSX.writeFile(wb, filename);
+      var ws = XLSX.utils.json_to_sheet(data);
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "People");
+      XLSX.writeFile(wb, filename);
     },
     importGuests(event) {
       this.file = event.target.files ? event.target.files[0] : null;
       readXlsxFile(this.file).then((rows) => {
-      
+
 
         const gosti = [];
 
@@ -229,17 +231,17 @@ export default {
           }
 
           this.idsguests.push(String(nextId));
-          axios.post(process.env.VUE_APP_BASE_URL+':8000/guests/',
+          axios.post(process.env.VUE_APP_BASE_URL + ':8000/guests/',
             { id: obj.id, name: obj.name, surname: obj.surname, jmbag: obj.jmbag, tag: obj.tag, bought: obj.bought, entered: obj.entered },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           ).catch(function (error) {
-    window.alert("IMPORT NEUSPJEŠAN ZA NEKE GOSTE");
-  });
+            window.alert("IMPORT NEUSPJEŠAN ZA NEKE GOSTE");
+          });
 
           gosti.push(obj);
         }
 
-        
+
 
 
       }
@@ -289,12 +291,12 @@ export default {
 
 
           this.idsusers.push(String(nextId));
-          axios.post(process.env.VUE_APP_BASE_URL+':8000/users/',
+          axios.post(process.env.VUE_APP_BASE_URL + ':8000/users/',
             { id: obj.id, name: obj.name, email: obj.email, privilege: obj.privilege },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           ).catch(function (error) {
-    window.alert("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE");
-  });
+            window.alert("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE");
+          });
 
           users.push(obj);
         }
@@ -327,7 +329,8 @@ export default {
   text-align: center;
   vertical-align: top;
 }
-.button-upload.white{
+
+.button-upload.white {
   line-height: 0%;
   width: 200px;
   color: black;
@@ -339,17 +342,16 @@ input[type="file"] {
   display: none;
 
 }
-.list{
+
+.list {
   margin-top: 2.5%;
   margin-bottom: 2.5%;
 }
 
-ul {
- 
-}
+ul {}
 
 li {
-    font-family: 'Montserrat';
+  font-family: 'Montserrat';
   font-style: normal;
   font-weight: 700;
   font-size: 16px;

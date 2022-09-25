@@ -5,15 +5,16 @@
       <div class="page-header user-page">
         <h1 class="page-title user-title">Korisnici</h1>
         <button class="button-icon"> <img class="add-icon user-icon" src="@/assets/icons/add-icon.svg"></button>
-        <input @input="searchUser" type="text" class="nosubmit search"  placeholder="Unesi ime/prezime/email"
+        <input @input="searchUser" type="text" class="nosubmit search" placeholder="Unesi ime/prezime/email"
           v-model="search" style="display: inline-block; margin-top: 0px; position: relative;">
 
-        </div>
+      </div>
       <div class=row>
         <table id="guests">
           <tbody>
             <div class="users-container" v-for="user in users" :key="user.id">
-              <div class="users-element hidedesktop hidetablett showmobile"><button class="button-priv" style="border: none; opacity: 0.25;" @click="deleteUser(user)">
+              <div class="users-element hidedesktop hidetablett showmobile"><button class="button-priv"
+                  style="border: none; opacity: 0.25;" @click="deleteUser(user)">
                   <img src="@/assets/icons/trash-icon.svg"></button></div>
               <div class="users-element userinfo" style="flex: 2;"
                 v-bind:style="[(user.privilege=='0') ? {color:'red'}: { color:'black'}]">{{user.name}} <br>
@@ -70,14 +71,14 @@ export default {
 
   methods: {
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL+':8000/users/',)
+      axios.get(process.env.VUE_APP_BASE_URL + ':8000/users/',)
         .then(response => {
           this.users = response.data;
 
         })
     },
     changeprivilege(user, changenum) {
-      axios.put(process.env.VUE_APP_BASE_URL+':8000/users/' + user.id + '/',
+      axios.put(process.env.VUE_APP_BASE_URL + ':8000/users/' + user.id + '/',
         { privilege: changenum },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
@@ -86,7 +87,7 @@ export default {
         })
     },
     deleteUser(user) {
-      axios.delete(process.env.VUE_APP_BASE_URL+':8000/users/' + user.id + '/',
+      axios.delete(process.env.VUE_APP_BASE_URL + ':8000/users/' + user.id + '/',
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
@@ -94,7 +95,7 @@ export default {
         })
     },
     searchUser() {
-      axios.get(process.env.VUE_APP_BASE_URL+':8000/users/?search=' + this.search,)
+      axios.get(process.env.VUE_APP_BASE_URL + ':8000/users/?search=' + this.search,)
         .then(response => {
           this.users = response.data;
         })
@@ -175,11 +176,13 @@ export default {
   background-color: white;
   color: black;
 }
+
 @media screen and (max-width: 980px) {
-  .hidetablett{
+  .hidetablett {
     display: none !important;
   }
 }
+
 @media screen and (max-width: 550px) {
   .users-container {
     display: grid !important;
@@ -202,7 +205,7 @@ export default {
     font-size: 12px;
   }
 
-  .hidetablett{
+  .hidetablett {
     display: block !important;
   }
 }

@@ -1,9 +1,8 @@
 <template>
   <div class="bw-page-container">
     <div class="sponsors">
-      <div v-for="user in users" :key="user.id" class="sponsor" >
-        <a  v-bind:href="user.url"  rel="noreferrer noopener" target="_blank"
-          >
+      <div v-for="user in users" :key="user.id" class="sponsor">
+        <a v-bind:href="user.url" rel="noreferrer noopener" target="_blank">
           <div class="image-container">
             <div class="image-sizer2"></div>
             <img class="image-frame2" v-bind:src="user.image">
@@ -21,7 +20,7 @@ import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import axios from 'axios'
 export default {
   name: 'UsersTable',
-  components: {Footer}, 
+  components: { Footer },
   props: {
     msg: String
   },
@@ -41,7 +40,7 @@ export default {
 
   methods: {
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL+':8000/sponsors/?ordering=order',)
+      axios.get(process.env.VUE_APP_BASE_URL + ':8000/sponsors/?ordering=order',)
         .then(response => {
           this.users = response.data;
 
@@ -57,8 +56,6 @@ export default {
 
 
 <style>
-
-
 .sponsors {
   padding: 3.14159em;
 

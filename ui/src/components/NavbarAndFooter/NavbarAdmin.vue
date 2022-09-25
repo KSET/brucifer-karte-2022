@@ -134,7 +134,7 @@ export default {
   methods: {
     ExportData() {
       var filename = 'export_guests.xlsx';
-      axios.get(process.env.VUE_APP_BASE_URL+':8000/guests/',)
+      axios.get(process.env.VUE_APP_BASE_URL + ':8000/guests/',)
         .then(response => {
           var data = response.data;
           var ws = XLSX.utils.json_to_sheet(data);
@@ -289,8 +289,8 @@ export default {
 }
 
 .showmobile {
-    display: none !important;
-  }
+  display: none !important;
+}
 
 @media screen and (max-width: 980px) {
   .hidedesktop {
@@ -304,6 +304,7 @@ export default {
   .textfield {
     font-size: 14px;
   }
+
   .showmobile {
     display: none !important;
   }

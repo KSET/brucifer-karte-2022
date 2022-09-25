@@ -6,7 +6,8 @@
                 <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje izvođača</h1>
                 <h1 v-else class="page-title">Uređivanje izvođača</h1>
             </div>
-            <img class="image-preview hidedesktop" style="display: block; margin-bottom: 5%; margin-left: 5%;" :src="previewImage" alt="" />
+            <img class="image-preview hidedesktop" style="display: block; margin-bottom: 5%; margin-left: 5%;"
+                :src="previewImage" alt="" />
 
             <form class="lineup-form" @submit="postLineup">
                 <div class="grid-container">
@@ -30,8 +31,8 @@
                     <button v-if="(this.slug == '0')" class="button submit">Dodaj</button>
                     <button v-else class="button submit">Spremi promjene</button>
 
-                    <button v-if="(this.slug != '0')" class="button submit" style="background-color: white; margin-left: 40px;"
-                        @click="deleteLineup">
+                    <button v-if="(this.slug != '0')" class="button submit"
+                        style="background-color: white; margin-left: 40px;" @click="deleteLineup">
                         <img class="va" src="../../assets/icons/trash-icon.svg">
                     </button>
                 </div>
@@ -76,7 +77,7 @@ export default {
         this.slug = this.$route.params.slug;
 
         if (this.slug != '0') {
-            axios.get(process.env.VUE_APP_BASE_URL+':8000/lineup/?search=' + this.slug,)
+            axios.get(process.env.VUE_APP_BASE_URL + ':8000/lineup/?search=' + this.slug,)
                 .then(response => {
                     this.lineup = response.data;
                     if (this.lineup.length == 0) {
@@ -99,7 +100,7 @@ export default {
                 })
 
         } else {
-            axios.get(process.env.VUE_APP_BASE_URL+':8000/lineup/?ordering=order',)
+            axios.get(process.env.VUE_APP_BASE_URL + ':8000/lineup/?ordering=order',)
                 .then(response => {
                     this.lineups = response.data;
 
@@ -226,16 +227,19 @@ export default {
 }
 
 @media screen and (max-width: 900px) {
-  .lineup-form {
-margin-left: 5%;}}
+    .lineup-form {
+        margin-left: 5%;
+    }
+}
 
 @media screen and (max-width: 550px) {
-  .lineup-form {
-    width: 100%;
-}
-.button.submit{
-    width: 130px;
-height: 40px;
-}
+    .lineup-form {
+        width: 100%;
+    }
+
+    .button.submit {
+        width: 130px;
+        height: 40px;
+    }
 }
 </style>

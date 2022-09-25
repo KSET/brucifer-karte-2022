@@ -97,7 +97,7 @@ export default {
         }
     },
     mounted() {
-        axios.get(process.env.VUE_APP_BASE_URL+':8000/tags/',)
+        axios.get(process.env.VUE_APP_BASE_URL + ':8000/tags/',)
             .then(response => {
                 var itemss = response.data;
                 itemss.forEach(element => {
@@ -108,7 +108,7 @@ export default {
     },
     methods: {
         searchGuest() {
-            axios.get(process.env.VUE_APP_BASE_URL+':8000/guests/?search=' + this.search + ' ' + this.selectedTag + "&search_fields=tag&search_fields=name&search_fields=surname",)
+            axios.get(process.env.VUE_APP_BASE_URL + ':8000/guests/?search=' + this.search + ' ' + this.selectedTag + "&search_fields=tag&search_fields=name&search_fields=surname",)
                 .then(response => {
                     if (this.search != '' && this.search.length > 2) {
                         this.guests = response.data;
@@ -155,7 +155,7 @@ export default {
 
         },
         changeEntered(guest, changenum) {
-            axios.put(process.env.VUE_APP_BASE_URL+':8000/guests/' + guest.id + '/',
+            axios.put(process.env.VUE_APP_BASE_URL + ':8000/guests/' + guest.id + '/',
                 { entered: changenum },
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
             )
@@ -165,7 +165,7 @@ export default {
                 })
         },
         changeBought(guest, changenum) {
-            axios.put(process.env.VUE_APP_BASE_URL+':8000/guests/' + guest.id + '/',
+            axios.put(process.env.VUE_APP_BASE_URL + ':8000/guests/' + guest.id + '/',
                 { bought: changenum },
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
             )

@@ -8,11 +8,13 @@
             Izvoz
         </button>
 
-        <div class="sidbar-element" style="border-bottom: 1px solid black;" v-bind:style= "[(showDropdownLineup) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]">
+        <div class="sidbar-element" style="border-bottom: 1px solid black;"
+            v-bind:style="[(showDropdownLineup) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]">
             <RouterElement class="sidebar-element" style="display: inline-block; width: 90%; border-bottom: none;"
                 :name="'Izvođači'">
             </RouterElement>
-            <img v-if="this.showDropdownLineup==false" class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownLineup">
+            <img v-if="this.showDropdownLineup==false" class="dropdown-icon"
+                src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownLineup">
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownLineup">
 
         </div>
@@ -21,18 +23,21 @@
         <RouterElement id="dpL2" class="sidebar-element" :name="'Dodavanje Izvođača'" :link="'/bruckarte/lineup-add/0'">
         </RouterElement>
 
-        <div class="sidbar-element" style="border-bottom: 1px solid black;" v-bind:style= "[(showDropdownSponsors) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]">
+        <div class="sidbar-element" style="border-bottom: 1px solid black;"
+            v-bind:style="[(showDropdownSponsors) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]">
             <RouterElement class="sidebar-element" style="display: inline-block; width: 90%; border-bottom: none;"
                 :name="'Sponzori'">
             </RouterElement>
-            <img v-if="this.showDropdownSponsors==false" class="dropdown-icon" src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownSponsors">
+            <img v-if="this.showDropdownSponsors==false" class="dropdown-icon"
+                src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownSponsors">
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownSponsors">
 
         </div>
-            <RouterElement id="dpS1" class="sidebar-element" :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors-list'">
-            </RouterElement>
-            <RouterElement id="dpS2" class="sidebar-element" :name="'Dodavanje Sponzora'" :link="'/bruckarte/sponsors-add/0'">
-            </RouterElement>
+        <RouterElement id="dpS1" class="sidebar-element" :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors-list'">
+        </RouterElement>
+        <RouterElement id="dpS2" class="sidebar-element" :name="'Dodavanje Sponzora'"
+            :link="'/bruckarte/sponsors-add/0'">
+        </RouterElement>
 
         <RouterElement class="sidebar-element" :name="'Dodaj Gosta'" :link="'/bruckarte/guests-add'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Kontakt'" :link="'/bruckarte/band-kontakt'"></RouterElement>
@@ -84,18 +89,18 @@ export default {
             }
         },
         ExportData() {
-      var filename = 'export_guests.xlsx';
-      axios.get(process.env.VUE_APP_BASE_URL+':8000/guests/',)
-        .then(response => {
-          var data = response.data;
-          var ws = XLSX.utils.json_to_sheet(data);
-          var wb = XLSX.utils.book_new();
-          XLSX.utils.book_append_sheet(wb, ws, "People");
-          XLSX.writeFile(wb, filename);
-        });
+            var filename = 'export_guests.xlsx';
+            axios.get(process.env.VUE_APP_BASE_URL + ':8000/guests/',)
+                .then(response => {
+                    var data = response.data;
+                    var ws = XLSX.utils.json_to_sheet(data);
+                    var wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "People");
+                    XLSX.writeFile(wb, filename);
+                });
 
 
-    }
+        }
     }
 }
 </script>
@@ -183,8 +188,7 @@ export default {
 }
 
 /* Optional: Style the caret down icon */
-.dropdown-icon {
-}
+.dropdown-icon {}
 
 .admin-page-container {
     position: relative;

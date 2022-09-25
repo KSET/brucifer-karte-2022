@@ -1,14 +1,15 @@
 <template>
   <div class="page-container">
-    <vue-countdown class="countdown-timer" :time=this.time :transform="transformSlotProps" v-slot="{ days, hours, minutes, seconds }">
-  {{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}
-</vue-countdown>
+    <vue-countdown class="countdown-timer" :time=this.time :transform="transformSlotProps"
+      v-slot="{ days, hours, minutes, seconds }">
+      {{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}
+    </vue-countdown>
     <div class="homepage">
       <div class="image-container">
         <div class="image-sizer"></div>
         <div class="image-frame"></div>
       </div>
-    
+
     </div>
     <Footer></Footer>
 
@@ -32,9 +33,9 @@ export default {
   },
   mounted() {
     var seconds = new Date().getTime() / 1000;
-    this.time=(1668283200-(seconds))*1000;
+    this.time = (1668283200 - (seconds)) * 1000;
   },
-  methods :{
+  methods: {
     transformSlotProps(props) {
       const formattedProps = {};
 
@@ -110,30 +111,28 @@ export default {
 }
 
 .countdown-timer {
-        position: absolute;
-        font-family: 'Antonio';
-        top: 0;
-        width: 100%;
-        right: 0;
-        padding-right: var(--countdown-right-offset);
-        text-align: right;
-        font-size: var(--countdown-font-size);
-        color:white;
-        text-shadow: .062em 0 black;
-        pointer-events: none;
-        user-select: none;
-        padding-bottom: min(
-                calc(var(--background-image-aspect-ratio) * 100%),
-                calc(100vh - var(--topbar-height) - var(--footer-height) - var(--countdown-font-size) - var(--countdown-top-offset))
-        );
-        overflow: hidden;
-    }
+  position: absolute;
+  font-family: 'Antonio';
+  top: 0;
+  width: 100%;
+  right: 0;
+  padding-right: var(--countdown-right-offset);
+  text-align: right;
+  font-size: var(--countdown-font-size);
+  color: white;
+  text-shadow: .062em 0 black;
+  pointer-events: none;
+  user-select: none;
+  padding-bottom: min(calc(var(--background-image-aspect-ratio) * 100%),
+      calc(100vh - var(--topbar-height) - var(--footer-height) - var(--countdown-font-size) - var(--countdown-top-offset)));
+  overflow: hidden;
+}
 
-    .countdown-timer::before {
-        content: "";
-        display: block;
-        padding-top: var(--countdown-top-offset);
-    }
+.countdown-timer::before {
+  content: "";
+  display: block;
+  padding-top: var(--countdown-top-offset);
+}
 
 @import url(../../bruciweb.css);
 </style>

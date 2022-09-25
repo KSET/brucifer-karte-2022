@@ -1,7 +1,7 @@
 <template>
-    <button @click="$router.push(this.link)">
-      {{name}}
-      </button>
+  <button @click="$router.push(this.link)">
+    {{name}}
+  </button>
 </template>
 
 <script>

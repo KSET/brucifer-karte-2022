@@ -1,6 +1,6 @@
 <template>
   <div id="adminPanel">
-      <Sidebar></Sidebar>
+    <Sidebar></Sidebar>
   </div>
 </template>
 

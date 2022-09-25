@@ -7,7 +7,8 @@
 
       <RouterElement class="navbar-element hidetablet" :name="'Naslovnica'" :link="'/'"></RouterElement>
 
-      <RouterElement v-if="this.visible=='1'" class="navbar-element hidetablet" :name="'Izvođači'" :link="'/lineup'"></RouterElement>
+      <RouterElement v-if="this.visible=='1'" class="navbar-element hidetablet" :name="'Izvođači'" :link="'/lineup'">
+      </RouterElement>
 
       <RouterElement class="navbar-element hidetablet" :name="'Ulaznice'" :link="'/ulaznice'"></RouterElement>
 
@@ -27,7 +28,8 @@
           <RouterElement class=" overlay-element" :name="'Naslovnica'" :link="'/'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement v-if="this.visible=='1'" class="overlay-element " :name="'Izvođači'" :link="'/lineup'" @click="toggleNav()">
+          <RouterElement v-if="this.visible=='1'" class="overlay-element " :name="'Izvođači'" :link="'/lineup'"
+            @click="toggleNav()">
           </RouterElement>
 
           <RouterElement class="overlay-element " :name="'Ulaznice'" :link="'/ulaznice'" @click="toggleNav()">
@@ -65,13 +67,13 @@ export default {
   },
   created() {
     this.showNav = false;
-    axios.get(process.env.VUE_APP_BASE_URL+':8000/lineup/?ordering=order',)
+    axios.get(process.env.VUE_APP_BASE_URL + ':8000/lineup/?ordering=order',)
       .then(response => {
         var users = response.data;
-        if(users.length==0){
-          this.visible=0;
-        }else{
-          this.visible= users[users.length - 1].visible;
+        if (users.length == 0) {
+          this.visible = 0;
+        } else {
+          this.visible = users[users.length - 1].visible;
         }
       })
   },
@@ -107,12 +109,12 @@ export default {
   transition: 0.5s;
 }
 
-.overlay.bw{
+.overlay.bw {
   background-color: #DC5E88;
 
 }
 
-.overlay.admin{
+.overlay.admin {
   background-color: white;
 
 }
@@ -124,7 +126,7 @@ export default {
   margin-top: 30px;
 }
 
-.overlay-content.bw{
+.overlay-content.bw {
   top: 17%;
 }
 
@@ -174,7 +176,7 @@ export default {
     right: 35px;
   }
 
-  .overlay-element.LS{
+  .overlay-element.LS {
     width: 5%;
   }
 }
@@ -266,8 +268,8 @@ export default {
 }
 
 .hidedesktop {
-    display:none !important;
-  }
+  display: none !important;
+}
 
 @media screen and (max-width: 980px) {
   .hidedesktop {
@@ -287,7 +289,8 @@ export default {
 @media screen and (max-width: 550px) {
   .lineup-form {
     width: 100%;
-}
+  }
+
   .hidemobile {
     display: none;
   }

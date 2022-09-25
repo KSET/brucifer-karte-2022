@@ -1,29 +1,25 @@
 <template>
-        <section style="padding:20%">
-          <h1 >404 Page not found
-          </h1>
+  <section style="padding:20%">
+    <h1>404 Page not found
+    </h1>
+
+    <p>
+      Izgleda da si pronašao stranicu koja ne postoji
+    </p>
+    <br>
+    <RouterElement class="overlay-element" :name="'Naslovnica'" :link="'/bruckarte/'"></RouterElement>
+
+  </section>
+
+</template>
   
-          <p>
-           Izgleda da si pronašao stranicu koja ne postoji
-          </p>
-          <br>
-          <RouterElement class="overlay-element" :name="'Naslovnica'" :link="'/bruckarte/'"></RouterElement>
-  
-        </section>
-  
-  </template>
-  
-  <script>
+<script>
 import RouterElement from '@/components/AdminPanel/RouterElement.vue'
 
-  
-  export default {
-    name: 'KontaktView',
-    components: { RouterElement }
-  
-  }
-  </script>
-  
-  <style>  
-  
-  </style>
+
+export default {
+  name: 'KontaktView',
+  components: { RouterElement }
+
+}
+</script>

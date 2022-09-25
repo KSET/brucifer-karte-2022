@@ -5,10 +5,13 @@
         <section>
           <h1 id="ulaznice">ULAZNICE</h1>
 
-          <p>Ulaznice po redovnoj cijeni od 80 kuna u prodaji su od 14. rujna do 12. studenog ili do isteka zaliha. Ulaznice se mogu kupiti u KSET-u te u Dirty Old Shopu.</p>
+          <p>Ulaznice po redovnoj cijeni od 80 kuna u prodaji su od 14. rujna do 12. studenog ili do isteka zaliha.
+            Ulaznice se mogu kupiti u KSET-u te u Dirty Old Shopu.</p>
 
-          <p>Ulaznice za brucoše FER-a po cijeni od 50 kuna kreću u prodaju od 30. rujna, a moguće ih je kupiti isključivo u KSET-u uz predočenje e-indeksa. Više informacija možete pronaći i na službenoj Facebook stranici Brucošijade FER-a.</p>
-          
+          <p>Ulaznice za brucoše FER-a po cijeni od 50 kuna kreću u prodaju od 30. rujna, a moguće ih je kupiti
+            isključivo u KSET-u uz predočenje e-indeksa. Više informacija možete pronaći i na službenoj Facebook
+            stranici Brucošijade FER-a.</p>
+
           <br>
           <h1 id="pravila-ponašanja">PRAVILA PONAŠANJA</h1>
 
@@ -31,7 +34,7 @@
           <p>Ova ulaznica obvezuje posjetitelje na poštivanje kućnog reda u prostoru održavanja događaja.</p>
 
           <p>Ugodan provod žele vam KSET i SS FER!</p>
-          
+
 
         </section>
 
@@ -42,11 +45,11 @@
 </template>
 
 <script>
-  import Footer from '@/components/NavbarAndFooter/Footer.vue'
+import Footer from '@/components/NavbarAndFooter/Footer.vue'
 
 export default {
   name: 'UlazniceView',
-  components:{Footer},
+  components: { Footer },
 }
 </script>
 
@@ -54,7 +57,7 @@ export default {
 @import url('http://fonts.cdnfonts.com/css/myriad-pro');
 
 h1 {
-  
+
   font-family: 'Antonio';
   font-style: normal;
   font-weight: 700;
@@ -77,7 +80,7 @@ p {
   will-change: margin-top;
 }
 
-.contents{
+.contents {
   padding-top: 4.5%;
   padding-left: 4.5%;
   padding-right: 4.5%;

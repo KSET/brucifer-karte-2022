@@ -11,7 +11,7 @@
                     <input class="inputfield" type="text" @input="changevalue" v-model="name">
 
                     <h1 class="textfield">Prezime: </h1>
-                    <input class="inputfield" type="text" @input="changevalue" v-model="surname" >
+                    <input class="inputfield" type="text" @input="changevalue" v-model="surname">
 
                     <h1 class="textfield">Tag: </h1>
 
@@ -21,14 +21,15 @@
 
 
                     <h1 class="textfield">JMBAG: </h1>
-                    <input class="inputfield" type="text" v-model="jmbag" >
+                    <input class="inputfield" type="text" v-model="jmbag">
 
                     <h1 class="textfield">Karta: </h1>
 
-                    <button class="button change" v-if="karta == '1'"  type="button" @click="changeKarta()">
+                    <button class="button change" v-if="karta == '1'" type="button" @click="changeKarta()">
                         <img src="../../assets/icons/yes-icon.svg">
                     </button>
-                    <button class="button change" v-else @click="changeKarta()" style="background-color: white;" type="button ">
+                    <button class="button change" v-else @click="changeKarta()" style="background-color: white;"
+                        type="button ">
                         <img src="../../assets/icons/no-icon.svg">
                     </button>
 
@@ -37,7 +38,8 @@
                     <button v-if="ulaz == '1'" type="button" class="button change" @click="changeUlaz()">
                         <img src="../../assets/icons/yes-icon.svg">
                     </button>
-                    <button v-else @click="changeUlaz()" type="button" style="background-color: white;" class="button change">
+                    <button v-else @click="changeUlaz()" type="button" style="background-color: white;"
+                        class="button change">
                         <img src="../../assets/icons/no-icon.svg">
                     </button>
                     <button class="button submit">Dodaj</button>
@@ -85,11 +87,11 @@ export default {
     },
 
     created() {
-        axios.get(process.env.VUE_APP_BASE_URL+':8000/guests/',)
+        axios.get(process.env.VUE_APP_BASE_URL + ':8000/guests/',)
             .then(response => {
                 this.guests = response.data;
                 this.len = this.guests.length;
-                axios.get(process.env.VUE_APP_BASE_URL+':8000/tags/',)
+                axios.get(process.env.VUE_APP_BASE_URL + ':8000/tags/',)
                     .then(response => {
                         var itemss = response.data;
                         itemss.forEach(element => {
@@ -130,7 +132,7 @@ export default {
                 this.nextId = ids.length;
             }
 
-            axios.post(process.env.VUE_APP_BASE_URL+':8000/guests/',
+            axios.post(process.env.VUE_APP_BASE_URL + ':8000/guests/',
                 { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
             )

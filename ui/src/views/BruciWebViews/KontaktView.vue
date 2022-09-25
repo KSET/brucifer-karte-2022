@@ -8,7 +8,7 @@
         <p>
           Antica Župić
           <br><br>
-          <a href="mailto:antica.zupic@kset.org" rel="nofollow noopener"  style="color: black">antica.zupic@kset.org</a>
+          <a href="mailto:antica.zupic@kset.org" rel="nofollow noopener" style="color: black">antica.zupic@kset.org</a>
         </p>
         <br>
         <h1 class="bwh1">PRESS:
@@ -17,7 +17,7 @@
         <p>
           Antica Župić
           <br><br>
-          <a href="mailto:antica.zupic@kset.org" rel="nofollow noopener"  style="color: black">antica.zupic@kset.org</a>
+          <a href="mailto:antica.zupic@kset.org" rel="nofollow noopener" style="color: black">antica.zupic@kset.org</a>
         </p>
 
       </section>
@@ -39,6 +39,4 @@ export default {
 
 <style>
 @import url(../../bruciweb.css);
-
-
 </style>

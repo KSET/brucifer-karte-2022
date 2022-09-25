@@ -36,7 +36,7 @@
             <td>Ulaz+Karte</td>
             <td>{{this.countUlplK}}</td>
           </tr>
-          
+
 
         </tbody>
       </table>
@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL+':8000/users/',)
+      axios.get(process.env.VUE_APP_BASE_URL + ':8000/users/',)
         .then(response => {
           this.users = response.data;
           this.users.forEach(element => {
@@ -97,22 +97,20 @@ export default {
 }
 </script>
 <style>
-
-
-.text1{
+.text1 {
   padding-bottom: 3%;
   font-family: 'Montserrat';
-font-style: normal;
-font-weight: 700;
-font-size: 16px;
-line-height: 36px;
-/* identical to box height, or 225% */
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 36px;
+  /* identical to box height, or 225% */
 
-display: flex;
-align-items: left;
-letter-spacing: -0.015em;
+  display: flex;
+  align-items: left;
+  letter-spacing: -0.015em;
 
-color: #000000;
+  color: #000000;
 }
 
 #guests {
@@ -133,14 +131,17 @@ color: #000000;
   border-bottom: 0.5px solid black;
   padding: 8px;
   text-align: left;
-  vertical-align:middle;
+  vertical-align: middle;
   font-family: 'Montserrat';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: left;
   font-size: 16px;
 }
-#guests tr {overflow:auto;}
+
+#guests tr {
+  overflow: auto;
+}
 
 
 
@@ -164,12 +165,9 @@ color: #000000;
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color:white;
+  background-color: white;
   color: black;
 }
-
-
-
 </style>
 
 
