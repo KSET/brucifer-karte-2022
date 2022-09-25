@@ -14,7 +14,5 @@ services:
     build:
       context: ./ui
       dockerfile: Dockerfile
-    volumes:
-      - .:/app
     depends_on:
       - django

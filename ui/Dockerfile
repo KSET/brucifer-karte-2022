@@ -1,16 +1,12 @@
-FROM node:16
-
+FROM node:16 as builder
+ENV NODE_ENV=production
 WORKDIR /ui
-RUN rm -rf node_modules
-RUN rm -f package-lock.json
 COPY package*.json ./
-RUN npm cache clean --force
-RUN npm install 
-RUN npm install -g @vue/cli-service
-RUN npm install -g @vue/cli
-
+RUN npm clean-install
 COPY . .
-
-EXPOSE 8080
-
+RUN npm run build
 CMD ["npm", "run", "serve"]
+
+FROM caddy:2-alpine
+COPY --from=builder /ui/dist /usr/share/caddy
+EXPOSE 80
