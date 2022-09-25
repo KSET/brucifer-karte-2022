@@ -5,3 +5,4 @@ ui/.env
 docker-compose.override.yml
 media/uploads
 db.sqlite3
+**/__pycache__/
