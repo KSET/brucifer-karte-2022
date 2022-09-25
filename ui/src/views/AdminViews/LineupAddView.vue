@@ -116,7 +116,7 @@ export default {
             this.message = "";
         },
         deleteLineup() {
-            axios.delete("http://127.0.0.1:8000/lineup/" + this.id + "/",
+            axios.delete(process.env.VUE_APP_BASE_URL + '/lineup/" + this.id + "/",
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                 {
                     headers: {
@@ -148,7 +148,7 @@ export default {
                     formData.append("image", this.currentImage);
                 }
 
-                axios.put("http://127.0.0.1:8000/lineup/" + this.id + "/", formData,
+                axios.put(process.env.VUE_APP_BASE_URL + '/lineup/" + this.id + "/", formData,
                     { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                     {
                         headers: {
@@ -202,7 +202,7 @@ export default {
 
 
 
-                axios.post("http://127.0.0.1:8000/lineup/", formData,
+                axios.post(process.env.VUE_APP_BASE_URL + '/lineup/", formData,
                     { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                     {
                         headers: {

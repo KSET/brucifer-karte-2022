@@ -67,19 +67,19 @@ export default {
         }
       }
 
-      axios.put(process.env.VUE_APP_BASE_URL+':8000/lineup/' + nextlineup.id + '/',
+      axios.put(process.env.VUE_APP_BASE_URL + '/lineup/' + nextlineup.id + '/',
         { order: "1000000" },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
 
-          axios.put(process.env.VUE_APP_BASE_URL+':8000/lineup/' + lineup.id + '/',
+          axios.put(process.env.VUE_APP_BASE_URL + '/lineup/' + lineup.id + '/',
             { order: nextlineup.order },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
             .then(() => {
             })
-          axios.put(process.env.VUE_APP_BASE_URL+':8000/lineup/' + nextlineup.id + '/',
+          axios.put(process.env.VUE_APP_BASE_URL + '/lineup/' + nextlineup.id + '/',
             { order: lineup.order },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           )
