@@ -1,5 +1,5 @@
 # brucifer-karte
-Brucifer karte 2022 (not finished)
+Brucifer karte 2022
 
 # Local deploy
 
