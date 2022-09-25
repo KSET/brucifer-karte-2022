@@ -1,5 +1,5 @@
 .vscode
 .dockerignore
 Dockerfile
-/ui/Dockerfile
+/ui
 db.sqlite3
