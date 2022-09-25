@@ -36,7 +36,7 @@ export default {
     }
   },
   created() {
-    axios.get(process.env.VUE_APP_BASE_URL + ':8000/tags/',)
+    axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
       .then(response => {
         this.tags = response.data;
       })
@@ -59,7 +59,7 @@ export default {
       }
 
 
-      axios.post(process.env.VUE_APP_BASE_URL + ':8000/tags/',
+      axios.post(process.env.VUE_APP_BASE_URL + '/tags/',
         { id: this.nextId, name: this.name },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )

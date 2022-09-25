@@ -134,7 +134,7 @@ export default {
   methods: {
     ExportData() {
       var filename = 'export_guests.xlsx';
-      axios.get(process.env.VUE_APP_BASE_URL + ':8000/guests/',)
+      axios.get(process.env.VUE_APP_BASE_URL + '/guests/',)
         .then(response => {
           var data = response.data;
           var ws = XLSX.utils.json_to_sheet(data);

@@ -87,11 +87,11 @@ export default {
     },
 
     created() {
-        axios.get(process.env.VUE_APP_BASE_URL + ':8000/guests/',)
+        axios.get(process.env.VUE_APP_BASE_URL + '/guests/',)
             .then(response => {
                 this.guests = response.data;
                 this.len = this.guests.length;
-                axios.get(process.env.VUE_APP_BASE_URL + ':8000/tags/',)
+                axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
                     .then(response => {
                         var itemss = response.data;
                         itemss.forEach(element => {
@@ -132,7 +132,7 @@ export default {
                 this.nextId = ids.length;
             }
 
-            axios.post(process.env.VUE_APP_BASE_URL + ':8000/guests/',
+            axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
                 { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
             )

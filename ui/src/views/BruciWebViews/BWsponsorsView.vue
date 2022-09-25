@@ -40,7 +40,7 @@ export default {
 
   methods: {
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL + ':8000/sponsors/?ordering=order',)
+      axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
         .then(response => {
           this.users = response.data;
 

@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL + ':8000/users/',)
+      axios.get(process.env.VUE_APP_BASE_URL + '/users/',)
         .then(response => {
           this.users = response.data;
           this.users.forEach(element => {

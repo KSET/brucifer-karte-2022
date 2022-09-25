@@ -67,7 +67,7 @@ export default {
   },
   created() {
     this.showNav = false;
-    axios.get(process.env.VUE_APP_BASE_URL + ':8000/lineup/?ordering=order',)
+    axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?ordering=order',)
       .then(response => {
         var users = response.data;
         if (users.length == 0) {

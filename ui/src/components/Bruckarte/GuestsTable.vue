@@ -67,14 +67,14 @@ export default {
     loggg() {
     },
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL + ':8000/guests/?search=Brucoši&search_fields=tag',)
+      axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši&search_fields=tag',)
 
         .then(response => {
           this.guests = response.data;
         })
     },
     changebought(guest, changenum) {
-      axios.put(process.env.VUE_APP_BASE_URL + ':8000/guests/' + guest.id + '/',
+      axios.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
         { bought: changenum },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
@@ -84,7 +84,7 @@ export default {
 
     },
     searchGuest() {
-      axios.get(process.env.VUE_APP_BASE_URL + ':8000/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=name&search_fields=surname",)
+      axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=name&search_fields=surname",)
         .then(response => {
           this.guests = response.data;
         })

@@ -88,7 +88,7 @@ export default {
 
   methods: {
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL + ':8000/contact/',)
+      axios.get(process.env.VUE_APP_BASE_URL + '/contact/',)
         .then(response => {
           this.bandcontacts = response.data;
           this.len = this.bandcontacts.length;
@@ -124,7 +124,7 @@ export default {
       }
 
 
-      axios.post(process.env.VUE_APP_BASE_URL + ':8000/contact/',
+      axios.post(process.env.VUE_APP_BASE_URL + '/contact/',
         { id: this.nextId, bandName: this.bandName, bookerName: this.bookerName, bookerPhone: this.bookerPhone },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
@@ -133,7 +133,7 @@ export default {
 
     },
     deleteBandContact(bandcontact) {
-      axios.delete(process.env.VUE_APP_BASE_URL + ':8000/contact/' + bandcontact.id + '/',
+      axios.delete(process.env.VUE_APP_BASE_URL + '/contact/' + bandcontact.id + '/',
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {

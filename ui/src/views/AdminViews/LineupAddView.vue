@@ -77,7 +77,7 @@ export default {
         this.slug = this.$route.params.slug;
 
         if (this.slug != '0') {
-            axios.get(process.env.VUE_APP_BASE_URL + ':8000/lineup/?search=' + this.slug,)
+            axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?search=' + this.slug,)
                 .then(response => {
                     this.lineup = response.data;
                     if (this.lineup.length == 0) {
@@ -100,7 +100,7 @@ export default {
                 })
 
         } else {
-            axios.get(process.env.VUE_APP_BASE_URL + ':8000/lineup/?ordering=order',)
+            axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?ordering=order',)
                 .then(response => {
                     this.lineups = response.data;
 
