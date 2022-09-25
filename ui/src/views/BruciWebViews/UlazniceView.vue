@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style>
-@import url('http://fonts.cdnfonts.com/css/myriad-pro');
+@import url('https://fonts.cdnfonts.com/css/myriad-pro');
 
 h1 {
 
