@@ -4,3 +4,4 @@ ui/.env
 ./node_modules/*
 package-lock.json
 .env
+docker-compose.override.yml

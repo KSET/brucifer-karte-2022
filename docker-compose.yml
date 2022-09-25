@@ -5,22 +5,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile     
-    container_name: brucifer-backend  
     volumes:
       - .:/app
       - .db_data/db.sqlite3:/db.sqlite3
-    ports:
-      - "8000:8000"
 
 
   vue:
     build:
       context: ./ui
       dockerfile: Dockerfile
-    container_name: brucifer-frontend
     volumes:
       - .:/app
-    ports:
-      - "8080:8080"
     depends_on:
       - django
