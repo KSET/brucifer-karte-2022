@@ -80,3 +80,11 @@ class Contact(models.Model):
     bandName=models.CharField(max_length=49, default='', blank=True)
     bookerName=models.CharField(max_length=50, default='0', blank=True)
     bookerPhone=models.CharField(max_length=50, default='0', blank=True)
+
+class Mailer(models.Model):
+    id=models.CharField(max_length=50, primary_key=True, default=0, blank=False)
+    subject=models.CharField(max_length=50, default=0, blank=False)
+    message=models.CharField(max_length=50, default=0, blank=False)
+    to_mail=models.CharField(max_length=50, default=0, blank=False)
+
+

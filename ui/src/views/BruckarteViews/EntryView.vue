@@ -248,7 +248,7 @@ export default {
 .button2-yes {
     box-sizing: border-box;
 
-    width: 50%;
+    width: 25%;
 
 
     background: #000000;
@@ -258,7 +258,7 @@ export default {
 
 .button2-no {
     box-sizing: border-box;
-    width: 50%;
+    width: 25%;
 
 
     border: 1px solid #000000;

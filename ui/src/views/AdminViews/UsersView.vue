@@ -31,7 +31,7 @@
               <div class="users-element"><button class="button-priv"
                   v-bind:style="[(user.privilege=='4') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
                   @click="changeprivilege(user,'4')">Ulaz <br>+Karte</button></div>
-              <div class="users-element hidemobile"><button class="button-priv" @click="deleteUser(user)">
+              <div class="users-element hidemobile"><button class="button-priv" style="border:0px" @click="deleteUser(user)">
                   <img src="@/assets/icons/trash-icon.svg">
                 </button>
               </div>

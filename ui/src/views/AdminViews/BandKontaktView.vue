@@ -25,6 +25,8 @@
             <button class="button submit">Dodaj</button>
 
           </form>
+          <button @click="sendmail" class="button submit">mail</button>
+
         </div>
         <div class="kontakt-table">
           <div class=row>
@@ -87,6 +89,7 @@ export default {
   },
 
   methods: {
+    
     created() {
       axios.get(process.env.VUE_APP_BASE_URL + '/contact/',)
         .then(response => {

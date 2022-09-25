@@ -57,6 +57,7 @@ export default {
     return {
       guest: '',
       guests: [],
+      mails: [],
       id: '',
       name: '',
       surname: '',
@@ -70,14 +71,17 @@ export default {
 
     }
   },
+  mounted() {
+    this.created();
+  },
   methods: {
     loggg() {
     },
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši&search_fields=tag',)
-
-        .then(response => {
-          this.guests = response.data;
+          axios.get(process.env.VUE_APP_BASE_URL + '/mailer/',)
+            .then(response => {
+              console.log(response.data)
+              this.mails = response.data;
         })
     },
     changevalue() {
@@ -104,7 +108,7 @@ export default {
           guest.confCode = confCode;
 
           if (changenum == 1) {
-            this.sendConfMail(guest);
+            this.sendMail(guest);
           }
         })
     },
@@ -148,9 +152,41 @@ export default {
           }
         })
     },
-    sendMail() {
-
-    }
+    sendMail(guest) {
+      var ids = [];
+      var nextId = '';
+      this.mails.forEach(element => {
+        ids.push(element.id);
+      });
+      for (let index = 0; index < ids.length; index++) {
+        if (ids.includes(String(index)) == false) {
+          nextId = index;
+          break;
+        }
+      }
+      if (nextId == '') {
+        nextId = ids.length;
+      }
+      console.log(this.mails)
+      console.log("send mail attempt")
+      axios.post('http://localhost:8000/api/mailer/',
+        {
+          id: nextId, "subject": "",
+          "message": "Dragi , izgasirao sam, realno, mailer radi",
+          "to_mail": ""
+        },
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      ).then(response => {
+        axios.post('http://localhost:8000/api/mailer/' + nextId + '/send_mail/',
+          {
+            "subject": "",
+            "message": "Dragi Marine, izgasirao sam, realno, mailer radi",
+            "to_mail": ""
+          },
+          { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+        )
+      })
+    },
   }
 
 }
