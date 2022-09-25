@@ -1,9 +1,9 @@
 FROM node:16 as builder
-ENV NODE_ENV=production
 WORKDIR /ui
 COPY package*.json ./
 RUN npm clean-install
 COPY . .
+ENV NODE_ENV=production
 RUN npm run build
 CMD ["npm", "run", "serve"]
 
