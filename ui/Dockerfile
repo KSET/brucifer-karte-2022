@@ -6,6 +6,5 @@ RUN npm clean-install
 COPY . .
 ENV NODE_ENV=production
 RUN npm run build
-ENV PORT=8080
-EXPOSE $PORT
-CMD serve -s dist -l "$PORT"
+EXPOSE 8080
+CMD [ "serve", "-s", "dist", "-l", "8080" ]

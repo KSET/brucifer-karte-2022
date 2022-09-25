@@ -1,5 +1,6 @@
 ui/node_modules/*
 ui/.env
+ui/dist
 ./node_modules/*
 .env
 docker-compose.override.yml
