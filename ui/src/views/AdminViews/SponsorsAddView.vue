@@ -121,7 +121,7 @@ export default {
             this.message = "";
         },
         deleteSponsors() {
-            axios.delete(process.env.VUE_APP_BASE_URL + '/sponsors/" + this.id + "/",
+            axios.delete(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/",
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                 {
                     headers: {
@@ -153,7 +153,7 @@ export default {
                     formData.append("image", this.currentImage);
                 }
 
-                axios.put(process.env.VUE_APP_BASE_URL + '/sponsors/" + this.id + "/", formData,
+                axios.put(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/", formData,
                     { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                     {
                         headers: {
@@ -208,7 +208,7 @@ export default {
 
 
 
-                axios.post(process.env.VUE_APP_BASE_URL + '/sponsors/", formData,
+                axios.post(process.env.VUE_APP_BASE_URL + "/sponsors/", formData,
                     { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                     {
                         headers: {
