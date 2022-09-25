@@ -18,6 +18,15 @@
         }
     },
     {
+        "model":"bruc.Users",
+        "fields":{
+            "id":2,
+            "name":"Josip Igrec",
+            "email":"josip.igrec@kset.org",
+            "privilege":"1"
+        }
+    },
+    {
         "model":"bruc.Lineup",
         "fields":{
             "id":314159,
