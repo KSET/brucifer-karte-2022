@@ -5,12 +5,9 @@
         <section>
           <h1 id="ulaznice">ULAZNICE</h1>
 
-          <p>Ulaznice po redovnoj cijeni od 70 kuna u prodaji su od 29. rujna do 12. studenog ili do isteka zaliha.
-            Ulaznice se mogu kupiti u KSET-u, glazbenoj knjižari Rockmark te u Dirty Old Shopu.</p>
+          <p>Ulaznice po redovnoj cijeni od 80 kuna u prodaji su od 14. rujna do 12. studenog ili do isteka zaliha. Ulaznice se mogu kupiti u KSET-u te u Dirty Old Shopu.</p>
 
-          <p>Prvog listopada u prodaju kreću ulaznice za brucoše FER-a po cijeni od 40 kuna, a moguće ih je kupiti
-            isključivo u KSET-u uz predočenje e-indeksa. Više informacija možete pronaći i na službenoj Facebook
-            stranici.</p>
+          <p>Ulaznice za brucoše FER-a po cijeni od 50 kuna kreću u prodaju od 30. rujna, a moguće ih je kupiti isključivo u KSET-u uz predočenje e-indeksa. Više informacija možete pronaći i na službenoj Facebook stranici Brucošijade FER-a.</p>
           
           <br>
           <h1 id="pravila-ponašanja">PRAVILA PONAŠANJA</h1>
@@ -54,7 +51,7 @@ export default {
 </script>
 
 <style>
-
+@import url('http://fonts.cdnfonts.com/css/myriad-pro');
 
 h1 {
   
@@ -68,15 +65,14 @@ h1 {
 }
 
 p {
-  font-family: 'Antonio';
+  font-family: 'Myriad Pro';
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 20px;
   line-height: 18px;
 
   color: #000000;
 
-  margin-top: 6rem;
   transition: margin-top .3s ease;
   will-change: margin-top;
 }
