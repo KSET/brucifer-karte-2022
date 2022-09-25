@@ -192,6 +192,8 @@ export default {
 
 .admin-page-container {
     position: relative;
+    margin-top: 3.75rem;
+
     margin-left: 26%;
     /* Same as the width of the sidenav */
     margin-right: 1%;

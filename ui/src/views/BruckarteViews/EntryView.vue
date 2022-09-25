@@ -1,5 +1,5 @@
 <template>
-    <div class="grid1-container" id="flex">
+    <div class="grid1-container" id="flex" style="margin-top: 3.75rem;">
         <div class="grid-item grid1-item1" id="a">
             <div class="grid2-container">
                 <div class="grid-item grid1-item">

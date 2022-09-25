@@ -86,6 +86,8 @@ export default {
 @import "@fontsource/antonio";
 
 .bw-page-container {
+    margin-top: 3.75rem;
+
     position: relative;
     background-image: var(--background-default);
     background-repeat: repeat;

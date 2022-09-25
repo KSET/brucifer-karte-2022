@@ -1,5 +1,5 @@
 <template>
-  <div class="guestss">
+  <div class="guestss" style="margin-top: 3.75rem;">
     <div class="header guests">
 
       <input class="nosubmit search" @input="searchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
@@ -176,7 +176,7 @@ export default {
 .grid-container.guests {
   margin-top: 3.5%;
   margin-left: 5%;
-  row-gap: 30%;
+  row-gap: 20%;
 }
 
 .container {

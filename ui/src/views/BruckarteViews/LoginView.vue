@@ -1,5 +1,5 @@
 <template>
-    <div id="login">
+    <div id="login" style="margin-top: 3.75rem;">
         <br>
         <div class="row justify-content-center">
             <div class="col-md-8">
