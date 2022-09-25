@@ -3,3 +3,4 @@ ui/.env
 ./node_modules/*
 .env
 docker-compose.override.yml
+media/uploads
