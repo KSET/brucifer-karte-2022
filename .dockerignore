@@ -1,0 +1,5 @@
+.vscode
+.dockerignore
+Dockerfile
+/ui/Dockerfile
+db.sqlite3
