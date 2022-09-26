@@ -1,6 +1,6 @@
 <template>
   <div class="navbar admin">
-    <router-link class="navbar-title" to="/bruckarte/">
+    <router-link style="left:  1.7rem !important;" class="navbar-title" to="/bruckarte/">
       #BRUCIFER
     </router-link>
 

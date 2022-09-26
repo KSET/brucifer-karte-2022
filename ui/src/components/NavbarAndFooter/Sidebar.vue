@@ -122,7 +122,8 @@ export default {
 
 /* Style the sidenav links and the dropdown button */
 .sidebar-element {
-    padding: 6px 8px 6px 16px;
+    padding-left: 1.7rem !important;
+    padding: 2.73%  8px 6px 16px;
     text-decoration: none;
     font-size: 20px;
     display: block;
@@ -188,7 +189,6 @@ export default {
 }
 
 /* Optional: Style the caret down icon */
-.dropdown-icon {}
 
 .admin-page-container {
     position: relative;
