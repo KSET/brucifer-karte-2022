@@ -9,7 +9,7 @@ main {
 }
 .contents {
     font-size: 1.5rem;
-    padding: 0 calc(var(--content-padding) * 1vw);
+    padding-left: 2.73%;
     padding-top: calc(var(--content-padding) * 0.85 * 1vw);
     transition: padding .3s ease, font-size .3s ease;
     will-change: padding, font-size;

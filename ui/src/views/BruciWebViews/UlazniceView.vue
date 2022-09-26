@@ -70,7 +70,7 @@ h1 {
 p {
   font-family: 'Myriad Pro';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300;
   font-size: 20px;
   line-height: 18px;
 
@@ -82,7 +82,7 @@ p {
 
 .contents {
   padding-top: 4.5%;
-  padding-left: 4.5%;
+  padding-left: 2.73%;
   padding-right: 4.5%;
 
 
