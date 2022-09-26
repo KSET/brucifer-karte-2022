@@ -45,7 +45,7 @@
                     @click="changeBought(guest, '1')">
                     <img class="va" src="../../assets/icons/no-icon.svg">
                 </button>
-                <br v-if="this.tag == 'Brucoši'">
+                <br v-if="this.tag == 'Brucoši'" class="hidedesktop showmobile">
                 <h1 class="textfield">Ulaz </h1>
 
                 <button v-if="this.entered == '1'" type="button" :disabled="this.id==''" class="bttn button2-yes"
@@ -133,6 +133,11 @@ export default {
 
                         }
                     } else {
+                        this.name = "";
+                            this.surname = '';
+                            this.jmbag = '';
+                            this.tag = '';
+                            this.confCode = '';
                         if (this.search != '') {
                             this.guests = [];
                         }
@@ -216,7 +221,6 @@ export default {
 }
 
 .grid1-item3 {
-    border-bottom: 1px solid #000000;
     overflow: visible;
 }
 
@@ -234,7 +238,8 @@ export default {
     width: 100%;
     box-sizing: border-box;
     background-color: white;
-    border-bottom: 1px solid #000000;
+    border: 0px;
+    border-bottom: 1px solid #000000 !important;
 }
 
 .menu-item {
@@ -267,8 +272,7 @@ export default {
 }
 
 .va {
-    position: relative;
-    top: -6%;
+    margin-bottom: 5px;
 }
 
 .nosubmit.search.entry {
@@ -294,7 +298,9 @@ export default {
     row-gap: 15%;
     align-items: center;
 }
-
+.showmobile{
+        display: none;
+    }
 @media screen and (max-width: 980px) {
     .hidedesktop {
         display: inline-block !important;
@@ -306,6 +312,9 @@ export default {
 
     .textfield {
         font-size: 14px;
+    }
+    .showmobile{
+        display: none !important;
     }
 
 }
@@ -414,6 +423,9 @@ export default {
         grid-gap: 15%;
         row-gap: 5%;
         align-items: center;
+    }
+    .showmobile{
+        display: block !important;
     }
 }
 </style>

@@ -18,9 +18,9 @@
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownLineup">
 
         </div>
-        <RouterElement id="dpL1" class="sidebar-element" :name="'Pregled Izvođača'" :link="'/admin/lineup-list'">
+        <RouterElement style="padding-left:3rem !important;" id="dpL1" class="sidebar-element" :name="'Pregled Izvođača'" :link="'/admin/lineup-list'">
         </RouterElement>
-        <RouterElement id="dpL2" class="sidebar-element" :name="'Dodavanje Izvođača'" :link="'/admin/lineup-add/0'">
+        <RouterElement style="padding-left:3rem !important;" id="dpL2" class="sidebar-element" :name="'Dodavanje Izvođača'" :link="'/admin/lineup-add/0'">
         </RouterElement>
 
         <div class="sidbar-element" style="border-bottom: 1px solid black;"
@@ -33,9 +33,9 @@
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownSponsors">
 
         </div>
-        <RouterElement id="dpS1" class="sidebar-element" :name="'Pregled Sponzora'" :link="'/admin/sponsors-list'">
+        <RouterElement style="padding-left:3rem !important;" id="dpS1" class="sidebar-element" :name="'Pregled Sponzora'" :link="'/admin/sponsors-list'">
         </RouterElement>
-        <RouterElement id="dpS2" class="sidebar-element" :name="'Dodavanje Sponzora'"
+        <RouterElement style="padding-left:3rem !important;" id="dpS2" class="sidebar-element" :name="'Dodavanje Sponzora'"
             :link="'/admin/sponsors-add/0'">
         </RouterElement>
 
