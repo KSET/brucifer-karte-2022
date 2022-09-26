@@ -80,7 +80,6 @@ export default {
     created() {
           axios.get(process.env.VUE_APP_BASE_URL + '/mailer/',)
             .then(response => {
-              console.log(response.data)
               this.mails = response.data;
         })
     },
@@ -93,6 +92,9 @@ export default {
       }
     },
     changebought(guest, changenum) {
+      if(this.name=="" || this.surname==""){
+        window.alert("Ispunite polja ime i prezime!")
+      }else{
       if (changenum == 1) {
         var confCode = (Math.random() + 1).toString(36).substring(7) + (Math.random() + 1).toString(36).substring(7);
 
@@ -110,19 +112,7 @@ export default {
           if (changenum == 1) {
             this.sendMail(guest);
           }
-        })
-    },
-    sendConfMail(guest) {
-      var jmbagslice = guest.jmbag;
-      if (jmbagslice.slice(0, 2) == "00") {
-        jmbagslice = jmbagslice.slice(4, 9);
-      } else {
-        jmbagslice = jmbagslice.slice(2, 7);
-      }
-
-      var email = guest.name[0].toLowerCase() + guest.surname[0].toLowerCase() + jmbagslice + "@fer.hr";
-
-
+        })}
     },
     searchGuest() {
       axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=jmbag",)
@@ -167,21 +157,35 @@ export default {
       if (nextId == '') {
         nextId = ids.length;
       }
-      console.log(this.mails)
       console.log("send mail attempt")
+
+      var jmbagslice = guest.jmbag;
+      if (jmbagslice.slice(0, 2) == "00") {
+        jmbagslice = jmbagslice.slice(4, 9);
+      } else {
+        jmbagslice = jmbagslice.slice(2, 7);
+      }
+
+      var email = guest.name[0].toLowerCase() + guest.surname[0].toLowerCase() + jmbagslice + "@fer.hr";
+      console.log(email);
+
+      var message= "Bok " + guest.name+"! \n\nPotvrđujemo tvoju kupnju brucoške karte za 39. Brucošijadu FER-a. Tvoj jedinstveni kod potvrde je "+guest.confCode +"!. Ovaj kod služi kao potvrda za kupljenu kartu od 40 kuna. Prati obavijesti na našoj web stranici i društvenim mrežama jer će postojati poseban ulaz za brucoše FER-a na brucošijadu gdje će se pregledavati studentske iskaznice koje služe kao ulaznice na događaj. Za svaki slučaj, preporučujemo ti da imaš i osobnu iskaznicu radi verifikacije svojeg identiteta. Također, ne zaboravi i na COVID potvrdu koja je obavezna i bez koje nećeš moći ući bez obzira na kupljenu kartu. U slučaju da ne budeš na popisu osoba koje su kupile kartu, pokaži ovaj jedinstveni kod. Vidimo se! \n\nLijep pozdrav, \n\nOrganizacijski tim Brucošijade FER-a"
+      console.log(message);
       axios.post('http://localhost:8000/api/mailer/',
         {
-          id: nextId, "subject": "",
-          "message": "Dragi , izgasirao sam, realno, mailer radi",
-          "to_mail": ""
+          id: nextId, subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
+          name: guest.name,
+          confCode: guest.confCode,
+          to_mail: "pavleergovic@gmail.com"
         },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       ).then(response => {
         axios.post('http://localhost:8000/api/mailer/' + nextId + '/send_mail/',
           {
-            "subject": "",
-            "message": "Dragi Marine, izgasirao sam, realno, mailer radi",
-            "to_mail": ""
+            subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
+            name: guest.name,
+          confCode: guest.confCode,
+            to_mail: "pavleergovic@gmail.com"
           },
           { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
         )

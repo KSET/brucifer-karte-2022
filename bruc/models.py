@@ -84,7 +84,7 @@ class Contact(models.Model):
 class Mailer(models.Model):
     id=models.CharField(max_length=50, primary_key=True, default=0, blank=False)
     subject=models.CharField(max_length=50, default=0, blank=False)
-    message=models.CharField(max_length=50, default=0, blank=False)
+    message=models.CharField(max_length=1000, default=0, blank=False)
     to_mail=models.CharField(max_length=50, default=0, blank=False)
 
 

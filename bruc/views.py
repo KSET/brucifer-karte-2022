@@ -10,7 +10,8 @@ from django.conf import settings
 from django.core.mail import BadHeaderError, send_mail
 from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework.decorators import action
-
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 # Create your views here.
 class MailerViewSet(viewsets.ModelViewSet):
@@ -21,15 +22,19 @@ class MailerViewSet(viewsets.ModelViewSet):
     def send_mail(self,request,pk):  
         print(request.data.get('subject', ''))
         subject = request.data.get('subject', '')
-        msg = request.data.get('message', '')
+        #msg = request.data.get('message', '')
+        msg="sta"
         to = request.data.get('to_mail', '')
-        
+        html_message = render_to_string('emails/guest_email.html',{
+        'name': request.data.get('name', ''), 'confCode': request.data.get('confCode', ''),
+    })
+
         if subject and msg and settings.EMAIL_HOST_USER:
             try:
-                send_mail(subject, msg, settings.EMAIL_HOST_USER, [to])
+                send_mail(subject, msg, settings.EMAIL_HOST_USER, [to],fail_silently=True,html_message=html_message)
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
-            return HttpResponseRedirect('/contact/thanks/')
+            return HttpResponse('Passed')
         else:
             # In reality we'd use a form class
             # to get proper validation errors.
