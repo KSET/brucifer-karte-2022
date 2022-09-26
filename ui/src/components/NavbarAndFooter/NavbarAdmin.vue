@@ -1,18 +1,18 @@
 <template>
   <div class="navbar admin">
-    <router-link style="left:  1.7rem !important;" class="navbar-title" to="/bruckarte/">
+    <router-link style="left:  1.7rem !important;" class="navbar-title" to="/admin/">
       #BRUCIFER
     </router-link>
 
     <div class="routes">
 
       <RouterElement v-if="privilege == '1' || privilege == '3' || privilege == '4'" class="navbar-element hidemobile"
-        :name="'Brucoši'" :link="'/bruckarte/guests'"></RouterElement>
+        :name="'Brucoši'" :link="'/admin/guests'"></RouterElement>
 
       <RouterElement v-if="privilege == '1' || privilege == '2' || privilege == '4'" class="navbar-element hidemobile"
-        :name="'Ulaz'" :link="'/bruckarte/entry'"></RouterElement>
+        :name="'Ulaz'" :link="'/admin/entry'"></RouterElement>
 
-      <router-link v-if="privilege == '1'" class="navbar-element hidetablet" to="/bruckarte/admin-panel">
+      <router-link v-if="privilege == '1'" class="navbar-element hidetablet" to="/admin/admin-panel">
         <img src="../../assets/icons/nav-burger.svg">
       </router-link>
       <div id="nav-icon3" style="  margin-left: 70px;" v-if="privilege != ''" class="navbar-element hidedesktop"
@@ -22,7 +22,7 @@
         <span></span>
         <span></span>
       </div>
-      <router-link v-if="privilege != '' && privilege != '0'" class="navbar-element lg" to="/bruckarte/logout">
+      <router-link v-if="privilege != '' && privilege != '0'" class="navbar-element lg" to="/admin/logout">
         <img src="../../assets/icons/logout-icon.svg">
       </router-link>
 
@@ -32,22 +32,22 @@
         <div class="overlay-content admin">
           <RouterElement class="overlay-element hidetablet showmobile"
             v-if="privilege == '1' || privilege == '3' || privilege == '4'" @click="toggleNav()" :name="'Brucoši'"
-            :link="'/bruckarte/guests'">
+            :link="'/admin/guests'">
           </RouterElement>
           <RouterElement class="overlay-element hidetablet showmobile"
             v-if="privilege == '1' || privilege == '2' || privilege == '4'" @click="toggleNav()" :name="'Ulaz'"
-            :link="'/bruckarte/entry'">
+            :link="'/admin/entry'">
           </RouterElement>
           <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Tagovi'"
-            :link="'/bruckarte/tags'">
+            :link="'/admin/tags'">
           </RouterElement>
           <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Privilegije'"
-            :link="'/bruckarte/privileges'"></RouterElement>
+            :link="'/admin/privileges'"></RouterElement>
           <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Korisnici'"
-            :link="'/bruckarte/users'">
+            :link="'/admin/users'">
           </RouterElement>
           <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Uvoz'"
-            :link="'/bruckarte/import'">
+            :link="'/admin/import'">
           </RouterElement>
 
           <button class="overlay-element" v-if="privilege == '1'" @click="ExportData()">
@@ -65,10 +65,10 @@
 
           </div>
           <RouterElement id="dpL11" class="overlay-element" @click="toggleNav()" :name="'Pregled Izvođača'"
-            :link="'/bruckarte/lineup-list'">
+            :link="'/admin/lineup-list'">
           </RouterElement>
           <RouterElement id="dpL21" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Izvođača'"
-            :link="'/bruckarte/lineup-add/0'">
+            :link="'/admin/lineup-add/0'">
           </RouterElement>
 
           <div class="sidbar-element" v-if="privilege == '1'" @click="toggleDropdownSponsors">
@@ -81,16 +81,16 @@
 
           </div>
           <RouterElement id="dpS11" class="overlay-element" @click="toggleNav()" :name="'Pregled Sponzora'"
-            :link="'/bruckarte/sponsors-list'">
+            :link="'/admin/sponsors-list'">
           </RouterElement>
           <RouterElement id="dpS21" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Sponzora'"
-            :link="'/bruckarte/sponsors-add/0'">
+            :link="'/admin/sponsors-add/0'">
           </RouterElement>
 
           <RouterElement class="overlay-element" v-if="privilege == '1'" :name="'Dodaj Gosta'" @click="toggleNav()"
-            :link="'/bruckarte/guests-add'"></RouterElement>
+            :link="'/admin/guests-add'"></RouterElement>
           <RouterElement class="overlay-element" v-if="privilege == '1'" :name="'Kontakt'" @click="toggleNav()"
-            :link="'/bruckarte/band-kontakt'"></RouterElement>
+            :link="'/admin/band-kontakt'"></RouterElement>
         </div>
       </div>
     </div>

@@ -50,7 +50,7 @@ export default {
         });
     },
     editlineup(lineup) {
-      this.$router.push({ path: '/bruckarte/lineup-add/' + lineup.slug });
+      this.$router.push({ path: '/admin/lineup-add/' + lineup.slug });
     },
     changelineuporder(lineup, direction) {
       document.querySelector('#next').disabled = true;

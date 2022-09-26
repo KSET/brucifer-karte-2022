@@ -33,93 +33,93 @@ import store from "@/store/index.js";
 
 const routes = [
   {
-    path: "/bruckarte/",
+    path: "/admin/",
     name: "home",
   },
 
   /* Bruckarte Views setup */
   {
-    path: "/bruckarte/tags",
+    path: "/admin/tags",
     name: "tags",
     component: Tags,
   },
   {
-    path: "/bruckarte/guests",
+    path: "/admin/guests",
     name: "guests",
     component: Guests,
   },
   {
-    path: "/bruckarte/entry",
+    path: "/admin/entry",
     name: "guest_tag",
     component: EntryView,
   },
   {
-    path: "/bruckarte/users",
+    path: "/admin/users",
     name: "users",
     component: Users,
   },
   {
-    path: "/bruckarte/privileges",
+    path: "/admin/privileges",
     name: "privileges",
     component: Privileges,
   },
   {
-    path: "/bruckarte/import",
+    path: "/admin/import",
     name: "import",
     component: Import,
   },
   {
-    path: "/bruckarte/login",
+    path: "/admin/login",
     name: "login",
     component: Login,
   },
   {
-    path: "/bruckarte/logout",
+    path: "/admin/logout",
     name: "logout",
     component: Logout,
   },
   {
-    path: "/bruckarte/lineup-list",
+    path: "/admin/lineup-list",
     name: "lineup",
     component: LineupList,
   },
   {
-    path: "/bruckarte/sponsors/:slug",
+    path: "/admin/sponsors/:slug",
     name: "sponsors",
     component: SponsorsList,
   },
   {
-    path: "/bruckarte/sponsors-list",
+    path: "/admin/sponsors-list",
     name: "sponsors",
     component: SponsorsList,
   },
   {
-    path: "/bruckarte/guests-add",
+    path: "/admin/guests-add",
     name: "guest-add",
     component: GuestAdd,
   },
   {
-    path: "/bruckarte/admin-panel",
+    path: "/admin/admin-panel",
     name: "admin-panel",
     component: AdminPanel,
   },
   {
-    path: "/bruckarte/lineup-add/:slug",
+    path: "/admin/lineup-add/:slug",
     name: "lineup-add",
     component: LineupAdd,
   },
   {
-    path: "/bruckarte/sponsors-add/:slug",
+    path: "/admin/sponsors-add/:slug",
     name: "sponsors-add",
     component: SponsorsAdd,
   },
   {
-    path: "/bruckarte/band-kontakt",
+    path: "/admin/band-kontakt",
     name: "band-kontakt",
     component: BandKontakt,
   },
   {
-    path: "/bruckarte/page-not-found",
+    path: "/admin/page-not-found",
     name: "PageNotFound",
     component: PageNotFound,
   },
@@ -172,7 +172,7 @@ router.beforeEach((to, from, next) => {
     "guest_tag",
     "",
     undefined,
-    "bruckarte",
+    "admin",
   ];
   var allowedRoutesForprivilege3 = [
     "home",
@@ -192,17 +192,17 @@ router.beforeEach((to, from, next) => {
     undefined,
   ];
 
-  if (String(to.path).split("/")[1] == "bruckarte") {
+  if (String(to.path).split("/")[1] == "admin") {
     if (Date.now() / 1000 > store.state.tokenExp && to.name != "logout") {
-      next({ path: "/bruckarte/logout" });
+      next({ path: "/admin/logout" });
     } else {
       if (store.state.id == "" && to.name != "login") {
-        next({ path: "/bruckarte/login" });
+        next({ path: "/admin/login" });
       } else if (store.state.privilege == 0 && to.name != "login") {
         window.alert(
           "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
         );
-        next({ path: "/bruckarte/login" });
+        next({ path: "/admin/login" });
       } else if (
         store.state.privilege == 2 &&
         !allowedRoutesForprivilege2.includes(to.name)
@@ -210,7 +210,7 @@ router.beforeEach((to, from, next) => {
         window.alert(
           "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
         );
-        next({ path: "/bruckarte/home" });
+        next({ path: "/admin/home" });
       } else if (
         store.state.privilege == 3 &&
         !allowedRoutesForprivilege3.includes(to.name)
@@ -218,7 +218,7 @@ router.beforeEach((to, from, next) => {
         window.alert(
           "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
         );
-        next({ path: "/bruckarte/home" });
+        next({ path: "/admin/home" });
       } else if (
         store.state.privilege == 4 &&
         !allowedRoutesForprivilege4.includes(to.name)
@@ -226,7 +226,7 @@ router.beforeEach((to, from, next) => {
         window.alert(
           "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
         );
-        next({ path: "/bruckarte/home" });
+        next({ path: "/admin/home" });
       } else {
         next();
       }

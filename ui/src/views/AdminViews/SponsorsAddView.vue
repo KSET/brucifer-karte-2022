@@ -88,7 +88,7 @@ export default {
                 .then(response => {
                     this.sponsors = response.data;
                     if (this.sponsors.length == 0) {
-                        this.$router.push({ path: '/bruckarte/sponsors-add/0' });
+                        this.$router.push({ path: '/admin/sponsors-add/0' });
                     }
 
                     this.sponsorsInstance = this.sponsors[0];

@@ -28,7 +28,7 @@ export default {
   name: 'KontaktView',
   components: { Footer, RouterElement },
   mounted() {
-    if ((this.$route.params.pathMatch[0]) == "bruckarte") {
+    if ((this.$route.params.pathMatch[0]) == "admin") {
       this.$router.push({ name: 'PageNotFound' });
 
     }

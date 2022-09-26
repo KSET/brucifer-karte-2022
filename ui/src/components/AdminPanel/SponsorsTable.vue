@@ -50,7 +50,7 @@ export default {
         });
     },
     editsponsor(sponsor) {
-      this.$router.push({ path: '/bruckarte/sponsors-add/' + sponsor.slug });
+      this.$router.push({ path: '/admin/sponsors-add/' + sponsor.slug });
     },
     changesponsororder(sponsor, direction) {
       var nextsponsorobj = (this.sponsors.indexOf(sponsor));

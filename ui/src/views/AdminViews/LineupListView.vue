@@ -5,7 +5,7 @@
 
       <div class="header">
         <h1 class="page-title">Izvođači</h1>
-        <router-link class="icon7" to="/bruckarte/lineup-add/0">
+        <router-link class="icon7" to="/admin/lineup-add/0">
           <img src="../../assets/icons/add-icon.svg">
         </router-link>
 

@@ -1,9 +1,9 @@
 <template>
     <div class="sidenav">
-        <RouterElement class="sidebar-element" :name="'Tagovi'" :link="'/bruckarte/tags'"></RouterElement>
-        <RouterElement class="sidebar-element" :name="'Privilegije'" :link="'/bruckarte/privileges'"></RouterElement>
-        <RouterElement class="sidebar-element" :name="'Korisnici'" :link="'/bruckarte/users'"></RouterElement>
-        <RouterElement class="sidebar-element" :name="'Uvoz'" :link="'/bruckarte/import'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Tagovi'" :link="'/admin/tags'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Privilegije'" :link="'/admin/privileges'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Korisnici'" :link="'/admin/users'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Uvoz'" :link="'/admin/import'"></RouterElement>
         <button class="sidebar-element" @click="ExportData">
             Izvoz
         </button>
@@ -18,9 +18,9 @@
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownLineup">
 
         </div>
-        <RouterElement id="dpL1" class="sidebar-element" :name="'Pregled Izvođača'" :link="'/bruckarte/lineup-list'">
+        <RouterElement id="dpL1" class="sidebar-element" :name="'Pregled Izvođača'" :link="'/admin/lineup-list'">
         </RouterElement>
-        <RouterElement id="dpL2" class="sidebar-element" :name="'Dodavanje Izvođača'" :link="'/bruckarte/lineup-add/0'">
+        <RouterElement id="dpL2" class="sidebar-element" :name="'Dodavanje Izvođača'" :link="'/admin/lineup-add/0'">
         </RouterElement>
 
         <div class="sidbar-element" style="border-bottom: 1px solid black;"
@@ -33,14 +33,14 @@
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownSponsors">
 
         </div>
-        <RouterElement id="dpS1" class="sidebar-element" :name="'Pregled Sponzora'" :link="'/bruckarte/sponsors-list'">
+        <RouterElement id="dpS1" class="sidebar-element" :name="'Pregled Sponzora'" :link="'/admin/sponsors-list'">
         </RouterElement>
         <RouterElement id="dpS2" class="sidebar-element" :name="'Dodavanje Sponzora'"
-            :link="'/bruckarte/sponsors-add/0'">
+            :link="'/admin/sponsors-add/0'">
         </RouterElement>
 
-        <RouterElement class="sidebar-element" :name="'Dodaj Gosta'" :link="'/bruckarte/guests-add'"></RouterElement>
-        <RouterElement class="sidebar-element" :name="'Kontakt'" :link="'/bruckarte/band-kontakt'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Dodaj Gosta'" :link="'/admin/guests-add'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Kontakt'" :link="'/admin/band-kontakt'"></RouterElement>
     </div>
 </template>
 

@@ -7,7 +7,7 @@
       Izgleda da si pronašao stranicu koja ne postoji
     </p>
     <br>
-    <RouterElement class="overlay-element" :name="'Naslovnica'" :link="'/bruckarte/'"></RouterElement>
+    <RouterElement class="overlay-element" :name="'Naslovnica'" :link="'/admin/'"></RouterElement>
 
   </section>
 

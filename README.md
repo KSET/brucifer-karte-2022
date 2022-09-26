@@ -54,7 +54,7 @@ npm run serve
 
 ### Logging in the app
 
-- go to http://localhost:8080/bruckarte/login/#loaded
+- go to http://localhost:8080/admin/login/#loaded
 - logg in with the email that you previously added to your admin user
 
 

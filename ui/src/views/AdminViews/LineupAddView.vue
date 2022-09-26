@@ -81,7 +81,7 @@ export default {
                 .then(response => {
                     this.lineup = response.data;
                     if (this.lineup.length == 0) {
-                        this.$router.push({ path: '/bruckarte/lineup-add/0' });
+                        this.$router.push({ path: '/admin/lineup-add/0' });
                     }
                     this.lineupp = this.lineup[0];
                     this.name = this.lineupp.name;
