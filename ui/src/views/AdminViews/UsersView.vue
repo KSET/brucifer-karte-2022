@@ -58,6 +58,7 @@ export default {
   data() {
     return {
       users: [],
+      mails:[],
       id: '',
       name: '',
       email: '',
@@ -74,7 +75,11 @@ export default {
       axios.get(process.env.VUE_APP_BASE_URL + '/users/',)
         .then(response => {
           this.users = response.data;
+          axios.get(process.env.VUE_APP_BASE_URL + '/mailer/',)
+        .then(response => {
+          this.mails = response.data;
 
+        })
         })
     },
     changeprivilege(user, changenum) {
@@ -83,6 +88,7 @@ export default {
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
+          this.sendMail(user,changenum);
           this.created();
         })
     },
@@ -91,6 +97,7 @@ export default {
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
+          this.sendMail(user,0);
           this.created();
         })
     },
@@ -99,6 +106,61 @@ export default {
         .then(response => {
           this.users = response.data;
         })
+    },
+    sendMail(user,changenum){
+      var ids = [];
+      var nextId = '';
+      this.mails.forEach(element => {
+        ids.push(element.id);
+      });
+      for (let index = 0; index < ids.length; index++) {
+        if (ids.includes(String(index)) == false) {
+          nextId = index;
+          break;
+        }
+      }
+      if (nextId == '') {
+        nextId = ids.length;
+      }
+      var privilege_name=0;
+      if(changenum==1){
+        privilege_name="Admin";
+      }else if(changenum==3){
+        privilege_name="Karte";
+      }else if(changenum==2){
+        privilege_name="Ulaz";
+      }else if(changenum==4){
+        privilege_name="Ulaz+Karte";
+      }
+      else if(changenum==0){
+        privilege_name="Ništa- nažalost, tvoj pristup stranici je obustavljen";
+      }
+
+      
+      var email=user.email
+      // obrisi liniju dolje kad bude spremno za produkciju
+      email = "pavle.ergovic@kset.org"
+      axios.post('http://localhost:8000/api/mailer/',
+        {
+          id: nextId, subject: "[#BRUCIFER22] Promjena privilegije",
+          name: user.name,
+          privilege_name: privilege_name,
+          to_mail: email
+        },
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      ).then(response => {
+        axios.post('http://localhost:8000/api/mailer/' + nextId + '/send_mail/',
+          {
+            subject: "[#BRUCIFER22] Promjena privilegije",
+            name: user.name,
+          privilege_name: privilege_name,
+            to_mail: email
+          },
+          { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+        )
+      }).then(response => {
+        this.created();
+      })
     }
   }
 

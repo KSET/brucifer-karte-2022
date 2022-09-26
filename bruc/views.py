@@ -20,18 +20,23 @@ class MailerViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def send_mail(self,request,pk):  
-        print(request.data.get('subject', ''))
         subject = request.data.get('subject', '')
         #msg = request.data.get('message', '')
         msg="sta"
         to = request.data.get('to_mail', '')
-        html_message = render_to_string('emails/guest_email.html',{
-        'name': request.data.get('name', ''), 'confCode': request.data.get('confCode', ''),
+
+        if(to[-8:-1]=="kset.or"):
+            html_message = render_to_string('emails/user_email.html',{
+            'name': request.data.get('name', ''), 'privilege_name': request.data.get('privilege_name', ''),})
+        else:
+            html_message = render_to_string('emails/guest_email.html',{
+            'name': request.data.get('name', ''), 'confCode': request.data.get('confCode', ''),
     })
 
         if subject and msg and settings.EMAIL_HOST_USER:
             try:
                 send_mail(subject, msg, settings.EMAIL_HOST_USER, [to],fail_silently=True,html_message=html_message)
+                x=1
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
             return HttpResponse('Passed')

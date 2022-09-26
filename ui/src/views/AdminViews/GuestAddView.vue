@@ -82,6 +82,7 @@ export default {
             len: '',
             services: ['Brucoši', 'KSET', 'VIP'],
             selectedTag: '',
+            nextId:'',
 
         }
     },
