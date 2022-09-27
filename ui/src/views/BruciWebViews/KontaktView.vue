@@ -15,9 +15,7 @@
         </h1>
 
         <p>
-          Antica Župić
-          <br><br>
-          <a href="mailto:antica.zupic@kset.org" rel="nofollow noopener" style="color: black">antica.zupic@kset.org</a>
+          <a href="mailto:press@kset.org" rel="nofollow noopener" style="color: black">press@kset.org</a>
         </p>
 
       </section>

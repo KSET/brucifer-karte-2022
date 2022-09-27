@@ -119,8 +119,7 @@ export default {
         window.addEventListener('load', () => {
             window.google.accounts.id.initialize({
                 client_id: "729300808359-9qt44p6ksjivnbfd981pgjbmkh4ifgcj.apps.googleusercontent.com",
-                /* RESTRIKCIJA DOMENE NA kset.org
-                hosted_domain: "kset.org",*/
+                hosted_domain: "kset.org",
                 callback: this.handleCredentialResponse,
 
             });

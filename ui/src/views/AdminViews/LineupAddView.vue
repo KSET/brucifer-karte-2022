@@ -19,7 +19,7 @@
                     <label for="file-upload" class="button white" style="margin-top: 0px;">
                         Odaberi PNG
                     </label>
-                    <input id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
+                    <input  id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
 
                     <h1 class="textfield">Prikaz na brucwebu </h1>
 
@@ -28,10 +28,10 @@
                         <span class="slider round"></span>
                     </label>
 
-                    <button v-if="(this.slug == '0')" class="button submit">Dodaj</button>
-                    <button v-else class="button submit">Spremi promjene</button>
+                    <button  v-if="(this.slug == '0')" class="button submit">Dodaj</button>
+                    <button  v-else class="button submit">Spremi promjene</button>
 
-                    <button v-if="(this.slug != '0')" class="button submit"
+                    <button  v-if="(this.slug != '0')" class="button submit"
                         style="background-color: white; margin-left: 40px;" @click="deleteLineup">
                         <img class="va" src="../../assets/icons/trash-icon.svg">
                     </button>
@@ -128,7 +128,12 @@ export default {
             )
         },
         postLineup() {
+            console.log(this.currentImage)
+            if(this.currentImage==undefined){
+                window.alert("Uploadajte fotografiju")
+            }else{
 
+            
             let formData = new FormData();
             formData.append("name", this.name);
             if (document.getElementById("switchLineup").checked == true) {
@@ -214,7 +219,7 @@ export default {
 
 
 
-        },
+        }}
     },
 
 };
