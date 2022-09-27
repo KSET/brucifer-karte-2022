@@ -8,7 +8,7 @@
 
                 </div>
                 <div class="grid-item grid1-item">
-                    <select class="inputfield entry" v-model="selectedTag" name={{selectedTag}} @updated="searchGuest">
+                    <select id="selector" class="inputfield entry" v-model="selectedTag" name={{selectedTag}} @input="searchGuest">
                         <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
                     </select>
                 </div>
@@ -108,7 +108,8 @@ export default {
     },
     methods: {
         searchGuest() {
-            axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + this.search + ' ' + this.selectedTag + "&search_fields=tag&search_fields=name&search_fields=surname",)
+            var e = document.getElementById("selector").value;
+            axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + this.search + ' ' + e + "&search_fields=tag&search_fields=name&search_fields=surname",)
                 .then(response => {
                     if (this.search != '' && this.search.length > 2) {
                         this.guests = response.data;
