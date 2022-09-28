@@ -10,6 +10,8 @@ export default createStore({
     email: "",
     privilege: "",
     tokenExp: 10000000000000000,
+
+    reroutePage: 0,
   },
   plugins: [createPersistedState()],
   mutations: {
@@ -27,6 +29,9 @@ export default createStore({
     },
     setTokenExp(state, value) {
       state.tokenExp = value;
+    },
+    setreroutePage(state, value) {
+      state.reroutePage = value;
     },
   },
 });

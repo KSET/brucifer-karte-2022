@@ -19,7 +19,7 @@
                     <label for="file-upload" class="button white" style="margin-top: 0px;">
                         Odaberi PNG
                     </label>
-                    <input  id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
+                    <input id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
 
                     <h1 class="textfield">Prikaz na brucwebu </h1>
 
@@ -28,10 +28,10 @@
                         <span class="slider round"></span>
                     </label>
 
-                    <button  v-if="(this.slug == '0')" class="button submit">Dodaj</button>
-                    <button  v-else class="button submit">Spremi promjene</button>
+                    <button v-if="(this.slug == '0')" class="button submit">Dodaj</button>
+                    <button v-else class="button submit">Spremi promjene</button>
 
-                    <button  v-if="(this.slug != '0')" class="button submit"
+                    <button v-if="(this.slug != '0')" class="button submit"
                         style="background-color: white; margin-left: 40px;" @click="deleteLineup">
                         <img class="va" src="../../assets/icons/trash-icon.svg">
                     </button>
@@ -48,7 +48,7 @@
 <script>
 import axios from 'axios'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
-
+import store from '@/store/index.js';
 
 export default {
     name: "upload-image",
@@ -72,9 +72,18 @@ export default {
             formData: '',
         };
     },
-
+    computed: {
+        reroutePage() {
+            return store.state.reroutePage;
+        }
+    },
     mounted() {
         this.slug = this.$route.params.slug;
+
+        if (this.reroutePage == "1") {
+            store.commit('setreroutePage', "0");
+            this.$router.push({ path: '/admin/lineup-list/' });
+        }
 
         if (this.slug != '0') {
             axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?search=' + this.slug,)
@@ -116,6 +125,7 @@ export default {
             this.message = "";
         },
         deleteLineup() {
+            store.commit('setreroutePage', "1");
             axios.delete(process.env.VUE_APP_BASE_URL + "/lineup/" + this.id + "/",
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                 {
@@ -128,98 +138,100 @@ export default {
             )
         },
         postLineup() {
-            console.log(this.currentImage)
-            if(this.currentImage==undefined){
+            store.commit('setreroutePage', "1");
+
+            if (this.currentImage == undefined) {
                 window.alert("Uploadajte fotografiju")
-            }else{
-
-            
-            let formData = new FormData();
-            formData.append("name", this.name);
-            if (document.getElementById("switchLineup").checked == true) {
-                formData.append("visible", "1");
             } else {
-                formData.append("visible", "0");
-            }
-
-            if (this.slug != "0") {
-
-                formData.append("id", this.id);
-                formData.append("order", this.order);
-                formData.append("slug", this.slug);
 
 
-                if (this.currentImage instanceof File) {
-                    formData.append("image", this.currentImage);
-                }
-
-                axios.put(process.env.VUE_APP_BASE_URL + "/lineup/" + this.id + "/", formData,
-                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data"
-
-                        }
-                    })
-            } else {
-                if (this.lineups.length != 1) {
-                    var ids = [];
-
-                    this.lineups.forEach(element => {
-                        ids.push(element.id);
-
-                    });
-                    for (let index = 0; index < ids.length; index++) {
-                        if (ids.includes(String(index)) == false) {
-                            this.nextId = index;
-                            break;
-                        }
-                    }
-                    if (this.nextId == '') {
-                        this.nextId = ids.length;
-                    }
-
-                    var lastOrder = this.lineups[this.lineups.length - 2].order;
-
-                    if (lastOrder[0] == "0") {
-                        if (lastOrder == "09") {
-                            this.nextOrder = "10"
-                        }
-                        else {
-                            this.nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
-                        }
-                    } else {
-                        this.nextOrder = (parseInt(lastOrder) + 1).toString();
-
-                    }
-
-
+                let formData = new FormData();
+                formData.append("name", this.name);
+                if (document.getElementById("switchLineup").checked == true) {
+                    formData.append("visible", "1");
                 } else {
-                    this.nextId = 0;
-                    this.nextOrder = "00";
+                    formData.append("visible", "0");
                 }
-                let r = (Math.random() + 1).toString(36).substring(7);
 
-                formData.append("id", this.nextId);
-                formData.append("order", this.nextOrder);
-                formData.append("image", this.currentImage);
-                formData.append("slug", r);
+                if (this.slug != "0") {
+
+                    formData.append("id", this.id);
+                    formData.append("order", this.order);
+                    formData.append("slug", this.slug);
 
 
+                    if (this.currentImage instanceof File) {
+                        formData.append("image", this.currentImage);
+                    }
 
-                axios.post(process.env.VUE_APP_BASE_URL + "/lineup/", formData,
-                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data"
+                    axios.put(process.env.VUE_APP_BASE_URL + "/lineup/" + this.id + "/", formData,
+                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+
+                            }
+                        })
+                } else {
+                    if (this.lineups.length != 1) {
+                        var ids = [];
+
+                        this.lineups.forEach(element => {
+                            ids.push(element.id);
+
+                        });
+                        for (let index = 0; index < ids.length; index++) {
+                            if (ids.includes(String(index)) == false) {
+                                this.nextId = index;
+                                break;
+                            }
                         }
-                    },
-                )
+                        if (this.nextId == '') {
+                            this.nextId = ids.length;
+                        }
+
+                        var lastOrder = this.lineups[this.lineups.length - 2].order;
+
+                        if (lastOrder[0] == "0") {
+                            if (lastOrder == "09") {
+                                this.nextOrder = "10"
+                            }
+                            else {
+                                this.nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
+                            }
+                        } else {
+                            this.nextOrder = (parseInt(lastOrder) + 1).toString();
+
+                        }
+
+
+                    } else {
+                        this.nextId = 0;
+                        this.nextOrder = "00";
+                    }
+                    let r = (Math.random() + 1).toString(36).substring(7);
+
+                    formData.append("id", this.nextId);
+                    formData.append("order", this.nextOrder);
+                    formData.append("image", this.currentImage);
+                    formData.append("slug", r);
+
+
+
+                    axios.post(process.env.VUE_APP_BASE_URL + "/lineup/", formData,
+                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        },
+                    )
+                }
+
+
+
             }
-
-
-
-        }}
+        }
     },
 
 };

@@ -53,11 +53,17 @@
 <script>
 import axios from 'axios'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
-
+import store from '@/store/index.js';
 
 export default {
     name: "upload-image",
     components: { Sidebar },
+    computed: {
+        refresh() {
+            return store.state.refresh;
+        },
+
+    },
     data() {
         return {
             currentImage: undefined,
@@ -79,9 +85,18 @@ export default {
             formData: '',
         };
     },
+    computed: {
+        reroutePage() {
+            return store.state.reroutePage;
+        }
+    },
 
     mounted() {
         this.slug = this.$route.params.slug;
+        if (this.reroutePage == "1") {
+            store.commit('setreroutePage', "0");
+            this.$router.push({ path: '/admin/sponsors-list/' });
+        }
 
         if (this.slug != '0') {
             axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.slug,)
@@ -121,6 +136,8 @@ export default {
             this.message = "";
         },
         deleteSponsors() {
+            store.commit('setreroutePage', "1");
+
             axios.delete(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/",
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                 {
@@ -133,6 +150,7 @@ export default {
             )
         },
         postSponsors() {
+            store.commit('setreroutePage', "1");
 
             let formData = new FormData();
             formData.append("name", this.name);
