@@ -1,7 +1,7 @@
 <template>
     <div id="sponsors-add">
         <Sidebar />
-        <div class="admin-page-container" style="margin-top: 0px;">
+        <div class="admin-page-container" style="margin-top: 0px; overflow: auto;">
             <div class="header">
                 <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje sponzora</h1>
                 <h1 v-else class="page-title">Uređivanje sponzora</h1>
@@ -10,7 +10,7 @@
                 :src="previewImage" alt="" />
 
             <form class="sponsors-form" @submit="postSponsors">
-                <div class="grid-container" style="row-gap:10%">
+                <div class="grid-container" style="row-gap:10%;">
 
                     <h1 class="textfield">Ime </h1>
                     <input required class="inputfield" type="text" v-model="name">
@@ -42,8 +42,8 @@
                     <button v-if="(this.slug == '0')" class="button submit" style=" margin-top: 0px">Dodaj</button>
                     <button v-else class="button submit" style=" margin-top: 0px">Spremi promjene</button>
 
-                    <button v-if="(this.slug != '0')" class="button submit"
-                        style="background-color: white; margin-top: 0px; margin-left: 70px;" @click="deleteSponsors">
+                    <button v-if="(this.slug != '0')" class="button submit del"
+                        style="background-color: white; margin-top: 0px; " @click="deleteSponsors">
                         <img class="va" src="../../assets/icons/trash-icon.svg">
                     </button>
                 </div>
@@ -270,8 +270,14 @@ export default {
     display: inline-block;
     width: 70%;
 }
+.button.submit.del{
+    margin-left: 0px;
+}
 
 @media screen and (max-width: 550px) {
+    .button.submit.del{
+    margin-left: 50px;
+}
     .grid-container {
         row-gap: 5%;
     }

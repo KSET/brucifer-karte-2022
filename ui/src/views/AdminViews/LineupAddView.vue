@@ -1,7 +1,7 @@
 <template>
     <div id="lineup-add">
         <Sidebar />
-        <div class="admin-page-container">
+        <div class="admin-page-container" style="overflow: auto">
             <div class="header">
                 <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje izvođača</h1>
                 <h1 v-else class="page-title">Uređivanje izvođača</h1>
@@ -31,8 +31,8 @@
                     <button v-if="(this.slug == '0')" class="button submit">Dodaj</button>
                     <button v-else class="button submit">Spremi promjene</button>
 
-                    <button v-if="(this.slug != '0')" class="button submit"
-                        style="background-color: white; margin-left: 40px;" @click="deleteLineup">
+                    <button v-if="(this.slug != '0')" class="button submit del"
+                        style="background-color: white" @click="deleteLineup">
                         <img class="va" src="../../assets/icons/trash-icon.svg">
                     </button>
                 </div>
@@ -239,6 +239,10 @@ export default {
     width: 70%;
 }
 
+.button.submit.del{
+    margin-left: 0px;
+}
+
 @media screen and (max-width: 900px) {
     .lineup-form {
         margin-left: 5%;
@@ -246,6 +250,9 @@ export default {
 }
 
 @media screen and (max-width: 550px) {
+    .button.submit.del{
+    margin-left: 50px;
+}
     .lineup-form {
         width: 100%;
     }
