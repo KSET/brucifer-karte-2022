@@ -15,9 +15,6 @@
 
 </template>
 
-
-
-
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import TagsTable from '@/components/AdminPanel/TagsTable.vue'
