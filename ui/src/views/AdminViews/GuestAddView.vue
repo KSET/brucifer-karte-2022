@@ -15,7 +15,8 @@
 
                     <h1 class="textfield">Tag: </h1>
 
-                    <select id="tagselect" class="inputfield" v-model="selectedTag" name={{selectedTag}} @input="checkJMBAGdisplay">
+                    <select id="tagselect" class="inputfield" v-model="selectedTag" name={{selectedTag}}
+                        @input="checkJMBAGdisplay">
                         <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
                     </select>
 
@@ -81,7 +82,7 @@ export default {
             len: '',
             services: ['Brucoši', 'KSET', 'VIP'],
             selectedTag: '',
-            nextId:'',
+            nextId: '',
 
         }
     },
@@ -105,13 +106,13 @@ export default {
             })
     },
     methods: {
-        checkJMBAGdisplay(){
+        checkJMBAGdisplay() {
             var e = document.getElementById("tagselect").value;
-            if(e=="Brucoši"){
+            if (e == "Brucoši") {
                 document.getElementById("jmbagselect").style.display = "inline-block";
                 document.getElementById("jmbagselectt").style.display = "inline-block";
 
-            }else{
+            } else {
                 document.getElementById("jmbagselect").style.display = "none";
                 document.getElementById("jmbagselectt").style.display = "none";
 

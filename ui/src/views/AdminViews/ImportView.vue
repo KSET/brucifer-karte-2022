@@ -340,7 +340,7 @@ export default {
 
 input[type="file"] {
   display: none;
-  
+
 }
 
 .list {

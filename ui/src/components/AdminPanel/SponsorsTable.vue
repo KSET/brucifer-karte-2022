@@ -2,10 +2,12 @@
   <div class="grid">
     <div class="card" style="height: 40%;" ref="" v-for="sponsor in sponsors" :key="sponsor.id">
 
-      <img class="ccard-img" v-bind:src="sponsor.image" v-bind:style= "[(sponsor.visible=='0') ? {opacity:'0.25'}: { opacity:'1'}]">
+      <img class="ccard-img" v-bind:src="sponsor.image"
+        v-bind:style="[(sponsor.visible=='0') ? {opacity:'0.25'}: { opacity:'1'}]">
       <div class="ccard-body">
         <h3 class="name"> {{sponsor.name}} </h3>
-        <a class="name" :href="sponsor.url" target="_blank" style="color: black;text-decoration: underline; ">{{sponsor.url}}</a>
+        <a class="name" :href="sponsor.url" target="_blank"
+          style="color: black;text-decoration: underline; ">{{sponsor.url}}</a>
 
         <div class="ccard-buttons">
           <button @click="changesponsororder(sponsor, 'b')" class="ccard-button">

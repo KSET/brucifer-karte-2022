@@ -41,7 +41,7 @@
 
 
 <script>
-  import { uuid } from 'vue-uuid'; 
+import { uuid } from 'vue-uuid';
 import GuestsAdd from '@/components/Bruckarte/GuestsAdd.vue'
 import GuestsTable from '@/components/Bruckarte/GuestsTable.vue'
 import axios from 'axios'
@@ -66,7 +66,7 @@ export default {
       entered: '',
       deleted: '',
       nomatch: '',
-      confCode:'',
+      confCode: '',
 
       uuid: uuid.v1(),
 
@@ -79,9 +79,9 @@ export default {
     loggg() {
     },
     created() {
-          axios.get(process.env.VUE_APP_BASE_URL + '/mailer/',)
-            .then(response => {
-              this.mails = response.data;
+      axios.get(process.env.VUE_APP_BASE_URL + '/mailer/',)
+        .then(response => {
+          this.mails = response.data;
         })
     },
     changevalue() {
@@ -94,28 +94,29 @@ export default {
     },
     changebought(guest, changenum) {
 
-      if(this.name=="" || this.surname==""){
+      if (this.name == "" || this.surname == "") {
         window.alert("Ispunite polja ime i prezime!")
-      }else{
-      if (changenum == 1) {
-        var confCode = this.$uuid.v1();
-
       } else {
-        var confCode = "";
-      }
-      axios.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
-        { bought: changenum, confCode: confCode },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
-        .then(() => {
-          guest.bought = changenum;
-          guest.confCode = confCode;
-          this.confCode = confCode;
+        if (changenum == 1) {
+          var confCode = this.$uuid.v1();
 
-          if (changenum == 1) {
-            this.sendMail(guest);
-          }
-        })}
+        } else {
+          var confCode = "";
+        }
+        axios.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
+          { bought: changenum, confCode: confCode },
+          { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+        )
+          .then(() => {
+            guest.bought = changenum;
+            guest.confCode = confCode;
+            this.confCode = confCode;
+
+            if (changenum == 1) {
+              this.sendMail(guest);
+            }
+          })
+      }
     },
     searchGuest() {
       axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=jmbag",)
@@ -176,7 +177,7 @@ export default {
         jmbagslice = jmbagslice.slice(2, 7);
       }
 
-      
+
       var email = guest.name[0].toLowerCase() + guest.surname[0].toLowerCase() + jmbagslice + "@fer.hr";
       console.log(email);
       // obrisi liniju dolje kad bude spremno za produkciju
@@ -194,7 +195,7 @@ export default {
           {
             subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
             name: guest.name,
-          confCode: guest.confCode,
+            confCode: guest.confCode,
             to_mail: email
           },
           { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }

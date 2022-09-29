@@ -8,7 +8,8 @@
 
                 </div>
                 <div class="grid-item grid1-item">
-                    <select id="selector" class="inputfield entry" v-model="selectedTag" name={{selectedTag}} @input="searchGuest">
+                    <select id="selector" class="inputfield entry" v-model="selectedTag" name={{selectedTag}}
+                        @input="searchGuest">
                         <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
                     </select>
                 </div>
@@ -135,10 +136,10 @@ export default {
                         }
                     } else {
                         this.name = "";
-                            this.surname = '';
-                            this.jmbag = '';
-                            this.tag = '';
-                            this.confCode = '';
+                        this.surname = '';
+                        this.jmbag = '';
+                        this.tag = '';
+                        this.confCode = '';
                         if (this.search != '') {
                             this.guests = [];
                         }
@@ -301,9 +302,11 @@ export default {
     row-gap: 15%;
     align-items: center;
 }
-.showmobile{
-        display: none;
-    }
+
+.showmobile {
+    display: none;
+}
+
 @media screen and (max-width: 980px) {
     .hidedesktop {
         display: inline-block !important;
@@ -316,7 +319,8 @@ export default {
     .textfield {
         font-size: 14px;
     }
-    .showmobile{
+
+    .showmobile {
         display: none !important;
     }
 
@@ -427,7 +431,8 @@ export default {
         row-gap: 5%;
         align-items: center;
     }
-    .showmobile{
+
+    .showmobile {
         display: block !important;
     }
 }

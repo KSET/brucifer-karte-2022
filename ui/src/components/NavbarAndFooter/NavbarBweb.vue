@@ -5,16 +5,21 @@
     </router-link>
     <div class="routes">
 
-      <RouterElement id="nav-naslovnica" class="navbar-element hidetablet" :name="'Naslovnica'" :link="'/'"></RouterElement>
-
-      <RouterElement id="nav-lineup" v-if="this.lineupVisible=='1'" class="navbar-element hidetablet" :name="'Izvođači'" :link="'/lineup'">
+      <RouterElement id="nav-naslovnica" class="navbar-element hidetablet" :name="'Naslovnica'" :link="'/'">
       </RouterElement>
 
-      <RouterElement id="nav-ulaznice" class="navbar-element hidetablet" :name="'Ulaznice'" :link="'/ulaznice'"></RouterElement>
+      <RouterElement id="nav-lineup" v-if="this.lineupVisible=='1'" class="navbar-element hidetablet" :name="'Izvođači'"
+        :link="'/lineup'">
+      </RouterElement>
 
-      <RouterElement id="nav-sponsors" v-if="this.sponsorsVisible=='1'" class="navbar-element hidetablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
+      <RouterElement id="nav-ulaznice" class="navbar-element hidetablet" :name="'Ulaznice'" :link="'/ulaznice'">
+      </RouterElement>
 
-      <RouterElement id="nav-kontakt" class="navbar-element hidetablet" :name="'Kontakt'" :link="'/kontakt'"></RouterElement>
+      <RouterElement id="nav-sponsors" v-if="this.sponsorsVisible=='1'" class="navbar-element hidetablet"
+        :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
+
+      <RouterElement id="nav-kontakt" class="navbar-element hidetablet" :name="'Kontakt'" :link="'/kontakt'">
+      </RouterElement>
 
       <div id="nav-icon3" class="hidedesktop" @click="toggleNav">
         <span></span>
@@ -63,7 +68,7 @@ export default {
     return {
       showNav: false,
       lineupVisible: '1',
-      sponsorsVisible:'1',
+      sponsorsVisible: '1',
     }
   },
   created() {
@@ -77,8 +82,8 @@ export default {
           this.lineupVisible = users[users.length - 1].visible;
         }
       })
-      
-      axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
+
+    axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
       .then(response => {
         var users = response.data;
         if (users.length == 0) {

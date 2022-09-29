@@ -31,8 +31,8 @@
                     <button v-if="(this.slug == '0')" class="button submit">Dodaj</button>
                     <button v-else class="button submit">Spremi promjene</button>
 
-                    <button v-if="(this.slug != '0')" class="button submit del"
-                        style="background-color: white" @click="deleteLineup">
+                    <button v-if="(this.slug != '0')" class="button submit del" style="background-color: white"
+                        @click="deleteLineup">
                         <img class="va" src="../../assets/icons/trash-icon.svg">
                     </button>
                 </div>
@@ -86,7 +86,7 @@ export default {
         }
 
         if (this.slug != '0') {
-            axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?search=' + this.slug+"&search_fields=slug")
+            axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?search=' + this.slug + "&search_fields=slug")
                 .then(response => {
                     this.lineup = response.data;
                     if (this.lineup.length == 0) {
@@ -239,7 +239,7 @@ export default {
     width: 70%;
 }
 
-.button.submit.del{
+.button.submit.del {
     margin-left: 0px;
 }
 
@@ -250,9 +250,10 @@ export default {
 }
 
 @media screen and (max-width: 550px) {
-    .button.submit.del{
-    margin-left: 50px;
-}
+    .button.submit.del {
+        margin-left: 50px;
+    }
+
     .lineup-form {
         width: 100%;
     }

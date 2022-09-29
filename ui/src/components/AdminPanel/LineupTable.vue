@@ -2,8 +2,9 @@
   <div class="grid">
     <div class="card" style="height: 40%; border: none;" v-for="lineup in lineups" :key="lineup.id">
 
-      <img class="ccard-img" v-bind:src="lineup.image" v-bind:style= "[(lineup.visible=='0') ? {opacity:'0.25'}: { opacity:'1'}]">
-      <div class="ccard-body" >
+      <img class="ccard-img" v-bind:src="lineup.image"
+        v-bind:style="[(lineup.visible=='0') ? {opacity:'0.25'}: { opacity:'1'}]">
+      <div class="ccard-body">
         <h3 class="name"> {{lineup.name}}</h3>
 
         <div class="ccard-buttons">

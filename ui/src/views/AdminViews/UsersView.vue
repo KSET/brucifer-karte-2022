@@ -30,7 +30,8 @@
               <div class="users-element"><button class="button-priv"
                   v-bind:style="[(user.privilege=='4') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
                   @click="changeprivilege(user,'4')">Ulaz <br>+Karte</button></div>
-              <div class="users-element hidemobile"><button class="button-priv" style="border:0px" @click="deleteUser(user)">
+              <div class="users-element hidemobile"><button class="button-priv" style="border:0px"
+                  @click="deleteUser(user)">
                   <img src="@/assets/icons/trash-icon.svg">
                 </button>
               </div>
@@ -57,7 +58,7 @@ export default {
   data() {
     return {
       users: [],
-      mails:[],
+      mails: [],
       id: '',
       name: '',
       email: '',
@@ -75,10 +76,10 @@ export default {
         .then(response => {
           this.users = response.data;
           axios.get(process.env.VUE_APP_BASE_URL + '/mailer/',)
-        .then(response => {
-          this.mails = response.data;
+            .then(response => {
+              this.mails = response.data;
 
-        })
+            })
         })
     },
     changeprivilege(user, changenum) {
@@ -87,7 +88,7 @@ export default {
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
-          this.sendMail(user,changenum);
+          this.sendMail(user, changenum);
           this.created();
         })
     },
@@ -96,7 +97,7 @@ export default {
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
-          this.sendMail(user,0);
+          this.sendMail(user, 0);
           this.created();
         })
     },
@@ -106,7 +107,7 @@ export default {
           this.users = response.data;
         })
     },
-    sendMail(user,changenum){
+    sendMail(user, changenum) {
       var ids = [];
       var nextId = '';
       this.mails.forEach(element => {
@@ -121,22 +122,22 @@ export default {
       if (nextId == '') {
         nextId = ids.length;
       }
-      var privilege_name=0;
-      if(changenum==1){
-        privilege_name="Admin";
-      }else if(changenum==3){
-        privilege_name="Karte";
-      }else if(changenum==2){
-        privilege_name="Ulaz";
-      }else if(changenum==4){
-        privilege_name="Ulaz+Karte";
+      var privilege_name = 0;
+      if (changenum == 1) {
+        privilege_name = "Admin";
+      } else if (changenum == 3) {
+        privilege_name = "Karte";
+      } else if (changenum == 2) {
+        privilege_name = "Ulaz";
+      } else if (changenum == 4) {
+        privilege_name = "Ulaz+Karte";
       }
-      else if(changenum==0){
-        privilege_name="Ništa- nažalost, tvoj pristup stranici je obustavljen";
+      else if (changenum == 0) {
+        privilege_name = "Ništa- nažalost, tvoj pristup stranici je obustavljen";
       }
 
-      
-      var email=user.email
+
+      var email = user.email
       // obrisi liniju dolje kad bude spremno za produkciju
       email = "pavle.ergovic@kset.org"
       axios.post('http://localhost:8000/api/mailer/',
@@ -152,7 +153,7 @@ export default {
           {
             subject: "[#BRUCIFER22] Promjena privilegije",
             name: user.name,
-          privilege_name: privilege_name,
+            privilege_name: privilege_name,
             to_mail: email
           },
           { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
@@ -170,7 +171,6 @@ export default {
 
 
 <style >
-  
 .page-header.user-page {
   border-bottom: 0.5px solid black;
 }

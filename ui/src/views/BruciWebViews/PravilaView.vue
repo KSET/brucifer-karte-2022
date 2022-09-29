@@ -126,7 +126,7 @@ import Footer from '@/components/NavbarAndFooter/Footer.vue'
 export default {
   name: 'PravilaView',
   components: { Footer },
-  mounted(){
+  mounted() {
     document.getElementById("nav-naslovnica").style.textDecoration = "none";
     document.getElementById("nav-lineup").style.textDecoration = "none";
     document.getElementById("nav-ulaznice").style.textDecoration = "none";

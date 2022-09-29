@@ -57,7 +57,7 @@
 </template>
   
 <script>
-import { uuid } from 'vue-uuid'; 
+import { uuid } from 'vue-uuid';
 
 import axios from 'axios'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
@@ -86,7 +86,7 @@ export default {
             len: '',
             nextId: '',
             nextOrder: '',
-            visible:'',
+            visible: '',
             url: '',
             order: '',
             email: '',
@@ -111,7 +111,7 @@ export default {
         }
 
         if (this.slug != '0') {
-            axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.slug+"&search_fields=slug")
+            axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.slug + "&search_fields=slug")
                 .then(response => {
                     this.sponsors = response.data;
                     if (this.sponsors.length == 0) {
@@ -168,97 +168,97 @@ export default {
             if (this.currentImage == undefined) {
                 window.alert("Uploadajte fotografiju")
             } else {
-            store.commit('setreroutePage', "1");
+                store.commit('setreroutePage', "1");
 
-            let formData = new FormData();
-            formData.append("name", this.name);
-            formData.append("url", this.url);
-            formData.append("email", this.email);
-            formData.append("guestCap", this.guestCap);
+                let formData = new FormData();
+                formData.append("name", this.name);
+                formData.append("url", this.url);
+                formData.append("email", this.email);
+                formData.append("guestCap", this.guestCap);
 
-            if (document.getElementById("switchSponsors").checked == true) {
+                if (document.getElementById("switchSponsors").checked == true) {
                     formData.append("visible", "1");
                 } else {
                     formData.append("visible", "0");
                 }
 
-            if (this.slug != "0") {
+                if (this.slug != "0") {
 
-                formData.append("id", this.id);
-                formData.append("order", this.order);
-                formData.append("slug", this.slug);
+                    formData.append("id", this.id);
+                    formData.append("order", this.order);
+                    formData.append("slug", this.slug);
 
 
-                if (this.currentImage instanceof File) {
-                    formData.append("image", this.currentImage);
-                }
-
-                axios.put(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/", formData,
-                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data"
-
-                        }
-                    })
-            } else {
-                if (this.sponsorss.length != 0) {
-                    var ids = [];
-
-                    this.sponsorss.forEach(element => {
-                        ids.push(element.id);
-
-                    });
-                    for (let index = 0; index < ids.length; index++) {
-                        if (ids.includes(String(index)) == false) {
-                            this.nextId = index;
-                            break;
-                        }
-                    }
-                    if (this.nextId == '') {
-                        this.nextId = ids.length;
+                    if (this.currentImage instanceof File) {
+                        formData.append("image", this.currentImage);
                     }
 
-                    var lastOrder = this.sponsorss[this.sponsorss.length - 2].order;
+                    axios.put(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/", formData,
+                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data"
 
-                    if (lastOrder[0] == "0") {
-                        if (lastOrder == "09") {
-                            this.nextOrder = "10"
-                        }
-                        else {
-                            this.nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
-                        }
-                    } else {
-                        this.nextOrder = (parseInt(lastOrder) + 1).toString();
-
-                    }
-
-
+                            }
+                        })
                 } else {
-                    this.nextId = 0;
-                    this.nextOrder = "00";
+                    if (this.sponsorss.length != 0) {
+                        var ids = [];
+
+                        this.sponsorss.forEach(element => {
+                            ids.push(element.id);
+
+                        });
+                        for (let index = 0; index < ids.length; index++) {
+                            if (ids.includes(String(index)) == false) {
+                                this.nextId = index;
+                                break;
+                            }
+                        }
+                        if (this.nextId == '') {
+                            this.nextId = ids.length;
+                        }
+
+                        var lastOrder = this.sponsorss[this.sponsorss.length - 2].order;
+
+                        if (lastOrder[0] == "0") {
+                            if (lastOrder == "09") {
+                                this.nextOrder = "10"
+                            }
+                            else {
+                                this.nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
+                            }
+                        } else {
+                            this.nextOrder = (parseInt(lastOrder) + 1).toString();
+
+                        }
+
+
+                    } else {
+                        this.nextId = 0;
+                        this.nextOrder = "00";
+                    }
+
+
+                    formData.append("id", this.nextId);
+                    formData.append("order", this.nextOrder);
+                    formData.append("image", this.currentImage);
+                    formData.append("slug", this.$uuid.v1());
+
+
+
+                    axios.post(process.env.VUE_APP_BASE_URL + "/sponsors/", formData,
+                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        },
+                    )
                 }
 
 
-                formData.append("id", this.nextId);
-                formData.append("order", this.nextOrder);
-                formData.append("image", this.currentImage);
-                formData.append("slug", this.$uuid.v1());
-
-
-
-                axios.post(process.env.VUE_APP_BASE_URL + "/sponsors/", formData,
-                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data"
-                        }
-                    },
-                )
             }
-
-
-        }
         },
     },
 
@@ -270,14 +270,16 @@ export default {
     display: inline-block;
     width: 70%;
 }
-.button.submit.del{
+
+.button.submit.del {
     margin-left: 0px;
 }
 
 @media screen and (max-width: 550px) {
-    .button.submit.del{
-    margin-left: 50px;
-}
+    .button.submit.del {
+        margin-left: 50px;
+    }
+
     .grid-container {
         row-gap: 5%;
     }
