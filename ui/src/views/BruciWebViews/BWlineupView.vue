@@ -100,6 +100,7 @@ export default {
 .lineup {
     padding: 3.14159em;
 
+    padding-top: 5.5em;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-row-gap: 3.45rem;
