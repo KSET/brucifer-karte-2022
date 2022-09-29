@@ -11,7 +11,7 @@
 
         <div class="switchdiv">
 
-          <h1 class="textfield" style="display: inline;">Prikaz sponsorsa na brucwebu </h1>
+          <h1 class="textfield" style="display: inline;">visible </h1>
 
           <label class="switch" @click="toggleVisibility">
             <input id="switch" type="checkbox" @input="changeVisible">
