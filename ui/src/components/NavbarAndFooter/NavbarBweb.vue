@@ -5,16 +5,16 @@
     </router-link>
     <div class="routes">
 
-      <RouterElement class="navbar-element hidetablet" :name="'Naslovnica'" :link="'/'"></RouterElement>
+      <RouterElement id="nav-naslovnica" class="navbar-element hidetablet" :name="'Naslovnica'" :link="'/'"></RouterElement>
 
-      <RouterElement v-if="this.lineupVisible=='1'" class="navbar-element hidetablet" :name="'Izvođači'" :link="'/lineup'">
+      <RouterElement id="nav-lineup" v-if="this.lineupVisible=='1'" class="navbar-element hidetablet" :name="'Izvođači'" :link="'/lineup'">
       </RouterElement>
 
-      <RouterElement class="navbar-element hidetablet" :name="'Ulaznice'" :link="'/ulaznice'"></RouterElement>
+      <RouterElement id="nav-ulaznice" class="navbar-element hidetablet" :name="'Ulaznice'" :link="'/ulaznice'"></RouterElement>
 
-      <RouterElement v-if="this.sponsorsVisible=='1'" class="navbar-element hidetablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
+      <RouterElement id="nav-sponsors" v-if="this.sponsorsVisible=='1'" class="navbar-element hidetablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
 
-      <RouterElement class="navbar-element hidetablet" :name="'Kontakt'" :link="'/kontakt'"></RouterElement>
+      <RouterElement id="nav-kontakt" class="navbar-element hidetablet" :name="'Kontakt'" :link="'/kontakt'"></RouterElement>
 
       <div id="nav-icon3" class="hidedesktop" @click="toggleNav">
         <span></span>

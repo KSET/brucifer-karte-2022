@@ -28,6 +28,12 @@ export default {
   name: 'KontaktView',
   components: { Footer, RouterElement },
   mounted() {
+    document.getElementById("nav-naslovnica").style.textDecoration = "none";
+    document.getElementById("nav-lineup").style.textDecoration = "none";
+    document.getElementById("nav-ulaznice").style.textDecoration = "none";
+    document.getElementById("nav-sponsors").style.textDecoration = "none";
+    document.getElementById("nav-kontakt").style.textDecoration = "none";
+
     if ((this.$route.params.pathMatch[0]) == "admin") {
       this.$router.push({ name: 'PageNotFound' });
 

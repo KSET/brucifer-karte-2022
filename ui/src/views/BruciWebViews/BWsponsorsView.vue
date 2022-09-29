@@ -42,6 +42,13 @@ export default {
     created() {
       axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order&search=1&search_fields=visible',)
         .then(response => {
+
+          document.getElementById("nav-naslovnica").style.textDecoration = "none";
+          document.getElementById("nav-lineup").style.textDecoration = "none";
+          document.getElementById("nav-ulaznice").style.textDecoration = "none";
+          document.getElementById("nav-sponsors").style.textDecoration = "underline";
+          document.getElementById("nav-kontakt").style.textDecoration = "none";
+
           this.users = response.data;
           if (this.users[this.users.length - 1].visible == "0") {
             this.users = [];

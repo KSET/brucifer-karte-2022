@@ -50,6 +50,13 @@ import Footer from '@/components/NavbarAndFooter/Footer.vue'
 export default {
   name: 'UlazniceView',
   components: { Footer },
+  mounted() {
+    document.getElementById("nav-naslovnica").style.textDecoration = "none";
+    document.getElementById("nav-lineup").style.textDecoration = "none";
+    document.getElementById("nav-ulaznice").style.textDecoration = "underline";
+    document.getElementById("nav-sponsors").style.textDecoration = "none";
+    document.getElementById("nav-kontakt").style.textDecoration = "none";
+  }
 }
 </script>
 

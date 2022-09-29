@@ -40,7 +40,7 @@
                 <tr v-for="bandcontact in bandcontacts" :key="bandcontact.id">
                   <td>{{bandcontact.bandName}}</td>
                   <td>{{bandcontact.bookerName}}</td>
-                  <td>{{bandcontact.bookerPhone}}</td>
+                  <td @click="call(bandcontact)"><a>{{bandcontact.bookerPhone}}</a></td>
                   <td><button class="button-icon" @click="deleteBandContact(bandcontact)"> <img
                         src="@/assets/icons/trash-icon.svg"></button>
                   </td>
@@ -88,7 +88,10 @@ export default {
   },
 
   methods: {
-    
+    call(bandcontact) {
+      let tel = "tel:" + bandcontact.bookerPhone
+      window.open(tel);
+    },
     created() {
       axios.get(process.env.VUE_APP_BASE_URL + '/contact/',)
         .then(response => {
@@ -168,15 +171,17 @@ export default {
   display: block;
   width: 90%;
 }
+
 @media screen and (max-width: 900px) {
 
-.grid-container-contact {
-  display: grid;
-  grid-template-columns: 40% 60%;
-  padding: 10px;
-  width: 100vw;
-  height: 87vh;
-} }
+  .grid-container-contact {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    padding: 10px;
+    width: 100vw;
+    height: 87vh;
+  }
+}
 
 @media screen and (max-width: 550px) {
   .grid-container-contact {
