@@ -155,7 +155,7 @@ export default {
  
       var email = user.email
   
-      axios.post('http://localhost:8000/api/mailer/',
+      axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
         {
           id: nextId, subject: "[#BRUCIFER22] Promjena privilegije",
           name: to_user_name,
@@ -164,7 +164,7 @@ export default {
         },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       ).then(response => {
-        axios.post('http://localhost:8000/api/mailer/' + nextId + '/send_mail/',
+        axios.post(process.env.VUE_APP_BASE_URL + '/mailer/' + nextId + '/send_mail/',
           {
             subject: "[#BRUCIFER22] Promjena privilegije",
             name: to_user_name,

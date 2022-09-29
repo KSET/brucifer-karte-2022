@@ -180,7 +180,7 @@ export default {
 
       var email = guest.name[0].toLowerCase() + guest.surname[0].toLowerCase() + jmbagslice + "@fer.hr";
    
-      axios.post('http://localhost:8000/api/mailer/',
+      axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
         {
           id: nextId, subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
           name: guest.name,
@@ -189,7 +189,7 @@ export default {
         },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       ).then(response => {
-        axios.post('http://localhost:8000/api/mailer/' + nextId + '/send_mail/',
+        axios.post(process.env.VUE_APP_BASE_URL + '/mailer/' + nextId + '/send_mail/',
           {
             subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
             name: guest.name,
