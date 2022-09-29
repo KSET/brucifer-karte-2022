@@ -101,10 +101,12 @@ export default {
   position: relative;
   background-color: #F6BB96;
   min-height: 93vh;
+  flex: 1;
 }
 
 .bw-page-container {
-  margin-top: 3.75rem;
+  margin-top: 0;
+  flex: 1;
 
   position: relative;
   background-image: var(--background-default);

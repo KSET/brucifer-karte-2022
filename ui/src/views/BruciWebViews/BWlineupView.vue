@@ -100,7 +100,8 @@ export default {
 @import "@fontsource/antonio";
 
 .bw-page-container {
-    margin-top: 3.75rem;
+    margin-top: 0;
+    flex: 1;
 
     position: relative;
     background-repeat: repeat;
@@ -218,4 +219,4 @@ export default {
 }
 </style>
 
-       
+
