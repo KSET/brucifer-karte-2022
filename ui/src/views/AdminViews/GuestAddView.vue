@@ -15,13 +15,12 @@
 
                     <h1 class="textfield">Tag: </h1>
 
-                    <select class="inputfield" v-model="selectedTag" name={{selectedTag}}>
+                    <select id="tagselect" class="inputfield" v-model="selectedTag" name={{selectedTag}} @input="checkJMBAGdisplay">
                         <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
                     </select>
 
-
                     <h1 id="jmbagselect" class="textfield">JMBAG: </h1>
-                    <input id="jmbagselect" class="inputfield" type="text" v-model="jmbag">
+                    <input id="jmbagselectt" class="inputfield" type="text" v-model="jmbag">
 
                     <h1 class="textfield">Karta: </h1>
 
@@ -87,9 +86,12 @@ export default {
         }
     },
 
-    created() {
+    mounted() {
+
         axios.get(process.env.VUE_APP_BASE_URL + '/guests/',)
             .then(response => {
+                document.getElementById("jmbagselect").style.display = "none";
+                document.getElementById("jmbagselectt").style.display = "none";
                 this.guests = response.data;
                 this.len = this.guests.length;
                 axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
@@ -103,6 +105,19 @@ export default {
             })
     },
     methods: {
+        checkJMBAGdisplay(){
+            var e = document.getElementById("tagselect").value;
+            if(e=="Brucoši"){
+                document.getElementById("jmbagselect").style.display = "inline-block";
+                document.getElementById("jmbagselectt").style.display = "inline-block";
+
+            }else{
+                document.getElementById("jmbagselect").style.display = "none";
+                document.getElementById("jmbagselectt").style.display = "none";
+
+            }
+
+        },
         changeKarta() {
             if (this.karta == '1') {
                 this.karta = '0';

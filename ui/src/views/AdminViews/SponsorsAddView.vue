@@ -1,7 +1,7 @@
 <template>
     <div id="sponsors-add">
         <Sidebar />
-        <div class="admin-page-container" style="margin-top: 0px; overflow: auto;">
+        <div class="admin-page-container" style="margin-top: 0px;">
             <div class="header">
                 <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje sponzora</h1>
                 <h1 v-else class="page-title">Uređivanje sponzora</h1>
@@ -10,7 +10,7 @@
                 :src="previewImage" alt="" />
 
             <form class="sponsors-form" @submit="postSponsors">
-                <div class="grid-container">
+                <div class="grid-container" style="row-gap:10%">
 
                     <h1 class="textfield">Ime </h1>
                     <input required class="inputfield" type="text" v-model="name">
