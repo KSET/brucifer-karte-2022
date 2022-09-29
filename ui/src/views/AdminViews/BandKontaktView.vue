@@ -4,14 +4,14 @@
     <div class="admin-page-container">
       <div class="grid-container-contact">
         <div style="border-right: 1px solid black; width: 95%">
-          <h1 class="page-title lineup-title">Dodavanje izvođača</h1>
+          <h1 class="page-title lineup-title">Dodavanje kontakata</h1>
 
           <img v-if="this.showContactForm==false" style="margin-top: 15px;" class="dropdown-icon showmobile"
             src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleContactForm">
           <img v-else class="dropdown-icon  showmobile" style="margin-top: 15px;"
             src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleContactForm">
 
-          <form id="hid" @submit="postBandContact" class="inputfields">
+          <form v-if="showHid" id="hid" @submit="postBandContact" class="inputfields">
 
             <h1 class="textfield">Ime Benda </h1>
             <input required class="inputfield kontakt" type="text" v-model="bandName">
@@ -36,7 +36,7 @@
                 <th>Kontakt</th>
                 <th>Opcije</th>
               </thead>
-              <tbody style="overflow:auto;" class="tbody" id="tbody">
+              <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto;" class="tbody">
                 <tr v-for="bandcontact in bandcontacts" :key="bandcontact.id">
                   <td>{{bandcontact.bandName}}</td>
                   <td>{{bandcontact.bookerName}}</td>
@@ -79,10 +79,12 @@ export default {
       bookerPhone: '',
       nextId: '',
       showContactForm: true,
+      showHid: false,
+      tbodyHigh: false,
     }
   },
   mounted() {
-    document.getElementById("hid").style.display = "block";
+    this.showHid = true;
 
     this.created();
   },
@@ -102,13 +104,11 @@ export default {
     toggleContactForm() {
       this.showContactForm = !this.showContactForm;
       if (this.showContactForm) {
-        document.getElementById("hid").style.display = "block";
-        document.getElementById("tbody").style.height = "250px";
-
+        this.showHid = true;
+        this.tbodyHigh = false;
       } else {
-        document.getElementById("hid").style.display = "none";
-        document.getElementById("tbody").style.height = "100%";
-
+        this.showHid = false;
+        this.tbodyHigh = true;
       }
     },
 
@@ -148,6 +148,12 @@ export default {
   }
 }
 </script>
+
+<style module>
+  :global(#app) .tbodyHigh {
+    height: 100%;
+  }
+</style>
 
 <style>
 .grid-container-contact {
