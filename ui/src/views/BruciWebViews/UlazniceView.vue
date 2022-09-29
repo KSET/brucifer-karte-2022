@@ -95,7 +95,7 @@ p {
 }
 
 .contents {
-  padding-top: 4.5%;
+  padding-top: 3.5em;
   padding-left: 2.73%;
   padding-right: 4.5%;
   padding-bottom: 4.5%;
