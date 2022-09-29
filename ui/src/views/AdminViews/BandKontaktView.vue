@@ -1,7 +1,7 @@
 <template>
   <div>
     <Sidebar />
-    <div class="admin-page-container" style="width: 100%; position: relative;">
+    <div class="admin-page-container">
       <div class="grid-container-contact">
         <div style="border-right: 1px solid black; width: 95%">
           <h1 class="page-title lineup-title">Dodavanje izvođača</h1>
@@ -113,7 +113,6 @@ export default {
     },
 
     postBandContact() {
-
       var ids = [];
       this.bandcontacts.forEach(element => {
         ids.push(element.id);
