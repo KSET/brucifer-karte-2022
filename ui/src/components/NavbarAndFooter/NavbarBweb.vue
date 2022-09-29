@@ -40,7 +40,7 @@
           <RouterElement class="overlay-element " :name="'Ulaznice'" :link="'/ulaznice'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement class="overlay-element " :name="'Sponzori'" :link="'/sponsors'" @click="toggleNav()">
+          <RouterElement v-if="this.sponsorsVisible=='1'" class="overlay-element " :name="'Sponzori'" :link="'/sponsors'" @click="toggleNav()">
           </RouterElement>
 
           <RouterElement class="overlay-element " :name="'Kontakt'" :link="'/kontakt'" @click="toggleNav()">
