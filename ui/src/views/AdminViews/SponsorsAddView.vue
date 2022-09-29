@@ -1,7 +1,7 @@
 <template>
     <div id="sponsors-add">
         <Sidebar />
-        <div class="admin-page-container" style="margin-top: 0px; overflow: auto;">
+        <div class="admin-page-container" style=" overflow: auto;">
             <div class="header">
                 <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje sponzora</h1>
                 <h1 v-else class="page-title">Uređivanje sponzora</h1>

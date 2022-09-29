@@ -1,9 +1,9 @@
 <template>
   <div>
     <Sidebar />
-    <div class="admin-page-container">
+    <div class="admin-page-container" style="width: 100%; position: relative;">
       <div class="grid-container-contact">
-        <div>
+        <div style="border-right: 1px solid black; width: 95%">
           <h1 class="page-title lineup-title">Dodavanje izvođača</h1>
 
           <img v-if="this.showContactForm==false" style="margin-top: 15px;" class="dropdown-icon showmobile"
@@ -168,6 +168,15 @@ export default {
   display: block;
   width: 90%;
 }
+@media screen and (max-width: 900px) {
+
+.grid-container-contact {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  padding: 10px;
+  width: 100vw;
+  height: 87vh;
+} }
 
 @media screen and (max-width: 550px) {
   .grid-container-contact {
