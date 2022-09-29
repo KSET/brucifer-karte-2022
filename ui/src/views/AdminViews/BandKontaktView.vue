@@ -41,7 +41,7 @@
                   <td>{{bandcontact.bandName}}</td>
                   <td>{{bandcontact.bookerName}}</td>
                   <td @click="call(bandcontact)"><a>{{bandcontact.bookerPhone}}</a></td>
-                  <td><button class="button-icon" @click="deleteBandContact(bandcontact)"> <img
+                  <td><button class="button-icon" @click="deleteBandContact(bandcontact)" style="margin-left: 0.9rem;"> <img
                         src="@/assets/icons/trash-icon.svg"></button>
                   </td>
                 </tr>
