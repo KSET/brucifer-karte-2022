@@ -1,7 +1,7 @@
 <template>
   <div class="users">
     <Sidebar />
-    <div class="admin-page-container" style="margin-top: 0px">
+    <div class="admin-page-container">
       <div class="page-header user-page">
         <h1 class="page-title user-title">Korisnici</h1>
         <button class="button-icon"> <img class="add-icon user-icon" src="@/assets/icons/add-icon.svg"></button>
