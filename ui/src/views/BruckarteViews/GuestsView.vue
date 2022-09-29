@@ -229,7 +229,7 @@ export default {
 .grid-container.guests {
   margin-top: 3.5%;
   margin-left: 5%;
-  row-gap: 20%;
+  row-gap: 18%;
 }
 
 .container {

@@ -1,5 +1,5 @@
 <template>
-    <div class="grid1-container" id="flex" style="margin-top: 3.75rem;">
+    <div class="grid1-container" id="flex" style="margin-top: 0%;">
         <div class="grid-item grid1-item1" id="a">
             <div class="grid2-container">
                 <div class="grid-item grid1-item">
@@ -23,7 +23,7 @@
             </button>
         </div>
         <div class="grid-item grid1-item3" id="c">
-            <div class="grid-container2">
+            <div class="grid-container2" style="row-gap:15%">
                 <h1 class="textfield span2">Ime </h1>
                 <input readonly class="inputfield span3" :disabled="this.id==''" type="text" @input="changevalue"
                     v-model="name">
@@ -188,7 +188,7 @@ export default {
 .grid1-container {
     display: grid;
     grid-template-columns: auto 34.47%;
-    grid-template-rows: auto 70.76%;
+    grid-template-rows: auto 80.76%;
     padding: 10px;
     width: 100vw;
     height: 87vh;
@@ -277,17 +277,19 @@ export default {
 }
 
 .nosubmit.search.entry {
-    width: 60%;
+    width: 90%;
     left: 0px;
     margin: 0px;
 }
 
 .inputfield.entry {
-    width: 60% !important;
+    width: 90%;
 }
 
 .grid1-item {
-    width: 60% !important;
+    width: 50% !important;
+    display: inline-block !important;
+
 }
 
 .grid-container2 {
