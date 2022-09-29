@@ -1,8 +1,9 @@
-ui/node_modules/*
+ui/node_modules
 ui/.env
 ui/dist
-./node_modules/*
+node_modules
 .env
 docker-compose.override.yml
 db.sqlite3
 **/__pycache__/
+.idea
