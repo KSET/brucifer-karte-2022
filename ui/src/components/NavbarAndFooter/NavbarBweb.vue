@@ -133,8 +133,8 @@ export default {
 .overlay-content {
   position: relative;
   width: 100%;
-  text-align: center;
-  margin-top: 30px;
+  text-align: left;
+  margin-top: 4rem;
 }
 
 .overlay-content.bw {
@@ -144,10 +144,9 @@ export default {
 
 
 .overlay-element {
-  width: 100%;
-  padding: 5%;
+  padding-left: 5%;
   text-decoration: none;
-  font-size: 36px;
+  font-size: 22px;
   color: black;
   display: block;
   transition: 0.3s;

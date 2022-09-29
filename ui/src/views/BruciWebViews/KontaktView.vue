@@ -37,6 +37,12 @@ export default {
     document.getElementById("nav-ulaznice").style.textDecoration = "none";
     document.getElementById("nav-sponsors").style.textDecoration = "none";
     document.getElementById("nav-kontakt").style.textDecoration = "underline";
+
+    document.getElementById("nav-naslovnica").style.fontWeight = "400";
+    document.getElementById("nav-lineup").style.fontWeight = "400";
+    document.getElementById("nav-ulaznice").style.fontWeight = "400";
+    document.getElementById("nav-sponsors").style.fontWeight = "400";
+    document.getElementById("nav-kontakt").style.fontWeight = "700";
   }
 }
 </script>

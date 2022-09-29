@@ -57,33 +57,33 @@
 
           <div class="sidbar-element" v-if="privilege == '1'" @click="toggleDropdownLineup">
             <RouterElement class="overlay-element"
-              style="display: inline-block; width: 30%; border-bottom: none; text-align: right;" :name="'Izvođači'">
+              style="left: 0%; position: abosolute; display: inline-block;" :name="'Izvođači'">
             </RouterElement>
             <img v-if="this.showDropdownLineup==false" class="dropdown-icon"
               src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownLineup">
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownLineup">
 
           </div>
-          <RouterElement id="dpL11" class="overlay-element" @click="toggleNav()" :name="'Pregled Izvođača'"
+          <RouterElement id="dpL11" class="overlay-element" @click="toggleNav()" :name="'Pregled Izvođača'" style="margin-left: 30px;"
             :link="'/admin/lineup-list'">
           </RouterElement>
-          <RouterElement id="dpL21" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Izvođača'"
+          <RouterElement id="dpL21" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Izvođača'" style="margin-left: 30px;"
             :link="'/admin/lineup-add/0'">
           </RouterElement>
 
           <div class="sidbar-element" v-if="privilege == '1'" @click="toggleDropdownSponsors">
             <RouterElement class="overlay-element"
-              style="display: inline-block; width: 30%; border-bottom: none; text-align: right;" :name="'Sponzori'">
+              style="left: 0%; position: abosolute; display: inline-block;" :name="'Sponzori'">
             </RouterElement>
             <img v-if="this.showDropdownSponsors==false" class="dropdown-icon" style="display: inline-block"
               src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownSponsors">
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownSponsors">
 
           </div>
-          <RouterElement id="dpS11" class="overlay-element" @click="toggleNav()" :name="'Pregled Sponzora'"
+          <RouterElement id="dpS11" class="overlay-element" @click="toggleNav()" :name="'Pregled Sponzora'" style="margin-left: 30px;"
             :link="'/admin/sponsors-list'">
           </RouterElement>
-          <RouterElement id="dpS21" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Sponzora'"
+          <RouterElement id="dpS21" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Sponzora'" style="margin-left: 30px;"
             :link="'/admin/sponsors-add/0'">
           </RouterElement>
 
@@ -337,6 +337,8 @@ export default {
   }
 
   .dropdown-icon {
+        margin-bottom: 7px;
+
     padding-left: 40px;
     padding-bottom: 10px,
   }

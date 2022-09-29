@@ -129,7 +129,7 @@ export default {
     border: none;
     background: none;
     width: 100%;
-    text-align: left;
+    text-align: left !important;
     cursor: pointer;
     outline: none;
     display: block;

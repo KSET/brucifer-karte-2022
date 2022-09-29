@@ -49,6 +49,12 @@ export default {
           document.getElementById("nav-sponsors").style.textDecoration = "underline";
           document.getElementById("nav-kontakt").style.textDecoration = "none";
 
+          document.getElementById("nav-naslovnica").style.fontWeight = "400";
+          document.getElementById("nav-lineup").style.fontWeight = "400";
+          document.getElementById("nav-ulaznice").style.fontWeight = "400";
+          document.getElementById("nav-sponsors").style.fontWeight = "700";
+          document.getElementById("nav-kontakt").style.fontWeight = "400";
+
           this.users = response.data;
           if (this.users[this.users.length - 1].visible == "0") {
             this.users = [];
