@@ -1,7 +1,7 @@
 <template>
   <div class="lineupp">
     <Sidebar />
-    <div class="admin-page-container">
+    <div class="admin-page-container" style="overflow: auto;">
 
       <div class="header">
         <h1 class="page-title">Izvođači</h1>
@@ -11,7 +11,7 @@
 
         <div class="switchdiv" :class="$style.forceNewLine">
 
-          <h1 class="textfield" style="display: inline;">Prikaz lineupa na brucwebu </h1>
+          <h1 class="textfield" style="display: inline;">visible </h1>
 
           <label class="switch" @click="toggleVisibility">
             <input id="switch" type="checkbox" @input="changeVisible">
@@ -27,9 +27,11 @@
 
 <style lang="scss" module>
   :global(#app) .forceNewLine {
-    display: block;
-    position: relative;
-    text-align: right;
+    @media screen and (max-width: 550px) {
+      display: block;
+      position: relative;
+      text-align: right;
+    }
   }
 </style>
 

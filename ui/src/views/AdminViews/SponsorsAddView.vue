@@ -24,7 +24,7 @@
                         Odaberi PNG
                     </label>
 
-                    <h1 class="textfield">Prikaz na brucwebu </h1>
+                    <h1 class="textfield">visible </h1>
 
                     <label class="switch">
                         <input id="switchSponsors" type="checkbox">

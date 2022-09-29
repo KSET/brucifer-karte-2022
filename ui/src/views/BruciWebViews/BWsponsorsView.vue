@@ -63,6 +63,7 @@ export default {
 <style>
 .sponsors {
   padding: 3.14159em;
+  padding-top: 5.5em;
 
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));

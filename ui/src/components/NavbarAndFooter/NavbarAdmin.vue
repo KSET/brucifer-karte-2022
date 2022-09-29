@@ -283,6 +283,7 @@ export default {
   padding-top: 3%;
   padding-bottom: 3%;
   padding-right: 5%;
+  padding: 3% 5%;
 
   font-family: 'Montserrat';
   font-style: normal;
