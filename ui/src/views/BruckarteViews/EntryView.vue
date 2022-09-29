@@ -17,13 +17,14 @@
         </div>
         <div class="grid-item grid1-item2" id="b">
             <button class="person"
+                :class="$style.person"
                 v-bind:style="[(this.id==guest.id) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]"
                 v-for="guest in guests" :key="guest.class" @click="chooseGuest(guest)">
                 <p><strong>{{ guest.name }} {{ guest.surname }}</strong></p>
                 <p>{{ guest.tag }} </p>
             </button>
         </div>
-        <div class="grid-item grid1-item3" id="c">
+        <div class="grid-item grid1-item3" :class="{[$style.cFix]: true, [$style.cFixExpanded]: this.tag === 'Brucoši'}" id="c">
             <div class="grid-container2">
                 <h1 class="textfield span2">Ime </h1>
                 <input readonly class="inputfield span3" :disabled="this.id==''" type="text" @input="changevalue"
@@ -36,7 +37,7 @@
                 <h1 v-if="this.tag == 'Brucoši'" class="textfield span2">JMBAG </h1>
                 <input v-if="this.tag == 'Brucoši'" class="inputfield span3" readonly type="text" v-model="jmbag">
 
-                <h1 v-if="this.tag == 'Brucoši'" class="textfield">Karta </h1>
+                <h1 v-if="this.tag == 'Brucoši'" class="textfield" :class="$style.span2Sm">Karta </h1>
 
                 <button disabled v-if="this.tag == 'Brucoši' &&  this.bought == '1'" class="bttn button2-yes"
                     @click="changeBought(guest, '0')">
@@ -47,7 +48,7 @@
                     <img class="va" src="../../assets/icons/no-icon.svg">
                 </button>
                 <br v-if="this.tag == 'Brucoši'" class="hidedesktop showmobile">
-                <h1 class="textfield">Ulaz </h1>
+                <h1 class="textfield" :class="$style.span2Sm">Ulaz </h1>
 
                 <button v-if="this.entered == '1'" type="button" :disabled="this.id==''" class="bttn button2-yes"
                     @click="changeEntered(guest, '0')">
@@ -58,12 +59,40 @@
                     <img class="va" src="../../assets/icons/no-icon.svg">
                 </button>
 
-                <h1 v-if="this.tag == 'Brucoši'" class="textfield span2" style="padding-bottom:16px">Potvrda </h1>
+                <h1 v-if="this.tag == 'Brucoši'" class="textfield span2">Potvrda </h1>
                 <h1 v-if="this.tag == 'Brucoši'" class="textfield span3">{{this.confCode}} </h1>
             </div>
         </div>
     </div>
 </template>
+
+<style module lang="scss">
+    .person {
+
+        p {
+            font-size: .6em;
+        }
+    }
+
+    .span2Sm {
+        @media screen and (max-width: 550px) {
+            grid-column: span 2;
+        }
+    }
+
+    :global(#flex) .cFix {
+        @media screen and (max-width: 550px) {
+            display: flex !important;
+            flex-direction: column;
+            height: fit-content;
+            justify-content: flex-start;
+
+            &.cFixExpanded {
+                height: 100%;
+            }
+        }
+    }
+</style>
 
 <script>
 import axios from 'axios';
@@ -369,7 +398,6 @@ export default {
 
     #c {
         order: 2;
-        height: 50% !important;
     }
 }
 

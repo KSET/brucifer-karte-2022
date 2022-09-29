@@ -1,22 +1,23 @@
 <template>
-  <div class="grid">
-    <div class="card" style="height: 40%; border: none;" v-for="lineup in lineups" :key="lineup.id">
+  <div>
+    <div class="grid">
+      <div class="card" style="height: 40%; border: none;" v-for="lineup in lineups" :key="lineup.id">
+        <img class="ccard-img" v-bind:src="lineup.image"
+          v-bind:style="[(lineup.visible=='0') ? {opacity:'0.25'}: { opacity:'1'}]">
+        <div class="ccard-body">
+          <h3 class="name"> {{lineup.name}}</h3>
 
-      <img class="ccard-img" v-bind:src="lineup.image"
-        v-bind:style="[(lineup.visible=='0') ? {opacity:'0.25'}: { opacity:'1'}]">
-      <div class="ccard-body">
-        <h3 class="name"> {{lineup.name}}</h3>
-
-        <div class="ccard-buttons">
-          <button @click="changelineuporder(lineup, 'b')" id="b4" class="ccard-button">
-            <img src="../../assets/icons/arrow-left-icon.svg">
-          </button>
-          <button @click="editlineup(lineup)" class="ccard-button" style="padding-bottom: 5px;">
-            <img src="../../assets/icons/edit-icon.svg">
-          </button>
-          <button @click="changelineuporder(lineup, 'f')" id="next" class="ccard-button">
-            <img src="../../assets/icons/arrow-right-icon.svg">
-          </button>
+          <div class="ccard-buttons">
+            <button @click="changelineuporder(lineup, 'b')" id="b4" class="ccard-button">
+              <img src="../../assets/icons/arrow-left-icon.svg">
+            </button>
+            <button @click="editlineup(lineup)" class="ccard-button" style="padding-bottom: 5px;">
+              <img src="../../assets/icons/edit-icon.svg">
+            </button>
+            <button @click="changelineuporder(lineup, 'f')" id="next" class="ccard-button">
+              <img src="../../assets/icons/arrow-right-icon.svg">
+            </button>
+          </div>
         </div>
       </div>
     </div>

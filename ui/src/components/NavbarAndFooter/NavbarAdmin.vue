@@ -1,6 +1,6 @@
 <template>
   <div class="navbar admin">
-    <router-link style="left:  1.7rem !important;" class="navbar-title" to="/admin/">
+    <router-link style="left:  1.7rem !important;" class="navbar-title" :class="$style.hideOnSmall" to="/admin/">
       #BRUCIFER
     </router-link>
 
@@ -179,6 +179,13 @@ export default {
 
 
 </script>
+<style module lang="scss">
+  .hideOnSmall {
+    @media screen and (max-width: 369px) {
+      display: none;
+    }
+  }
+</style>
 <style lang="scss">
 .navbar {
   overflow: hidden;

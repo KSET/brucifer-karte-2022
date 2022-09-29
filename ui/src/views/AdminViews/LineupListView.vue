@@ -9,7 +9,7 @@
           <img src="../../assets/icons/add-icon.svg">
         </router-link>
 
-        <div class="switchdiv">
+        <div class="switchdiv" :class="$style.forceNewLine">
 
           <h1 class="textfield" style="display: inline;">Prikaz lineupa na brucwebu </h1>
 
@@ -24,6 +24,14 @@
     </div>
   </div>
 </template>
+
+<style lang="scss" module>
+  :global(#app) .forceNewLine {
+    display: block;
+    position: relative;
+    text-align: right;
+  }
+</style>
 
 <script>
 import LineupTable from '@/components/AdminPanel/LineupTable.vue'

@@ -1,16 +1,16 @@
 <template>
   <div class="users">
     <Sidebar />
-    <div class="admin-page-container">
+    <div class="admin-page-container" :class="$style.flexi">
       <div class="page-header user-page">
         <h1 class="page-title user-title">Korisnici</h1>
         <button class="button-icon"> <img class="add-icon user-icon" src="@/assets/icons/add-icon.svg"></button>
         <input @input="searchUser" type="text" class="nosubmit search" placeholder="Unesi ime/prezime/email"
           v-model="search" style="display: inline-block; margin-top: 0px; position: relative;">
       </div>
-      <div class=row style="height: 34.375rem">
-        <table id="guests" style="height: 34.375rem">
-          <tbody style="height: 34.375rem">
+      <div class=row>
+        <table id="guests">
+          <tbody>
             <div class="users-container" v-for="user in users" :key="user.id">
               <div class="users-element hidedesktop hidetablett showmobile"><button class="button-priv"
                   style="border: none; opacity: 0.25;" @click="deleteUser(user)">
@@ -46,6 +46,21 @@
 
 </template>
 
+<style module lang="scss">
+  :global(#app) .flexi {
+    display: flex;
+    flex-direction: column;
+
+    :global(.row) {
+      overflow: scroll;
+      flex: 1;
+
+      tbody {
+        height: initial;
+      }
+    }
+  }
+</style>
 
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
