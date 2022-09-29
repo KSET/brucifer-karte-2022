@@ -43,20 +43,6 @@ export default {
         created() {
             axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?ordering=order&search=1&search_fields=visible',)
                 .then(response => {
-
-                    document.getElementById("nav-naslovnica").style.textDecoration = "none";
-                    document.getElementById("nav-lineup").style.textDecoration = "underline";
-                    document.getElementById("nav-lineup").style.textDecoration = "bold";
-                    document.getElementById("nav-ulaznice").style.textDecoration = "none";
-                    document.getElementById("nav-sponsors").style.textDecoration = "none";
-                    document.getElementById("nav-kontakt").style.textDecoration = "none";
-
-                    document.getElementById("nav-naslovnica").style.fontWeight = "400";
-                    document.getElementById("nav-lineup").style.fontWeight = "700";
-                    document.getElementById("nav-ulaznice").style.fontWeight = "400";
-                    document.getElementById("nav-sponsors").style.fontWeight = "400";
-                    document.getElementById("nav-kontakt").style.fontWeight = "400";
-
                     this.users = response.data;
                     if (this.users[this.users.length - 1].visible == "0") {
                         this.users = [];

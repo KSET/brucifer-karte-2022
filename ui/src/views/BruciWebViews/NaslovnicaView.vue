@@ -32,18 +32,6 @@ export default {
 
   },
   mounted() {
-    document.getElementById("nav-naslovnica").style.textDecoration = "underline";
-    document.getElementById("nav-lineup").style.textDecoration = "none";
-    document.getElementById("nav-ulaznice").style.textDecoration = "none";
-    document.getElementById("nav-sponsors").style.textDecoration = "none";
-    document.getElementById("nav-kontakt").style.textDecoration = "none";
-
-    document.getElementById("nav-naslovnica").style.fontWeight = "700";
-    document.getElementById("nav-lineup").style.fontWeight = "400";
-    document.getElementById("nav-ulaznice").style.fontWeight = "400";
-    document.getElementById("nav-sponsors").style.fontWeight = "400";
-    document.getElementById("nav-kontakt").style.fontWeight = "400";
-
     var seconds = new Date().getTime() / 1000;
     this.time = (1668283200 - (seconds)) * 1000;
   },
