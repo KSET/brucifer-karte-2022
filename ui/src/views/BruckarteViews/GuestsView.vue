@@ -1,5 +1,5 @@
 <template>
-  <div class="guestss" style="margin-top: 0px;">
+  <div class="guestss" style="margin-top: 3.75rem;">
     <div class="header guests">
 
       <input class="nosubmit search" @input="searchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
