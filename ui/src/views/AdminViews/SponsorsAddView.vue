@@ -1,7 +1,7 @@
 <template>
     <div id="sponsors-add">
         <Sidebar />
-        <div class="admin-page-container">
+        <div class="admin-page-container" style="margin-top: 0px; overflow: auto;">
             <div class="header">
                 <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje sponzora</h1>
                 <h1 v-else class="page-title">Uređivanje sponzora</h1>
@@ -23,6 +23,14 @@
                     <label for="file-upload" class="button white" style="margin-top: 0px;">
                         Odaberi PNG
                     </label>
+
+                    <h1 class="textfield">Prikaz na brucwebu </h1>
+
+                    <label class="switch">
+                        <input id="switchSponsors" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+
                     <input id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
 
                     <h1 class="textfield">E-mail </h1>
@@ -76,6 +84,7 @@ export default {
             len: '',
             nextId: '',
             nextOrder: '',
+            visible:'',
             url: '',
             order: '',
             email: '',
@@ -115,6 +124,12 @@ export default {
 
                     this.currentImage = this.sponsorsInstance.image;
 
+                    this.visible = this.sponsorsInstance.visible;
+                    if (this.visible == '1') {
+                        document.getElementById("switchSponsors").checked = true;
+                    } else {
+                        document.getElementById("switchSponsors").checked = false;
+                    }
                 })
 
         } else {
@@ -134,14 +149,11 @@ export default {
             this.message = "";
         },
         deleteSponsors() {
-            store.commit('setreroutePage', "1");
-
             axios.delete(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/",
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                 {
                     headers: {
                         "Content-Type": "multipart/form-data"
-
                     }
                 },
 
@@ -156,7 +168,11 @@ export default {
             formData.append("email", this.email);
             formData.append("guestCap", this.guestCap);
 
-
+            if (document.getElementById("switchSponsors").checked == true) {
+                    formData.append("visible", "1");
+                } else {
+                    formData.append("visible", "0");
+                }
 
             if (this.slug != "0") {
 
@@ -195,7 +211,7 @@ export default {
                         this.nextId = ids.length;
                     }
 
-                    var lastOrder = this.sponsorss[this.sponsorss.length - 1].order;
+                    var lastOrder = this.sponsorss[this.sponsorss.length - 2].order;
 
                     if (lastOrder[0] == "0") {
                         if (lastOrder == "09") {

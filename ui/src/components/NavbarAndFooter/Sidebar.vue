@@ -117,7 +117,6 @@ export default {
     left: 0;
     background-color: white;
     overflow-x: hidden;
-    padding-top: 20px;
 }
 
 /* Style the sidenav links and the dropdown button */

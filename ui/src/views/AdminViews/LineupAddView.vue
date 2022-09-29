@@ -125,13 +125,11 @@ export default {
             this.message = "";
         },
         deleteLineup() {
-            store.commit('setreroutePage', "1");
             axios.delete(process.env.VUE_APP_BASE_URL + "/lineup/" + this.id + "/",
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                 {
                     headers: {
                         "Content-Type": "multipart/form-data"
-
                     }
                 },
 
