@@ -52,6 +52,7 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
     'https://brucosijada.kset.org',
+    'https://bruc-test.josip.igr.ec',
 ]
 
 MIDDLEWARE = [
