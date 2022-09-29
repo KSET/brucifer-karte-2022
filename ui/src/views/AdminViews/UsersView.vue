@@ -154,8 +154,7 @@ export default {
       var to_user_name = user.name.split(" ")[0];
  
       var email = user.email
-      // obrisi liniju dolje kad bude spremno za produkciju
-      email = "pavle.ergovic@kset.org"
+  
       axios.post('http://localhost:8000/api/mailer/',
         {
           id: nextId, subject: "[#BRUCIFER22] Promjena privilegije",

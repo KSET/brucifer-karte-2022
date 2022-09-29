@@ -179,9 +179,7 @@ export default {
 
 
       var email = guest.name[0].toLowerCase() + guest.surname[0].toLowerCase() + jmbagslice + "@fer.hr";
-      console.log(email);
-      // obrisi liniju dolje kad bude spremno za produkciju
-      email = "pavleergovic@gmail.com"
+   
       axios.post('http://localhost:8000/api/mailer/',
         {
           id: nextId, subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
