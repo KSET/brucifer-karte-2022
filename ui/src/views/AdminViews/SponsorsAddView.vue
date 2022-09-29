@@ -1,6 +1,4 @@
 <template>
-
-
     <div id="sponsors-add">
         <Sidebar />
         <div class="admin-page-container">

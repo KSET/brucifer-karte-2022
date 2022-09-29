@@ -35,6 +35,16 @@
             "slug":"0",
             "visible":"0"
         }
+    },
+    {
+        "model":"bruc.Sponsors",
+        "fields":{
+            "id":314159,
+            "name":"SPONSORS_VISIBILITY",
+            "order":"314159",
+            "slug":"0",
+            "visible":"0"
+        }
     }
    
 ]
