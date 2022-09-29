@@ -136,14 +136,15 @@ export default {
         privilege_name = "Ništa- nažalost, tvoj pristup stranici je obustavljen";
       }
 
-
+      var to_user_name = user.name.split(" ")[0];
+ 
       var email = user.email
       // obrisi liniju dolje kad bude spremno za produkciju
       email = "pavle.ergovic@kset.org"
       axios.post('http://localhost:8000/api/mailer/',
         {
           id: nextId, subject: "[#BRUCIFER22] Promjena privilegije",
-          name: user.name,
+          name: to_user_name,
           privilege_name: privilege_name,
           to_mail: email
         },
@@ -152,7 +153,7 @@ export default {
         axios.post('http://localhost:8000/api/mailer/' + nextId + '/send_mail/',
           {
             subject: "[#BRUCIFER22] Promjena privilegije",
-            name: user.name,
+            name: to_user_name,
             privilege_name: privilege_name,
             to_mail: email
           },
