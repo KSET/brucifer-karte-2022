@@ -43,6 +43,11 @@ export default {
       axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
         .then(response => {
           this.users = response.data;
+          if (this.users[this.users.length - 1].visible == "0") {
+            this.users = [];
+          } else {
+            this.users.splice(this.users.length - 1, 1);
+          }
 
 
         })

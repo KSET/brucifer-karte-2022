@@ -41,7 +41,7 @@ export default {
 
     methods: {
         created() {
-            axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?ordering=order',)
+            axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?ordering=order&search=1&search_fields=visible',)
                 .then(response => {
                     this.users = response.data;
                     if (this.users[this.users.length - 1].visible == "0") {

@@ -106,7 +106,7 @@ export default {
         }
 
         if (this.slug != '0') {
-            axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.slug,)
+            axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.slug+"&search_fields=slug")
                 .then(response => {
                     this.sponsors = response.data;
                     if (this.sponsors.length == 0) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="guestss" style="margin-top: 3.75rem;">
+  <div class="guestss" style="margin-top: 0px;">
     <div class="header guests">
 
       <input class="nosubmit search" @input="searchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
@@ -30,7 +30,7 @@
       </button>
 
       <h1 class="textfield">Potvrda </h1>
-      <h1 class="textfield">{{guest.confCode}} </h1>
+      <h1 class="textfield">{{this.confCode}} </h1>
     </div>
 
   </div>
@@ -41,17 +41,15 @@
 
 
 <script>
-import emailjs from 'emailjs-com';
+  import { uuid } from 'vue-uuid'; 
 import GuestsAdd from '@/components/Bruckarte/GuestsAdd.vue'
 import GuestsTable from '@/components/Bruckarte/GuestsTable.vue'
 import axios from 'axios'
 export default {
   name: 'GuestsView',
   components: {
-
     GuestsTable,
     GuestsAdd
-
   },
   data() {
     return {
@@ -68,6 +66,9 @@ export default {
       entered: '',
       deleted: '',
       nomatch: '',
+      confCode:'',
+
+      uuid: uuid.v1(),
 
     }
   },
@@ -92,11 +93,12 @@ export default {
       }
     },
     changebought(guest, changenum) {
+
       if(this.name=="" || this.surname==""){
         window.alert("Ispunite polja ime i prezime!")
       }else{
       if (changenum == 1) {
-        var confCode = (Math.random() + 1).toString(36).substring(7) + (Math.random() + 1).toString(36).substring(7);
+        var confCode = this.$uuid.v1();
 
       } else {
         var confCode = "";
@@ -108,6 +110,7 @@ export default {
         .then(() => {
           guest.bought = changenum;
           guest.confCode = confCode;
+          this.confCode = confCode;
 
           if (changenum == 1) {
             this.sendMail(guest);
@@ -125,12 +128,17 @@ export default {
             this.name = this.guest.name;
             this.surname = this.guest.surname;
             this.jmbag = this.guest.jmbag;
+            this.jmbag = this.guest.jmbag;
+            this.confCode = this.guest.confCode;
+
           } else if (this.guests.length == 0) {
             this.nomatch = "JMBAG nije pronađen!";
             this.id = "";
             this.name = "";
             this.surname = '';
             this.jmbag = '';
+            this.confCode = '';
+
           }
           else {
             this.nomatch = "";
@@ -138,6 +146,8 @@ export default {
             this.name = '';
             this.surname = '';
             this.jmbag = '';
+            this.confCode = '';
+
             this.bought = '0';
           }
         })

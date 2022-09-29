@@ -86,7 +86,7 @@ export default {
         }
 
         if (this.slug != '0') {
-            axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?search=' + this.slug,)
+            axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?search=' + this.slug+"&search_fields=slug")
                 .then(response => {
                     this.lineup = response.data;
                     if (this.lineup.length == 0) {

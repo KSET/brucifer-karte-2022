@@ -47,6 +47,8 @@ export default {
       axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
         .then(response => {
           this.sponsors = response.data;
+          this.sponsors.splice(this.sponsors.length - 1, 1);
+
         });
     },
     editsponsor(sponsor) {

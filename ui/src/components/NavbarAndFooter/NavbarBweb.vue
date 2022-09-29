@@ -7,12 +7,12 @@
 
       <RouterElement class="navbar-element hidetablet" :name="'Naslovnica'" :link="'/'"></RouterElement>
 
-      <RouterElement v-if="this.visible=='1'" class="navbar-element hidetablet" :name="'Izvođači'" :link="'/lineup'">
+      <RouterElement v-if="this.lineupVisible=='1'" class="navbar-element hidetablet" :name="'Izvođači'" :link="'/lineup'">
       </RouterElement>
 
       <RouterElement class="navbar-element hidetablet" :name="'Ulaznice'" :link="'/ulaznice'"></RouterElement>
 
-      <RouterElement class="navbar-element hidetablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
+      <RouterElement v-if="this.sponsorsVisible=='1'" class="navbar-element hidetablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
 
       <RouterElement class="navbar-element hidetablet" :name="'Kontakt'" :link="'/kontakt'"></RouterElement>
 
@@ -28,7 +28,7 @@
           <RouterElement class=" overlay-element" :name="'Naslovnica'" :link="'/'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement v-if="this.visible=='1'" class="overlay-element " :name="'Izvođači'" :link="'/lineup'"
+          <RouterElement v-if="this.lineupVisible=='1'" class="overlay-element " :name="'Izvođači'" :link="'/lineup'"
             @click="toggleNav()">
           </RouterElement>
 
@@ -62,7 +62,8 @@ export default {
   data() {
     return {
       showNav: false,
-      visible: '1',
+      lineupVisible: '1',
+      sponsorsVisible:'1',
     }
   },
   created() {
@@ -71,9 +72,19 @@ export default {
       .then(response => {
         var users = response.data;
         if (users.length == 0) {
-          this.visible = 0;
+          this.lineupVisible = 0;
         } else {
-          this.visible = users[users.length - 1].visible;
+          this.lineupVisible = users[users.length - 1].visible;
+        }
+      })
+      
+      axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
+      .then(response => {
+        var users = response.data;
+        if (users.length == 0) {
+          this.sponsorsVisible = 0;
+        } else {
+          this.sponsorsVisible = users[users.length - 1].visible;
         }
       })
   },

@@ -79,19 +79,15 @@ class UsersViewSet(viewsets.ModelViewSet):
 class LineupViewSet(viewsets.ModelViewSet):
     queryset = Lineup.objects.all()
     serializer_class = LineupSerializer
-    filter_backends = [filters.SearchFilter,filters.OrderingFilter]
-
-
-    search_fields = ['slug']
+    filter_backends = [DynamicSearchFilter,filters.OrderingFilter]
     ordering_fields = ['order']
 
 
 class SponsorsViewSet(viewsets.ModelViewSet):
     queryset = Sponsors.objects.all()
     serializer_class = SponsorsSerializer
-    filter_backends = [filters.SearchFilter,filters.OrderingFilter]
+    filter_backends = [DynamicSearchFilter,filters.OrderingFilter]
 
-    search_fields = ['slug']
     ordering_fields = ['order']
 
 class ContactViewSet(viewsets.ModelViewSet):

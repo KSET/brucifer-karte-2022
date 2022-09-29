@@ -25,7 +25,6 @@
             <button class="button submit">Dodaj</button>
 
           </form>
-          <button @click="sendmail" class="button submit">mail</button>
 
         </div>
         <div class="kontakt-table">
