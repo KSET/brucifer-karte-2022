@@ -77,3 +77,8 @@ cd brucifer-karte
 ```
 docker-compose up -d --build
 ```
+## After docker is up
+Run only the first time you are deploying the app
+```
+python manage.py loaddata init_data.json
+```
