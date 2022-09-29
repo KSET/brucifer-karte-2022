@@ -57,6 +57,8 @@
 </template>
   
 <script>
+import { uuid } from 'vue-uuid'; 
+
 import axios from 'axios'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import store from '@/store/index.js';
@@ -90,6 +92,9 @@ export default {
             email: '',
             guestCap: '',
             formData: '',
+
+            uuid: uuid.v1(),
+
         };
     },
     computed: {
@@ -160,6 +165,9 @@ export default {
             )
         },
         postSponsors() {
+            if (this.currentImage == undefined) {
+                window.alert("Uploadajte fotografiju")
+            } else {
             store.commit('setreroutePage', "1");
 
             let formData = new FormData();
@@ -230,13 +238,12 @@ export default {
                     this.nextId = 0;
                     this.nextOrder = "00";
                 }
-                let r = (Math.random() + 1).toString(36).substring(7);
 
 
                 formData.append("id", this.nextId);
                 formData.append("order", this.nextOrder);
                 formData.append("image", this.currentImage);
-                formData.append("slug", r);
+                formData.append("slug", this.$uuid.v1());
 
 
 
@@ -251,7 +258,7 @@ export default {
             }
 
 
-
+        }
         },
     },
 
