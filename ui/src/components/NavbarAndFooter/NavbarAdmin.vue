@@ -212,7 +212,17 @@ export default {
   letter-spacing: -0.022em;
   font-style: normal;
   background: #DC5E88;
+  overflow: initial;
+}
 
+.navbar.bw::after {
+  position: absolute;
+  right: 0;
+  bottom: -8px;
+  left: 0;
+  height: 8px;
+  content: "";
+  background: linear-gradient(#DC5E88, transparent);
 }
 
 .navbar-title {
