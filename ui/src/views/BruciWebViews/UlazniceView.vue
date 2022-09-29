@@ -98,6 +98,8 @@ p {
   padding-top: 4.5%;
   padding-left: 2.73%;
   padding-right: 4.5%;
+  padding-bottom: 4.5%;
+
 
 
 }
