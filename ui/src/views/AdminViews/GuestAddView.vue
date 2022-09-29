@@ -20,8 +20,8 @@
                     </select>
 
 
-                    <h1 class="textfield">JMBAG: </h1>
-                    <input class="inputfield" type="text" v-model="jmbag">
+                    <h1 id="jmbagselect" class="textfield">JMBAG: </h1>
+                    <input id="jmbagselect" class="inputfield" type="text" v-model="jmbag">
 
                     <h1 class="textfield">Karta: </h1>
 
@@ -67,8 +67,8 @@ export default {
         return {
             items: [],
             guests: [],
-            karta: '0',
-            ulaz: '0',
+            karta: '1',
+            ulaz: '1',
             guest: '',
             id: '',
             name: '',

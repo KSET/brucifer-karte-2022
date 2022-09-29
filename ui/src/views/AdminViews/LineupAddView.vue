@@ -141,8 +141,6 @@ export default {
             if (this.currentImage == undefined) {
                 window.alert("Uploadajte fotografiju")
             } else {
-
-
                 let formData = new FormData();
                 formData.append("name", this.name);
                 if (document.getElementById("switchLineup").checked == true) {
