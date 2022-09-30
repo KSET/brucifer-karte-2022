@@ -182,9 +182,7 @@ export default {
     },
     importGuests(event) {
       this.file = event.target.files ? event.target.files[0] : null;
-      readXlsxFile(this.file).then((rows) => {
-
-
+      readXlsxFile(this.file).then(async (rows) => {
         const gosti = [];
 
         for (let index = 1; index < rows.length; index++) {
@@ -231,13 +229,13 @@ export default {
           }
 
           this.idsguests.push(String(nextId));
-          axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
+          await axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
             { id: obj.id, name: obj.name, surname: obj.surname, jmbag: obj.jmbag, tag: obj.tag, bought: obj.bought, entered: obj.entered },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           ).catch(function (error) {
             window.alert("IMPORT NEUSPJEŠAN ZA NEKE GOSTE");
           });
-
+          console.log(`Imported ${index}/${rows.length} guests`);
           gosti.push(obj);
         }
 
@@ -251,7 +249,7 @@ export default {
     },
     importUsers(event) {
       this.file = event.target.files ? event.target.files[0] : null;
-      readXlsxFile(this.file).then((rows) => {
+      readXlsxFile(this.file).then(async (rows) => {
 
 
         const users = [];
@@ -291,19 +289,16 @@ export default {
 
 
           this.idsusers.push(String(nextId));
-          axios.post(process.env.VUE_APP_BASE_URL + '/users/',
+          await axios.post(process.env.VUE_APP_BASE_URL + '/users/',
             { id: obj.id, name: obj.name, email: obj.email, privilege: obj.privilege },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           ).catch(function (error) {
             window.alert("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE");
           });
+          console.log(`Imported ${i}/${rows.length} users`);
 
           users.push(obj);
         }
-
-
-
-
       })
 
 
