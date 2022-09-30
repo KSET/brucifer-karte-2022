@@ -233,7 +233,7 @@ export default {
             { id: obj.id, name: obj.name, surname: obj.surname, jmbag: obj.jmbag, tag: obj.tag, bought: obj.bought, entered: obj.entered },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           ).catch(function (error) {
-            window.alert("IMPORT NEUSPJEŠAN ZA NEKE GOSTE");
+            console.error("IMPORT NEUSPJEŠAN ZA NEKE GOSTE", error);
           });
           console.log(`Imported ${index}/${rows.length} guests`);
           gosti.push(obj);
@@ -293,7 +293,7 @@ export default {
             { id: obj.id, name: obj.name, email: obj.email, privilege: obj.privilege },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           ).catch(function (error) {
-            window.alert("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE");
+            console.error("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE", error);
           });
           console.log(`Imported ${i}/${rows.length} users`);
 
