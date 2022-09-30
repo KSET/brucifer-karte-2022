@@ -22,7 +22,6 @@ class MailerViewSet(viewsets.ModelViewSet):
     def send_mail(self,request,pk):  
         subject = request.data.get('subject', '')
         msg = request.data.get('message', '')
-        msg="sta"
         to = request.data.get('to_mail', '')
 
         if(to[-8:-1]=="kset.or"):
