@@ -183,7 +183,7 @@ export default {
       axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
         {
           id: nextId, subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
-          name: guest.name,
+          name: this.name,
           confCode: guest.confCode,
           to_mail: email
         },
@@ -192,7 +192,7 @@ export default {
         axios.post(process.env.VUE_APP_BASE_URL + '/mailer/' + nextId + '/send_mail/',
           {
             subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
-            name: guest.name,
+            name: this.name,
             confCode: guest.confCode,
             to_mail: email
           },
