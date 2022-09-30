@@ -178,7 +178,7 @@ export default {
       }
 
 
-      var email = guest.name[0].toLowerCase() + guest.surname[0].toLowerCase() + jmbagslice + "@fer.hr";
+      var email = this.name[0].toLowerCase() + this.surname[0].toLowerCase() + jmbagslice + "@fer.hr";
    
       axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
         {
