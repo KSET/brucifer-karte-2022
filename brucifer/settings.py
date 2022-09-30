@@ -74,6 +74,10 @@ REST_FRAMEWORK = {
      'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8080',
+    'https://brucosijada.kset.org',
+    'https://bruc-test.josip.igr.ec',]
+
 ROOT_URLCONF = 'brucifer.urls'
 
 TEMPLATES = [
