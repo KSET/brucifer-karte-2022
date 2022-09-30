@@ -206,9 +206,12 @@ export default {
 
       var email = e_name + e_surname + jmbagslice + "@fer.hr";
 
+      var msg=this.name+" "+this.surname+" "+guest.confCode
+
       axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
         {
           id: nextId, subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
+          message: msg,
           name: this.name,
           confCode: guest.confCode,
           to_mail: email
@@ -218,6 +221,7 @@ export default {
         axios.post(process.env.VUE_APP_BASE_URL + '/mailer/' + nextId + '/send_mail/',
           {
             subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
+            message: msg,
             name: this.name,
             confCode: guest.confCode,
             to_mail: email

@@ -21,7 +21,7 @@ class MailerViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def send_mail(self,request,pk):  
         subject = request.data.get('subject', '')
-        #msg = request.data.get('message', '')
+        msg = request.data.get('message', '')
         msg="sta"
         to = request.data.get('to_mail', '')
 
