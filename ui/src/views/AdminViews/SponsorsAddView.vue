@@ -202,7 +202,7 @@ export default {
                             }
                         })
                 } else {
-                    if (this.sponsorss.length != 0) {
+                    if (this.sponsorss.length != 1) {
                         var ids = [];
 
                         this.sponsorss.forEach(element => {
