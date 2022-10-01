@@ -213,7 +213,7 @@ export default {
 
 
     .page-title {
-      font-size: 16px;
+      font-size: 26px;
     }
 
     .textfield {

@@ -33,10 +33,10 @@
 
                     <input id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
 
-                    <h1 class="textfield">E-mail </h1>
+                    <h1 class="textfield" style="width: 150%;">E-mail </h1>
                     <input required class="inputfield" type="text" v-model="email">
 
-                    <h1 class="textfield">Broj uzvanika </h1>
+                    <h1 class="textfield" style="width: 150%;">Broj uzvanika </h1>
                     <input required class="inputfield" type="text" v-model="guestCap">
 
                     <button v-if="(this.slug == '0')" class="button submit" style=" margin-top: 0px">Dodaj</button>
@@ -277,7 +277,7 @@ export default {
 
 @media screen and (max-width: 550px) {
     .button.submit.del {
-        margin-left: 50px;
+        margin-left: 70px !important;
     }
 
     .grid-container {

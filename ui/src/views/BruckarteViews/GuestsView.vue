@@ -248,11 +248,10 @@ export default {
 }
 
 .nosubmit.search {
-  position: relative;
+  position: absolute;
   margin-top: 2.375rem;
-  margin-left: 4%;
   width: 20%;
-  padding-left: 2.2rem;
+  left:6%;
 }
 
 .grid-container.guests {

@@ -30,33 +30,33 @@
 
       <div id="myNav" class="overlay admin">
         <div class="overlay-content admin">
-          <RouterElement class="overlay-element hidetablet showmobile"
+          <RouterElement class="overlay-element admin hidetablet showmobile"
             v-if="privilege == '1' || privilege == '3' || privilege == '4'" @click="toggleNav()" :name="'Brucoši'"
             :link="'/admin/guests'">
           </RouterElement>
-          <RouterElement class="overlay-element hidetablet showmobile"
+          <RouterElement class="overlay-element admin hidetablet showmobile"
             v-if="privilege == '1' || privilege == '2' || privilege == '4'" @click="toggleNav()" :name="'Ulaz'"
             :link="'/admin/entry'">
           </RouterElement>
-          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Tagovi'"
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Tagovi'"
             :link="'/admin/tags'">
           </RouterElement>
-          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Privilegije'"
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Privilegije'"
             :link="'/admin/privileges'"></RouterElement>
-          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Korisnici'"
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Korisnici'"
             :link="'/admin/users'">
           </RouterElement>
-          <RouterElement class="overlay-element" v-if="privilege == '1'" @click="toggleNav()" :name="'Uvoz'"
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Uvoz'"
             :link="'/admin/import'">
           </RouterElement>
 
-          <button class="overlay-element" v-if="privilege == '1'" @click="ExportData()">
+          <button class="overlay-element admin" v-if="privilege == '1'" @click="ExportData()">
             Izvoz
           </button>
 
 
           <div class="sidbar-element" v-if="privilege == '1'" @click="toggleDropdownLineup">
-            <RouterElement class="overlay-element" style="left: 0%; position: abosolute; display: inline-block;"
+            <RouterElement class="overlay-element admin" style="left: 0%; position: abosolute; display: inline-block;"
               :name="'Izvođači'">
             </RouterElement>
             <img v-if="this.showDropdownLineup==false" class="dropdown-icon"
@@ -64,15 +64,15 @@
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownLineup">
 
           </div>
-          <RouterElement id="dpL11" class="overlay-element" @click="toggleNav()" :name="'Pregled Izvođača'"
+          <RouterElement id="dpL11" class="overlay-element admin" @click="toggleNav()" :name="'Pregled Izvođača'"
             style="margin-left: 30px;" :link="'/admin/lineup-list'">
           </RouterElement>
-          <RouterElement id="dpL21" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Izvođača'"
+          <RouterElement id="dpL21" class="overlay-element admin" @click="toggleNav()" :name="'Dodavanje Izvođača'"
             style="margin-left: 30px;" :link="'/admin/lineup-add/0'">
           </RouterElement>
 
           <div class="sidbar-element" v-if="privilege == '1'" @click="toggleDropdownSponsors">
-            <RouterElement class="overlay-element" style="left: 0%; position: abosolute; display: inline-block;"
+            <RouterElement class="overlay-element admin" style="left: 0%; position: abosolute; display: inline-block;"
               :name="'Sponzori'">
             </RouterElement>
             <img v-if="this.showDropdownSponsors==false" class="dropdown-icon" style="display: inline-block"
@@ -80,16 +80,16 @@
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownSponsors">
 
           </div>
-          <RouterElement id="dpS11" class="overlay-element" @click="toggleNav()" :name="'Pregled Sponzora'"
+          <RouterElement id="dpS11" class="overlay-element admin" @click="toggleNav()" :name="'Pregled Sponzora'"
             style="margin-left: 30px;" :link="'/admin/sponsors-list'">
           </RouterElement>
-          <RouterElement id="dpS21" class="overlay-element" @click="toggleNav()" :name="'Dodavanje Sponzora'"
+          <RouterElement id="dpS21" class="overlay-element admin" @click="toggleNav()" :name="'Dodavanje Sponzora'"
             style="margin-left: 30px;" :link="'/admin/sponsors-add/0'">
           </RouterElement>
 
-          <RouterElement class="overlay-element" v-if="privilege == '1'" :name="'Dodaj Gosta'" @click="toggleNav()"
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Dodaj Gosta'" @click="toggleNav()"
             :link="'/admin/guests-add'"></RouterElement>
-          <RouterElement class="overlay-element" v-if="privilege == '1'" :name="'Kontakt'" @click="toggleNav()"
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Kontakt'" @click="toggleNav()"
             :link="'/admin/band-kontakt'"></RouterElement>
         </div>
       </div>
@@ -187,6 +187,10 @@ export default {
   }
 </style>
 <style lang="scss">
+.overlay-element.admin{
+  height: 2.5rem;
+}
+
 .navbar {
   overflow: hidden;
   position: absolute;
@@ -283,7 +287,6 @@ export default {
   padding-top: 3%;
   padding-bottom: 3%;
   padding-right: 5%;
-  padding: 3% 5%;
 
   font-family: 'Montserrat';
   font-style: normal;
@@ -343,7 +346,7 @@ export default {
   }
 
   .page-title {
-    font-size: 16px;
+    font-size: 26px;
   }
 
   .textfield {
