@@ -77,7 +77,7 @@ export default {
             return store.state.reroutePage;
         }
     },
-    mounted() {
+      created() {
         this.slug = this.$route.params.slug;
 
         if (this.reroutePage == "1") {
@@ -124,7 +124,9 @@ export default {
             this.progress = 0;
             this.message = "";
         },
-        deleteLineup() {
+          deleteLineup() {
+            store.commit('setreroutePage', "1");
+
             axios.delete(process.env.VUE_APP_BASE_URL + "/lineup/" + this.id + "/",
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                 {
@@ -135,12 +137,11 @@ export default {
 
             )
         },
-        postLineup() {
-            store.commit('setreroutePage', "1");
-
+         postLineup() {
             if (this.currentImage == undefined) {
                 window.alert("Uploadajte fotografiju")
             } else {
+                store.commit('setreroutePage', "1");
                 let formData = new FormData();
                 formData.append("name", this.name);
                 if (document.getElementById("switchLineup").checked == true) {
@@ -160,7 +161,7 @@ export default {
                         formData.append("image", this.currentImage);
                     }
 
-                    axios.put(process.env.VUE_APP_BASE_URL + "/lineup/" + this.id + "/", formData,
+                     axios.put(process.env.VUE_APP_BASE_URL + "/lineup/" + this.id + "/", formData,
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                         {
                             headers: {
@@ -214,7 +215,7 @@ export default {
 
 
 
-                    axios.post(process.env.VUE_APP_BASE_URL + "/lineup/", formData,
+                     axios.post(process.env.VUE_APP_BASE_URL + "/lineup/", formData,
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                         {
                             headers: {

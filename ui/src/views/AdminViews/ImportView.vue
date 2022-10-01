@@ -251,7 +251,6 @@ export default {
       this.file = event.target.files ? event.target.files[0] : null;
       readXlsxFile(this.file).then(async (rows) => {
 
-
         const users = [];
 
         for (let index = 1; index < rows.length; index++) {

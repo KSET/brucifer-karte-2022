@@ -103,7 +103,7 @@ export default {
         }
     },
 
-    mounted() {
+    created() {
         this.slug = this.$route.params.slug;
         if (this.reroutePage == "1") {
             store.commit('setreroutePage', "0");
