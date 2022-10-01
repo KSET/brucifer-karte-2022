@@ -44,11 +44,17 @@ export default {
             axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?ordering=order&search=1&search_fields=visible',)
                 .then(response => {
                     this.users = response.data;
-                    if (this.users[this.users.length - 1].visible == "0") {
-                        this.users = [];
-                    } else {
+                    var ids = [];
+                    this.users.forEach(element => {
+                        ids.push(element.id);
+                    });
+                    if (ids.includes(String(314159)) == true) {
                         this.users.splice(this.users.length - 1, 1);
+
+                    } else {
+                        this.users = [];
                     }
+
                 })
         },
         changeprivilege(user, changenum) {
