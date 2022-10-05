@@ -173,40 +173,42 @@ export default {
       var jmbagslice = guest.jmbag;
       if (jmbagslice.slice(0, 2) == "00") {
         jmbagslice = jmbagslice.slice(4, 9);
+      } else if (jmbagslice.slice(0, 2) == "01") {
+        jmbagslice = jmbagslice.slice(0, 9);
       } else {
         jmbagslice = jmbagslice.slice(2, 7);
       }
 
-      var e_name= this.name[0].toLowerCase()
-      if(e_name=="č"){
-        e_name="c";
-      }else if(e_name=="š"){
-        e_name="s";
-      }else if(e_name=="ž"){
-        e_name="z";
-      }else if(e_name=="đ"){
-        e_name="d";
-      }else if(e_name=="ć"){
-        e_name="c";
+      var e_name = this.name[0].toLowerCase()
+      if (e_name == "č") {
+        e_name = "c";
+      } else if (e_name == "š") {
+        e_name = "s";
+      } else if (e_name == "ž") {
+        e_name = "z";
+      } else if (e_name == "đ") {
+        e_name = "d";
+      } else if (e_name == "ć") {
+        e_name = "c";
       }
 
-      var e_surname= this.surname[0].toLowerCase()
-      if(e_surname=="č"){
-        e_surname="c";
-      }else if(e_surname=="š"){
-        e_surname="s";
-      }else if(e_surname=="ž"){
-        e_surname="z";
-      }else if(e_surname=="đ"){
-        e_surname="d";
-      }else if(e_surname=="ć"){
-        e_surname="c";
+      var e_surname = this.surname[0].toLowerCase()
+      if (e_surname == "č") {
+        e_surname = "c";
+      } else if (e_surname == "š") {
+        e_surname = "s";
+      } else if (e_surname == "ž") {
+        e_surname = "z";
+      } else if (e_surname == "đ") {
+        e_surname = "d";
+      } else if (e_surname == "ć") {
+        e_surname = "c";
       }
 
 
       var email = e_name + e_surname + jmbagslice + "@fer.hr";
 
-      var msg=this.name+" "+this.surname+" "+guest.confCode
+      var msg = this.name + " " + this.surname + " " + guest.confCode
 
       axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
         {
@@ -251,7 +253,7 @@ export default {
   position: absolute;
   margin-top: 2.375rem;
   width: 20%;
-  left:6%;
+  left: 6%;
 }
 
 .grid-container.guests {
