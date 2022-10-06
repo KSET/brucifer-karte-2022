@@ -29,8 +29,8 @@
 
       <button class="button-upload white" @click="exportExample(2)">Preuzmi CSV template</button>
 
-      <div class="list">
-        <ul style="list-style-type: circle;">
+      <div >
+        <ul class="list" >
           <li>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećem redu.
           </li>
           <li>Imena polja mogu biti: name, email, privilege.</li>
