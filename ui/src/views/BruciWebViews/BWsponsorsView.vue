@@ -32,19 +32,16 @@ export default {
       email: '',
       privilege: '',
     }
-
   },
   mounted() {
     this.created();
   },
-
   methods: {
     created() {
       axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order&search=1&search_fields=visible',)
         .then(response => {
           this.users = response.data;
-
-          var ids=[];
+          var ids = [];
           this.users.forEach(element => {
             ids.push(element.id);
           });
@@ -54,15 +51,10 @@ export default {
           } else {
             this.users = [];
           }
-
-
         })
     }
   }
-
 }
-
-
 </script>
 
 

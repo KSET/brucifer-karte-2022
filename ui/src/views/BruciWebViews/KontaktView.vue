@@ -4,7 +4,7 @@
       <section>
         <h1 class="bwh1">PR &amp; MARKETING:
         </h1>
-
+        
         <p>
           Antica Župić
           <br><br>
@@ -19,7 +19,6 @@
         </p>
 
       </section>
-
     </div>
     <Footer></Footer>
   </div>

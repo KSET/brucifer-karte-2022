@@ -26,7 +26,7 @@ export default {
 
     },
   mounted(){
-    if(((String(window.location.href).split("/"))[3])=="admin"){
+    if(((String(window.location.href).split("/"))[3])=="admin" || ((String(window.location.href).split("/"))[3])=="sponzori" ){
       this.navtype="bruckarte"
     }else{
       this.navtype="brucweb"

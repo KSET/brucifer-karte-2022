@@ -9,7 +9,7 @@
             <img class="image-preview hidetablet showmobile" style="display: block; margin-bottom: 5%; margin-left: 5%;"
                 :src="previewImage" alt="" />
 
-            <form class="lineup-form" @submit="postLineup">
+            <form onsubmit="return false" class="lineup-form">
                 <div class="grid-container">
 
                     <h1 class="textfield">Ime </h1>
@@ -19,7 +19,7 @@
                     <label for="file-upload" class="button white" style="margin-top: 0px;">
                         Odaberi PNG
                     </label>
-                    <input id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
+                    <input required id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
 
                     <h1 class="textfield">visible </h1>
 
@@ -28,8 +28,8 @@
                         <span class="slider round"></span>
                     </label>
 
-                    <button v-if="(this.slug == '0')" class="button submit">Dodaj</button>
-                    <button v-else class="button submit">Spremi promjene</button>
+                    <button v-if="(this.slug == '0')" class="button submit" @click="postLineup">Dodaj</button>
+                    <button v-else class="button submit" @click="postLineup">Spremi promjene</button>
 
                     <button v-if="(this.slug != '0')" class="button submit del" style="background-color: white"
                         @click="deleteLineup">
@@ -48,7 +48,6 @@
 <script>
 import axios from 'axios'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
-import store from '@/store/index.js';
 
 export default {
     name: "upload-image",
@@ -72,18 +71,8 @@ export default {
             formData: '',
         };
     },
-    computed: {
-        reroutePage() {
-            return store.state.reroutePage;
-        }
-    },
       created() {
         this.slug = this.$route.params.slug;
-
-        if (this.reroutePage == "1") {
-            store.commit('setreroutePage', "0");
-            this.$router.push({ path: '/admin/lineup-list/' });
-        }
 
         if (this.slug != '0') {
             axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?search=' + this.slug + "&search_fields=slug")
@@ -124,24 +113,21 @@ export default {
             this.progress = 0;
             this.message = "";
         },
-          deleteLineup() {
-            store.commit('setreroutePage', "1");
-
-            axios.delete(process.env.VUE_APP_BASE_URL + "/lineup/" + this.id + "/",
+          async deleteLineup() {
+            const resp = await axios.delete(process.env.VUE_APP_BASE_URL + "/lineup/" + this.id + "/",
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                 {
                     headers: {
                         "Content-Type": "multipart/form-data"
                     }
                 },
-
             )
+            this.$router.push({ path: '/admin/lineup-list/' });
         },
-         postLineup() {
+         async postLineup() {
             if (this.currentImage == undefined) {
                 window.alert("Uploadajte fotografiju")
             } else {
-                store.commit('setreroutePage', "1");
                 let formData = new FormData();
                 formData.append("name", this.name);
                 if (document.getElementById("switchLineup").checked == true) {
@@ -161,7 +147,7 @@ export default {
                         formData.append("image", this.currentImage);
                     }
 
-                     axios.put(process.env.VUE_APP_BASE_URL + "/lineup/" + this.id + "/", formData,
+                    const resp = await axios.put(process.env.VUE_APP_BASE_URL + "/lineup/" + this.id + "/", formData,
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                         {
                             headers: {
@@ -215,7 +201,7 @@ export default {
 
 
 
-                     axios.post(process.env.VUE_APP_BASE_URL + "/lineup/", formData,
+                    const resp= await axios.post(process.env.VUE_APP_BASE_URL + "/lineup/", formData,
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                         {
                             headers: {
@@ -223,8 +209,11 @@ export default {
                             }
                         },
                     )
+
+
                 }
 
+                this.$router.push({ path: '/admin/lineup-list/' });
 
 
             }

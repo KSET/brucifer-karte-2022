@@ -17,8 +17,8 @@
 
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
-
 import axios from 'axios'
+
 export default {
     name: 'UsersTable',
     components: { Footer },
@@ -33,12 +33,10 @@ export default {
             email: '',
             privilege: '',
         }
-
     },
     mounted() {
         this.created();
     },
-
     methods: {
         created() {
             axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?ordering=order&search=1&search_fields=visible',)
@@ -54,24 +52,6 @@ export default {
                     } else {
                         this.users = [];
                     }
-
-                })
-        },
-        changeprivilege(user, changenum) {
-            axios.put(process.env.VUE_APP_BASE_URL + '/users/' + user.id + '/',
-                { privilege: changenum },
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-            )
-                .then(() => {
-                    this.created();
-                })
-        },
-        deleteUser(user) {
-            axios.delete(process.env.VUE_APP_BASE_URL + '/users/' + user.id + '/',
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-            )
-                .then(() => {
-                    this.created();
                 })
         },
         searchUser() {
@@ -83,8 +63,6 @@ export default {
     }
 
 }
-
-
 </script>
 
 

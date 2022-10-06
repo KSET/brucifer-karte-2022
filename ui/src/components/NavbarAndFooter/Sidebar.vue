@@ -8,14 +8,14 @@
             Izvoz
         </button>
 
-        <div class="sidbar-element" style="border-bottom: 1px solid black;"
+        <div class="sidbar-element" style="border-bottom: 1px solid black;" @click="toggleDropdownLineup"
             v-bind:style="[(showDropdownLineup) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]">
             <RouterElement class="sidebar-element" style="display: inline-block; width: 90%; border-bottom: none;"
                 :name="'Izvođači'">
             </RouterElement>
-            <img v-if="this.showDropdownLineup==false" class="dropdown-icon"
-                src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownLineup">
-            <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownLineup">
+            <img v-if="this.showDropdownLineup==false" class="dropdown-icon" style="z-index:-1"
+                src="@/assets/icons/dopdwn-notopen-icon.svg" >
+            <img style="z-index:-1" v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg">
 
         </div>
         <RouterElement style="padding-left:3rem !important;" id="dpL1" class="sidebar-element"
@@ -25,14 +25,14 @@
             :name="'Dodavanje Izvođača'" :link="'/admin/lineup-add/0'">
         </RouterElement>
 
-        <div class="sidbar-element" style="border-bottom: 1px solid black;"
+        <div class="sidbar-element" style="border-bottom: 1px solid black;" @click="toggleDropdownSponsors"
             v-bind:style="[(showDropdownSponsors) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]">
             <RouterElement class="sidebar-element" style="display: inline-block; width: 90%; border-bottom: none;"
                 :name="'Sponzori'">
             </RouterElement>
             <img v-if="this.showDropdownSponsors==false" class="dropdown-icon"
-                src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownSponsors">
-            <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownSponsors">
+                src="@/assets/icons/dopdwn-notopen-icon.svg" >
+            <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg">
 
         </div>
         <RouterElement style="padding-left:3rem !important;" id="dpS1" class="sidebar-element"

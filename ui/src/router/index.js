@@ -29,6 +29,9 @@ import Pravila from "../views/BruciWebViews/PravilaView.vue";
 import Naslovnica from "../views/BruciWebViews/NaslovnicaView.vue";
 import BWPageNotFound from "../views/BruciWebViews/BWPageNotFound.vue";
 
+import SponsorsPage from "../views/BruciWebViews/SponsorsPageView.vue";
+
+
 import store from "@/store/index.js";
 
 const routes = [
@@ -156,6 +159,12 @@ const routes = [
     component: Naslovnica,
   },
   { path: "/:pathMatch(.*)*", component: BWPageNotFound },
+
+  {
+    path: "/sponzori/:slug",
+    name: "sponzori-page",
+    component: SponsorsPage,
+  },
 ];
 
 const router = createRouter({

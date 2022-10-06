@@ -71,6 +71,7 @@
 
         p {
             font-size: .6em;
+            font-family: 'Montserrat';
         }
     }
 
@@ -79,6 +80,8 @@
             grid-column: span 2;
         }
     }
+
+    
 
     :global(#flex) .cFix {
         @media screen and (max-width: 550px) {
@@ -130,6 +133,7 @@ export default {
         axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
             .then(response => {
                 var itemss = response.data;
+                this.items.push("...");
                 itemss.forEach(element => {
                     this.items.push(element.name);
                 });
@@ -139,6 +143,10 @@ export default {
     methods: {
         searchGuest() {
             var e = document.getElementById("selector").value;
+            if(e=="..."){
+                e=" ";
+                document.getElementById("selector").value=" ";
+            }
             axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + this.search + ' ' + e + "&search_fields=tag&search_fields=name&search_fields=surname",)
                 .then(response => {
                     if (this.search != '' && this.search.length > 2) {
@@ -263,6 +271,13 @@ export default {
 #inputfield {
     width: 50.6%;
 }
+.nosubmit.search {
+  position: relative;
+  margin-top: 2.375rem;
+  margin-left: 4%;
+  width: 20%;
+  padding-left: 2.2rem;
+}
 
 .person {
     display: block;
@@ -296,7 +311,7 @@ export default {
     box-sizing: border-box;
     width: 25%;
 
-
+    background-color: white !important;
     border: 1px solid #000000;
     border-radius: 6px;
 

@@ -10,11 +10,11 @@
       <input id="file-upload" type="file" @change="importGuests" />
       <button class="button-upload white" @click="exportExample(1)">Preuzmi CSV template</button>
 
-      <div class="list">
-        <ul>
+      <div >
+        <ul class="list">
           <li>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećemredu
           </li>
-          <li>Imena polja mogu biti: name surname jmbag email tag bought entered</li>
+          <li>Imena polja mogu biti: name, surname, jmbag, email, tag, bought, entered</li>
           <li>Tablica ne mora sadržavati sva imena polja, redoslijed stupaca nije bitan</li>
           <li>Ukoliko se polje tag kod nekog gosta ostavi prazno, tag će automatski biti Brucoši</li>
           <li>Ukoliko se polja bought i entered kod nekog gosta ostave prazna, bit će postavljena na 0</li>
@@ -30,7 +30,7 @@
       <button class="button-upload white" @click="exportExample(2)">Preuzmi CSV template</button>
 
       <div class="list">
-        <ul>
+        <ul style="list-style-type: circle;">
           <li>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećem redu.
           </li>
           <li>Imena polja mogu biti: name, email, privilege.</li>
@@ -325,8 +325,8 @@ export default {
 }
 
 .button-upload.white {
-  line-height: 0%;
-  width: 200px;
+  line-height: 100%;
+  width: 250px;
   color: black;
   background: white;
 }
@@ -337,12 +337,12 @@ input[type="file"] {
 
 }
 
-.list {
+ul.list {
   margin-top: 2.5%;
   margin-bottom: 2.5%;
+  list-style-type:auto;
 }
 
-ul {}
 
 li {
   font-family: 'Montserrat';
