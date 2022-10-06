@@ -53,7 +53,7 @@ const routes = [
   },
   {
     path: "/admin/entry",
-    name: "guest_tag",
+    name: "entry",
     component: EntryView,
   },
   {
@@ -178,7 +178,7 @@ router.beforeEach((to, from, next) => {
     "home",
     "login",
     "logout",
-    "guest_tag",
+    "entry",
     "",
     undefined,
     "admin",
