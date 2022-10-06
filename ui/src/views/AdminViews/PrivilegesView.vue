@@ -3,7 +3,7 @@
     <Sidebar />
     <div class="admin-page-container">
       <h1 class="page-title">Privilegije</h1>
-      <h1 class="text1">UKUPNO {{this.countNista+this.countAdmin+this.countUlaz+this.countKarte+this.countUlplK}}</h1>
+      <h1 class="text1" style="word-spacing: 10px;">UKUPNO {{this.countNista+this.countAdmin+this.countUlaz+this.countKarte+this.countUlplK}}</h1>
       <table class="table" id="guests">
         <thead>
           <th>Oznaka</th>
