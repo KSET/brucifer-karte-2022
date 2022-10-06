@@ -4,7 +4,7 @@
     <div class="admin-page-container">
       <div class="grid-container-contact">
         <div style="border-right: 1px solid black; width: 95%">
-          <h1 class="page-title lineup-title">Dodavanje kontakata</h1>
+          <h1 class="page-title lineup-title">Popis kontakata</h1>
 
           <img v-if="this.showContactForm==false" style="margin-top: 15px;" class="dropdown-icon showmobile"
             src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleContactForm">
