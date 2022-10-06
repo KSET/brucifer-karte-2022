@@ -9,7 +9,7 @@
             <img class="image-preview hidedesktop" style="display: block; margin-bottom: 5%; margin-left: 5%;"
                 :src="previewImage" alt="" />
 
-            <form class="sponsors-form" @submit="postSponsors">
+            <form class="sponsors-form" onsubmit="return false">
                 <div class="grid-container" style="row-gap:10%;">
 
                     <h1 class="textfield">Ime </h1>
@@ -39,8 +39,8 @@
                     <h1 class="textfield" style="width: 150%;">Broj uzvanika </h1>
                     <input required class="inputfield" type="text" v-model="guestCap">
 
-                    <button v-if="(this.slug == '0')" class="button submit" style=" margin-top: 0px">Dodaj</button>
-                    <button v-else class="button submit" style=" margin-top: 0px">Spremi promjene</button>
+                    <button v-if="(this.slug == '0')" class="button submit" style=" margin-top: 0px " @click="postSponsors">Dodaj</button>
+                    <button v-else class="button submit" style=" margin-top: 0px" @click="postSponsors">Spremi promjene</button>
 
                     <button v-if="(this.slug != '0')" class="button submit del"
                         style="background-color: white; margin-top: 0px; " @click="deleteSponsors">
@@ -66,12 +66,6 @@ import store from '@/store/index.js';
 export default {
     name: "upload-image",
     components: { Sidebar },
-    computed: {
-        refresh() {
-            return store.state.refresh;
-        },
-
-    },
     data() {
         return {
             currentImage: undefined,
@@ -97,18 +91,9 @@ export default {
 
         };
     },
-    computed: {
-        reroutePage() {
-            return store.state.reroutePage;
-        }
-    },
-
     created() {
         this.slug = this.$route.params.slug;
-        if (this.reroutePage == "1") {
-            store.commit('setreroutePage', "0");
-            this.$router.push({ path: '/admin/sponsors-list/' });
-        }
+     
 
         if (this.slug != '0') {
             axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.slug + "&search_fields=slug")
@@ -153,22 +138,21 @@ export default {
             this.progress = 0;
             this.message = "";
         },
-        deleteSponsors() {
-            axios.delete(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/",
+        async deleteSponsors() {
+            const resp = await axios.delete(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/",
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                 {
                     headers: {
                         "Content-Type": "multipart/form-data"
                     }
                 },
-
             )
+            this.$router.push({ path: '/admin/sponsors-list/' });
         },
-        postSponsors() {
+        async postSponsors() {
             if (this.currentImage == undefined) {
                 window.alert("Uploadajte fotografiju")
             } else {
-                store.commit('setreroutePage', "1");
 
                 let formData = new FormData();
                 formData.append("name", this.name);
@@ -193,7 +177,7 @@ export default {
                         formData.append("image", this.currentImage);
                     }
 
-                    axios.put(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/", formData,
+                    const resp = await axios.put(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/", formData,
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                         {
                             headers: {
@@ -247,7 +231,7 @@ export default {
 
 
 
-                    axios.post(process.env.VUE_APP_BASE_URL + "/sponsors/", formData,
+                    const resp = await axios.post(process.env.VUE_APP_BASE_URL + "/sponsors/", formData,
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                         {
                             headers: {
@@ -256,6 +240,7 @@ export default {
                         },
                     )
                 }
+                this.$router.push({ path: '/admin/sponsors-list/' });
 
 
             }
