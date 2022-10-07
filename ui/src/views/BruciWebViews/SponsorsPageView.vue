@@ -13,10 +13,10 @@
                 </button>
             </div>
 
-            <div style="border-right: white solid 2px !important; padding-left: 6%; " class="infofield">
+            <div class="infofield">
                 <img class="image-preview" style="border: none;" :src="previewImage" alt="" />
 
-                <div style=" padding-left: 12%; ">
+                <div class="infofield-element">
                     <div class="grid-container">
                         <h1 class="textfield">Ograničenje</h1>
                         <h1 class="textfield" style="font-weight: 400">{{this.guestCap}}</h1>
@@ -215,6 +215,10 @@ h1 {
     color: white;
 }
 
+.infofield-element {
+    padding-left: 12%;
+}
+
 .inputfield {
     background: transparent;
     border: none;
@@ -240,6 +244,8 @@ h1 {
     display: flex;
     flex-direction: row;
     align-items: center;
+    border-right: white solid 2px !important;
+    padding-left: 6%;
 }
 
 #guests td {
@@ -267,6 +273,8 @@ h1 {
         display: grid;
         grid-template-columns: 65% auto;
         width: 100%;
+        margin-top: 2rem;
+        padding-bottom: 2rem;
 
     }
 
@@ -275,15 +283,41 @@ h1 {
         flex-direction: column;
         border: none !important;
         padding: 0px;
-        margin: 0px;    
+        margin: 0px;
         align-items: flex-start;
     }
 
-    .popis-element1{
+    .popis-element1 {
         border: none !important;
         padding-top: 0px;
     }
 
-  
+    .grid-container {
+        row-gap: 50%;
+        padding-left: 0%;
+    }
+
+    .image-preview {
+        height: 150px;
+        width: 150px;
+    }
+
+    .infofield-element {
+        padding-top: 6%;
+        padding-left: 0%;
+    }
+
+    .inputfield {
+        margin-top: 5%;
+        margin-bottom: 7%;
+    }
+
+    .page-title {
+        padding-bottom: 7%;
+    }
+
+    .sponsorsPage-table {
+        margin-top: 0rem;
+    }
 }
 </style>
