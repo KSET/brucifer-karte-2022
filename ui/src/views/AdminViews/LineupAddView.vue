@@ -101,7 +101,6 @@ export default {
             axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?ordering=order',)
                 .then(response => {
                     this.lineups = response.data;
-
                 })
         }
 
@@ -169,7 +168,7 @@ export default {
                                 break;
                             }
                         }
-                        if (this.nextId == '') {
+                        if (this.nextId === '') {
                             this.nextId = ids.length;
                         }
 

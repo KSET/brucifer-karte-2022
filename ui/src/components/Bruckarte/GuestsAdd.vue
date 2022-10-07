@@ -62,7 +62,7 @@ export default {
           break;
         }
       }
-      if (this.nextId == '') {
+      if (this.nextId === '') {
         this.nextId = ids.length;
       }
 

@@ -16,8 +16,8 @@
 
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
-
 import axios from 'axios'
+
 export default {
   name: 'UsersTable',
   components: { Footer },

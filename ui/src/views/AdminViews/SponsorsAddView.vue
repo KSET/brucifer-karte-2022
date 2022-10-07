@@ -9,6 +9,7 @@
             <img class="image-preview hidedesktop" style="display: block; margin-bottom: 5%; margin-left: 5%;"
                 :src="previewImage" alt="" />
 
+            
             <form class="sponsors-form" onsubmit="return false">
                 <div class="grid-container" style="row-gap:10%;">
 
@@ -48,7 +49,7 @@
                     </button>
                 </div>
             </form>
-            <img class="image-preview hidetablet" :src="previewImage" alt="" />
+            <img style="display: inline-block" class="image-preview hidetablet" :src="previewImage" alt="" />
 
         </div>
     </div>
@@ -199,7 +200,7 @@ export default {
                                 break;
                             }
                         }
-                        if (this.nextId == '') {
+                        if (this.nextId === '') {
                             this.nextId = ids.length;
                         }
 

@@ -153,7 +153,7 @@ export default {
                             break;
                         }
                     }
-                    if (this.nextId == '') {
+                    if (this.nextId === '') {
                         this.nextId = ids.length;
                     }
 
@@ -162,6 +162,7 @@ export default {
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                     )
                         .then(() => {
+                            this.created()
                         })
                 }
             }
