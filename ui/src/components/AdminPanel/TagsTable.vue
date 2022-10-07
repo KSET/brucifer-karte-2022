@@ -116,7 +116,7 @@ export default {
 
 tbody {
   display: block;
-  height: 500px;
+  height: 31.25rem;
   overflow: auto;
 }
 

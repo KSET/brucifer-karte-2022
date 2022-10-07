@@ -1,25 +1,28 @@
 <template>
     <div class="bw-page-container sponsors-page">
         <div class="popis">
-            <div style="border-bottom: white solid 2px !important; border-right: white solid 2px !important;">
+            <div class="popis-element1">
                 <h1 class="page-title">Popis uzvanika</h1>
 
                 <h1 class="textfield">Ime i prezime </h1>
                 <input class="inputfield " type="text" v-model="sponsorName">
 
-                <button class="button submit" style="background-color: white; margin-top: 0px; " @click="sponsorPost">
+                <button class="button submit" style="background-color: white; margin-top: 0px; display: block; "
+                    @click="sponsorPost">
                     Dodaj
                 </button>
             </div>
 
-            <div style="border-right: white solid 2px !important;">
+            <div style="border-right: white solid 2px !important; padding-left: 6%; " class="infofield">
                 <img class="image-preview" style="border: none;" :src="previewImage" alt="" />
 
-                <div class="grid-container">
-                    <h1 class="textfield">Ograničenje</h1>
-                    <h1 class="textfield">{{this.guestCap}}</h1>
-                    <h1 class="textfield">Broj unesenih</h1>
-                    <h1 class="textfield">{{this.guestsAdded}}</h1>
+                <div style=" padding-left: 12%; ">
+                    <div class="grid-container">
+                        <h1 class="textfield">Ograničenje</h1>
+                        <h1 class="textfield" style="font-weight: 400">{{this.guestCap}}</h1>
+                        <h1 class="textfield">Broj unesenih</h1>
+                        <h1 class="textfield" style="font-weight: 400">{{this.guestsAdded}}</h1>
+                    </div>
                 </div>
             </div>
 
@@ -153,7 +156,7 @@ export default {
                     { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                 )
                     .then(() => {
-                        this.sponsorName="";
+                        this.sponsorName = "";
                         this.created()
                     })
             }
@@ -170,8 +173,20 @@ export default {
 </style>
 
 <style scoped>
+.popis-element1 {
+    border-bottom: white solid 2px !important;
+    border-right: white solid 2px !important;
+    padding-left: 6%;
+    padding-top: 5%
+}
+
 .sponsorsPage-table {
     margin-top: 3rem;
+}
+
+.grid-container {
+    grid-template-columns: 95% auto;
+    row-gap: 100%;
 }
 
 .sponsors-page {
@@ -188,7 +203,6 @@ export default {
 
 .popis {
     position: relative;
-    padding-left: 2%;
     margin-top: 2%;
     display: grid;
     grid-template-rows: 50% 50%;
@@ -206,6 +220,9 @@ h1 {
     border: none;
     border: white solid 2px !important;
     color: white;
+
+    margin-top: 2%;
+    margin-bottom: 5%;
 }
 
 .button.submit {
@@ -217,6 +234,12 @@ h1 {
 
 .row {
     margin-left: 0px;
+}
+
+.infofield {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 #guests td {
@@ -232,5 +255,35 @@ h1 {
     background-color: transparent;
     ;
 
+}
+
+@media screen and (max-width: 980px) {
+    .sponsors-page {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .popis {
+        display: grid;
+        grid-template-columns: 65% auto;
+        width: 100%;
+
+    }
+
+    .infofield {
+        display: flex;
+        flex-direction: column;
+        border: none !important;
+        padding: 0px;
+        margin: 0px;    
+        align-items: flex-start;
+    }
+
+    .popis-element1{
+        border: none !important;
+        padding-top: 0px;
+    }
+
+  
 }
 </style>
