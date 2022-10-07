@@ -320,4 +320,11 @@ h1 {
         margin-top: 0rem;
     }
 }
+
+@media screen and (max-width: 980px) {
+    .image-preview{
+        width:100px;
+        height: 100px;
+    }
+}
 </style>
