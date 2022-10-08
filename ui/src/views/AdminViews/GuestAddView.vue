@@ -8,10 +8,10 @@
             <form @submit="postGuest">
                 <div class="grid-container" style="row-gap: 5%;">
                     <h1 class="textfield">Ime: </h1>
-                    <input class="inputfield" type="text" @input="changevalue" v-model="name">
+                    <input required class="inputfield" type="text" @input="changevalue" v-model="name">
 
                     <h1 class="textfield">Prezime: </h1>
-                    <input class="inputfield" type="text" @input="changevalue" v-model="surname">
+                    <input required class="inputfield" type="text" @input="changevalue" v-model="surname">
 
                     <h1 class="textfield">Tag: </h1>
 
@@ -21,7 +21,7 @@
                     </select>
 
                     <h1 id="jmbagselect" class="textfield">JMBAG: </h1>
-                    <input id="jmbagselectt" class="inputfield" type="text" v-model="jmbag">
+                    <input  id="jmbagselectt" class="inputfield" type="text" v-model="jmbag">
 
                     <h1 class="textfield">Karta: </h1>
 
@@ -88,7 +88,6 @@ export default {
     },
 
     mounted() {
-
         axios.get(process.env.VUE_APP_BASE_URL + '/guests/',)
             .then(response => {
                 document.getElementById("jmbagselect").style.display = "none";
@@ -117,7 +116,6 @@ export default {
                 document.getElementById("jmbagselectt").style.display = "none";
 
             }
-
         },
         changeKarta() {
             if (this.karta == '1') {
@@ -140,10 +138,12 @@ export default {
 
             this.guests.forEach(element => {
                 ids.push(element.id);
-                jmbags.push(element.jmbags);
+                jmbags.push(element.jmbag);
             });
 
             if (this.selectedTag == "Brucoši") {
+                console.log(jmbags.includes(String(this.jmbag)))
+
                 if (jmbags.includes(String(this.jmbag))) {
                     window.alert("Gost s ovim JMBAG-om već postoji!!")
                 } else {
