@@ -204,7 +204,7 @@ export default {
 
   .tbody {
     position: relative;
-    height: 350px;
+    height: 21.875rem;
   }
 
 

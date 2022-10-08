@@ -177,7 +177,7 @@ export default {
     }
 }
 
-@media screen and (max-width: 350px) {
+@media screen and (max-width: 21.875rem) {
     .lineup {
         grid-template-columns: repeat(1, minmax(0, 1fr));
         grid-row-gap: 1.2rem;
