@@ -9,7 +9,6 @@
             <img class="image-preview hidedesktop" style="display: block; margin-bottom: 5%; margin-left: 5%;"
                 :src="previewImage" alt="" />
 
-            
             <form class="sponsors-form" onsubmit="return false">
                 <div class="grid-container" style="row-gap:10%;">
 
@@ -40,8 +39,10 @@
                     <h1 class="textfield" style="width: 150%;">Broj uzvanika </h1>
                     <input required class="inputfield" type="text" v-model="guestCap">
 
-                    <button v-if="(this.slug == '0')" class="button submit" style=" margin-top: 0px " @click="postSponsors">Dodaj</button>
-                    <button v-else class="button submit" style=" margin-top: 0px" @click="postSponsors">Spremi promjene</button>
+                    <button v-if="(this.slug == '0')" class="button submit" style=" margin-top: 0px "
+                        @click="postSponsors">Dodaj</button>
+                    <button v-else class="button submit" style=" margin-top: 0px" @click="postSponsors">Spremi
+                        promjene</button>
 
                     <button v-if="(this.slug != '0')" class="button submit del"
                         style="background-color: white; margin-top: 0px; " @click="deleteSponsors">
@@ -53,8 +54,6 @@
 
         </div>
     </div>
-
-
 </template>
   
 <script>
@@ -94,7 +93,7 @@ export default {
     },
     created() {
         this.slug = this.$route.params.slug;
-     
+
 
         if (this.slug != '0') {
             axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.slug + "&search_fields=slug")
