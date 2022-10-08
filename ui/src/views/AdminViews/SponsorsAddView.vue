@@ -49,7 +49,7 @@
                     </button>
                 </div>
             </form>
-            <img style="display: inline-block" class="image-preview hidetablet" :src="previewImage" alt="" />
+            <img class="image-preview hidetablet" :src="previewImage" alt="" />
 
         </div>
     </div>
