@@ -298,6 +298,7 @@ h1 {
     }
 
     .image-preview {
+        margin-top: 3%;
         height: 150px;
         width: 150px;
     }
@@ -321,10 +322,14 @@ h1 {
     }
 }
 
-@media screen and (max-width: 980px) {
+@media screen and (max-width: 400px) {
     .image-preview{
-        width:100px;
-        height: 100px;
+        width:6.25rem;
+        height: 6.25rem;
+    }
+
+    .popis {
+        grid-template-columns: 60% auto;
     }
 }
 </style>
