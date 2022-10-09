@@ -208,8 +208,6 @@ export default {
 
       var email = e_name + e_surname + jmbagslice + "@fer.hr";
 
-      // delete in production
-      email="pavleergovic@gmail.com"
 
       var msg = this.name + " " + this.surname + " " + guest.confCode
 
