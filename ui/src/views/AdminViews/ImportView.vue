@@ -10,7 +10,9 @@
       <input id="file-upload" type="file" @change="importGuests" />
       <button class="button-upload white" @click="exportExample(1)">Preuzmi CSV template</button>
 
-      <div >
+      <h1 class="textfield" style="display: inline-block">{{this.importstatusGuests}}</h1>
+
+      <div>
         <ul class="list">
           <li>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećemredu
           </li>
@@ -26,17 +28,17 @@
         Odaberi CSV
       </label>
       <input id="file-uploadd" type="file" @change="importUsers" />
-
       <button class="button-upload white" @click="exportExample(2)">Preuzmi CSV template</button>
 
-      <div >
-        <ul class="list" >
+      <h1 class="textfield" style="display: inline-block">{{this.importstatusUsers}}</h1>
+
+      <div>
+        <ul class="list">
           <li>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećem redu.
           </li>
           <li>Imena polja mogu biti: name, email, privilege.</li>
           <li>Mogće vrijednosti privilege su cijeli brojevi izmešu 0 i 4 s uključivim granicama.</li>
           <li>Polje name može se ostaviti prazno, taj podatadak će se sam updeatati kada se korisnik prijavi</li>
-
         </ul>
       </div>
     </div>
@@ -65,6 +67,8 @@ export default {
       users: [],
       idsguests: [],
       idsusers: [],
+      importstatusGuests: '',
+      importstatusUsers: '',
     };
   },
   mounted() {
@@ -72,7 +76,6 @@ export default {
       .then(response => {
         this.guests = response.data;
         this.len = this.guests.length;
-
         this.guests.forEach(element => {
           this.idsguests.push(element.id);
         });
@@ -182,6 +185,7 @@ export default {
     },
     importGuests(event) {
       this.file = event.target.files ? event.target.files[0] : null;
+      let error = 0;
       readXlsxFile(this.file).then(async (rows) => {
         const gosti = [];
 
@@ -234,28 +238,28 @@ export default {
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           ).catch(function (error) {
             console.error("IMPORT NEUSPJEŠAN ZA NEKE GOSTE", error);
+            error = 1;
           });
-          console.log(`Imported ${index}/${rows.length} guests`);
+          this.importstatusGuests = (`Imported ${index}/${rows.length} guests`);
           gosti.push(obj);
         }
-
-
-
-
+        if (error == 0) {
+          this.importstatusGuests = "Import uspješan!"
+        } else {
+          this.importstatusGuests = "Import neuspješan!"
+        }
       }
       )
-
-
     },
     importUsers(event) {
       this.file = event.target.files ? event.target.files[0] : null;
       readXlsxFile(this.file).then(async (rows) => {
 
         const users = [];
+        let error = 0;
 
         for (let index = 1; index < rows.length; index++) {
           const element = rows[index];
-
 
           const obj = {};
           obj["id"] = "";
@@ -282,10 +286,7 @@ export default {
             nextId = this.idsusers.length;
           }
 
-
-
           obj["id"] = nextId;
-
 
           this.idsusers.push(String(nextId));
           await axios.post(process.env.VUE_APP_BASE_URL + '/users/',
@@ -293,10 +294,16 @@ export default {
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           ).catch(function (error) {
             console.error("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE", error);
+            error = 1;
           });
-          console.log(`Imported ${i}/${rows.length} users`);
+          this.importstatusUsers = (`Imported ${index}/${rows.length} users`);
 
           users.push(obj);
+        }
+        if (error == 0) {
+          this.importstatusUsers = "Import uspješan!"
+        } else {
+          this.importstatusUsers = "Import neuspješan!"
         }
       })
 
@@ -340,7 +347,7 @@ input[type="file"] {
 ul.list {
   margin-top: 2.5%;
   margin-bottom: 2.5%;
-  list-style-type:auto;
+  list-style-type: auto;
 }
 
 
