@@ -2,14 +2,13 @@
   <div class="bw-page-container">
     <div class="contents">
       <section>
-        <h1 class="bwh1">404 Page not found
+        <h1 class="bwh1 opa">...OPA!
         </h1>
 
-        <p>
-          Izgleda da si pronašao stranicu koja ne postoji
+        <p class="p404">
+          Izgleda da tražena stranica ne postoji!
         </p>
         <br>
-        <RouterElement class="overlay-element" :name="'Naslovnica'" :link="'/'"></RouterElement>
 
       </section>
 
@@ -39,4 +38,20 @@ export default {
   
 <style>
 @import url(../../bruciweb.css);
+
+.opa {
+  font-size: 128px !important;
+  font-weight: 700 !important;
+  text-align: center;
+  margin-bottom: 5rem !important;
+  margin-top: 5rem !important;
+
+}
+
+.p404 {
+  font-size: 24px !important;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 5rem !important;
+}
 </style>
