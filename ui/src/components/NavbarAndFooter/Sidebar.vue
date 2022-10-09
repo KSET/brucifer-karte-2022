@@ -21,9 +21,9 @@
         <RouterElement style="padding-left:3rem !important;" id="dpL1" class="sidebar-element"
             :name="'Pregled Izvođača'" :link="'/admin/lineup-list'">
         </RouterElement>
-        <RouterElement style="padding-left:3rem !important;" id="dpL2" class="sidebar-element"
-            :name="'Dodavanje Izvođača'" :link="'/admin/lineup-add/0'">
-        </RouterElement>
+  
+        <a style="padding-left:3rem !important; color: black;" id="dpL2" class="sidebar-element" href="/admin/lineup-add/0">Dodavanje Izvođača</a>
+
 
         <div class="sidbar-element" style="border-bottom: 1px solid black;" @click="toggleDropdownSponsors"
             v-bind:style="[(showDropdownSponsors) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]">
@@ -38,9 +38,8 @@
         <RouterElement style="padding-left:3rem !important;" id="dpS1" class="sidebar-element"
             :name="'Pregled Sponzora'" :link="'/admin/sponsors-list'">
         </RouterElement>
-        <RouterElement style="padding-left:3rem !important;" id="dpS2" class="sidebar-element"
-            :name="'Dodavanje Sponzora'" :link="'/admin/sponsors-add/0'">
-        </RouterElement>
+    
+        <a style="padding-left:3rem !important; color: black;" id="dpS2" class="sidebar-element" href="/admin/sponsors-add/0">Dodavanje Sponzora</a>
 
         <RouterElement class="sidebar-element" :name="'Dodaj Gosta'" :link="'/admin/guests-add'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Kontakt'" :link="'/admin/band-kontakt'"></RouterElement>

@@ -31,7 +31,6 @@
         <div class="sponsorsPage-table">
             <div class=row>
                 <table id="guests">
-
                     <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto;" class="tbody">
                         <tr v-for="guest in sponsorGuests" :key="guest.id">
                             <td style="padding-left: 20% !important;">{{guest.name}}</td>
@@ -177,20 +176,19 @@ export default {
     border-bottom: white solid 2px !important;
     border-right: white solid 2px !important;
     padding-left: 6%;
-    padding-top: 5%
+    margin-top: 6.75rem;
 }
 
 .sponsorsPage-table {
-    margin-top: 3rem;
+    margin-top: 6.75rem;
 }
 
 .grid-container {
     grid-template-columns: 95% auto;
-    row-gap: 100%;
+    row-gap: 0%;
 }
 
 .sponsors-page {
-
     position: relative;
     display: grid;
     grid-template-columns: 50% 50%;
@@ -264,6 +262,9 @@ h1 {
 }
 
 @media screen and (max-width: 980px) {
+    .popis-element1 {
+    margin-top: 0rem;
+}
     .sponsors-page {
         display: flex;
         flex-direction: column;
@@ -273,7 +274,7 @@ h1 {
         display: grid;
         grid-template-columns: 65% auto;
         width: 100%;
-        margin-top: 2rem;
+        margin-top: 5.75rem;
         padding-bottom: 2rem;
 
     }
@@ -293,7 +294,7 @@ h1 {
     }
 
     .grid-container {
-        row-gap: 50%;
+        row-gap: 0%;
         padding-left: 0%;
     }
 
