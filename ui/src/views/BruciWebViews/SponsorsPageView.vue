@@ -274,7 +274,7 @@ h1 {
         display: grid;
         grid-template-columns: 65% auto;
         width: 100%;
-        margin-top: 5.75rem;
+        padding-top: 5.75rem;
         padding-bottom: 2rem;
 
     }
@@ -323,7 +323,7 @@ h1 {
     }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 550px) {
     .image-preview{
         width:6.25rem;
         height: 6.25rem;
