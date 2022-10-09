@@ -233,13 +233,16 @@ export default {
           }
 
           this.idsguests.push(String(nextId));
-          await axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
+          let resp = await axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
             { id: obj.id, name: obj.name, surname: obj.surname, jmbag: obj.jmbag, tag: obj.tag, bought: obj.bought, entered: obj.entered },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           ).catch(function (error) {
-            console.error("IMPORT NEUSPJEŠAN ZA NEKE GOSTE", error);
+            console.error("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE", error);
             error = 1;
           });
+          if(resp==undefined){
+            error=1;
+          }
           this.importstatusGuests = (`Imported ${index}/${rows.length} guests`);
           gosti.push(obj);
         }
@@ -289,13 +292,16 @@ export default {
           obj["id"] = nextId;
 
           this.idsusers.push(String(nextId));
-          await axios.post(process.env.VUE_APP_BASE_URL + '/users/',
+          let resp = await axios.post(process.env.VUE_APP_BASE_URL + '/users/',
             { id: obj.id, name: obj.name, email: obj.email, privilege: obj.privilege },
             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
           ).catch(function (error) {
             console.error("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE", error);
             error = 1;
           });
+          if(resp==undefined){
+            error=1;
+          }
           this.importstatusUsers = (`Imported ${index}/${rows.length} users`);
 
           users.push(obj);
