@@ -3,7 +3,7 @@
         <br>
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card">
+                <div class="card" style="height: 100% !important">
                     <div class="card-header">Login</div>
                     <div class="card-body">
                         <div id="signin_button"></div>
