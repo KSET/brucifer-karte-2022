@@ -21,7 +21,7 @@
                     </label>
                     <input required id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
 
-                    <h1 class="textfield">visible </h1>
+                    <h1 class="textfield">Vidljvo </h1>
 
                     <label class="switch">
                         <input id="switchLineup" type="checkbox">

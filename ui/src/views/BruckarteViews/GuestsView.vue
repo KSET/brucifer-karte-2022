@@ -254,12 +254,12 @@ export default {
   position: absolute;
   margin-top: 2.375rem;
   width: 20%;
-  left: 6%;
+  left: 0% !important;
 }
 
 .grid-container.guests {
   margin-top: 3.5%;
-  margin-left: 5%;
+  margin-left: 6%;
   row-gap: 18%;
 }
 
@@ -330,13 +330,21 @@ input.nosubmit {
 
 @media screen and (max-width: 980px) {
   .nosubmit.search {
-    width: 40%;
+    width: 40% !important;
     font-size: 12px;
   }
 
   .inputfield {
     width: 80% !important;
   }
+}
+
+@media screen and (max-width: 550px) {
+  .nosubmit.search {
+    width: 55% !important;
+  }
+
+
 }
 </style>
 

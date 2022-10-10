@@ -227,7 +227,6 @@ export default {
     display: grid;
     grid-template-columns: auto 34.47%;
     grid-template-rows: auto 80.76%;
-    padding: 10px;
     width: 100vw;
     height: 87vh;
 }
@@ -274,9 +273,8 @@ export default {
 .nosubmit.search {
   position: relative;
   margin-top: 2.375rem;
-  margin-left: 4%;
   width: 20%;
-  padding-left: 2.2rem;
+  margin-left: 6% ;
 }
 
 .person {
@@ -343,7 +341,7 @@ export default {
     grid-template-columns: 15% auto;
     padding: 10px;
     grid-gap: 15%;
-    row-gap: 15%;
+    row-gap: 13%;
     align-items: center;
 }
 

@@ -1,17 +1,17 @@
 <template>
   <div>
     <Sidebar />
-    <div class="admin-page-container">
-      <div class="grid-container-contact">
+    <div class="admin-page-container" style="padding-top: 0px;">
+      <div class="grid-container-contact" style="padding-top: 0px;">
         <div style="border-right: 1px solid black; width: 95%">
-          <h1 class="page-title lineup-title">Popis kontakata</h1>
+          <h1 class="page-title lineup-title" style="padding-top: 20px">Popis kontakata</h1>
 
           <img v-if="this.showContactForm==false" style="margin-top: 15px;" class="dropdown-icon showmobile"
             src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleContactForm">
           <img v-else class="dropdown-icon  showmobile" style="margin-top: 15px;"
             src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleContactForm">
 
-          <form v-if="showHid" id="hid" @submit="postBandContact" class="inputfields">
+          <form v-if="showHid" id="hid" class="inputfields" onsubmit="return false">
 
             <h1 class="textfield">Ime Benda </h1>
             <input required class="inputfield kontakt" type="text" v-model="bandName">
@@ -22,12 +22,12 @@
             <h1 class="textfield">Broj mobitela bookera </h1>
             <input required class="inputfield kontakt" type="text" v-model="bookerPhone">
 
-            <button class="button submit">Dodaj</button>
+            <button class="button submit" @click="postBandContact">Dodaj</button>
 
           </form>
-
         </div>
-        <div class="kontakt-table">
+
+        <div class="kontakt-table" style="padding-top: 20px">
           <div class=row>
             <table id="guests">
               <thead>
@@ -41,13 +41,12 @@
                   <td>{{bandcontact.bandName}}</td>
                   <td>{{bandcontact.bookerName}}</td>
                   <td @click="call(bandcontact)"><a>{{bandcontact.bookerPhone}}</a></td>
-                  <td><button class="button-icon" @click="deleteBandContact(bandcontact)" style="margin-left: 0.9rem;"> <img
-                        src="@/assets/icons/trash-icon.svg"></button>
+                  <td><button class="button-icon" @click="deleteBandContact(bandcontact)">
+                      <img src="@/assets/icons/trash-icon.svg"></button>
                   </td>
                 </tr>
               </tbody>
             </table>
-
           </div>
         </div>
 
@@ -75,7 +74,7 @@ export default {
     return {
       bandcontacts: [],
       bandName: '',
-      bookeraName: '',
+      bookerName: '',
       bookerPhone: '',
       nextId: '',
       showContactForm: true,
@@ -114,6 +113,7 @@ export default {
 
     postBandContact() {
       var ids = [];
+      this.nextId = '';
       this.bandcontacts.forEach(element => {
         ids.push(element.id);
       });
@@ -127,12 +127,15 @@ export default {
         this.nextId = ids.length;
       }
 
-
       axios.post(process.env.VUE_APP_BASE_URL + '/contact/',
         { id: this.nextId, bandName: this.bandName, bookerName: this.bookerName, bookerPhone: this.bookerPhone },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
+          this.bookerName = "";
+          this.bookerPhone = "";
+          this.bandName = "";
+          this.created();
         })
 
     },
@@ -150,24 +153,25 @@ export default {
 </script>
 
 <style module>
-  :global(#app) .tbodyHigh {
-    height: 100%;
-  }
+:global(#app) .tbodyHigh {
+  height: 100%;
+}
 </style>
 
 <style>
 .grid-container-contact {
   display: grid;
   grid-template-columns: 30% 40%;
-  padding: 10px;
   width: 100vw;
   height: 87vh;
+  align-content: stretch;
+  justify-items: center;
 }
 
 .kontakt-table {
   position: relative;
   width: 100%;
-  padding-left: 5px;
+  margin-left: 0px;
 }
 
 .inputfield.kontakt {
@@ -175,6 +179,11 @@ export default {
   margin-bottom: 30px;
   display: block;
   width: 90%;
+}
+
+.row {
+  padding: 0px;
+  border-left: 1px solid;
 }
 
 @media screen and (max-width: 900px) {

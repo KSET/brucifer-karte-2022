@@ -4,9 +4,9 @@
     <div class="admin-page-container">
       <div class="page-header">
         <h1 class="page-title">Tagovi</h1>
-        <form style="display: inline-block;  vertical-align: middle;" @submit="postTag">
+        <form onsubmit="return false" style="display: inline-block;  vertical-align: middle;" >
           <input required type="text" class="inputtag" v-model="name" placeholder="Unesi ime taga">
-          <button class="button-icon"> <img class="add-icon" src="@/assets/icons/add-icon.svg"></button>
+          <button class="button-icon" @click="postTag"> <img class="add-icon" src="@/assets/icons/add-icon.svg"></button>
         </form>
       </div>
       <tags-table></tags-table>
@@ -32,14 +32,18 @@ export default {
       nextId: '',
     }
   },
-  created() {
+  mounted(){
+    this.created();
+  },
+  methods: {
+    created() {
     axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
       .then(response => {
         this.tags = response.data;
       })
   },
-  methods: {
     postTag() {
+      if(this.name!=""){
       var ids = [];
 
       this.tags.forEach(element => {
@@ -61,9 +65,10 @@ export default {
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
+          this.name="";
           location.reload();
         })
-    }
+    }}
   }
 }
 </script>

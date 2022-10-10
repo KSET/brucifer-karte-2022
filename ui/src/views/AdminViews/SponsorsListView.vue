@@ -1,7 +1,7 @@
 <template>
   <div class="sponsorsp">
     <Sidebar />
-    <div class="admin-page-container">
+    <div class="admin-page-container" >
 
       <div class="header">
         <h1 class="page-title">Sponzori</h1>
@@ -11,7 +11,7 @@
 
         <div class="switchdiv">
 
-          <h1 class="textfield" style="display: inline;">visible </h1>
+          <h1 class="textfield" style="display: inline;">Vidljvo </h1>
 
           <label class="switch" @click="toggleVisibility">
             <input id="switch" type="checkbox" @input="changeVisible">

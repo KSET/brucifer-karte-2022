@@ -18,18 +18,21 @@
               <div class="users-element userinfo" style="flex: 2;"
                 v-bind:style="[(user.privilege=='0') ? {color:'red'}: { color:'black'}]">{{user.name}} <br>
                 {{user.email}}</div>
-              <div class="users-element"><button class="button-priv"
-                  v-bind:style="[(user.privilege=='1') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
-                  @click="changeprivilege(user,'1')">Admin</button></div>
-              <div class="users-element"><button class="button-priv"
-                  v-bind:style="[(user.privilege=='2') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
-                  @click="changeprivilege(user,'2')">Ulaz</button></div>
               <div class="users-element"> <button class="button-priv"
                   v-bind:style="[(user.privilege=='3') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
                   @click="changeprivilege(user,'3')">Karte</button></div>
               <div class="users-element"><button class="button-priv"
+                  v-bind:style="[(user.privilege=='2') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
+                  @click="changeprivilege(user,'2')">Ulaz</button></div>
+              <div class="users-element"><button class="button-priv"
                   v-bind:style="[(user.privilege=='4') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
                   @click="changeprivilege(user,'4')">Ulaz <br>+Karte</button></div>
+              <div class="users-element"><button class="button-priv"
+                  v-bind:style="[(user.privilege=='1') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
+                  @click="changeprivilege(user,'1')">Admin</button></div>
+
+
+
               <div class="users-element hidemobile"><button class="button-priv" style="border:0px"
                   @click="deleteUser(user)">
                   <img src="@/assets/icons/trash-icon.svg">
@@ -47,19 +50,19 @@
 </template>
 
 <style module lang="scss">
-  :global(#app) .flexi {
-    display: flex;
-    flex-direction: column;
+:global(#app) .flexi {
+  display: flex;
+  flex-direction: column;
 
-    :global(.row) {
-      overflow: scroll;
-      flex: 1;
+  :global(.row) {
+    overflow: scroll;
+    flex: 1;
 
-      tbody {
-        height: initial;
-      }
+    tbody {
+      height: initial;
     }
   }
+}
 </style>
 
 <script>
@@ -152,9 +155,9 @@ export default {
       }
 
       var to_user_name = user.name.split(" ")[0];
- 
+
       var email = user.email
-  
+
       axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
         {
           id: nextId, subject: "[#BRUCIFER22] Promjena privilegije",
@@ -274,12 +277,19 @@ export default {
     ;
 
   }
-
+  .nosubmit.search{
+    width: 52% !important;
+    font-size: 10px !important;
+  }
   .userinfo {
     grid-column: 2/5;
     display: block;
     text-align: left;
     font-size: 12px;
+  }
+
+  .page-title.user-title{
+    font-size: 20px;
   }
 
   .hidetablett {
