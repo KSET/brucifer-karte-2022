@@ -10,6 +10,7 @@ import PageNotFound from "../views/BruckarteViews/PageNotFound.vue";
 /* Admin Views */
 import Tags from "../views/AdminViews/TagsView.vue";
 import Users from "../views/AdminViews/UsersView.vue";
+import UsersAdd from "../views/AdminViews/UsersAddView.vue";
 import Privileges from "../views/AdminViews/PrivilegesView.vue";
 import Import from "../views/AdminViews/ImportView.vue";
 import LineupList from "../views/AdminViews/LineupListView.vue";
@@ -60,6 +61,11 @@ const routes = [
     path: "/admin/users",
     name: "users",
     component: Users,
+  },
+  {
+    path: "/admin/users-add",
+    name: "usersAdd",
+    component: UsersAdd,
   },
   {
     path: "/admin/privileges",

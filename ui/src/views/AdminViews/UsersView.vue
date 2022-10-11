@@ -4,7 +4,9 @@
     <div class="admin-page-container" :class="$style.flexi">
       <div class="page-header user-page">
         <h1 class="page-title user-title">Korisnici</h1>
-        <button class="button-icon"> <img class="add-icon user-icon" src="@/assets/icons/add-icon.svg"></button>
+        <router-link class="icon7" to="/admin/users-add">
+          <img src="../../assets/icons/add-icon.svg">
+        </router-link>
         <input @input="searchUser" type="text" class="nosubmit search" placeholder="Unesi ime/prezime/email"
           v-model="search" style="display: inline-block; margin-top: 0px; position: relative;">
       </div>

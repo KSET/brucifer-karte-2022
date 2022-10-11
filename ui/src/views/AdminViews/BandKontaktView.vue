@@ -186,6 +186,10 @@ export default {
   border-left: 1px solid;
 }
 
+#guests th{
+  padding-left: 20px
+}
+
 @media screen and (max-width: 900px) {
 
   .grid-container-contact {
