@@ -5,9 +5,9 @@
       <div class="page-header user-page">
         <h1 class="page-title user-title">Korisnici</h1>
         <router-link class="icon7" to="/admin/users-add">
-          <img src="../../assets/icons/add-icon.svg">
+          <img style="width: 40px; height: 40px;" src="../../assets/icons/add-icon.svg">
         </router-link>
-        <input @input="searchUser" type="text" class="nosubmit search" placeholder="Unesi ime/prezime/email"
+        <input @input="searchUser" type="text" class="nosubmit search users" placeholder="Unesi ime/prezime/email"
           v-model="search" style="display: inline-block; margin-top: 0px; position: relative;">
       </div>
       <div class=row>
@@ -199,7 +199,9 @@ export default {
   padding-right: 1%;
   vertical-align: middle;
 }
-
+.nosubmit.search.users{
+  width: 25% !important;
+}
 .user-search {
   padding-left: 40px;
   margin-left: 7%;
@@ -263,6 +265,9 @@ export default {
   .hidetablett {
     display: none !important;
   }
+  .nosubmit.search.users{
+  width: 35% !important;
+}
 }
 
 @media screen and (max-width: 550px) {
@@ -279,7 +284,7 @@ export default {
     ;
 
   }
-  .nosubmit.search{
+  .nosubmit.search.users{
     width: 52% !important;
     font-size: 10px !important;
   }

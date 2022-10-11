@@ -3,29 +3,29 @@
         <Sidebar />
         <div class="admin-page-container">
 
-            <h1 class="page-title">Dodavanje Korisnka</h1>
+            <h1 class="page-title" style="margin-bottom: 40px;">Dodavanje Korisnka</h1>
 
             <div class="grid-container" style="row-gap: 5%;">
                 <h1 class="textfield">Ime i prezime </h1>
                 <input required class="inputfield" type="text" @input="changevalue" v-model="name">
 
-                <h1 class="textfield">KSET e-mail adresa </h1>
+                <h1 class="textfield">KSET e-adresa </h1>
                 <input required class="inputfield" type="text" @input="changevalue" v-model="email">
 
                 <h1 class="textfield">Privilegija </h1>
 
-                <div>
+                <div class="users-elements">
 
-                    <div class="users-element"> <button class="button-priv"
+                    <div class="users-element add"> <button class="button-priv"
                             v-bind:style="[(this.privilege=='3') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
                             @click="changeprivilege('3')">Karte</button></div>
-                    <div class="users-element"><button class="button-priv"
+                    <div class="users-element add"><button class="button-priv"
                             v-bind:style="[(this.privilege=='2') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
                             @click="changeprivilege('2')">Ulaz</button></div>
-                    <div class="users-element"><button class="button-priv"
+                    <div class="users-element add"><button class="button-priv"
                             v-bind:style="[(this.privilege=='4') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
                             @click="changeprivilege('4')">Ulaz <br>+Karte</button></div>
-                    <div class="users-element"><button class="button-priv"
+                    <div class="users-element add"><button class="button-priv"
                             v-bind:style="[(this.privilege=='1') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
                             @click="changeprivilege('1')">Admin</button></div>
 
@@ -112,9 +112,24 @@ export default {
 </script>
 
 <style lang="scss" scope>
-.users-element {
+.users-element.add {
     display: inline-block;
     border: 0px;
+}
+
+@media screen and (max-width: 550px) {
+    .users-elements {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        width: 80%;
+    }
+
+    .button-priv {
+        height: 70px;
+        width: 70px;
+        font-size: 16px;
+        
+    }
 }
 
 @import '../../assets/scss/Admin-scss/gird-view.scss';
