@@ -35,7 +35,7 @@ class ContactSerializer(serializers.HyperlinkedModelSerializer):
 class MailerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Mailer
-        fields = ["id","subject","message","to_mail"]
+        fields = ["subject","message","to_mail"]
 
 class DynamicSearchFilter(filters.SearchFilter):
     def get_search_fields(self, view, request):

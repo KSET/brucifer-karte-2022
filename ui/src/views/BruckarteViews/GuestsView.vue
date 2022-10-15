@@ -78,11 +78,8 @@ export default {
   methods: {
     loggg() {
     },
-    created() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/mailer/',)
-        .then(response => {
-          this.mails = response.data;
-        })
+   created() {
+     
     },
     changevalue() {
       if (this.guest != '') {
@@ -153,27 +150,14 @@ export default {
           }
         })
     },
-    sendMail(guest) {
-      var ids = [];
-      var nextId = '';
-      this.mails.forEach(element => {
-        ids.push(element.id);
-      });
-      for (let index = 0; index < ids.length; index++) {
-        if (ids.includes(String(index)) == false) {
-          nextId = index;
-          break;
-        }
-      }
-      if (nextId == '') {
-        nextId = ids.length;
-      }
+    async sendMail(guest) {
+      
       console.log("send mail attempt")
 
       var jmbagslice = guest.jmbag;
-      if (jmbagslice.slice(0, 2) == "00") {
+      if (jmbagslice.slice(0, 3) == "003") {
         jmbagslice = jmbagslice.slice(4, 9);
-      } else if (jmbagslice.slice(0, 2) == "01") {
+      } else if (jmbagslice.slice(0, 1) == "0") {
         jmbagslice = jmbagslice.slice(0, 9);
       } else {
         jmbagslice = jmbagslice.slice(2, 7);
@@ -207,21 +191,10 @@ export default {
 
 
       var email = e_name + e_surname + jmbagslice + "@fer.hr";
-
-
+      
       var msg = this.name + " " + this.surname + " " + guest.confCode
 
-      axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
-        {
-          id: nextId, subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
-          message: msg,
-          name: this.name,
-          confCode: guest.confCode,
-          to_mail: email
-        },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      ).then(response => {
-        axios.post(process.env.VUE_APP_BASE_URL + '/mailer/' + nextId + '/send_mail/',
+      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
           {
             subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
             message: msg,
@@ -231,9 +204,16 @@ export default {
           },
           { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
         )
-      }).then(response => {
-        this.created();
-      })
+      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+        {
+          subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
+          message: msg,
+          name: this.name,
+          confCode: guest.confCode,
+          to_mail: email
+        },
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      )
     },
   }
 
