@@ -95,11 +95,6 @@ export default {
       axios.get(process.env.VUE_APP_BASE_URL + '/users/',)
         .then(response => {
           this.users = response.data;
-          axios.get(process.env.VUE_APP_BASE_URL + '/mailer/',)
-            .then(response => {
-              this.mails = response.data;
-
-            })
         })
     },
     changeprivilege(user, changenum) {
@@ -127,21 +122,9 @@ export default {
           this.users = response.data;
         })
     },
-    sendMail(user, changenum) {
-      var ids = [];
-      var nextId = '';
-      this.mails.forEach(element => {
-        ids.push(element.id);
-      });
-      for (let index = 0; index < ids.length; index++) {
-        if (ids.includes(String(index)) == false) {
-          nextId = index;
-          break;
-        }
-      }
-      if (nextId == '') {
-        nextId = ids.length;
-      }
+    async sendMail(user, changenum) {
+      console.log("send mail attempt")
+
       var privilege_name = 0;
       if (changenum == 1) {
         privilege_name = "Admin";
@@ -160,27 +143,34 @@ export default {
 
       var email = user.email
 
-      axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+      //makni u produkciji
+      email = "pavleergovic@gmail.com"
+
+      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
         {
-          id: nextId, subject: "[#BRUCIFER22] Promjena privilegije",
+          subject: "[#BRUCIFER22] Promjena privilegije",
+          template: "user_email",
+          message: user.name + " "+ privilege_name,
           name: to_user_name,
           privilege_name: privilege_name,
           to_mail: email
         },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      ).then(response => {
-        axios.post(process.env.VUE_APP_BASE_URL + '/mailer/' + nextId + '/send_mail/',
-          {
-            subject: "[#BRUCIFER22] Promjena privilegije",
-            name: to_user_name,
-            privilege_name: privilege_name,
-            to_mail: email
-          },
-          { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-        )
-      }).then(response => {
-        this.created();
-      })
+      )
+
+      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+        {
+          subject: "[#BRUCIFER22] Promjena privilegije",
+          template: "user_email",
+          message: user.name + " "+ privilege_name,
+          name: to_user_name,
+          privilege_name: privilege_name,
+          to_mail: email
+        },
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      )
+
+      this.created();
     }
   }
 
@@ -199,9 +189,11 @@ export default {
   padding-right: 1%;
   vertical-align: middle;
 }
-.nosubmit.search.users{
+
+.nosubmit.search.users {
   width: 25% !important;
 }
+
 .user-search {
   padding-left: 40px;
   margin-left: 7%;
@@ -265,9 +257,10 @@ export default {
   .hidetablett {
     display: none !important;
   }
-  .nosubmit.search.users{
-  width: 35% !important;
-}
+
+  .nosubmit.search.users {
+    width: 35% !important;
+  }
 }
 
 @media screen and (max-width: 550px) {
@@ -284,10 +277,12 @@ export default {
     ;
 
   }
-  .nosubmit.search.users{
+
+  .nosubmit.search.users {
     width: 52% !important;
     font-size: 10px !important;
   }
+
   .userinfo {
     grid-column: 2/5;
     display: block;
@@ -295,7 +290,7 @@ export default {
     font-size: 12px;
   }
 
-  .page-title.user-title{
+  .page-title.user-title {
     font-size: 20px;
   }
 

@@ -78,8 +78,8 @@ export default {
   methods: {
     loggg() {
     },
-   created() {
-     
+    created() {
+
     },
     changevalue() {
       if (this.guest != '') {
@@ -151,7 +151,7 @@ export default {
         })
     },
     async sendMail(guest) {
-      
+
       console.log("send mail attempt")
 
       var jmbagslice = guest.jmbag;
@@ -191,22 +191,27 @@ export default {
 
 
       var email = e_name + e_surname + jmbagslice + "@fer.hr";
-      
+
+      //maknuti u produkcji
+      email = "pavleergovic@gmail.com"
+
       var msg = this.name + " " + this.surname + " " + guest.confCode
 
       await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
-          {
-            subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
-            message: msg,
-            name: this.name,
-            confCode: guest.confCode,
-            to_mail: email
-          },
-          { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-        )
+        {
+          subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
+          template: "guest_email",
+          message: msg,
+          name: this.name,
+          confCode: guest.confCode,
+          to_mail: email
+        },
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      )
       await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
         {
           subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
+          template: "guest_email",
           message: msg,
           name: this.name,
           confCode: guest.confCode,

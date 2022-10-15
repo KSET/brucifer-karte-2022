@@ -23,11 +23,12 @@ class MailerViewSet(viewsets.ModelViewSet):
         subject = request.data.get('subject', '')
         msg = request.data.get('message', '')
         to = request.data.get('to_mail', '')
+        template_name = request.data.get('template', '')
 
-        if(to[-8:-1]=="kset.or"):
+        if(template_name=="user_email"):
             html_message = render_to_string('emails/user_email.html',{
             'name': request.data.get('name', ''), 'privilege_name': request.data.get('privilege_name', ''),})
-        else:
+        elif(template_name=="guest_email"):
             html_message = render_to_string('emails/guest_email.html',{
             'name': request.data.get('name', ''), 'confCode': request.data.get('confCode', ''),
     })
