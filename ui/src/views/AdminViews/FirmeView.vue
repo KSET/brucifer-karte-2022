@@ -17,8 +17,8 @@
                     <tr v-for="guest in firms" :key="guest.id">
                         <td>{{guest.name}}</td>
                         <td>{{guest.guestCap}}</td>
-                        <td>{{guest.name}}</td>
-                        <td>{{guest.guestCap}}</td>
+                        <td>{{guest.guestsAdded}}</td>
+                        <td>{{guest.guetsEntered}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -44,6 +44,9 @@ export default {
         return {
             firms: [],
             search: '',
+
+            guestsAdded: '',
+            guetsEntered: 0,
         }
     },
     mounted() {
@@ -54,6 +57,22 @@ export default {
             axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/',)
                 .then(response => {
                     this.firms = response.data;
+
+                    this.firms.forEach(element => {
+                        axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + element.slug + "&search_fields=tag")
+                            .then(response => {
+                                var sponsorGuests = response.data;
+                                element.guestsAdded = sponsorGuests.length;
+                                var enter = 0;
+                                sponsorGuests.forEach(elementy => {
+                                    if (elementy.entered == 1)
+                                        enter = enter + 1;
+                                });
+
+                                element.guetsEntered =enter;
+                            })
+
+                    });
 
                 })
         },

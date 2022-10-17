@@ -58,6 +58,9 @@ export default {
       bought: '',
       entered: '',
       deleted: '',
+
+      guestsAdded: '',
+      guetsEntered: '',
     }
   },
   mounted() {
@@ -68,9 +71,9 @@ export default {
     },
     created() {
       axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši&search_fields=tag',)
-
         .then(response => {
           this.guests = response.data;
+          
         })
     },
     changebought(guest, changenum) {
