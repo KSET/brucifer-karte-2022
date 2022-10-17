@@ -20,6 +20,9 @@ import LineupAdd from "../views/AdminViews/LineupAddView.vue";
 import SponsorsAdd from "../views/AdminViews/SponsorsAddView.vue";
 import GuestAdd from "../views/AdminViews/GuestAddView.vue";
 import BandKontakt from "../views/AdminViews/BandKontaktView.vue";
+import Firme from "../views/AdminViews/FirmeView.vue";
+import Cjenik from "../views/AdminViews/CjenikView.vue";
+
 
 /* BruciWeb Views */
 import Bwlineup from "../views/BruciWebViews/BWlineupView.vue";
@@ -126,6 +129,16 @@ const routes = [
     path: "/admin/band-kontakt",
     name: "band-kontakt",
     component: BandKontakt,
+  },
+  {
+    path: "/admin/firme",
+    name: "firme",
+    component: Firme,
+  },
+  {
+    path: "/admin/cjenik",
+    name: "cjenik",
+    component: Cjenik,
   },
   {
     path: "/admin/page-not-found",

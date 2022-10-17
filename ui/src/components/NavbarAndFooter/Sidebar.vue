@@ -43,6 +43,9 @@
 
         <RouterElement class="sidebar-element" :name="'Dodaj Gosta'" :link="'/admin/guests-add'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Kontakt'" :link="'/admin/band-kontakt'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Firme'" :link="'/admin/firme'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Cjenik'" :link="'/admin/cjenik'"></RouterElement>
+
     </div>
 </template>
 
