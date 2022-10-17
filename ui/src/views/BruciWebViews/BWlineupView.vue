@@ -114,6 +114,7 @@ export default {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: contain;
+    object-fit: contain;
 }
 
 .artist {
