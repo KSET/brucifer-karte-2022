@@ -57,6 +57,7 @@ export default {
             axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/',)
                 .then(response => {
                     this.firms = response.data;
+                    this.firms.splice(0, 1);                   
 
                     this.firms.forEach(element => {
                         axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + element.slug + "&search_fields=tag")
@@ -69,7 +70,7 @@ export default {
                                         enter = enter + 1;
                                 });
 
-                                element.guetsEntered =enter;
+                                element.guetsEntered = enter;
                             })
 
                     });

@@ -59,6 +59,7 @@ export default {
 
 
 <style>
+
 .sponsors {
   padding: 3.14159em;
   padding-top: 5.5em;

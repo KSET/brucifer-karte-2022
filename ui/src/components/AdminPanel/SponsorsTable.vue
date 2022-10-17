@@ -1,9 +1,9 @@
 <template>
   <div class="grid">
     <div class="card" style="height: 40%;" ref="" v-for="sponsor in sponsors" :key="sponsor.id">
-
+      
       <img class="ccard-img" v-bind:src="sponsor.image"
-        v-bind:style="[(sponsor.visible=='0') ? {opacity:'0.25'}: { opacity:'1'}]" style="background-color: #D9D9D9;">
+        v-bind:style="[(sponsor.visible=='0') ? {opacity:'0.25'}: { opacity:'1'}]" style="background-color: #D9D9D9; height: 20rem;">
       <div class="ccard-body">
         <h3 class="name"> {{sponsor.name}} </h3>
         <a class="name" :href="sponsor.url" target="_blank"
