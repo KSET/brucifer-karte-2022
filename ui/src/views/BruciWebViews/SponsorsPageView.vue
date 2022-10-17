@@ -302,6 +302,7 @@ h1 {
         margin-top: 3%;
         height: 150px;
         width: 150px;
+        background-color: gray !important;
     }
 
     .infofield-element {
@@ -327,6 +328,8 @@ h1 {
     .image-preview{
         width:6.25rem;
         height: 6.25rem;
+        background-color: gray !important;
+
     }
 
     .popis {
