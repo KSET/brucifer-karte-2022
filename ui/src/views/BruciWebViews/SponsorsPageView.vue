@@ -214,7 +214,7 @@ export default {
     border-bottom: white solid 2px !important;
     border-right: white solid 2px !important;
     padding-left: 6%;
-    margin-top: 6.75rem;
+    padding-top: 6.75rem;
 }
 
 .sponsorsPage-table {
