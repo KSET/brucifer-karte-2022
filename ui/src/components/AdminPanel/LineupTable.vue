@@ -131,6 +131,7 @@ export default {
 .ccard-img {
   position: relative;
   width: 150%;
+  object-fit: contain;
 }
 
 .ccard-buttons {

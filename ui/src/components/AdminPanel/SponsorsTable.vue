@@ -1,10 +1,11 @@
 <template>
   <div class="grid">
     <div class="card" style="height: 40%;" ref="" v-for="sponsor in sponsors" :key="sponsor.id">
-      
+      <div>
       <img class="ccard-img" v-bind:src="sponsor.image"
-        v-bind:style="[(sponsor.visible=='0') ? {opacity:'0.25'}: { opacity:'1'}]" style="background-color: #D9D9D9; height: 20rem;">
-      <div class="ccard-body">
+        v-bind:style="[(sponsor.visible=='0') ? {opacity:'0.25'}: { opacity:'1'}]" style="background-color: #D9D9D9; height: 10rem;">
+      </div>
+        <div class="ccard-body">
         <h3 class="name"> {{sponsor.name}} </h3>
         <a class="name" :href="sponsor.url" target="_blank"
           style="color: black;text-decoration: underline; ">{{sponsor.url}}</a>
@@ -127,6 +128,7 @@ export default {
 .ccard-img {
   position: relative;
   width: 150%;
+  object-fit: contain;
 }
 
 .ccard-buttons {

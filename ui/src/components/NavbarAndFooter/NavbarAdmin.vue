@@ -41,8 +41,8 @@
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Tagovi'"
             :link="'/admin/tags'">
           </RouterElement>
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Privilegije'"
-            :link="'/admin/privileges'"></RouterElement>
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()"
+            :name="'Privilegije'" :link="'/admin/privileges'"></RouterElement>
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Korisnici'"
             :link="'/admin/users'">
           </RouterElement>
@@ -87,10 +87,14 @@
             style="margin-left: 30px;" :link="'/admin/sponsors-add/0'">
           </RouterElement>
 
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Dodaj Gosta'" @click="toggleNav()"
-            :link="'/admin/guests-add'"></RouterElement>
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Dodaj Gosta'"
+            @click="toggleNav()" :link="'/admin/guests-add'"></RouterElement>
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Kontakt'" @click="toggleNav()"
             :link="'/admin/band-kontakt'"></RouterElement>
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Firme'" @click="toggleNav()"
+            :link="'/admin/firme'"></RouterElement>
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Cjenik'" @click="toggleNav()"
+            :link="'/admin/cjenik'"></RouterElement>
         </div>
       </div>
     </div>
@@ -180,14 +184,14 @@ export default {
 
 </script>
 <style module lang="scss">
-  .hideOnSmall {
-    @media screen and (max-width: 369px) {
-      display: none;
-    }
+.hideOnSmall {
+  @media screen and (max-width: 369px) {
+    display: none;
   }
+}
 </style>
 <style lang="scss">
-.overlay-element.admin{
+.overlay-element.admin {
   height: 2.5rem;
 }
 

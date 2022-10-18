@@ -14,7 +14,12 @@
             </div>
 
             <div class="infofield">
-                <img class="image-preview" style="border: none;" :src="previewImage" alt="" />
+                <div class="artist">
+                    <div class="image-container">
+                        <div class="image-sizer2"></div>
+                        <img class="image-frame2" style="border: none;" :src="previewImage">
+                    </div>
+                </div>
 
                 <div class="infofield-element">
                     <div class="grid-container">
@@ -172,6 +177,39 @@ export default {
 </style>
 
 <style scoped>
+
+.image-container {
+    position: relative;
+}
+
+.image-container .image-sizer2 {
+    padding-bottom: calc(0.86 * 100%);
+    transition: padding-bottom .3s ease;
+    will-change: padding-bottom;
+}
+
+.image-container .image-frame2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;     
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    object-fit: contain;
+}
+
+.artist {
+    width: 15rem;
+    height: 15rem;
+    background: rgba(0, 0, 0, .3);
+    border-radius: 18px;
+    padding: 15px 30px;
+}
+.artist.popis{
+
+}
 .popis-element1 {
     border-bottom: white solid 2px !important;
     border-right: white solid 2px !important;
@@ -203,7 +241,7 @@ export default {
     position: relative;
     margin-top: 2%;
     display: grid;
-    grid-template-rows: 50% 50%;
+    grid-template-rows: 55% 45%;
     width: 100%;
     height: 100%;
     border-bottom: white solid 2px !important;
@@ -298,11 +336,10 @@ h1 {
         padding-left: 0%;
     }
 
-    .image-preview {
+    .artist {
         margin-top: 3%;
         height: 150px;
         width: 150px;
-        background-color: gray !important;
     }
 
     .infofield-element {
@@ -325,10 +362,9 @@ h1 {
 }
 
 @media screen and (max-width: 550px) {
-    .image-preview{
+    .artist{
         width:6.25rem;
         height: 6.25rem;
-        background-color: gray !important;
 
     }
 
