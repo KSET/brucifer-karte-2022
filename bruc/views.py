@@ -2,9 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import filters
 from rest_framework import routers, serializers, viewsets
-from .models import Guests, Tags, Users, Lineup, Sponsors, Contact,Mailer
+from .models import Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact,Mailer
 from django_filters.rest_framework import DjangoFilterBackend
-from .serializer import GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer,DynamicSearchFilter, MailerSerializer
+from .serializer import CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer,DynamicSearchFilter, MailerSerializer
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.mail import BadHeaderError, send_mail
@@ -77,5 +77,9 @@ class SponsorsViewSet(viewsets.ModelViewSet):
 class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+
+class CjenikViewSet(viewsets.ModelViewSet):
+    queryset = Cjenik.objects.all()
+    serializer_class = CjenikSerializer
     
     

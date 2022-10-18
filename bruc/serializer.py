@@ -1,6 +1,6 @@
 from socket import if_indextoname
 from rest_framework import serializers, filters
-from .models import Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer
+from .models import Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer
 
 class GuestsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -36,6 +36,11 @@ class MailerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Mailer
         fields = ["subject","message","to_mail"]
+
+class CjenikSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Cjenik
+        fields = ["id","name","tag","priceHR","priceEUR","amountL"]
 
 class DynamicSearchFilter(filters.SearchFilter):
     def get_search_fields(self, view, request):
