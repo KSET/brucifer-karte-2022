@@ -10,4 +10,6 @@ admin.site.register(Lineup)
 admin.site.register(Sponsors)
 admin.site.register(Contact)
 admin.site.register(Cjenik)
+ 
 
+ 

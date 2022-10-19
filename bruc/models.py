@@ -92,6 +92,7 @@ class Cjenik(models.Model):
     id = models.AutoField(primary_key=True)
     name=models.CharField(max_length=100, default='', blank=True)
     tag=models.CharField(max_length=50, default='0', blank=True)
+    order=models.CharField(max_length=100, default='', blank=True)
     priceHR=models.CharField(max_length=50, default='0', blank=True)
     priceEUR=models.CharField(max_length=50, default='0', blank=True)
     amountL=models.CharField(max_length=50, default='0', blank=True)

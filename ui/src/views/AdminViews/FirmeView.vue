@@ -5,7 +5,7 @@
             <h1 class="page-title">Firme</h1>
 
             <h1 class="textfield">Ime Firme</h1>
-            <input @input="searchFirm" class="inputfield" type="text" v-model="name">
+            <input @input="searchFirm" class="inputfield" type="text" v-model="search">
             <table class="table" id="guests">
                 <thead>
                     <th>Firma</th>
@@ -81,6 +81,14 @@ export default {
             axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.search + "&search_fields=name",)
                 .then(response => {
                     this.firms = response.data;
+                    var ids= [];
+                    this.firms.forEach(element => {
+                        ids.push(element.id)
+                    });
+                    console.log(ids)
+                    if(ids.includes('314159')){
+                        this.firms.splice(0, 1);                   
+                    }
                 })
         }
     }

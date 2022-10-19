@@ -40,7 +40,7 @@ class MailerSerializer(serializers.HyperlinkedModelSerializer):
 class CjenikSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Cjenik
-        fields = ["id","name","tag","priceHR","priceEUR","amountL"]
+        fields = ["id","name","tag","order","priceHR","priceEUR","amountL"]
 
 class DynamicSearchFilter(filters.SearchFilter):
     def get_search_fields(self, view, request):
