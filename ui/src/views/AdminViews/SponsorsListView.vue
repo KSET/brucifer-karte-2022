@@ -82,7 +82,7 @@ export default {
 
         resp.data.forEach(async element => {
           
-          let msg = "["+Date.now().toLocaleString+"] "+element.name+" "+element.email+" "+element.slug
+          let msg = element.name+" "+element.email+" "+element.slug
 
           let email=element.email
           //maknut u produkciji
