@@ -30,8 +30,10 @@ class MailerViewSet(viewsets.ModelViewSet):
             'name': request.data.get('name', ''), 'privilege_name': request.data.get('privilege_name', ''),})
         elif(template_name=="guest_email"):
             html_message = render_to_string('emails/guest_email.html',{
-            'name': request.data.get('name', ''), 'confCode': request.data.get('confCode', ''),
-    })
+            'name': request.data.get('name', ''), 'confCode': request.data.get('confCode', '')})
+        elif(template_name=="sponsors_email"):
+            html_message = render_to_string('emails/sponsors_email.html',{
+            'name': request.data.get('name', ''), 'link': request.data.get('link', '')})
 
         if subject and msg and settings.EMAIL_HOST_USER:
             try:

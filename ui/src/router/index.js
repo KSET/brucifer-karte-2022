@@ -23,7 +23,6 @@ import BandKontakt from "../views/AdminViews/BandKontaktView.vue";
 import Firme from "../views/AdminViews/FirmeView.vue";
 import Cjenik from "../views/AdminViews/CjenikView.vue";
 
-
 /* BruciWeb Views */
 import Bwlineup from "../views/BruciWebViews/BWlineupView.vue";
 import BWsponsors from "../views/BruciWebViews/BWsponsorsView.vue";
@@ -34,7 +33,6 @@ import Naslovnica from "../views/BruciWebViews/NaslovnicaView.vue";
 import BWPageNotFound from "../views/BruciWebViews/BWPageNotFound.vue";
 
 import SponsorsPage from "../views/BruciWebViews/SponsorsPageView.vue";
-
 
 import store from "@/store/index.js";
 
@@ -219,45 +217,48 @@ router.beforeEach((to, from, next) => {
     "",
     undefined,
   ];
-
   if (String(to.path).split("/")[1] == "admin") {
-    if (Date.now() / 1000 > store.state.tokenExp && to.name != "logout") {
-      next({ path: "/admin/logout" });
-    } else {
-      if (store.state.id == "" && to.name != "login") {
-        next({ path: "/admin/login" });
-      } else if (store.state.privilege == 0 && to.name != "login") {
-        window.alert(
-          "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-        );
-        next({ path: "/admin/login" });
-      } else if (
-        store.state.privilege == 2 &&
-        !allowedRoutesForprivilege2.includes(to.name)
-      ) {
-        window.alert(
-          "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-        );
-        next({ path: "/admin/home" });
-      } else if (
-        store.state.privilege == 3 &&
-        !allowedRoutesForprivilege3.includes(to.name)
-      ) {
-        window.alert(
-          "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-        );
-        next({ path: "/admin/home" });
-      } else if (
-        store.state.privilege == 4 &&
-        !allowedRoutesForprivilege4.includes(to.name)
-      ) {
-        window.alert(
-          "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-        );
-        next({ path: "/admin/home" });
+    if (String(to.path).split("/")[1] == "admin") {
+      if (Date.now() / 1000 > store.state.tokenExp && to.name != "logout") {
+        next({ path: "/admin/logout" });
       } else {
-        next();
+        if (store.state.id == "" && to.name != "login") {
+          next({ path: "/admin/login" });
+        } else if (store.state.privilege == 0 && to.name != "login") {
+          window.alert(
+            "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
+          );
+          next({ path: "/admin/login" });
+        } else if (
+          store.state.privilege == 2 &&
+          !allowedRoutesForprivilege2.includes(to.name)
+        ) {
+          window.alert(
+            "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
+          );
+          next({ path: "/admin/home" });
+        } else if (
+          store.state.privilege == 3 &&
+          !allowedRoutesForprivilege3.includes(to.name)
+        ) {
+          window.alert(
+            "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
+          );
+          next({ path: "/admin/home" });
+        } else if (
+          store.state.privilege == 4 &&
+          !allowedRoutesForprivilege4.includes(to.name)
+        ) {
+          window.alert(
+            "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
+          );
+          next({ path: "/admin/home" });
+        } else {
+          next();
+        }
       }
+    } else {
+      next();
     }
   } else {
     next();

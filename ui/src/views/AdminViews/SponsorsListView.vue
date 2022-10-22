@@ -9,6 +9,8 @@
           <img src="../../assets/icons/add-icon.svg">
         </router-link>
 
+        <button  class="button submit" style=" margin-top: 0px;  vertical-align: middle; " @click="sendMail">Pozovi sponzore</button>
+
         <div class="switchdiv">
 
           <h1 class="textfield" style="display: inline;">Vidljvo </h1>
@@ -72,8 +74,44 @@ export default {
       )
         .then(() => {
         })
+    },
+    async sendMail(){
+      if(window.confirm("Klikom na OK šaljete mail SVIM sponzorima!!!")){
+        const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/')
+        resp.data.splice(0, 1);                   
 
+        resp.data.forEach(async element => {
+          
+          let msg = "["+Date.now().toLocaleString+"] "+element.name+" "+element.email+" "+element.slug
 
+          let email=element.email
+          //maknut u produkciji
+          email= "pavleergovic@gmail.com"
+
+          await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
+        {
+          subject: "[#BRUCIFER22] Dobrodošli na Brucošijadu",
+          template: "sponsors_email",
+          message: msg,
+          name: element.name,
+          link: "https://brucosijada.kset.org/sponzori/"+element.slug,
+          to_mail: email
+        },
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      )
+      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+        {
+          subject: "[#BRUCIFER22] Dobrodošli na Brucošijadu",
+          template: "sponsors_email",
+          message: msg,
+          name: element.name,
+          link: "https://brucosijada.kset.org/sponzori/"+element.slug,
+          to_mail: email
+        },
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      )
+        });
+      }
     }
   }
 

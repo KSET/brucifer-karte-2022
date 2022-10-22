@@ -27,7 +27,7 @@
               <h1 class="textfield">Cijena u HRK</h1>
               <h1 class="textfield">Cijena u EUR </h1>
 
-              <input required class="inputfield kontakt" type="text" v-model="priceHRK">
+              <input required class="inputfield kontakt" type="text" v-model="priceHRK" @input="calculateEUR">
               <input required class="inputfield kontakt" type="text" v-model="priceEUR">
 
             </div>
@@ -47,16 +47,25 @@
                 <th>Cijena EUR</th>
                 <th>Opcije</th>
               </thead>
-              <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto;" class="tbody">
+              <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto; " class="tbody">
                 <div class="grid-artikli" v-for="artikl in artikli" :key="artikl.id">
                   <p>{{artikl.name}}</p>
                   <p>{{artikl.priceHRK}}</p>
                   <p>{{artikl.priceEUR}}</p>
                   <p><button class="button-icon" @click="deleteArtikl(artikl)">
+                      <img src="@/assets/icons/arrow-up-icon.svg"></button> </p>
+
+  
+                  <p><button class="button-icon" @click="deleteArtikl(artikl)">
+                      <img src="@/assets/icons/dopdwn-notopen-icon.svg"></button> </p>
+
+                  <p style="grid-column: 1/6;">{{artikl.volume}} L</p>
+
+                  <p style="grid-column: 1/4;">{{artikl.tag}}</p>
+
+                  <p><button class="button-icon" @click="deleteArtikl(artikl)">
                       <img src="@/assets/icons/trash-icon.svg"></button> </p>
 
-                  <p>{{artikl.volume}}</p>
-                  <p>{{artikl.tag}}</p>
 
                 </div>
               </tbody>
@@ -112,6 +121,10 @@ export default {
           this.artikli = response.data;
         })
     },
+    calculateEUR(){
+      const tečajEUR = 7.53450;
+      this.priceEUR=Math.round(((this.priceHRK/tečajEUR)) * 100) / 100
+    },
     toggleContactForm() {
       this.showContactForm = !this.showContactForm;
       if (this.showContactForm) {
@@ -124,6 +137,8 @@ export default {
     },
 
     postArtikl() {
+      
+
       axios.post(process.env.VUE_APP_BASE_URL + '/cjenik/',
         { name: this.name, tag: this.selectedTag, priceHRK: this.priceHRK, priceEUR: this.priceEUR, volume: this.volume },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
@@ -156,7 +171,9 @@ export default {
 <style>
 .grid-artikli {
   display: grid;
-  grid-template-columns: 30% 15% 15% auto;
+  grid-template-columns: 30% 15% 15% 5% 5%;
+  border-bottom: 1px solid black;
+  row-gap: 20px;
 }
 
 .grid-container-contact {
