@@ -171,7 +171,7 @@ export default {
 <style>
 .grid-artikli {
   display: grid;
-  grid-template-columns: 30% 15% 15% 5% 5%;
+  grid-template-columns: 35% 20% 25% 5% 5%;
   border-bottom: 1px solid black;
   row-gap: 20px;
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="sponsorsp">
     <Sidebar />
-    <div class="admin-page-container" >
+    <div class="admin-page-container">
 
       <div class="header">
         <h1 class="page-title">Sponzori</h1>
@@ -9,7 +9,8 @@
           <img src="../../assets/icons/add-icon.svg">
         </router-link>
 
-        <button  class="button submit" style=" margin-top: 0px;  vertical-align: middle; " @click="sendMail">Pozovi sponzore</button>
+        <button class="button submit" style=" margin-top: 0px;  vertical-align: middle; " @click="sendMail">Pozovi
+          sponzore</button>
 
         <div class="switchdiv">
 
@@ -75,48 +76,74 @@ export default {
         .then(() => {
         })
     },
-    async sendMail(){
-      if(window.confirm("Klikom na OK šaljete mail SVIM sponzorima!!!")){
+    async sendMail() {
+      if (window.confirm("Klikom na OK šaljete mail SVIM sponzorima!!!")) {
         const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/')
-        resp.data.splice(0, 1);                   
+        const res = await axios.get(process.env.VUE_APP_BASE_URL + '/mailer/')
 
-        resp.data.forEach(async element => {
-          
-          let msg = element.name+" "+element.email+" "+element.slug
-
-          let email=element.email
-          //maknut u produkciji
-          email= "pavleergovic@gmail.com"
-
-          await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
-        {
-          subject: "[#BRUCIFER22] Dobrodošli na Brucošijadu",
-          template: "sponsors_email",
-          message: msg,
-          name: element.name,
-          link: "https://brucosijada.kset.org/sponzori/"+element.slug,
-          to_mail: email
-        },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
-      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
-        {
-          subject: "[#BRUCIFER22] Dobrodošli na Brucošijadu",
-          template: "sponsors_email",
-          message: msg,
-          name: element.name,
-          link: "https://brucosijada.kset.org/sponzori/"+element.slug,
-          to_mail: email
-        },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
+        let emails = []
+        resp.data.forEach(elementy => {
+          if(elementy.email!=''){
+            emails.push(elementy.email)
+          }
         });
+
+        console.log(emails)
+        let mailsent = 0;
+        res.data.forEach(element => {
+          emails.forEach(elementy => {
+            if(element.message.includes(elementy)) {
+              mailsent += 1;
+              emails.pop(elementy)
+            }
+        });        });
+
+        if (mailsent > 0) {
+          if (window.confirm(`Mail je već poslan ${mailsent}/${resp.data.length-1} sponzora, klikom na 'OK' SVIM sponzorima će se ponovno poslati mail!!!`)) {
+            mailsent = 0;
+          }
+        }
+        if (mailsent == 0) {
+          resp.data.splice(0, 1);
+
+          resp.data.forEach(async element => {
+
+            let msg = element.name + " " + element.email + " " + element.slug
+
+            let email = element.email
+            //maknut u produkciji
+            email = "pavleergovic@gmail.com"
+
+            await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
+              {
+                subject: "[#BRUCIFER22] Dobrodošli na Brucošijadu",
+                template: "sponsors_email",
+                message: msg,
+                name: element.name,
+                link: "https://brucosijada.kset.org/sponzori/" + element.slug,
+                to_mail: email
+              },
+              { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+            )
+            await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+              {
+                subject: "[#BRUCIFER22] Dobrodošli na Brucošijadu",
+                template: "sponsors_email",
+                message: msg,
+                name: element.name,
+                link: "https://brucosijada.kset.org/sponzori/" + element.slug,
+                to_mail: email
+              },
+              { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+            )
+          });
+        }
       }
+
     }
   }
-
-
 }
+
 </script>
 
 <style >
