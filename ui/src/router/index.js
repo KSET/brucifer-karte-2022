@@ -31,6 +31,8 @@ import Ulaznice from "../views/BruciWebViews/UlazniceView.vue";
 import Pravila from "../views/BruciWebViews/PravilaView.vue";
 import Naslovnica from "../views/BruciWebViews/NaslovnicaView.vue";
 import BWPageNotFound from "../views/BruciWebViews/BWPageNotFound.vue";
+import BWcjenik from "../views/BruciWebViews/BWcjenikView.vue";
+
 
 import SponsorsPage from "../views/BruciWebViews/SponsorsPageView.vue";
 
@@ -169,6 +171,11 @@ const routes = [
     path: "/pravila-ponasanja",
     name: "pravila-ponasanja",
     component: Pravila,
+  },
+  {
+    path: "/cjenik",
+    name: "BWcjenik",
+    component: BWcjenik,
   },
   {
     path: "/",

@@ -73,7 +73,6 @@ class SponsorsViewSet(viewsets.ModelViewSet):
     queryset = Sponsors.objects.all()
     serializer_class = SponsorsSerializer
     filter_backends = [DynamicSearchFilter,filters.OrderingFilter]
-
     ordering_fields = ['order']
 
 class ContactViewSet(viewsets.ModelViewSet):
@@ -83,5 +82,9 @@ class ContactViewSet(viewsets.ModelViewSet):
 class CjenikViewSet(viewsets.ModelViewSet):
     queryset = Cjenik.objects.all()
     serializer_class = CjenikSerializer
+
+    filter_backends = [DynamicSearchFilter,filters.OrderingFilter]
+    search_fields = ['tag']
+    ordering_fields = ['order']
     
     

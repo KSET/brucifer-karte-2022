@@ -6,7 +6,7 @@
         <div style="border-right: 1px solid black; width: 95%">
           <h1 class="page-title lineup-title" style="padding-top: 20px">Popis Artikala</h1>
 
-          <img v-if="this.showContactForm==false" style="margin-top: 15px;" class="dropdown-icon showmobile"
+          <img v-if="this.showContactForm == false" style="margin-top: 15px;" class="dropdown-icon showmobile"
             src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleContactForm">
           <img v-else class="dropdown-icon  showmobile" style="margin-top: 15px;"
             src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleContactForm">
@@ -49,19 +49,19 @@
               </thead>
               <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto; " class="tbody">
                 <div class="grid-artikli" v-for="artikl in artikli" :key="artikl.id">
-                  <p>{{artikl.name}}</p>
-                  <p>{{artikl.priceHRK}}</p>
-                  <p>{{artikl.priceEUR}}</p>
+                  <p>{{ artikl.name }}</p>
+                  <p>{{ artikl.priceHRK }}</p>
+                  <p>{{ artikl.priceEUR }}</p>
                   <p><button class="button-icon" @click="deleteArtikl(artikl)">
                       <img src="@/assets/icons/arrow-up-icon.svg"></button> </p>
 
-  
+
                   <p><button class="button-icon" @click="deleteArtikl(artikl)">
                       <img src="@/assets/icons/dopdwn-notopen-icon.svg"></button> </p>
 
-                  <p style="grid-column: 1/6;">{{artikl.volume}} L</p>
+                  <p style="grid-column: 1/6;">{{ artikl.volume }} L</p>
 
-                  <p style="grid-column: 1/4;">{{artikl.tag}}</p>
+                  <p style="grid-column: 1/4;">{{ artikl.tag }}</p>
 
                   <p><button class="button-icon" @click="deleteArtikl(artikl)">
                       <img src="@/assets/icons/trash-icon.svg"></button> </p>
@@ -116,14 +116,17 @@ export default {
 
   methods: {
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/',)
-        .then(response => {
-          this.artikli = response.data;
-        })
+      this.tags.forEach(element => {
+        const resp = axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?ordering=order&search=' + element + '&search_fields=tag',)
+        this.artikli.push(resp.data)
+      });
+
+      console.log(this.artikli)
+
     },
-    calculateEUR(){
+    calculateEUR() {
       const tečajEUR = 7.53450;
-      this.priceEUR=Math.round(((this.priceHRK/tečajEUR)) * 100) / 100
+      this.priceEUR = Math.round(((this.priceHRK / tečajEUR)) * 100) / 100
     },
     toggleContactForm() {
       this.showContactForm = !this.showContactForm;
@@ -136,11 +139,32 @@ export default {
       }
     },
 
-    postArtikl() {
-      
+    async postArtikl() {
+      const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?ordering=order&search=' + this.selectedTag + '&search_fields=tag',)
+      let nextOrder = "00";
 
+      let cjenik = resp.data;
+
+      if ((cjenik.length) != 0) {
+        let lastOrder = cjenik[cjenik.length - 1].order;
+
+        if (lastOrder[0] == "0") {
+          if (lastOrder == "09") {
+            nextOrder = "10"
+          }
+          else {
+            nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
+          }
+        } else {
+          nextOrder = (parseInt(lastOrder) + 1).toString();
+        }
+      }
+
+
+
+      console.log(nextOrder)
       axios.post(process.env.VUE_APP_BASE_URL + '/cjenik/',
-        { name: this.name, tag: this.selectedTag, priceHRK: this.priceHRK, priceEUR: this.priceEUR, volume: this.volume },
+        { name: this.name, tag: this.selectedTag, order: nextOrder, priceHRK: this.priceHRK, priceEUR: this.priceEUR, volume: this.volume },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
