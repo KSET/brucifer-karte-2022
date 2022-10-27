@@ -19,6 +19,7 @@ Porez je uračunat u cijenu.</p>
   
   <script>
   import Footer from '@/components/NavbarAndFooter/Footer.vue'
+  import axios from 'axios';
   
   export default {
     name: 'KontaktView',
@@ -26,11 +27,33 @@ Porez je uračunat u cijenu.</p>
     mounted(){
         this.created();
     },
+    data() {
+    return {
+      showContactForm: true,
+      showHid: false,
+      tbodyHigh: false,
+
+      tags: ["Bezalkoholna pića", "Pivo", "Vino", "Žestoka pića", "Ostalo"],
+      artikli: [],
+
+    }
+  },
     methods: {
-        created(){
-            const resp= axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/')
-            this.cjenik=resp.data;
+      async created() {
+      this.artikli=[];
+      this.tags.forEach(async element => {
+        console.log(element)
+        const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?search=' + element + '&search_fields=tag',)
+        if(resp.data.length!=0){
+          resp.data.forEach(elementy => {
+            console.log(this.artikli)
+            this.artikli[element]=elementy
+          });
         }
+      });
+      console.log(this.artikli)
+
+    },
     }
   }
   </script>
