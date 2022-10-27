@@ -33,7 +33,7 @@ class Tags(models.Model):
 class Lineup(models.Model):
     id=models.CharField(max_length=50, primary_key=True, default=0, blank=False)
     slug=models.CharField(max_length=200, default='', blank=True)
-    order=models.CharField(max_length=200, default='', blank=True)
+    order=models.IntegerField(default='', blank=True)
     visible=models.CharField(max_length=200, default='', blank=True)
     name=models.CharField(max_length=49, default='', blank=True)
     image = models.ImageField(upload_to='uploads/lineup', blank=True, null=True)
@@ -54,7 +54,7 @@ class Lineup(models.Model):
 class Sponsors(models.Model):
     id=models.CharField(max_length=50, primary_key=True, default=0, blank=False)
     slug=models.CharField(max_length=200, default='', blank=True)
-    order=models.CharField(max_length=200, default='', blank=True)
+    order=models.IntegerField(default='', blank=True)
     visible=models.CharField(max_length=200, default='', blank=True)
     name=models.CharField(max_length=49, default='', blank=True)
     url=models.CharField(max_length=400, default='0', blank=True)
@@ -92,7 +92,7 @@ class Cjenik(models.Model):
     id = models.AutoField(primary_key=True)
     name=models.CharField(max_length=100, default='', blank=True)
     tag=models.CharField(max_length=50, default='0', blank=True)
-    order=models.CharField(max_length=100, default='', blank=True)
+    order=models.IntegerField(default='', blank=True)
     priceHRK=models.CharField(max_length=50, default='0', blank=True)
     priceEUR=models.CharField(max_length=50, default='0', blank=True)
     volume=models.CharField(max_length=50, default='0', blank=True)
