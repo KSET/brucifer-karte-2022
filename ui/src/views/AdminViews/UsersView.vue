@@ -143,9 +143,6 @@ export default {
 
       var email = user.email
 
-      //makni u produkciji
-      email = "pavleergovic@gmail.com"
-
       await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
         {
           subject: "[#BRUCIFER22] Promjena privilegije",

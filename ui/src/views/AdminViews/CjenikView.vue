@@ -110,17 +110,22 @@ export default {
   },
   mounted() {
     this.showHid = true;
-
     this.created();
   },
 
   methods: {
-    created() {
-      this.tags.forEach(element => {
-        const resp = axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?ordering=order&search=' + element + '&search_fields=tag',)
-        this.artikli.push(resp.data)
+    async created() {
+      this.artikli=[];
+      this.tags.forEach(async element => {
+        console.log(element)
+        const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?search=' + element + '&search_fields=tag',)
+        if(resp.data.length!=0){
+          resp.data.forEach(element => {
+            console.log(this.artikli)
+            this.artikli.push(element)
+          });
+        }
       });
-
       console.log(this.artikli)
 
     },
@@ -163,14 +168,11 @@ export default {
 
 
       console.log(nextOrder)
-      axios.post(process.env.VUE_APP_BASE_URL + '/cjenik/',
+      await axios.post(process.env.VUE_APP_BASE_URL + '/cjenik/',
         { name: this.name, tag: this.selectedTag, order: nextOrder, priceHRK: this.priceHRK, priceEUR: this.priceEUR, volume: this.volume },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
-        .then(() => {
-
-          this.created();
-        })
+      this.created();
 
     },
     deleteArtikl(artikl) {
