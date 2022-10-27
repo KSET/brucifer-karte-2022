@@ -52,11 +52,11 @@
                   <p>{{ artikl.name }}</p>
                   <p>{{ artikl.priceHRK }}</p>
                   <p>{{ artikl.priceEUR }}</p>
-                  <p><button class="button-icon" @click="deleteArtikl(artikl)">
+                  <p><button class="button-icon" @click="orderUp(artikl)">
                       <img src="@/assets/icons/arrow-up-icon.svg"></button> </p>
 
 
-                  <p><button class="button-icon" @click="deleteArtikl(artikl)">
+                  <p><button class="button-icon" @click="orderDown(artikl)">
                       <img src="@/assets/icons/dopdwn-notopen-icon.svg"></button> </p>
 
                   <p style="grid-column: 1/6;">{{ artikl.volume }} L</p>
@@ -108,6 +108,7 @@ export default {
 
     }
   },
+  
   mounted() {
     this.showHid = true;
     this.created();
@@ -115,19 +116,54 @@ export default {
 
   methods: {
     async created() {
-      this.artikli=[];
+      this.artikli = [];
       this.tags.forEach(async element => {
         console.log(element)
-        const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?search=' + element + '&search_fields=tag',)
-        if(resp.data.length!=0){
+        const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?ordering=order&search=' + element + '&search_fields=tag',)
+        if (resp.data.length != 0) {
           resp.data.forEach(element => {
-            console.log(this.artikli)
             this.artikli.push(element)
           });
         }
       });
       console.log(this.artikli)
 
+    },
+    async orderUp(artikl) {
+      let curIndex = this.artikli.indexOf(artikl);
+      let nextIndex = curIndex - 1;
+      let nextArtikl = this.artikli[nextIndex]
+      
+      if (curIndex != "0") {
+        if (artikl.tag == nextArtikl.tag) {
+          await axios.put(process.env.VUE_APP_BASE_URL + '/cjenik/' + artikl.id + '/',
+            { order: nextArtikl.order },
+            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } })
+
+          await axios.put(process.env.VUE_APP_BASE_URL + '/cjenik/' + nextArtikl.id + '/',
+            { order: artikl.order },
+            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } })
+        }
+        window.location.reload();
+      }
+    },
+    async orderDown(artikl) {
+      let curIndex = this.artikli.indexOf(artikl);
+      let nextIndex = curIndex + 1;
+      let nextArtikl = this.artikli[nextIndex]
+
+      if (nextIndex != this.artikli.length) {
+        if (artikl.tag == nextArtikl.tag) {
+          await axios.put(process.env.VUE_APP_BASE_URL + '/cjenik/' + artikl.id + '/',
+            { order: nextArtikl.order },
+            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } })
+
+          await axios.put(process.env.VUE_APP_BASE_URL + '/cjenik/' + nextArtikl.id + '/',
+            { order: artikl.order },
+            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } })
+        }
+        window.location.reload();
+      }
     },
     calculateEUR() {
       const tečajEUR = 7.53450;
@@ -165,14 +201,12 @@ export default {
         }
       }
 
-
-
-      console.log(nextOrder)
-      await axios.post(process.env.VUE_APP_BASE_URL + '/cjenik/',
+      axios.post(process.env.VUE_APP_BASE_URL + '/cjenik/',
         { name: this.name, tag: this.selectedTag, order: nextOrder, priceHRK: this.priceHRK, priceEUR: this.priceEUR, volume: this.volume },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
-      this.created();
+      ).then(() => {
+        window.location.reload();
+        })
 
     },
     deleteArtikl(artikl) {
@@ -180,7 +214,7 @@ export default {
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
-          this.created();
+          window.location.reload();
         })
     }
 
