@@ -99,7 +99,7 @@ export default {
       showHid: false,
       tbodyHigh: false,
 
-      tags: ["Bezalkoholna pića", "Pivo", "Vino", "Žestoka pića", "Ostalo"],
+      tags: ["BEZALKOHOLNA PIĆA", "PIVO", "VINO", "ŽESTOKA PIĆA", "OSTALO"],
 
       selectedTag: '',
       priceHRK: '',
