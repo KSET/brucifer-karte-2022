@@ -46,7 +46,7 @@ export default {
       showHid: false,
       tbodyHigh: false,
 
-      tags: ["BEZALKOHOLNA PIĆA", "PIVO", "VINO", "ŽESTOKA PIĆA", "OSTALO"],
+      tags: ["SOK", "PIVO", "DOLJEVI", "ALKOHOL", "OSTALO"],
       artikli: [],
 
     }
