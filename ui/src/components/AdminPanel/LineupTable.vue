@@ -3,9 +3,9 @@
     <div class="grid">
       <div class="card" style="height: 40%; border: none;" v-for="lineup in lineups" :key="lineup.id">
         <img class="ccard-img" v-bind:src="lineup.image"
-          v-bind:style="[(lineup.visible=='0') ? {opacity:'0.25'}: { opacity:'1'}]">
+          v-bind:style="[(lineup.visible == '0') ? { opacity: '0.25' } : { opacity: '1' }]">
         <div class="ccard-body">
-          <h3 class="name"> {{lineup.name}}</h3>
+          <h3 class="name"> {{ lineup.name }}</h3>
 
           <div class="ccard-buttons">
             <button @click="changelineuporder(lineup, 'b')" id="b4" class="ccard-button">
@@ -54,9 +54,7 @@ export default {
     editlineup(lineup) {
       this.$router.push({ path: '/admin/lineup-add/' + lineup.slug });
     },
-    changelineuporder(lineup, direction) {
-      document.querySelector('#next').disabled = true;
-      document.querySelector('#b4').disabled = true;
+    async changelineuporder(lineup, direction) {
 
       var nextlineupobj = (this.lineups.indexOf(lineup));
       if (direction == "f") {
@@ -69,30 +67,16 @@ export default {
         }
       }
 
-      axios.put(process.env.VUE_APP_BASE_URL + '/lineup/' + nextlineup.id + '/',
-        { order: "1000000" },
+      await axios.put(process.env.VUE_APP_BASE_URL + '/lineup/' + lineup.id + '/',
+        { order: nextlineup.order },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
-        .then(() => {
 
-          axios.put(process.env.VUE_APP_BASE_URL + '/lineup/' + lineup.id + '/',
-            { order: nextlineup.order },
-            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-          )
-            .then(() => {
-            })
-          axios.put(process.env.VUE_APP_BASE_URL + '/lineup/' + nextlineup.id + '/',
-            { order: lineup.order },
-            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-          )
-            .finally(() => {
-              document.querySelector('#next').disabled = false;
-              document.querySelector('#b4').disabled = false;
-              this.created();
-            })
+      await axios.put(process.env.VUE_APP_BASE_URL + '/lineup/' + nextlineup.id + '/',
+        { order: lineup.order },
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } })
 
-        })
-
+      this.created();
     }
   }
 
