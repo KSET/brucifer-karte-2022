@@ -2,13 +2,14 @@
   <div class="grid">
     <div class="card" style="height: 40%;" ref="" v-for="sponsor in sponsors" :key="sponsor.id">
       <div>
-      <img class="ccard-img" v-bind:src="sponsor.image"
-        v-bind:style="[(sponsor.visible=='0') ? {opacity:'0.25'}: { opacity:'1'}]" style="background-color: #D9D9D9; height: 10rem;">
+        <img class="ccard-img" v-bind:src="sponsor.image"
+          v-bind:style="[(sponsor.visible == '0') ? { opacity: '0.25' } : { opacity: '1' }]"
+          style="background-color: #D9D9D9; height: 10rem;">
       </div>
-        <div class="ccard-body">
-        <h3 class="name"> {{sponsor.name}} </h3>
+      <div class="ccard-body">
+        <h3 class="name"> {{ sponsor.name }} </h3>
         <a class="name" :href="sponsor.url" target="_blank"
-          style="color: black;text-decoration: underline; ">{{sponsor.url}}</a>
+          style="color: black;text-decoration: underline; ">{{ sponsor.url }}</a>
 
         <div class="ccard-buttons">
           <button @click="changesponsororder(sponsor, 'b')" class="ccard-button">
@@ -57,7 +58,7 @@ export default {
     editsponsor(sponsor) {
       this.$router.push({ path: '/admin/sponsors-add/' + sponsor.slug });
     },
-    changesponsororder(sponsor, direction) {
+    async changesponsororder(sponsor, direction) {
       var nextsponsorobj = (this.sponsors.indexOf(sponsor));
 
       if (direction == "f") {
@@ -70,26 +71,17 @@ export default {
         }
       }
 
-      axios.put(process.env.VUE_APP_BASE_URL + '/sponsors/' + nextsponsor.id + '/',
-        { order: "1000000" },
+
+      await axios.put(process.env.VUE_APP_BASE_URL + '/sponsors/' + sponsor.id + '/',
+        { order: nextsponsor.order },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
-        .then(() => {
-          axios.put(process.env.VUE_APP_BASE_URL + '/sponsors/' + sponsor.id + '/',
-            { order: nextsponsor.order },
-            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-          )
-            .then(() => {
-            })
-          axios.put(process.env.VUE_APP_BASE_URL + '/sponsors/' + nextsponsor.id + '/',
-            { order: sponsor.order },
-            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-          )
-            .then(() => {
-              this.created();
-            })
+      await axios.put(process.env.VUE_APP_BASE_URL + '/sponsors/' + nextsponsor.id + '/',
+        { order: sponsor.order },
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      )
+      this.created();
 
-        })
 
     }
   }
