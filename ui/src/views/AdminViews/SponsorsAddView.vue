@@ -183,7 +183,7 @@ export default {
 
                     await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
                         {
-                            subject: "[#BRUCIFER22] Dobrodošli na Brucošijadu",
+                            subject: "[KSET] Link za uređivanje popisa za 40. Beucošijadu FER-a",
                             template: "sponsors_email",
                             message: msg,
                             name: this.name,
@@ -194,7 +194,7 @@ export default {
                     )
                     await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
                         {
-                            subject: "[#BRUCIFER22] Dobrodošli na Brucošijadu",
+                            subject: "[KSET] Link za uređivanje popisa za 40. Beucošijadu FER-a",
                             template: "sponsors_email",
                             message: msg,
                             name: this.name,
