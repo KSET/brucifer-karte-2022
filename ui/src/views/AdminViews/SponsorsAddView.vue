@@ -52,6 +52,9 @@
                     <button v-if="(this.slug != '0')" class="button submit" style=" margin-top: 0px "
                         @click="sendMail">Pozovi</button>
 
+                    <button v-if="(this.slug != '0')" class="button submit" style=" margin-top: 0px "
+                        @click="reroutePopis">Popis</button>
+
                 </div>
             </form>
             <img class="image-preview hidetablet" :src="previewImage" alt="" />
@@ -143,6 +146,9 @@ export default {
             this.progress = 0;
             this.message = "";
         },
+        reroutePopis(){
+            this.$router.push({ path: '/sponzori/'+this.slug });
+        },
         async deleteSponsors() {
             const resp = await axios.delete(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/",
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
@@ -174,8 +180,6 @@ export default {
                     let msg = this.name + " " + this.email + " " + this.slug
 
                     let email = this.email
-                    //maknut u this
-                    email = "pavleergovic@gmail.com"
 
                     await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
                         {
