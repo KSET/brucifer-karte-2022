@@ -161,6 +161,9 @@ export default {
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                     )
                         .then(() => {
+                            this.name = ''
+                            this.surname = ''
+                            this.selectedTag = ''
                             this.created()
                         })
                 }
