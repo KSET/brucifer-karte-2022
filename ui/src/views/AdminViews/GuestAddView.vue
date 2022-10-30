@@ -5,7 +5,7 @@
 
             <h1 class="page-title">Dodavanje Gosta</h1>
 
-            <form  onsubmit="return false">
+            <form onsubmit="return false">
                 <div class="grid-container" style="row-gap: 5%;">
                     <h1 class="textfield">Ime: </h1>
                     <input required class="inputfield" type="text" @input="changevalue" v-model="name">
@@ -143,33 +143,30 @@ export default {
                     jmbags.push(element.jmbag);
                 });
 
-                if (this.selectedTag == "Brucoši") {
-                    console.log(jmbags.includes(String(this.jmbag)))
-
-                    if (jmbags.includes(String(this.jmbag))) {
-                        window.alert("Gost s ovim JMBAG-om već postoji!!")
-                    } else {
-                        for (let index = 0; index < ids.length; index++) {
-                            if (ids.includes(String(index)) == false) {
-                                this.nextId = index;
-                                break;
-                            }
+                if (this.selectedTag == "Brucoši" || jmbags.includes(String(this.jmbag))) {
+                    window.alert("Gost s ovim JMBAG-om već postoji!!")
+                } else {
+                    for (let index = 0; index < ids.length; index++) {
+                        if (ids.includes(String(index)) == false) {
+                            this.nextId = index;
+                            break;
                         }
-                        if (this.nextId === '') {
-                            this.nextId = ids.length;
-                        }
-
-                        axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
-                            { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
-                            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-                        )
-                            .then(() => {
-                                this.created()
-                            })
                     }
+                    if (this.nextId === '') {
+                        this.nextId = ids.length;
+                    }
+
+                    axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
+                        { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
+                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+                    )
+                        .then(() => {
+                            this.created()
+                        })
                 }
             }
         }
+
     }
 }
 </script>
