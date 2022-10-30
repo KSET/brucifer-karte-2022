@@ -5,7 +5,7 @@
 
             <h1 class="page-title">Dodavanje Gosta</h1>
 
-            <form @submit="postGuest">
+            <form  onsubmit="return false">
                 <div class="grid-container" style="row-gap: 5%;">
                     <h1 class="textfield">Ime: </h1>
                     <input required class="inputfield" type="text" @input="changevalue" v-model="name">
@@ -21,7 +21,7 @@
                     </select>
 
                     <h1 id="jmbagselect" class="textfield">JMBAG: </h1>
-                    <input  id="jmbagselectt" class="inputfield" type="text" v-model="jmbag">
+                    <input id="jmbagselectt" class="inputfield" type="text" v-model="jmbag">
 
                     <h1 class="textfield">Karta: </h1>
 
@@ -42,7 +42,7 @@
                         class="button change">
                         <img src="../../assets/icons/no-icon.svg">
                     </button>
-                    <button class="button submit">Dodaj</button>
+                    <button class="button submit" @click="postGuest">Dodaj</button>
                 </div>
             </form>
 
@@ -132,43 +132,43 @@ export default {
             }
         },
         postGuest() {
+            if (this.name == '' || this.surname == '' || this.selectedTag == '') {
+                window.alert("Unesite sva polja")
+            } else {
+                var ids = [];
+                var jmbags = [];
 
-            var ids = [];
-            var jmbags = [];
+                this.guests.forEach(element => {
+                    ids.push(element.id);
+                    jmbags.push(element.jmbag);
+                });
 
-            this.guests.forEach(element => {
-                ids.push(element.id);
-                jmbags.push(element.jmbag);
-            });
+                if (this.selectedTag == "Brucoši") {
+                    console.log(jmbags.includes(String(this.jmbag)))
 
-            if (this.selectedTag == "Brucoši") {
-                console.log(jmbags.includes(String(this.jmbag)))
-
-                if (jmbags.includes(String(this.jmbag))) {
-                    window.alert("Gost s ovim JMBAG-om već postoji!!")
-                } else {
-                    for (let index = 0; index < ids.length; index++) {
-                        if (ids.includes(String(index)) == false) {
-                            this.nextId = index;
-                            break;
+                    if (jmbags.includes(String(this.jmbag))) {
+                        window.alert("Gost s ovim JMBAG-om već postoji!!")
+                    } else {
+                        for (let index = 0; index < ids.length; index++) {
+                            if (ids.includes(String(index)) == false) {
+                                this.nextId = index;
+                                break;
+                            }
                         }
-                    }
-                    if (this.nextId === '') {
-                        this.nextId = ids.length;
-                    }
+                        if (this.nextId === '') {
+                            this.nextId = ids.length;
+                        }
 
-                    axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
-                        { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
-                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-                    )
-                        .then(() => {
-                            this.created()
-                        })
+                        axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
+                            { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
+                            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+                        )
+                            .then(() => {
+                                this.created()
+                            })
+                    }
                 }
             }
-
-
-
         }
     }
 }
