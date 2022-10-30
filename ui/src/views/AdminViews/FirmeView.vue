@@ -85,7 +85,6 @@ export default {
                     this.firms.forEach(element => {
                         ids.push(element.id)
                     });
-                    console.log(ids)
                     if(ids.includes('314159')){
                         this.firms.splice(0, 1);                   
                     }

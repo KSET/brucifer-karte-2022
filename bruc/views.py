@@ -37,7 +37,7 @@ class MailerViewSet(viewsets.ModelViewSet):
 
         if subject and msg and settings.EMAIL_HOST_USER:
             try:
-                send_mail(subject, msg, settings.EMAIL_HOST_USER, [to],fail_silently=True,html_message=html_message)
+                send_mail(subject, msg, "ZARI<"+settings.EMAIL_HOST_USER+">", [to],fail_silently=True,html_message=html_message)
                 x=1
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')

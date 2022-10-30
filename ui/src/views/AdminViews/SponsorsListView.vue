@@ -88,7 +88,6 @@ export default {
           }
         });
 
-        console.log(emails)
         let mailsent = 0;
         res.data.forEach(element => {
           emails.forEach(elementy => {

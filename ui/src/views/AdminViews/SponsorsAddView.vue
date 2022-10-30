@@ -101,8 +101,6 @@ export default {
     created() {
         this.slug = this.$route.params.slug;
 
-        console.log("dobroveče")
-
         if (this.slug != '0') {
             axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.slug + "&search_fields=slug")
                 .then(response => {

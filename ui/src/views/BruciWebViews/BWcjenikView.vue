@@ -55,13 +55,11 @@ export default {
     async created() {
       this.artikli = [];
       this.tags.forEach(async element => {
-        console.log(element)
         const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?ordering=order&search=' + element + '&search_fields=tag',)
         if (resp.data.length != 0) {
           this.artikli[element] = resp.data
         }
       });
-      console.log(this.artikli)
 
     },
   }
