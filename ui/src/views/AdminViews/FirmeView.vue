@@ -88,6 +88,22 @@ export default {
                     if(ids.includes('314159')){
                         this.firms.splice(0, 1);                   
                     }
+
+                    this.firms.forEach(element => {
+                        axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + element.slug + "&search_fields=tag")
+                            .then(response => {
+                                var sponsorGuests = response.data;
+                                element.guestsAdded = sponsorGuests.length;
+                                var enter = 0;
+                                sponsorGuests.forEach(elementy => {
+                                    if (elementy.entered == 1)
+                                        enter = enter + 1;
+                                });
+
+                                element.guetsEntered = enter;
+                            })
+
+                    });
                 })
         }
     }
