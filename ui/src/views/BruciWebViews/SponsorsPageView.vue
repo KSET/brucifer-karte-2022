@@ -152,7 +152,7 @@ export default {
                     this.nextId = ids.length;
                 }
 
-                let sponsorTag = "Sponzori" + this.slug
+                let sponsorTag = this.slug + "VIP - Sponzor - "+this.name;
 
                 axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
                     { id: this.nextId, name: this.sponsorName, tag: sponsorTag, bought: '1', entered: '0' },

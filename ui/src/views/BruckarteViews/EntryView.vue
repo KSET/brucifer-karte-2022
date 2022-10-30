@@ -151,6 +151,14 @@ export default {
                 .then(response => {
                     if (this.search != '' && this.search.length > 2) {
                         this.guests = response.data;
+
+                        this.guests.forEach(element => {
+                            if(element.tag.includes("Sponzor")){
+                                element.tag=(element.tag).slice(36,element.tag.length)
+                            }
+                        });
+
+
                         if (this.guests.length == 1) {
                             this.guest = this.guests[0];
                             this.name = this.guest.name;
