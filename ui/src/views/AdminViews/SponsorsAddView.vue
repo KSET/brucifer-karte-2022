@@ -24,13 +24,6 @@
                         Odaberi PNG
                     </label>
 
-                    <h1 class="textfield">Vidljvo </h1>
-
-                    <label class="switch">
-                        <input id="switchSponsors" type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-
                     <input id="file-upload" type="file" accept="image/*" ref="file" @change="selectImage" />
 
                     <h1 class="textfield" style="width: 150%;">E-mail </h1>
@@ -38,6 +31,20 @@
 
                     <h1 class="textfield" style="width: 150%;">Broj uzvanika </h1>
                     <input required class="inputfield" type="text" v-model="guestCap">
+
+                    <h1 class="textfield">Vidljvo </h1>
+
+                    <label class="switch">
+                        <input id="switchSponsors" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+
+                    <h1 class="textfield">Popis </h1>
+
+                    <label class="switch">
+                        <input id="switchSponsors" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
 
                     <button v-if="(this.slug == '0')" class="button submit" style=" margin-top: 0px "
                         @click="postSponsors">Dodaj</button>
@@ -144,8 +151,8 @@ export default {
             this.progress = 0;
             this.message = "";
         },
-        reroutePopis(){
-            this.$router.push({ path: '/sponzori/'+this.slug });
+        reroutePopis() {
+            this.$router.push({ path: '/sponzori/' + this.slug });
         },
         async deleteSponsors() {
             const resp = await axios.delete(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/",

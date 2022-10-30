@@ -10,8 +10,15 @@
             src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleContactForm">
           <img v-else class="dropdown-icon  showmobile" style="margin-top: 15px;"
             src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleContactForm">
+          <h1 class="textfield">Popis </h1>
+
+          <label class="switch">
+            <input id="switchSponsors" type="checkbox">
+            <span class="slider round"></span>
+          </label>
 
           <form v-if="showHid" id="hid" class="inputfields" onsubmit="return false">
+
 
             <h1 class="textfield">Ime Arikla </h1>
             <input required class="inputfield kontakt" type="text" v-model="name">
@@ -107,7 +114,7 @@ export default {
       artikli: [],
     }
   },
-  
+
   mounted() {
     this.showHid = true;
     this.created();
@@ -130,7 +137,7 @@ export default {
       let curIndex = this.artikli.indexOf(artikl);
       let nextIndex = curIndex - 1;
       let nextArtikl = this.artikli[nextIndex]
-      
+
       if (curIndex != "0") {
         if (artikl.tag == nextArtikl.tag) {
           await axios.put(process.env.VUE_APP_BASE_URL + '/cjenik/' + artikl.id + '/',
@@ -203,7 +210,7 @@ export default {
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       ).then(() => {
         window.location.reload();
-        })
+      })
 
     },
     deleteArtikl(artikl) {
