@@ -172,6 +172,9 @@ export default {
                             this.name = ''
                             this.surname = ''
                             this.selectedTag = ''
+                            this.jmbag = ''
+                            document.getElementById("jmbagselect").style.display = "none";
+                            document.getElementById("jmbagselectt").style.display = "none";
                             this.created()
                         })
                 }
