@@ -101,6 +101,7 @@ export default {
                 axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
                     .then(response => {
                         var itemss = response.data;
+                        this.items = [];
                         itemss.forEach(element => {
                             this.items.push(element.name);
                         });
