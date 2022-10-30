@@ -16,15 +16,14 @@
             <div class="infofield">
                 <div class="artist">
                     <div class="image-container">
-                        <div class="image-sizer2"></div>
                         <img class="image-frame2" style="border: none;" :src="previewImage">
                     </div>
                 </div>
 
                 <div class="infofield-element">
                     <div class="grid-container">
-                        <h1 class="textfield">Ograničenje</h1>
-                        <h1 class="textfield" style="font-weight: 400">{{this.guestCap}}</h1>
+                        <h1 class="textfield" style="margin-bottom: 1em">Ograničenje</h1>
+                        <h1 class="textfield" style="font-weight: 400; margin-bottom: 1em">{{this.guestCap}}</h1>
                         <h1 class="textfield">Broj unesenih</h1>
                         <h1 class="textfield" style="font-weight: 400">{{this.guestsAdded}}</h1>
                     </div>
@@ -179,25 +178,11 @@ export default {
 <style scoped>
 
 .image-container {
-    position: relative;
-}
-
-.image-container .image-sizer2 {
-    padding-bottom: calc(0.86 * 100%);
-    transition: padding-bottom .3s ease;
-    will-change: padding-bottom;
-}
-
-.image-container .image-frame2 {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;     
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: contain;
-    object-fit: contain;
+    height: 100%;
 }
 
 .artist {
@@ -215,6 +200,7 @@ export default {
     border-right: white solid 2px !important;
     padding-left: 6%;
     padding-top: 6.75rem;
+    padding-bottom: 5rem;
 }
 
 .sponsorsPage-table {
@@ -302,6 +288,7 @@ h1 {
 @media screen and (max-width: 980px) {
     .popis-element1 {
     margin-top: 0rem;
+      padding-bottom: 0rem;
 }
     .sponsors-page {
         display: flex;
@@ -338,8 +325,9 @@ h1 {
 
     .artist {
         margin-top: 3%;
-        height: 150px;
-        width: 150px;
+        width: 12rem;
+        height: 12rem;
+        padding: 20px;
     }
 
     .infofield-element {
@@ -359,13 +347,26 @@ h1 {
     .sponsorsPage-table {
         margin-top: 0rem;
     }
+
+    .image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 9rem;
+    }
 }
 
 @media screen and (max-width: 550px) {
     .artist{
-        width:6.25rem;
-        height: 6.25rem;
+        width: 8rem;
+        height: 8rem;
+        padding: 12px;
+    }
 
+    .image-container {
+        width: 100%;
+        height: 6rem;
     }
 
     .popis {
