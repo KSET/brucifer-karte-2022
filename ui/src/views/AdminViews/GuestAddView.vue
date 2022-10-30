@@ -143,9 +143,17 @@ export default {
                     jmbags.push(element.jmbag);
                 });
 
-                if (this.selectedTag == "Brucoši" || jmbags.includes(String(this.jmbag))) {
-                    window.alert("Gost s ovim JMBAG-om već postoji!!")
-                } else {
+                let post = 1;
+
+                if (this.selectedTag == "Brucoši") {
+                    if (jmbags.includes(String(this.jmbag))) {
+                        window.alert("Gost s ovim JMBAG-om već postoji!!")
+                        post = 0;
+                    }
+                }
+
+                if (post == 1) {
+
                     for (let index = 0; index < ids.length; index++) {
                         if (ids.includes(String(index)) == false) {
                             this.nextId = index;
@@ -169,7 +177,6 @@ export default {
                 }
             }
         }
-
     }
 }
 </script>
