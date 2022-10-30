@@ -88,7 +88,11 @@ export default {
     },
 
     mounted() {
-        axios.get(process.env.VUE_APP_BASE_URL + '/guests/',)
+        this.created()
+    },
+    methods: {
+        created(){
+            axios.get(process.env.VUE_APP_BASE_URL + '/guests/',)
             .then(response => {
                 document.getElementById("jmbagselect").style.display = "none";
                 document.getElementById("jmbagselectt").style.display = "none";
@@ -103,8 +107,7 @@ export default {
 
                     })
             })
-    },
-    methods: {
+        },
         checkJMBAGdisplay() {
             var e = document.getElementById("tagselect").value;
             if (e == "Brucoši") {
@@ -173,6 +176,8 @@ export default {
                             this.surname = ''
                             this.selectedTag = ''
                             this.jmbag = ''
+                            this.karta = '1';
+                            this.ulaz = '1';
                             document.getElementById("jmbagselect").style.display = "none";
                             document.getElementById("jmbagselectt").style.display = "none";
                             this.created()
