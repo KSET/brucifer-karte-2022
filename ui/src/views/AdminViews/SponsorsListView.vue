@@ -76,6 +76,12 @@ export default {
         .then(() => {
         })
     },
+    sleep(ms) {
+      return new Promise(
+        resolve => setTimeout(resolve, ms)
+      );
+    },
+
     async sendMail() {
       if (window.confirm("Klikom na OK šaljete mail SVIM sponzorima!!!")) {
         const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/')
@@ -111,9 +117,11 @@ export default {
             console.log(element)
             if (element.guestCap != 0) {
 
+              await this.sleep(element.id*1000);
+
               console.log("mail poslan")
 
-              
+
               let msg = element.name + " " + element.email + " " + element.slug
 
               let email = element.email
@@ -143,7 +151,7 @@ export default {
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
               )
               console.log("mail poslan")
-              
+
             }
           });
         }
