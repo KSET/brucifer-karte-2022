@@ -121,12 +121,9 @@ export default {
 
               console.log("mail poslan")
 
-
               let msg = element.name + " " + element.email + " " + element.slug
 
               let email = element.email
-              //maknut u produkciji
-              email = "pavleergovic@gmail.com"
 
               const respp = await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
                 {
