@@ -111,13 +111,16 @@ export default {
             console.log(element)
             if (element.guestCap != 0) {
 
+              console.log("mail poslan")
+
+              
               let msg = element.name + " " + element.email + " " + element.slug
 
               let email = element.email
               //maknut u produkciji
               email = "pavleergovic@gmail.com"
 
-              await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
+              const respp = await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
                 {
                   subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
                   template: "sponsors_email",
@@ -128,7 +131,7 @@ export default {
                 },
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
               )
-              await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+              const resppp = await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
                 {
                   subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
                   template: "sponsors_email",
@@ -139,6 +142,8 @@ export default {
                 },
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
               )
+              console.log("mail poslan")
+              
             }
           });
         }
