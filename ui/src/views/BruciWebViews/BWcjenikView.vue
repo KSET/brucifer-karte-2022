@@ -2,8 +2,15 @@
   <div class="bw-page-container">
     <div class="contents">
       <section>
-        <h1 class="bwh1">CJENIK PIĆA
+        <h1 class="bwh1" style="display:inline-block">CJENIK PIĆA
         </h1>
+        <div class="aircash">
+          <h1 class="bwh1" style="color: white;display:inline-block">Plaćaj 20% jeftinije uz Aircash!
+          </h1>
+
+          <button style="display:inline-block; background: #FFFFFF;
+border-radius: 6px; border: 0px;">PREUZMI</button>
+        </div>
         <div class="cjenik-table">
           <div class="cjenik-title" v-for="tag in tags" :key="tag.id">
             <h1>{{ tag }}</h1>
@@ -19,10 +26,12 @@
           </div>
 
         </div>
-        <p class="disclamer-text">Prodaju pića vrši ElektroStudent d.o.o. (OIB: 18333034190) sa
-          sjedištem u Unskoj 3, 10 000 Zagreb čiji je vlasnik udruga SS FER. Zabranjeno usluživanje i konzumiranje
+        <p class="disclamer-text">Prodaju pića vrši ElektroStudent d.o.o. (OIB: 18333034190) sa sjedištem u Unskoj 3, 10
+          000 Zagreb čiji je vlasnik udruga SS FER. Zabranjeno usluživanje i konzumiranje
           alkoholnih pića mlađima od 18 godina!
-          Porez je uračunat u cijenu.</p>
+          Porez je uračunat u cijenu. Cijene izražene u eurima informativnog su karaktera. Konverzija u eure odrađena je
+          prema tečaju 1 EUR = 7,53450 HRK. Plaćanje je moguće samo u hrvatskim kunama gotovinom ili putem aplikacije
+          Aircash.</p>
 
       </section>
     </div>
@@ -67,6 +76,16 @@ export default {
 </script>
   
 <style>
+.aircash {
+  position: absolute;
+  display: inline-block;
+  right:  0px;
+  margin-right: 4.5%;
+  left:  15%;
+
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
 .cjenik-table {
   width: 100%;
   background-color: rgba(0, 0, 0, 0.3);
@@ -117,6 +136,10 @@ export default {
 @media screen and (max-width: 980px) {
   .cjenik-title h1 {
     font-size: 24px;
+  }
+
+  .aircash {
+    display: block;
   }
 }
 
