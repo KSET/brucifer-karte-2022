@@ -2,14 +2,19 @@
   <div class="bw-page-container">
     <div class="contents">
       <section>
-        <h1 class="bwh1" style="display:inline-block">CJENIK PIĆA
+        <h1 class="bwh1" style="display:inline-block; vertical-align: middle;">CJENIK PIĆA
         </h1>
-        <div class="aircash">
-          <h1 class="bwh1" style="color: white;display:inline-block">Plaćaj 20% jeftinije uz Aircash!
-          </h1>
+        <div lass="aircash-block">
+          <div class="aircash">
+            <h1 class="bwh1" style="color: white;display:inline-block; vertical-align: middle;">Plaćaj 20% jeftinije uz
+              Aircash!
+            </h1>
 
-          <button style="display:inline-block; background: #FFFFFF;
-border-radius: 6px; border: 0px;">PREUZMI</button>
+            <a href="https://aircash.page.link/fer-download" class="aircash-btn" rel="noreferrer noopener"
+              target="_blank">Preuzmi aircash</a>
+
+            <img src="@/assets/icons/aircash-logo.svg">
+          </div>
         </div>
         <div class="cjenik-table">
           <div class="cjenik-title" v-for="tag in tags" :key="tag.id">
@@ -78,12 +83,20 @@ export default {
 <style>
 .aircash {
   position: absolute;
-  display: inline-block;
-  right:  0px;
+  display: grid;
+  grid-template-columns: 50% 30% 20%;
+  right: 0px;
   margin-right: 4.5%;
-  left:  15%;
-
+  left: 15%;
+  top: 6%;
+  vertical-align: middle;
   background-color: rgba(0, 0, 0, 0.3);
+  align-items: center;
+  justify-items: center;
+}
+
+.aircash-block {
+  display: inline-block !important;
 }
 
 .cjenik-table {
@@ -94,8 +107,31 @@ export default {
   padding: 10px;
   padding-top: 0px;
   padding-right: 0px;
+}
 
+.aircash-btn {
+  width: 186px;
+  height: 40px;
 
+  padding: 11px;
+
+  font-family: 'Antonio';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 15px;
+  /* identical to box height, or 100% */
+
+  color: black;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+  display: inline-block;
+  background: #FFFFFF;
+  border-radius: 6px;
+  border: 0px;
 }
 
 .cjenik-title {
@@ -138,8 +174,21 @@ export default {
     font-size: 24px;
   }
 
+  .aircash{
+    grid-template-columns: 60% 20% 20%;
+  }
+
   .aircash {
+    left: 3%;
+    top: 12%;
+  }
+
+  .aircash-block {
     display: block;
+  }
+
+  .cjenik-table{
+    margin-top: 100px;
   }
 }
 
@@ -150,6 +199,19 @@ export default {
 
   .disclamer-text {
     font-size: 14px;
+
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .aircash-btn{
+    width: 155px;
+height: 33px;
+  }
+
+  .aircash{
+    font-size:14px; 
+    grid-template-columns: 47% 33% 20%;
 
   }
 }
