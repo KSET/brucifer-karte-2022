@@ -2,7 +2,7 @@
   <div class="bw-page-container">
     <div class="contents">
       <section>
-        <h1 class="bwh1" style="display:inline-block; vertical-align: middle;">CJENIK PIĆA
+        <h1 class="bwh1" style="display:inline-block; vertical-align: middle; margin-top: 2rem;">CJENIK PIĆA
         </h1>
         <div lass="aircash-block">
           <div class="aircash">
@@ -88,7 +88,7 @@ export default {
   right: 0px;
   margin-right: 4.5%;
   left: 15%;
-  top: 6%;
+  top: 3.8%;
   vertical-align: middle;
   background-color: rgba(0, 0, 0, 0.3);
   align-items: center;
@@ -174,20 +174,20 @@ export default {
     font-size: 24px;
   }
 
-  .aircash{
+  .aircash {
     grid-template-columns: 60% 20% 20%;
   }
 
   .aircash {
     left: 3%;
-    top: 12%;
+    top: 6%;
   }
 
   .aircash-block {
     display: block;
   }
 
-  .cjenik-table{
+  .cjenik-table {
     margin-top: 100px;
   }
 }
@@ -204,15 +204,15 @@ export default {
 }
 
 @media screen and (max-width: 550px) {
-  .aircash-btn{
+  .aircash-btn {
     width: 155px;
-height: 33px;
+    height: 33px;
   }
 
-  .aircash{
-    font-size:14px; 
+  .aircash {
+    font-size: 14px;
     grid-template-columns: 47% 33% 20%;
-
+    top: 5.5%;
   }
 }
 
