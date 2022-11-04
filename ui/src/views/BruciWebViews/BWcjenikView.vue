@@ -63,7 +63,7 @@ export default {
       tags: ["SOK", "PIVO", "DOLJEVI", "ALKOHOL", "OSTALO"],
       artikli: [],
 
-      cjenikVisible: '',
+      cjenikVisible: 1,
 
     }
   },
@@ -78,7 +78,6 @@ export default {
             this.cjenikVisible = 1;
           }
         })
-
       if (this.cjenikVisible == 1) {
         this.artikli = [];
         this.tags.forEach(async element => {
@@ -88,8 +87,6 @@ export default {
           }
         });
       }
-
-
     },
   }
 }
