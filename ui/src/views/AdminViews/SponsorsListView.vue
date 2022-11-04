@@ -113,13 +113,9 @@ export default {
           resp.data.splice(0, 1);
 
           resp.data.forEach(async element => {
-            console.log("slanje maila")
-            console.log(element)
             if (element.guestCap != 0) {
 
               await this.sleep(element.id*1000);
-
-              console.log("mail poslan")
 
               let msg = element.name + " " + element.email + " " + element.slug
 
