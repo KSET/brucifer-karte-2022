@@ -226,8 +226,10 @@ export default {
   text-align: center;
   letter-spacing: -0.022em;
   font-style: normal;
-  background: #DC5E88;
+  /* background: #DC5E88; */
+  background: transparent;
   overflow: initial;
+  position: absolute;
 }
 
 .navbar.bw::after {
@@ -237,7 +239,7 @@ export default {
   left: 0;
   height: 8px;
   content: "";
-  background: linear-gradient(#DC5E88, transparent);
+  /* background: linear-gradient(#DC5E88, transparent); */
 }
 
 .navbar-title {
