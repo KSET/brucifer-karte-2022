@@ -5,23 +5,27 @@
     </router-link>
     <div class="routes">
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('naslovnica') }" class="navbar-element hidetablet" :name="'Naslovnica'" :link="'/'">
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('naslovnica') }" class="navbar-element hidetablet"
+        :name="'Naslovnica'" :link="'/'">
       </RouterElement>
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.lineupVisible=='1'" class="navbar-element hidetablet" :name="'Izvođači'"
-        :link="'/lineup'">
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.lineupVisible == '1'"
+        class="navbar-element hidetablet" :name="'Izvođači'" :link="'/lineup'">
       </RouterElement>
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }" class="navbar-element hidetablet" :name="'Ulaznice'" :link="'/ulaznice'">
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }" class="navbar-element hidetablet"
+        :name="'Ulaznice'" :link="'/ulaznice'">
       </RouterElement>
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }" v-if="this.sponsorsVisible=='1'" class="navbar-element hidetablet"
-        :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }" v-if="this.sponsorsVisible == '1'"
+        class="navbar-element hidetablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="navbar-element hidetablet" :name="'Kontakt'" :link="'/kontakt'">
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="navbar-element hidetablet"
+        :name="'Kontakt'" :link="'/kontakt'">
       </RouterElement>
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('cjenik') }" v-if="this.cjenikVisible=='1'" class="navbar-element hidetablet" :name="'Cjenik'" :link="'/cjenik'">
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('cjenik') }" v-if="this.cjenikVisible == '1'"
+        class="navbar-element hidetablet" :name="'Cjenik'" :link="'/cjenik'">
       </RouterElement>
 
       <div id="nav-icon3" class="hidedesktop" @click="toggleNav">
@@ -33,23 +37,28 @@
 
       <div id="myNav" class="overlay bw">
         <div class="overlay-content bw">
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('naslovnica') }" class=" overlay-element" :name="'Naslovnica'" :link="'/'" @click="toggleNav()">
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('naslovnica') }" class=" overlay-element"
+            :name="'Naslovnica'" :link="'/'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.lineupVisible=='1'" class="overlay-element " :name="'Izvođači'" :link="'/lineup'"
-            @click="toggleNav()">
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.lineupVisible == '1'"
+            class="overlay-element " :name="'Izvođači'" :link="'/lineup'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }" class="overlay-element " :name="'Ulaznice'" :link="'/ulaznice'" @click="toggleNav()">
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }" class="overlay-element "
+            :name="'Ulaznice'" :link="'/ulaznice'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }" v-if="this.sponsorsVisible=='1'" class="overlay-element " :name="'Sponzori'" :link="'/sponsors'" @click="toggleNav()">
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }" v-if="this.sponsorsVisible == '1'"
+            class="overlay-element " :name="'Sponzori'" :link="'/sponsors'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="overlay-element " :name="'Kontakt'" :link="'/kontakt'" @click="toggleNav()">
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="overlay-element "
+            :name="'Kontakt'" :link="'/kontakt'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('cjenik') }" v-if="this.cjenikVisible=='1'" class="overlay-element " :name="'Cjenik'" :link="'/cjenik'" @click="toggleNav()">
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('cjenik') }" v-if="this.cjenikVisible == '1'"
+            class="overlay-element " :name="'Cjenik'" :link="'/cjenik'" @click="toggleNav()">
           </RouterElement>
 
         </div>
@@ -60,10 +69,10 @@
 </template>
 
 <style module>
-  .page .selected {
-    text-decoration: underline;
-    font-weight: 700;
-  }
+.page .selected {
+  text-decoration: underline;
+  font-weight: 700;
+}
 </style>
 
 <script>
@@ -106,7 +115,7 @@ export default {
         }
       })
 
-      axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/31/',)
+    axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/31/',)
       .then(response => {
         var cjenik = response.data.name;
         if (cjenik == 0) {
