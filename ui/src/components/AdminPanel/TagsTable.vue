@@ -11,10 +11,10 @@
         </thead>
         <tbody>
           <tr style="overflow:auto; height=200px;" v-for="tag in tags" :key="tag.id">
-            <td>{{tag.name}}</td>
-            <td>{{tag.count}}</td>
-            <td>{{tag.bought}}</td>
-            <td>{{tag.entered}}</td>
+            <td>{{ tag.name }}</td>
+            <td>{{ tag.count }}</td>
+            <td>{{ tag.bought }}</td>
+            <td>{{ tag.entered }}</td>
             <td><button class="button-icon" @click="deleteTag(tag)"> <img src="@/assets/icons/trash-icon.svg"></button>
             </td>
           </tr>
@@ -63,31 +63,61 @@ export default {
           this.tags.forEach(element => {
             axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + element.name + '&search_fields=tag',)
               .then(response => {
-                this.numc = 0;
-                this.numb = 0;
-                this.nume = 0;
-                response.data.forEach(element => {
-                  this.numc++;
-                  if (element.bought == 1) {
-                    this.numb++;
+
+                if (element.name == "VIP") {
+                  this.numc = 0;
+                  this.numb = 0;
+                  this.nume = 0;
+                  response.data.forEach(element => {
+                    if(element.tag=="VIP"){
+                      this.numc++;
+                    if (element.bought == 1) {
+                      this.numb++;
+                    }
+                    if (element.entered == 1) {
+                      this.nume++;
+                    }
+                    }
+                  });
+                  if (String(this.numc) != String(element.count) || this.numb != element.bought || this.nume != element.entered) {
+
+                    axios.put(process.env.VUE_APP_BASE_URL + '/tags/' + element.id + '/',
+                      { count: this.numc, bought: this.numb, entered: this.nume },
+                      { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+
+                    )
+
+                    this.created();
+
                   }
-                  if (element.entered == 1) {
-                    this.nume++;
+                } else {
+                  this.numc = 0;
+                  this.numb = 0;
+                  this.nume = 0;
+                  response.data.forEach(element => {
+                    this.numc++;
+                    if (element.bought == 1) {
+                      this.numb++;
+                    }
+                    if (element.entered == 1) {
+                      this.nume++;
+                    }
+
+
+                  });
+                  if (String(this.numc) != String(element.count) || this.numb != element.bought || this.nume != element.entered) {
+
+                    axios.put(process.env.VUE_APP_BASE_URL + '/tags/' + element.id + '/',
+                      { count: this.numc, bought: this.numb, entered: this.nume },
+                      { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+
+                    )
+
+                    this.created();
+
                   }
-
-
-                });
-                if (String(this.numc) != String(element.count) || this.numb != element.bought || this.nume != element.entered) {
-
-                  axios.put(process.env.VUE_APP_BASE_URL + '/tags/' + element.id + '/',
-                    { count: this.numc, bought: this.numb, entered: this.nume },
-                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-
-                  )
-
-                  this.created();
-
                 }
+
               })
 
 
