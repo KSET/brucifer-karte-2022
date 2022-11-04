@@ -21,6 +21,9 @@
       <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="navbar-element hidetablet" :name="'Kontakt'" :link="'/kontakt'">
       </RouterElement>
 
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('cjenik') }" v-if="this.cjenikVisible=='1'" class="navbar-element hidetablet" :name="'Cjenik'" :link="'/cjenik'">
+      </RouterElement>
+
       <div id="nav-icon3" class="hidedesktop" @click="toggleNav">
         <span></span>
         <span></span>
@@ -46,6 +49,8 @@
           <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="overlay-element " :name="'Kontakt'" :link="'/kontakt'" @click="toggleNav()">
           </RouterElement>
 
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('cjenik') }" v-if="this.cjenikVisible=='1'" class="overlay-element " :name="'Cjenik'" :link="'/cjenik'" @click="toggleNav()">
+          </RouterElement>
 
         </div>
       </div>
@@ -76,6 +81,7 @@ export default {
       showNav: false,
       lineupVisible: '1',
       sponsorsVisible: '1',
+      cjenikVisible: '1',
     }
   },
   created() {
@@ -97,6 +103,16 @@ export default {
           this.sponsorsVisible = 0;
         } else {
           this.sponsorsVisible = users[users.length - 1].visible;
+        }
+      })
+
+      axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/31/',)
+      .then(response => {
+        var cjenik = response.data.name;
+        if (cjenik == 0) {
+          this.cjenikVisible = 0;
+        } else {
+          this.cjenikVisible = 1;
         }
       })
   },
