@@ -113,7 +113,7 @@ export default {
       priceEUR: '',
       artikli: [],
 
-      isVisible:'',
+      isVisible: '',
     }
   },
 
@@ -136,19 +136,19 @@ export default {
 
 
       axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/31/',)
-      .then(response => {
-        if (response.data.name == 0) {
-          this.visible = 0;
-        } else {
-          this.isVisible = 1;
-        }
-        if (this.isVisible == '1') {
-          document.getElementById("switch").checked = true;
-        } else {
-          document.getElementById("switch").checked = false;
-        }
+        .then(response => {
+          if (response.data.name == 0) {
+            this.visible = 0;
+          } else {
+            this.isVisible = 1;
+          }
+          if (this.isVisible == '1') {
+            document.getElementById("switch").checked = true;
+          } else {
+            document.getElementById("switch").checked = false;
+          }
 
-      })
+        })
     },
     changeVisible() {
       if (this.isVisible == 1) {

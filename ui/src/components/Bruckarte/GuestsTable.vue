@@ -16,16 +16,16 @@
       <tbody>
         <tr v-for="guest in guests" :key="guest.id">
           <td>
-            <div contenteditable id="contentedit" @keypress.enter="loggg">{{guest.name}}</div>
+            <div contenteditable id="contentedit" @keypress.enter="loggg">{{ guest.name }}</div>
           </td>
-          <td>{{guest.surname}}</td>
-          <td>{{guest.jmbag}}</td>
+          <td>{{ guest.surname }}</td>
+          <td>{{ guest.jmbag }}</td>
           <td>
-            <button @click="changebought(guest,'1')" v-if="guest.bought=='0'" class="btn btn-xs btn-danger"
+            <button @click="changebought(guest, '1')" v-if="guest.bought == '0'" class="btn btn-xs btn-danger"
               id="gumbarn">
               <font-awesome-icon icon="fa-solid fa-xmark" />
             </button>
-            <button v-else class="btn btn-xs btn-success" id="gumbary" @click="changebought(guest,'0')">
+            <button v-else class="btn btn-xs btn-success" id="gumbary" @click="changebought(guest, '0')">
               <font-awesome-icon icon="fa-solid fa-check" />
             </button>
           </td>
@@ -73,7 +73,7 @@ export default {
       axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši&search_fields=tag',)
         .then(response => {
           this.guests = response.data;
-          
+
         })
     },
     changebought(guest, changenum) {

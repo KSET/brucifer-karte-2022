@@ -26,13 +26,13 @@
 </template>
 
 <style lang="scss" module>
-  :global(#app) .forceNewLine {
-    @media screen and (max-width: 550px) {
-      display: block;
-      position: relative;
-      text-align: right;
-    }
+:global(#app) .forceNewLine {
+  @media screen and (max-width: 550px) {
+    display: block;
+    position: relative;
+    text-align: right;
   }
+}
 </style>
 
 <script>

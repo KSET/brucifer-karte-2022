@@ -8,8 +8,9 @@
       </div>
       <div class="ccard-body">
         <h3 class="name"> {{ sponsor.name }} </h3>
-        <a class="name" :href="sponsor.url" target="_blank"
-          style="color: black;text-decoration: underline; ">{{ sponsor.url }}</a>
+        <a class="name" :href="sponsor.url" target="_blank" style="color: black;text-decoration: underline; ">{{
+            sponsor.url
+        }}</a>
 
         <div class="ccard-buttons">
           <button @click="changesponsororder(sponsor, 'b')" class="ccard-button">

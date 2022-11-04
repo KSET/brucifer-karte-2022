@@ -69,14 +69,14 @@ export default {
                   this.numb = 0;
                   this.nume = 0;
                   response.data.forEach(element => {
-                    if(element.tag=="VIP"){
+                    if (element.tag == "VIP") {
                       this.numc++;
-                    if (element.bought == 1) {
-                      this.numb++;
-                    }
-                    if (element.entered == 1) {
-                      this.nume++;
-                    }
+                      if (element.bought == 1) {
+                        this.numb++;
+                      }
+                      if (element.entered == 1) {
+                        this.nume++;
+                      }
                     }
                   });
                   if (String(this.numc) != String(element.count) || this.numb != element.bought || this.nume != element.entered) {

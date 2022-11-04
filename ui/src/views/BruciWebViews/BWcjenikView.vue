@@ -70,25 +70,25 @@ export default {
   methods: {
     async created() {
       axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/31/',)
-      .then(response => {
-        var cjenik = response.data.name;
-        if (cjenik == 0) {
-          this.cjenikVisible = 0;
-        } else {
-          this.cjenikVisible = 1;
-        }
-      })
+        .then(response => {
+          var cjenik = response.data.name;
+          if (cjenik == 0) {
+            this.cjenikVisible = 0;
+          } else {
+            this.cjenikVisible = 1;
+          }
+        })
 
-      if(this.cjenikVisible==1){
+      if (this.cjenikVisible == 1) {
         this.artikli = [];
-      this.tags.forEach(async element => {
-        const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?ordering=order&search=' + element + '&search_fields=tag',)
-        if (resp.data.length != 0) {
-          this.artikli[element] = resp.data
-        }
-      });
+        this.tags.forEach(async element => {
+          const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?ordering=order&search=' + element + '&search_fields=tag',)
+          if (resp.data.length != 0) {
+            this.artikli[element] = resp.data
+          }
+        });
       }
-      
+
 
     },
   }

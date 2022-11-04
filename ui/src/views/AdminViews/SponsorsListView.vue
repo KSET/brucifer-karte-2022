@@ -115,7 +115,7 @@ export default {
           resp.data.forEach(async element => {
             if (element.guestCap != 0) {
 
-              await this.sleep(element.id*1000);
+              await this.sleep(element.id * 1000);
 
               let msg = element.name + " " + element.email + " " + element.slug
 

@@ -5,32 +5,32 @@
       <input class="nosubmit search" @input="searchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
 
 
-      <h1 class="textfield" style="display: inline-block; margin-left: 12rem">{{this.nomatch}} </h1>
+      <h1 class="textfield" style="display: inline-block; margin-left: 12rem">{{ this.nomatch }} </h1>
     </div>
 
     <div class="grid-container guests">
       <h1 class="textfield">Ime </h1>
-      <input class="inputfield" :disabled="this.id==''" type="text" @input="changevalue" v-model="name">
+      <input class="inputfield" :disabled="this.id == ''" type="text" @input="changevalue" v-model="name">
 
       <h1 class="textfield">Prezime </h1>
-      <input class="inputfield" :disabled="this.id==''" type="text" @input="changevalue" v-model="surname">
+      <input class="inputfield" :disabled="this.id == ''" type="text" @input="changevalue" v-model="surname">
 
       <h1 class="textfield">JMBAG </h1>
       <input class="inputfield" readonly type="text" v-model="jmbag">
 
       <h1 class="textfield">Karta </h1>
 
-      <button class="button change" :disabled="this.id==''" v-if="guest.bought == '1'"
+      <button class="button change" :disabled="this.id == ''" v-if="guest.bought == '1'"
         @click="changebought(guest, '0')">
         <img src="../../assets/icons/yes-icon.svg">
       </button>
-      <button class="button change" :disabled="this.id==''" v-else @click="changebought(guest, '1') "
+      <button class="button change" :disabled="this.id == ''" v-else @click="changebought(guest, '1')"
         style="background-color: white;">
         <img class="image1" src="../../assets/icons/no-icon.svg">
       </button>
 
       <h1 class="textfield">Potvrda </h1>
-      <h1 class="textfield">{{this.confCode}} </h1>
+      <h1 class="textfield">{{ this.confCode }} </h1>
     </div>
 
   </div>

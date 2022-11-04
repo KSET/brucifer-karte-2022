@@ -27,14 +27,14 @@ export default {
 }
 
 .footery::after {
-  position: absolute;
-  top: -8px;
-  right: 0;
-  left: 0;
-  z-index: 2;
-  height: 8px;
-  content: "";
-  background: linear-gradient(to top, #F6BB96, transparent);
+    position: absolute;
+    top: -8px;
+    right: 0;
+    left: 0;
+    z-index: 2;
+    height: 8px;
+    content: "";
+    background: linear-gradient(to top, #F6BB96, transparent);
 }
 
 #text1 {

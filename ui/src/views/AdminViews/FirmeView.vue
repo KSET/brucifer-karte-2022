@@ -15,10 +15,10 @@
                 </thead>
                 <tbody>
                     <tr v-for="guest in firms" :key="guest.id">
-                        <td>{{guest.name}}</td>
-                        <td>{{guest.guestCap}}</td>
-                        <td>{{guest.guestsAdded}}</td>
-                        <td>{{guest.guetsEntered}}</td>
+                        <td>{{ guest.name }}</td>
+                        <td>{{ guest.guestCap }}</td>
+                        <td>{{ guest.guestsAdded }}</td>
+                        <td>{{ guest.guetsEntered }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -57,7 +57,7 @@ export default {
             axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/',)
                 .then(response => {
                     this.firms = response.data;
-                    this.firms.splice(0, 1);                   
+                    this.firms.splice(0, 1);
 
                     this.firms.forEach(element => {
                         axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + element.slug + "&search_fields=tag")
@@ -81,12 +81,12 @@ export default {
             axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.search + "&search_fields=name",)
                 .then(response => {
                     this.firms = response.data;
-                    var ids= [];
+                    var ids = [];
                     this.firms.forEach(element => {
                         ids.push(element.id)
                     });
-                    if(ids.includes('314159')){
-                        this.firms.splice(0, 1);                   
+                    if (ids.includes('314159')) {
+                        this.firms.splice(0, 1);
                     }
 
                     this.firms.forEach(element => {

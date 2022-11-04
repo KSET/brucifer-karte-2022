@@ -10,7 +10,7 @@
       <input id="file-upload" type="file" @change="importGuests" />
       <button class="button-upload white" @click="exportExample(1)">Preuzmi CSV template</button>
 
-      <h1 class="textfield" style="display: inline-block">{{this.importstatusGuests}}</h1>
+      <h1 class="textfield" style="display: inline-block">{{ this.importstatusGuests }}</h1>
 
       <div>
         <ul class="list">
@@ -30,7 +30,7 @@
       <input id="file-uploadd" type="file" @change="importUsers" />
       <button class="button-upload white" @click="exportExample(2)">Preuzmi CSV template</button>
 
-      <h1 class="textfield" style="display: inline-block">{{this.importstatusUsers}}</h1>
+      <h1 class="textfield" style="display: inline-block">{{ this.importstatusUsers }}</h1>
 
       <div>
         <ul class="list">
@@ -240,8 +240,8 @@ export default {
             console.error("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE", error);
             error = 1;
           });
-          if(resp==undefined){
-            error=1;
+          if (resp == undefined) {
+            error = 1;
           }
           this.importstatusGuests = (`Imported ${index}/${rows.length} guests`);
           gosti.push(obj);
@@ -299,8 +299,8 @@ export default {
             console.error("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE", error);
             error = 1;
           });
-          if(resp==undefined){
-            error=1;
+          if (resp == undefined) {
+            error = 1;
           }
           this.importstatusUsers = (`Imported ${index}/${rows.length} users`);
 

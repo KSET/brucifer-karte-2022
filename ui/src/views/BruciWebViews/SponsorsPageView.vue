@@ -23,9 +23,9 @@
                 <div class="infofield-element">
                     <div class="grid-container">
                         <h1 class="textfield" style="margin-bottom: 1em">Ograničenje</h1>
-                        <h1 class="textfield" style="font-weight: 400; margin-bottom: 1em">{{this.guestCap}}</h1>
+                        <h1 class="textfield" style="font-weight: 400; margin-bottom: 1em">{{ this.guestCap }}</h1>
                         <h1 class="textfield">Broj unesenih</h1>
-                        <h1 class="textfield" style="font-weight: 400">{{this.guestsAdded}}</h1>
+                        <h1 class="textfield" style="font-weight: 400">{{ this.guestsAdded }}</h1>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                 <table id="guests">
                     <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto;" class="tbody">
                         <tr v-for="guest in sponsorGuests" :key="guest.id">
-                            <td style="padding-left: 20% !important;">{{guest.name}}</td>
+                            <td style="padding-left: 20% !important;">{{ guest.name }}</td>
                             <td style="padding-left: 10%% !important;"><button class="button-icon"
                                     @click=sponsorDelete(guest)
                                     style="margin-left: 0.9rem;     background: transparent;"> <img
@@ -49,7 +49,6 @@
 
             </div>
         </div>
-
 
         <Footer></Footer>
     </div>
@@ -96,7 +95,6 @@ export default {
                             this.$router.push({ path: '/admin/sponsors-add/0' });
                         }
 
-
                         this.sponsorsInstance = this.sponsors[0];
                         this.name = this.sponsorsInstance.name;
                         this.previewImage = this.sponsorsInstance.image;
@@ -122,7 +120,6 @@ export default {
                 axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
                     .then(response => {
                         this.sponsorss = response.data;
-
                     })
             }
         },
@@ -152,7 +149,7 @@ export default {
                     this.nextId = ids.length;
                 }
 
-                let sponsorTag = this.slug + "VIP - Sponzor - "+this.name;
+                let sponsorTag = this.slug + "VIP - Sponzor - " + this.name;
 
                 axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
                     { id: this.nextId, name: this.sponsorName, tag: sponsorTag, bought: '1', entered: '0' },
@@ -163,9 +160,7 @@ export default {
                         this.created()
                     })
             }
-
         }
-
     }
 }
 </script>
@@ -176,7 +171,6 @@ export default {
 </style>
 
 <style scoped>
-
 .image-container {
     display: flex;
     justify-content: center;
@@ -192,9 +186,9 @@ export default {
     border-radius: 18px;
     padding: 15px 30px;
 }
-.artist.popis{
 
-}
+.artist.popis {}
+
 .popis-element1 {
     border-bottom: white solid 2px !important;
     border-right: white solid 2px !important;
@@ -287,9 +281,10 @@ h1 {
 
 @media screen and (max-width: 980px) {
     .popis-element1 {
-    margin-top: 0rem;
-      padding-bottom: 0rem;
-}
+        margin-top: 0rem;
+        padding-bottom: 0rem;
+    }
+
     .sponsors-page {
         display: flex;
         flex-direction: column;
@@ -358,7 +353,7 @@ h1 {
 }
 
 @media screen and (max-width: 550px) {
-    .artist{
+    .artist {
         width: 8rem;
         height: 8rem;
         padding: 12px;

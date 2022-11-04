@@ -71,7 +71,7 @@ export default {
             formData: '',
         };
     },
-      created() {
+    created() {
         this.slug = this.$route.params.slug;
 
         if (this.slug != '0') {
@@ -112,7 +112,7 @@ export default {
             this.progress = 0;
             this.message = "";
         },
-          async deleteLineup() {
+        async deleteLineup() {
             const resp = await axios.delete(process.env.VUE_APP_BASE_URL + "/lineup/" + this.id + "/",
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                 {
@@ -123,7 +123,7 @@ export default {
             )
             this.$router.push({ path: '/admin/lineup-list/' });
         },
-         async postLineup() {
+        async postLineup() {
             if (this.currentImage == undefined) {
                 window.alert("Uploadajte fotografiju")
             } else {
@@ -200,7 +200,7 @@ export default {
 
 
 
-                    const resp= await axios.post(process.env.VUE_APP_BASE_URL + "/lineup/", formData,
+                    const resp = await axios.post(process.env.VUE_APP_BASE_URL + "/lineup/", formData,
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
                         {
                             headers: {
@@ -236,9 +236,11 @@ export default {
     .lineup-form {
         margin-left: 5%;
     }
+
     .button.submit {
         font-size: 14px;
     }
+
     .button.submit.del {
         margin-left: 50px;
     }

@@ -1,9 +1,9 @@
 <template>
-<div id="app">
-  <NavbarAdmin v-if="this.navtype=='bruckarte'"></NavbarAdmin>
-  <NavbarBweb v-if="this.navtype=='brucweb'"></NavbarBweb>
-<router-view/>
-</div>
+  <div id="app">
+    <NavbarAdmin v-if="this.navtype == 'bruckarte'"></NavbarAdmin>
+    <NavbarBweb v-if="this.navtype == 'brucweb'"></NavbarBweb>
+    <router-view />
+  </div>
 </template>
 
 <script>
@@ -18,24 +18,23 @@ export default {
     NavbarAdmin,
     NavbarBweb,
     Footer
-},
+  },
   data() {
-      return {
-        navtype:'brucweb',
-      }
+    return {
+      navtype: 'brucweb',
+    }
 
-    },
-  mounted(){
-    if(((String(window.location.href).split("/"))[3])=="admin"){
-      this.navtype="bruckarte"
-    }else{
-      this.navtype="brucweb"
+  },
+  mounted() {
+    if (((String(window.location.href).split("/"))[3]) == "admin") {
+      this.navtype = "bruckarte"
+    } else {
+      this.navtype = "brucweb"
     }
   }
 }
 </script>
 
 <style>
-
 @import '~bootstrap/dist/css/bootstrap.css'
 </style>

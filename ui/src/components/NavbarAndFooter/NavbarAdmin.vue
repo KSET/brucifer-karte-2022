@@ -54,12 +54,11 @@
             Izvoz
           </button>
 
-
           <div class="sidbar-element" v-if="privilege == '1'" @click="toggleDropdownLineup">
             <RouterElement class="overlay-element admin" style="left: 0%; position: abosolute; display: inline-block;"
               :name="'Izvođači'">
             </RouterElement>
-            <img v-if="this.showDropdownLineup==false" class="dropdown-icon"
+            <img v-if="this.showDropdownLineup == false" class="dropdown-icon"
               src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownLineup">
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownLineup">
 
@@ -75,7 +74,7 @@
             <RouterElement class="overlay-element admin" style="left: 0%; position: abosolute; display: inline-block;"
               :name="'Sponzori'">
             </RouterElement>
-            <img v-if="this.showDropdownSponsors==false" class="dropdown-icon" style="display: inline-block"
+            <img v-if="this.showDropdownSponsors == false" class="dropdown-icon" style="display: inline-block"
               src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownSponsors">
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownSponsors">
 
@@ -146,8 +145,6 @@ export default {
           XLSX.utils.book_append_sheet(wb, ws, "People");
           XLSX.writeFile(wb, filename);
         });
-
-
     },
     toggleNav() {
       document.getElementById("nav-icon3").classList.toggle('open');
@@ -180,7 +177,6 @@ export default {
     },
   }
 }
-
 
 </script>
 <style module lang="scss">

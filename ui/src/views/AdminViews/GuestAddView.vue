@@ -91,23 +91,23 @@ export default {
         this.created()
     },
     methods: {
-        created(){
+        created() {
             axios.get(process.env.VUE_APP_BASE_URL + '/guests/',)
-            .then(response => {
-                document.getElementById("jmbagselect").style.display = "none";
-                document.getElementById("jmbagselectt").style.display = "none";
-                this.guests = response.data;
-                this.len = this.guests.length;
-                axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
-                    .then(response => {
-                        var itemss = response.data;
-                        this.items = [];
-                        itemss.forEach(element => {
-                            this.items.push(element.name);
-                        });
+                .then(response => {
+                    document.getElementById("jmbagselect").style.display = "none";
+                    document.getElementById("jmbagselectt").style.display = "none";
+                    this.guests = response.data;
+                    this.len = this.guests.length;
+                    axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
+                        .then(response => {
+                            var itemss = response.data;
+                            this.items = [];
+                            itemss.forEach(element => {
+                                this.items.push(element.name);
+                            });
 
-                    })
-            })
+                        })
+                })
         },
         checkJMBAGdisplay() {
             var e = document.getElementById("tagselect").value;

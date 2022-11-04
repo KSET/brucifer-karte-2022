@@ -18,20 +18,20 @@
                   style="border: none; opacity: 0.25;" @click="deleteUser(user)">
                   <img src="@/assets/icons/trash-icon.svg"></button></div>
               <div class="users-element userinfo" style="flex: 2;"
-                v-bind:style="[(user.privilege=='0') ? {color:'red'}: { color:'black'}]">{{user.name}} <br>
-                {{user.email}}</div>
+                v-bind:style="[(user.privilege == '0') ? { color: 'red' } : { color: 'black' }]">{{ user.name }} <br>
+                {{ user.email }}</div>
               <div class="users-element"> <button class="button-priv"
-                  v-bind:style="[(user.privilege=='3') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
-                  @click="changeprivilege(user,'3')">Karte</button></div>
+                  v-bind:style="[(user.privilege == '3') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                  @click="changeprivilege(user, '3')">Karte</button></div>
               <div class="users-element"><button class="button-priv"
-                  v-bind:style="[(user.privilege=='2') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
-                  @click="changeprivilege(user,'2')">Ulaz</button></div>
+                  v-bind:style="[(user.privilege == '2') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                  @click="changeprivilege(user, '2')">Ulaz</button></div>
               <div class="users-element"><button class="button-priv"
-                  v-bind:style="[(user.privilege=='4') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
-                  @click="changeprivilege(user,'4')">Ulaz <br>+Karte</button></div>
+                  v-bind:style="[(user.privilege == '4') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                  @click="changeprivilege(user, '4')">Ulaz <br>+Karte</button></div>
               <div class="users-element"><button class="button-priv"
-                  v-bind:style="[(user.privilege=='1') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
-                  @click="changeprivilege(user,'1')">Admin</button></div>
+                  v-bind:style="[(user.privilege == '1') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                  @click="changeprivilege(user, '1')">Admin</button></div>
 
 
 
@@ -147,7 +147,7 @@ export default {
         {
           subject: "[#BRUCIFER22] Promjena privilegije",
           template: "user_email",
-          message: user.name + " "+ privilege_name,
+          message: user.name + " " + privilege_name,
           name: to_user_name,
           privilege_name: privilege_name,
           to_mail: email
@@ -159,7 +159,7 @@ export default {
         {
           subject: "[#BRUCIFER22] Promjena privilegije",
           template: "user_email",
-          message: user.name + " "+ privilege_name,
+          message: user.name + " " + privilege_name,
           name: to_user_name,
           privilege_name: privilege_name,
           to_mail: email
