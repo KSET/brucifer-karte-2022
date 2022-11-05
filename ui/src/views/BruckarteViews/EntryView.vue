@@ -30,8 +30,8 @@
                 <input readonly class="inputfield span3" :disabled="this.id == ''" type="text" @input="changevalue"
                     v-model="name">
 
-                <h1 class="textfield span2">Prezime </h1>
-                <input readonly class="inputfield span3" :disabled="this.id == ''" type="text" @input="changevalue"
+                <h1 v-if="!this.tag.includes('Sponzor')" class="textfield span2">Prezime </h1>
+                <input  v-if="!this.tag.includes('Sponzor')" readonly class="inputfield span3" :disabled="this.id == ''" type="text" @input="changevalue"
                     v-model="surname">
 
                 <h1 v-if="this.tag == 'Brucoši'" class="textfield span2">JMBAG </h1>

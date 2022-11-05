@@ -4,7 +4,6 @@
 
       <input class="nosubmit search" @input="searchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
 
-
       <h1 class="textfield" style="display: inline-block; margin-left: 12rem">{{ this.nomatch }} </h1>
     </div>
 
@@ -191,7 +190,6 @@ export default {
 
 
       var email = e_name + e_surname + jmbagslice + "@fer.hr";
-
 
       var msg = this.name + " " + this.surname + " " + guest.confCode
 
