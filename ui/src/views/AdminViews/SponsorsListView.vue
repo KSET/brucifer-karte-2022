@@ -13,7 +13,6 @@
           sponzore</button>
 
         <div class="switchdiv">
-
           <h1 class="textfield" style="display: inline;">Vidljvo </h1>
 
           <label class="switch" @click="toggleVisibility">
