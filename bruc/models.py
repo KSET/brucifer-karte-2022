@@ -15,7 +15,6 @@ class Guests(models.Model):
     entered=models.CharField(max_length=50, default='', blank=True)
     confCode=models.CharField(max_length=50, default='', blank=True)
 
-
 class Users(models.Model):
     id=models.CharField(max_length=50, primary_key=True, default='', blank=True)
     name=models.CharField(max_length=50, default='', blank=True)
@@ -56,6 +55,7 @@ class Sponsors(models.Model):
     slug=models.CharField(max_length=200, default='', blank=True)
     order=models.IntegerField(default='', blank=True)
     visible=models.CharField(max_length=200, default='', blank=True)
+    guestsEnabled=models.CharField(max_length=200, default='1', blank=True)
     name=models.CharField(max_length=49, default='', blank=True)
     url=models.CharField(max_length=400, default='0', blank=True)
     image = models.ImageField(upload_to='uploads/sponsors', blank=True, null=True)
@@ -86,7 +86,6 @@ class Mailer(models.Model):
     subject=models.CharField(max_length=200, default=0, blank=False)
     message=models.CharField(max_length=1000, default=0, blank=False)
     to_mail=models.CharField(max_length=50, default=0, blank=False)
-
 
 class Cjenik(models.Model):
     id = models.AutoField(primary_key=True)
