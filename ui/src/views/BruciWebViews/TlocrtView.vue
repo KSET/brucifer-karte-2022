@@ -48,6 +48,13 @@
     height: 100%;
   }
 
+  .navbar.bw {
+    background: #DC5E88;
+  }
+
+  .navbar.bw::after {
+    background: linear-gradient(#DC5E88, transparent);
+  }
 
   @media screen and (max-width: 980px) {
     .tlocrt-desktop {
