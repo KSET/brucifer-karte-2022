@@ -26,7 +26,7 @@
     }
   </script>
   
-  <style>
+  <style scoped>
   .tlocrt {
     width: 100%;
     min-height: 91vh;

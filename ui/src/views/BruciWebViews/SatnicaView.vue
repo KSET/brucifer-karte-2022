@@ -26,7 +26,7 @@
     }
   </script>
   
-  <style>
+  <style scoped>
   .satnica {
     width: 100%;
     min-height: 91vh;
