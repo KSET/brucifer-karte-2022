@@ -1,6 +1,6 @@
 <template>
   <button @click="$router.push(this.link)">
-    {{name}}
+    {{ name }}
   </button>
 </template>
 

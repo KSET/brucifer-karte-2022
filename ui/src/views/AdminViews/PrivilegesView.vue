@@ -3,7 +3,8 @@
     <Sidebar />
     <div class="admin-page-container">
       <h1 class="page-title">Privilegije</h1>
-      <h1 class="text1" style="word-spacing: 10px;">UKUPNO {{this.countNista+this.countAdmin+this.countUlaz+this.countKarte+this.countUlplK}}</h1>
+      <h1 class="text1" style="word-spacing: 10px;">UKUPNO
+        {{ this.countNista + this.countAdmin + this.countUlaz + this.countKarte + this.countUlplK }}</h1>
       <table class="table" id="guests">
         <thead>
           <th>Oznaka</th>
@@ -14,27 +15,27 @@
           <tr>
             <td>0</td>
             <td>Ništa</td>
-            <td>{{this.countNista}}</td>
+            <td>{{ this.countNista }}</td>
           </tr>
           <tr>
             <td>1</td>
             <td>Admin</td>
-            <td>{{this.countAdmin}}</td>
+            <td>{{ this.countAdmin }}</td>
           </tr>
           <tr>
             <td>2</td>
             <td>Ulaz</td>
-            <td>{{this.countUlaz}}</td>
+            <td>{{ this.countUlaz }}</td>
           </tr>
           <tr>
             <td>3</td>
             <td>Karte</td>
-            <td>{{this.countKarte}}</td>
+            <td>{{ this.countKarte }}</td>
           </tr>
           <tr>
             <td>4</td>
             <td>Ulaz+Karte</td>
-            <td>{{this.countUlplK}}</td>
+            <td>{{ this.countUlplK }}</td>
           </tr>
 
 

@@ -98,11 +98,11 @@ export default {
                         )
                         store.commit('setPrivilege', '0')
                     }
-                    if(this.privilege==2){
-                        this.$router.push({ name: 'entry' }) 
-                    }else if(this.privilege==3){
-                        this.$router.push({ name: 'guests' }) 
-                    }else{
+                    if (this.privilege == 2) {
+                        this.$router.push({ name: 'entry' })
+                    } else if (this.privilege == 3) {
+                        this.$router.push({ name: 'guests' })
+                    } else {
                         this.$router.push({ name: 'home' })
                     }
                 })

@@ -13,7 +13,6 @@
           sponzore</button>
 
         <div class="switchdiv">
-
           <h1 class="textfield" style="display: inline;">Vidljvo </h1>
 
           <label class="switch" @click="toggleVisibility">
@@ -76,6 +75,12 @@ export default {
         .then(() => {
         })
     },
+    sleep(ms) {
+      return new Promise(
+        resolve => setTimeout(resolve, ms)
+      );
+    },
+
     async sendMail() {
       if (window.confirm("Klikom na OK šaljete mail SVIM sponzorima!!!")) {
         const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/')
@@ -83,7 +88,7 @@ export default {
 
         let emails = []
         resp.data.forEach(elementy => {
-          if(elementy.email!=''){
+          if (elementy.email != '') {
             emails.push(elementy.email)
           }
         });
@@ -91,14 +96,15 @@ export default {
         let mailsent = 0;
         res.data.forEach(element => {
           emails.forEach(elementy => {
-            if(element.message.includes(elementy)) {
+            if (element.message.includes(elementy)) {
               mailsent += 1;
               emails.pop(elementy)
             }
-        });        });
+          });
+        });
 
         if (mailsent > 0) {
-          if (window.confirm(`Mail je već poslan ${mailsent}/${resp.data.length-1} sponzora, klikom na 'OK' SVIM sponzorima će se ponovno poslati mail!!!`)) {
+          if (window.confirm(`Mail je već poslan ${mailsent}/${resp.data.length - 1} sponzora, klikom na 'OK' SVIM sponzorima će se ponovno poslati mail!!!`)) {
             mailsent = 0;
           }
         }
@@ -106,35 +112,39 @@ export default {
           resp.data.splice(0, 1);
 
           resp.data.forEach(async element => {
+            if (element.guestCap != 0) {
 
-            let msg = element.name + " " + element.email + " " + element.slug
+              await this.sleep(element.id * 1000);
 
-            let email = element.email
-            //maknut u produkciji
-            email = "pavleergovic@gmail.com"
+              let msg = element.name + " " + element.email + " " + element.slug
 
-            await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
-              {
-                subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
-                template: "sponsors_email",
-                message: msg,
-                name: element.name,
-                link: "https://brucosijada.kset.org/sponzori/" + element.slug,
-                to_mail: email
-              },
-              { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-            )
-            await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
-              {
-                subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
-                template: "sponsors_email",
-                message: msg,
-                name: element.name,
-                link: "https://brucosijada.kset.org/sponzori/" + element.slug,
-                to_mail: email
-              },
-              { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-            )
+              let email = element.email
+
+              const respp = await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
+                {
+                  subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
+                  template: "sponsors_email",
+                  message: msg,
+                  name: element.name,
+                  link: "https://brucosijada.kset.org/sponzori/" + element.slug,
+                  to_mail: email
+                },
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+              )
+              const resppp = await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+                {
+                  subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
+                  template: "sponsors_email",
+                  message: msg,
+                  name: element.name,
+                  link: "https://brucosijada.kset.org/sponzori/" + element.slug,
+                  to_mail: email
+                },
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+              )
+              console.log("mail poslan")
+
+            }
           });
         }
       }

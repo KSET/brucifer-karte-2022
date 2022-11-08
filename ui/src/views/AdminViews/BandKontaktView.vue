@@ -6,7 +6,7 @@
         <div style="border-right: 1px solid black; width: 95%">
           <h1 class="page-title lineup-title" style="padding-top: 20px">Popis kontakata</h1>
 
-          <img v-if="this.showContactForm==false" style="margin-top: 15px;" class="dropdown-icon showmobile"
+          <img v-if="this.showContactForm == false" style="margin-top: 15px;" class="dropdown-icon showmobile"
             src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleContactForm">
           <img v-else class="dropdown-icon  showmobile" style="margin-top: 15px;"
             src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleContactForm">
@@ -38,9 +38,9 @@
               </thead>
               <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto;" class="tbody">
                 <tr v-for="bandcontact in bandcontacts" :key="bandcontact.id">
-                  <td>{{bandcontact.bandName}}</td>
-                  <td>{{bandcontact.bookerName}}</td>
-                  <td @click="call(bandcontact)"><a>{{bandcontact.bookerPhone}}</a></td>
+                  <td>{{ bandcontact.bandName }}</td>
+                  <td>{{ bandcontact.bookerName }}</td>
+                  <td @click="call(bandcontact)"><a>{{ bandcontact.bookerPhone }}</a></td>
                   <td><button class="button-icon" @click="deleteBandContact(bandcontact)">
                       <img src="@/assets/icons/trash-icon.svg"></button>
                   </td>
@@ -186,7 +186,7 @@ export default {
   border-left: 1px solid;
 }
 
-#guests th{
+#guests th {
   padding-left: 20px
 }
 

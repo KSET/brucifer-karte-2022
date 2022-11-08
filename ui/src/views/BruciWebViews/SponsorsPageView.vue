@@ -16,17 +16,16 @@
             <div class="infofield">
                 <div class="artist">
                     <div class="image-container">
-                        <div class="image-sizer2"></div>
                         <img class="image-frame2" style="border: none;" :src="previewImage">
                     </div>
                 </div>
 
                 <div class="infofield-element">
                     <div class="grid-container">
-                        <h1 class="textfield">Ograničenje</h1>
-                        <h1 class="textfield" style="font-weight: 400">{{this.guestCap}}</h1>
+                        <h1 class="textfield" style="margin-bottom: 1em">Ograničenje</h1>
+                        <h1 class="textfield" style="font-weight: 400; margin-bottom: 1em">{{ this.guestCap }}</h1>
                         <h1 class="textfield">Broj unesenih</h1>
-                        <h1 class="textfield" style="font-weight: 400">{{this.guestsAdded}}</h1>
+                        <h1 class="textfield" style="font-weight: 400">{{ this.guestsAdded }}</h1>
                     </div>
                 </div>
             </div>
@@ -38,7 +37,7 @@
                 <table id="guests">
                     <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto;" class="tbody">
                         <tr v-for="guest in sponsorGuests" :key="guest.id">
-                            <td style="padding-left: 20% !important;">{{guest.name}}</td>
+                            <td style="padding-left: 20% !important;">{{ guest.name }}</td>
                             <td style="padding-left: 10%% !important;"><button class="button-icon"
                                     @click=sponsorDelete(guest)
                                     style="margin-left: 0.9rem;     background: transparent;"> <img
@@ -50,7 +49,6 @@
 
             </div>
         </div>
-
 
         <Footer></Footer>
     </div>
@@ -97,7 +95,6 @@ export default {
                             this.$router.push({ path: '/admin/sponsors-add/0' });
                         }
 
-
                         this.sponsorsInstance = this.sponsors[0];
                         this.name = this.sponsorsInstance.name;
                         this.previewImage = this.sponsorsInstance.image;
@@ -123,7 +120,6 @@ export default {
                 axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
                     .then(response => {
                         this.sponsorss = response.data;
-
                     })
             }
         },
@@ -153,7 +149,7 @@ export default {
                     this.nextId = ids.length;
                 }
 
-                let sponsorTag = "Sponzori" + this.slug
+                let sponsorTag = this.slug + "VIP - Sponzor - " + this.name;
 
                 axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
                     { id: this.nextId, name: this.sponsorName, tag: sponsorTag, bought: '1', entered: '0' },
@@ -164,9 +160,7 @@ export default {
                         this.created()
                     })
             }
-
         }
-
     }
 }
 </script>
@@ -177,27 +171,12 @@ export default {
 </style>
 
 <style scoped>
-
 .image-container {
-    position: relative;
-}
-
-.image-container .image-sizer2 {
-    padding-bottom: calc(0.86 * 100%);
-    transition: padding-bottom .3s ease;
-    will-change: padding-bottom;
-}
-
-.image-container .image-frame2 {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;     
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: contain;
-    object-fit: contain;
+    height: 100%;
 }
 
 .artist {
@@ -207,14 +186,15 @@ export default {
     border-radius: 18px;
     padding: 15px 30px;
 }
-.artist.popis{
 
-}
+.artist.popis {}
+
 .popis-element1 {
     border-bottom: white solid 2px !important;
     border-right: white solid 2px !important;
     padding-left: 6%;
     padding-top: 6.75rem;
+    padding-bottom: 5rem;
 }
 
 .sponsorsPage-table {
@@ -301,8 +281,10 @@ h1 {
 
 @media screen and (max-width: 980px) {
     .popis-element1 {
-    margin-top: 0rem;
-}
+        margin-top: 0rem;
+        padding-bottom: 0rem;
+    }
+
     .sponsors-page {
         display: flex;
         flex-direction: column;
@@ -338,8 +320,9 @@ h1 {
 
     .artist {
         margin-top: 3%;
-        height: 150px;
-        width: 150px;
+        width: 12rem;
+        height: 12rem;
+        padding: 20px;
     }
 
     .infofield-element {
@@ -359,13 +342,26 @@ h1 {
     .sponsorsPage-table {
         margin-top: 0rem;
     }
+
+    .image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 9rem;
+    }
 }
 
 @media screen and (max-width: 550px) {
-    .artist{
-        width:6.25rem;
-        height: 6.25rem;
+    .artist {
+        width: 8rem;
+        height: 8rem;
+        padding: 12px;
+    }
 
+    .image-container {
+        width: 100%;
+        height: 6rem;
     }
 
     .popis {

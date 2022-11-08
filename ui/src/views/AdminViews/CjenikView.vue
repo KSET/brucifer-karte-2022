@@ -13,7 +13,7 @@
           <h1 class="textfield">Popis </h1>
 
           <label class="switch">
-            <input id="switchSponsors" type="checkbox">
+            <input id="switch" type="checkbox" @input="changeVisible">
             <span class="slider round"></span>
           </label>
 
@@ -112,6 +112,8 @@ export default {
       priceHRK: '',
       priceEUR: '',
       artikli: [],
+
+      isVisible: '',
     }
   },
 
@@ -132,7 +134,36 @@ export default {
         }
       });
 
+
+      axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/31/',)
+        .then(response => {
+          if (response.data.name == 0) {
+            this.visible = 0;
+          } else {
+            this.isVisible = 1;
+          }
+          if (this.isVisible == '1') {
+            document.getElementById("switch").checked = true;
+          } else {
+            document.getElementById("switch").checked = false;
+          }
+
+        })
     },
+    changeVisible() {
+      if (this.isVisible == 1) {
+        var changenum = '0';
+        this.isVisible = '0';
+      } else {
+        var changenum = '1';
+        this.isVisible = '1';
+      }
+      axios.put(process.env.VUE_APP_BASE_URL + '/cjenik/31/',
+        { name: changenum },
+        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      )
+    },
+
     async orderUp(artikl) {
       let curIndex = this.artikli.indexOf(artikl);
       let nextIndex = curIndex - 1;

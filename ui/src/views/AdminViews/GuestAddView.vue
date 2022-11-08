@@ -5,7 +5,7 @@
 
             <h1 class="page-title">Dodavanje Gosta</h1>
 
-            <form  onsubmit="return false">
+            <form onsubmit="return false">
                 <div class="grid-container" style="row-gap: 5%;">
                     <h1 class="textfield">Ime: </h1>
                     <input required class="inputfield" type="text" @input="changevalue" v-model="name">
@@ -88,23 +88,27 @@ export default {
     },
 
     mounted() {
-        axios.get(process.env.VUE_APP_BASE_URL + '/guests/',)
-            .then(response => {
-                document.getElementById("jmbagselect").style.display = "none";
-                document.getElementById("jmbagselectt").style.display = "none";
-                this.guests = response.data;
-                this.len = this.guests.length;
-                axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
-                    .then(response => {
-                        var itemss = response.data;
-                        itemss.forEach(element => {
-                            this.items.push(element.name);
-                        });
-
-                    })
-            })
+        this.created()
     },
     methods: {
+        created() {
+            axios.get(process.env.VUE_APP_BASE_URL + '/guests/',)
+                .then(response => {
+                    document.getElementById("jmbagselect").style.display = "none";
+                    document.getElementById("jmbagselectt").style.display = "none";
+                    this.guests = response.data;
+                    this.len = this.guests.length;
+                    axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
+                        .then(response => {
+                            var itemss = response.data;
+                            this.items = [];
+                            itemss.forEach(element => {
+                                this.items.push(element.name);
+                            });
+
+                        })
+                })
+        },
         checkJMBAGdisplay() {
             var e = document.getElementById("tagselect").value;
             if (e == "Brucoši") {
@@ -143,30 +147,42 @@ export default {
                     jmbags.push(element.jmbag);
                 });
 
-                if (this.selectedTag == "Brucoši") {
-                    console.log(jmbags.includes(String(this.jmbag)))
+                let post = 1;
 
+                if (this.selectedTag == "Brucoši") {
                     if (jmbags.includes(String(this.jmbag))) {
                         window.alert("Gost s ovim JMBAG-om već postoji!!")
-                    } else {
-                        for (let index = 0; index < ids.length; index++) {
-                            if (ids.includes(String(index)) == false) {
-                                this.nextId = index;
-                                break;
-                            }
-                        }
-                        if (this.nextId === '') {
-                            this.nextId = ids.length;
-                        }
-
-                        axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
-                            { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
-                            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-                        )
-                            .then(() => {
-                                this.created()
-                            })
+                        post = 0;
                     }
+                }
+
+                if (post == 1) {
+
+                    for (let index = 0; index < ids.length; index++) {
+                        if (ids.includes(String(index)) == false) {
+                            this.nextId = index;
+                            break;
+                        }
+                    }
+                    if (this.nextId === '') {
+                        this.nextId = ids.length;
+                    }
+
+                    axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
+                        { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
+                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+                    )
+                        .then(() => {
+                            this.name = ''
+                            this.surname = ''
+                            this.selectedTag = ''
+                            this.jmbag = ''
+                            this.karta = '1';
+                            this.ulaz = '1';
+                            document.getElementById("jmbagselect").style.display = "none";
+                            document.getElementById("jmbagselectt").style.display = "none";
+                            this.created()
+                        })
                 }
             }
         }

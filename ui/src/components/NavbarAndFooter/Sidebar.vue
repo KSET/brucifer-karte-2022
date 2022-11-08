@@ -9,37 +9,39 @@
         </button>
 
         <div class="sidbar-element" style="border-bottom: 1px solid black;" @click="toggleDropdownLineup"
-            v-bind:style="[(showDropdownLineup) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]">
+            v-bind:style="[(showDropdownLineup) ? { backgroundColor: '#D9D9D9' } : { backgroundColor: 'white' }]">
             <RouterElement class="sidebar-element" style="display: inline-block; width: 90%; border-bottom: none;"
                 :name="'Izvođači'">
             </RouterElement>
-            <img v-if="this.showDropdownLineup==false" class="dropdown-icon" style="z-index:-1"
-                src="@/assets/icons/dopdwn-notopen-icon.svg" >
+            <img v-if="this.showDropdownLineup == false" class="dropdown-icon" style="z-index:-1"
+                src="@/assets/icons/dopdwn-notopen-icon.svg">
             <img style="z-index:-1" v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg">
 
         </div>
         <RouterElement style="padding-left:3rem !important;" id="dpL1" class="sidebar-element"
             :name="'Pregled Izvođača'" :link="'/admin/lineup-list'">
         </RouterElement>
-  
-        <a style="padding-left:3rem !important; color: black;" id="dpL2" class="sidebar-element" href="/admin/lineup-add/0">Dodavanje Izvođača</a>
+
+        <a style="padding-left:3rem !important; color: black;" id="dpL2" class="sidebar-element"
+            href="/admin/lineup-add/0">Dodavanje Izvođača</a>
 
 
         <div class="sidbar-element" style="border-bottom: 1px solid black;" @click="toggleDropdownSponsors"
-            v-bind:style="[(showDropdownSponsors) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]">
+            v-bind:style="[(showDropdownSponsors) ? { backgroundColor: '#D9D9D9' } : { backgroundColor: 'white' }]">
             <RouterElement class="sidebar-element" style="display: inline-block; width: 90%; border-bottom: none;"
                 :name="'Sponzori'">
             </RouterElement>
-            <img v-if="this.showDropdownSponsors==false" class="dropdown-icon"
-                src="@/assets/icons/dopdwn-notopen-icon.svg" >
+            <img v-if="this.showDropdownSponsors == false" class="dropdown-icon"
+                src="@/assets/icons/dopdwn-notopen-icon.svg">
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg">
 
         </div>
         <RouterElement style="padding-left:3rem !important;" id="dpS1" class="sidebar-element"
             :name="'Pregled Sponzora'" :link="'/admin/sponsors-list'">
         </RouterElement>
-    
-        <a style="padding-left:3rem !important; color: black;" id="dpS2" class="sidebar-element" href="/admin/sponsors-add/0">Dodavanje Sponzora</a>
+
+        <a style="padding-left:3rem !important; color: black;" id="dpS2" class="sidebar-element"
+            href="/admin/sponsors-add/0">Dodavanje Sponzora</a>
 
         <RouterElement class="sidebar-element" :name="'Dodaj Gosta'" :link="'/admin/guests-add'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Kontakt'" :link="'/admin/band-kontakt'"></RouterElement>

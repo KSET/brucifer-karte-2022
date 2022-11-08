@@ -16,22 +16,22 @@
             </div>
         </div>
         <div class="grid-item grid1-item2" id="b">
-            <button class="person"
-                :class="$style.person"
-                v-bind:style="[(this.id==guest.id) ? {backgroundColor:'#D9D9D9'}: { backgroundColor:'white'}]"
+            <button class="person" :class="$style.person"
+                v-bind:style="[(this.id == guest.id) ? { backgroundColor: '#D9D9D9' } : { backgroundColor: 'white' }]"
                 v-for="guest in guests" :key="guest.class" @click="chooseGuest(guest)">
                 <p><strong>{{ guest.name }} {{ guest.surname }}</strong></p>
                 <p>{{ guest.tag }} </p>
             </button>
         </div>
-        <div class="grid-item grid1-item3" :class="{[$style.cFix]: true, [$style.cFixExpanded]: this.tag === 'Brucoši'}" id="c">
+        <div class="grid-item grid1-item3" :class="{ [$style.cFix]: true, [$style.cFixExpanded]: this.tag === 'Brucoši' }"
+            id="c">
             <div class="grid-container2">
                 <h1 class="textfield span2">Ime </h1>
-                <input readonly class="inputfield span3" :disabled="this.id==''" type="text" @input="changevalue"
+                <input readonly class="inputfield span3" :disabled="this.id == ''" type="text" @input="changevalue"
                     v-model="name">
 
-                <h1 class="textfield span2">Prezime </h1>
-                <input readonly class="inputfield span3" :disabled="this.id==''" type="text" @input="changevalue"
+                <h1 v-if="!this.tag.includes('Sponzor')" class="textfield span2">Prezime </h1>
+                <input  v-if="!this.tag.includes('Sponzor')" readonly class="inputfield span3" :disabled="this.id == ''" type="text" @input="changevalue"
                     v-model="surname">
 
                 <h1 v-if="this.tag == 'Brucoši'" class="textfield span2">JMBAG </h1>
@@ -39,7 +39,7 @@
 
                 <h1 v-if="this.tag == 'Brucoši'" class="textfield" :class="$style.span2Sm">Karta </h1>
 
-                <button disabled v-if="this.tag == 'Brucoši' &&  this.bought == '1'" class="bttn button2-yes"
+                <button disabled v-if="this.tag == 'Brucoši' && this.bought == '1'" class="bttn button2-yes"
                     @click="changeBought(guest, '0')">
                     <img class="va" src="../../assets/icons/yes-icon.svg">
                 </button>
@@ -50,51 +50,51 @@
                 <br v-if="this.tag == 'Brucoši'" class="hidedesktop showmobile">
                 <h1 class="textfield" :class="$style.span2Sm">Ulaz </h1>
 
-                <button v-if="this.entered == '1'" type="button" :disabled="this.id==''" class="bttn button2-yes"
+                <button v-if="this.entered == '1'" type="button" :disabled="this.id == ''" class="bttn button2-yes"
                     @click="changeEntered(guest, '0')">
                     <img class="va" src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button v-else @click="changeEntered(guest, '1')" :disabled="this.id==''" type="button"
+                <button v-else @click="changeEntered(guest, '1')" :disabled="this.id == ''" type="button"
                     class="bttn button2-no">
                     <img class="va" src="../../assets/icons/no-icon.svg">
                 </button>
 
                 <h1 v-if="this.tag == 'Brucoši'" class="textfield span2">Potvrda </h1>
-                <h1 v-if="this.tag == 'Brucoši'" class="textfield span3">{{this.confCode}} </h1>
+                <h1 v-if="this.tag == 'Brucoši'" class="textfield span3">{{ this.confCode }} </h1>
             </div>
         </div>
     </div>
 </template>
 
 <style module lang="scss">
-    .person {
+.person {
 
-        p {
-            font-size: .6em;
-            font-family: 'Montserrat';
+    p {
+        font-size: .6em;
+        font-family: 'Montserrat';
+    }
+}
+
+.span2Sm {
+    @media screen and (max-width: 550px) {
+        grid-column: span 2;
+    }
+}
+
+
+
+:global(#flex) .cFix {
+    @media screen and (max-width: 550px) {
+        display: flex !important;
+        flex-direction: column;
+        height: fit-content;
+        justify-content: flex-start;
+
+        &.cFixExpanded {
+            height: 100%;
         }
     }
-
-    .span2Sm {
-        @media screen and (max-width: 550px) {
-            grid-column: span 2;
-        }
-    }
-
-    
-
-    :global(#flex) .cFix {
-        @media screen and (max-width: 550px) {
-            display: flex !important;
-            flex-direction: column;
-            height: fit-content;
-            justify-content: flex-start;
-
-            &.cFixExpanded {
-                height: 100%;
-            }
-        }
-    }
+}
 </style>
 
 <script>
@@ -143,14 +143,22 @@ export default {
     methods: {
         searchGuest() {
             var e = document.getElementById("selector").value;
-            if(e=="..."){
-                e=" ";
-                document.getElementById("selector").value=" ";
+            if (e == "...") {
+                e = " ";
+                document.getElementById("selector").value = " ";
             }
             axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + this.search + ' ' + e + "&search_fields=tag&search_fields=name&search_fields=surname",)
                 .then(response => {
                     if (this.search != '' && this.search.length > 2) {
                         this.guests = response.data;
+
+                        this.guests.forEach(element => {
+                            if (element.tag.includes("Sponzor")) {
+                                element.tag = (element.tag).slice(36, element.tag.length)
+                            }
+                        });
+
+
                         if (this.guests.length == 1) {
                             this.guest = this.guests[0];
                             this.name = this.guest.name;
@@ -270,11 +278,12 @@ export default {
 #inputfield {
     width: 50.6%;
 }
+
 .nosubmit.search {
-  position: relative;
-  margin-top: 2.375rem;
-  width: 20%;
-  margin-left: 6% ;
+    position: relative;
+    margin-top: 2.375rem;
+    width: 20%;
+    margin-left: 6%;
 }
 
 .person {

@@ -17,16 +17,16 @@
                 <div class="users-elements">
 
                     <div class="users-element add"> <button class="button-priv"
-                            v-bind:style="[(this.privilege=='3') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
+                            v-bind:style="[(this.privilege == '3') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
                             @click="changeprivilege('3')">Karte</button></div>
                     <div class="users-element add"><button class="button-priv"
-                            v-bind:style="[(this.privilege=='2') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
+                            v-bind:style="[(this.privilege == '2') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
                             @click="changeprivilege('2')">Ulaz</button></div>
                     <div class="users-element add"><button class="button-priv"
-                            v-bind:style="[(this.privilege=='4') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
+                            v-bind:style="[(this.privilege == '4') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
                             @click="changeprivilege('4')">Ulaz <br>+Karte</button></div>
                     <div class="users-element add"><button class="button-priv"
-                            v-bind:style="[(this.privilege=='1') ? {backgroundColor: 'black', color:'white'}: {backgroundColor: 'white', color:'black'}]"
+                            v-bind:style="[(this.privilege == '1') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
                             @click="changeprivilege('1')">Admin</button></div>
 
                 </div>
@@ -128,7 +128,7 @@ export default {
         height: 70px;
         width: 70px;
         font-size: 16px;
-        
+
     }
 }
 

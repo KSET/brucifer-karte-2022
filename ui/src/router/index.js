@@ -33,7 +33,6 @@ import Naslovnica from "../views/BruciWebViews/NaslovnicaView.vue";
 import BWPageNotFound from "../views/BruciWebViews/BWPageNotFound.vue";
 import BWcjenik from "../views/BruciWebViews/BWcjenikView.vue";
 
-
 import SponsorsPage from "../views/BruciWebViews/SponsorsPageView.vue";
 
 import store from "@/store/index.js";
