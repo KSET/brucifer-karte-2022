@@ -32,6 +32,8 @@ import Pravila from "../views/BruciWebViews/PravilaView.vue";
 import Naslovnica from "../views/BruciWebViews/NaslovnicaView.vue";
 import BWPageNotFound from "../views/BruciWebViews/BWPageNotFound.vue";
 import BWcjenik from "../views/BruciWebViews/BWcjenikView.vue";
+import Tlocrt from "../views/BruciWebViews/TlocrtView.vue";
+import Satnica from "../views/BruciWebViews/SatnicaView.vue";
 
 import SponsorsPage from "../views/BruciWebViews/SponsorsPageView.vue";
 
@@ -175,6 +177,16 @@ const routes = [
     path: "/cjenik",
     name: "BWcjenik",
     component: BWcjenik,
+  },
+  {
+    path: "/tlocrt",
+    name: "Tlocrt",
+    component: Tlocrt,
+  },
+  {
+    path: "/Satnica",
+    name: "satnica",
+    component: Satnica,
   },
   {
     path: "/",

@@ -81,38 +81,40 @@ export default {
         };
     },
     mounted() {
+        this.slug = this.$route.params.slug;
+        if (this.slug != '0') {
+            axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.slug + "&search_fields=slug")
+                .then(response => {
+                    this.sponsors = response.data;
+                    if (this.sponsors.length == 0) {
+                        this.$router.push({ path: '/admin/sponsors-add/0' });
+                    }
+
+                    this.sponsorsInstance = this.sponsors[0];
+                    this.name = this.sponsorsInstance.name;
+                    this.previewImage = this.sponsorsInstance.image;
+                    this.id = this.sponsorsInstance.id;
+                    this.guestCap = this.sponsorsInstance.guestCap;
+
+                    this.currentImage = this.sponsorsInstance.image;
+
+                    this.guestIDs = this.sponsorsInstance.guests;
+                })
+        }
         this.created();
     },
 
     methods: {
         created() {
-            this.slug = this.$route.params.slug;
+
             if (this.slug != '0') {
-                axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.slug + "&search_fields=slug")
+                axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + this.slug + "&search_fields=tag")
                     .then(response => {
-                        this.sponsors = response.data;
-                        if (this.sponsors.length == 0) {
-                            this.$router.push({ path: '/admin/sponsors-add/0' });
-                        }
-
-                        this.sponsorsInstance = this.sponsors[0];
-                        this.name = this.sponsorsInstance.name;
-                        this.previewImage = this.sponsorsInstance.image;
-                        this.id = this.sponsorsInstance.id;
-                        this.guestCap = this.sponsorsInstance.guestCap;
-
-                        this.currentImage = this.sponsorsInstance.image;
-
-                        this.guestIDs = this.sponsorsInstance.guests;
-
-                        axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + this.slug + "&search_fields=tag")
+                        this.sponsorGuests = response.data;
+                        this.guestsAdded = this.sponsorGuests.length;
+                        axios.get(process.env.VUE_APP_BASE_URL + '/guests/')
                             .then(response => {
-                                this.sponsorGuests = response.data;
-                                this.guestsAdded = this.sponsorGuests.length;
-                                axios.get(process.env.VUE_APP_BASE_URL + '/guests/')
-                                    .then(response => {
-                                        this.guests = response.data;
-                                    })
+                                this.guests = response.data;
                             })
                     })
 
