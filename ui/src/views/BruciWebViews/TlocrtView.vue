@@ -1,5 +1,6 @@
 <template>
     <div class="page-container">
+    <NavbarBweb></NavbarBweb>
       <div class="tlocrt">
           <div class="image">
             <img class="tlocrt-desktop" src="../../assets/tlocrt/tlocrt-desktop.svg" alt="Brucifer Tlocrt"/>
@@ -14,10 +15,11 @@
   
   <script>
   import Footer from '@/components/NavbarAndFooter/Footer.vue'
-  
+  import NavbarBweb from '@/components/NavbarAndFooter/NavbarBweb.vue'
+
   export default {
     name: 'Naslovnica',
-    components: { Footer },
+    components: { Footer, NavbarBweb },
     props: {
       msg: String
     },
