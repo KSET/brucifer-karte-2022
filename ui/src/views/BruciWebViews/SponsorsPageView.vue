@@ -281,6 +281,14 @@ h1 {
 
 }
 
+.footery {
+  background: #F6BB96;
+}
+
+.footery::after {
+  background: linear-gradient(to top, #F6BB96, transparent);
+}
+
 @media screen and (max-width: 980px) {
     .popis-element1 {
         margin-top: 0rem;
