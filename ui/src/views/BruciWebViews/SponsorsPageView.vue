@@ -1,5 +1,6 @@
 <template>
     <div class="bw-page-container sponsors-page">
+        <NavbarBweb></NavbarBweb>
         <div class="popis">
             <div class="popis-element1">
                 <h1 class="page-title">Popis uzvanika</h1>
@@ -56,10 +57,12 @@
 
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
+import NavbarBweb from '@/components/NavbarAndFooter/NavbarBweb.vue'
+
 import axios from 'axios'
 
 export default {
-    components: { Footer },
+    components: { Footer,NavbarBweb },
     data() {
         return {
             currentImage: undefined,
