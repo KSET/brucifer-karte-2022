@@ -292,6 +292,14 @@ h1 {
   background: linear-gradient(to top, #F6BB96, transparent);
 }
 
+.navbar.bw {
+  background: #DC5E88;
+}
+
+.navbar.bw::after {
+  background: linear-gradient(#DC5E88, transparent);
+}
+
 @media screen and (max-width: 980px) {
     .popis-element1 {
         margin-top: 0rem;
