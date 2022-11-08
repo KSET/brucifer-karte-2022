@@ -49,11 +49,11 @@
   }
 
   .navbar.bw {
-    background: #DC5E88;
+    background: #c15476;
   }
 
   .navbar.bw::after {
-    background: linear-gradient(#DC5E88, transparent);
+    background: linear-gradient(#c15476, transparent);
   }
 
   @media screen and (max-width: 980px) {

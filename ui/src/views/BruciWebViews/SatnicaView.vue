@@ -1,10 +1,11 @@
 <template>
     <div class="page-container">
+    <NavbarBweb></NavbarBweb>
       <div class="satnica">
-        <div class="image-container">
-          <div class="image-sizer"></div>
-          <div class="image-frame"></div>
-        </div>
+          <div class="image">
+            <img class="satnica-desktop" src="../../assets/satnica/satnica-desktop.svg" alt="Brucifer Tlocrt"/>
+            <img class="satnica-tablet" src="../../assets/satnica/satnica-tablet.svg" alt="Brucifer Tlocrt" />
+          </div>
   
       </div>
       <Footer></Footer>
@@ -14,10 +15,11 @@
   
   <script>
   import Footer from '@/components/NavbarAndFooter/Footer.vue'
-  
+  import NavbarBweb from '@/components/NavbarAndFooter/NavbarBweb.vue'
+
   export default {
     name: 'Naslovnica',
-    components: { Footer },
+    components: { Footer, NavbarBweb },
     props: {
       msg: String
     },
@@ -26,16 +28,44 @@
   
   <style>
   .satnica {
-    background-image: url("../../assets/satnica/satnica-desktop.svg");
-    background-repeat: no-repeat;
-    background-size: cover;
+    width: 100%;
+    min-height: 91vh;
+    padding-top: 3rem;
+  }
+
+  .satnica-desktop {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .satnica-tablet {
+    display: none !important;
+  }
+
+  .image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .navbar.bw {
+    background: #c15476;
+  }
+
+  .navbar.bw::after {
+    background: linear-gradient(#c15476, transparent);
   }
 
   @media screen and (max-width: 980px) {
-    .satnica {
-    background-image: url("../../assets/satnica/satnica-tablet.svg");
+    .satnica-desktop {
+      display: none !important;
+    }
 
-  }
+    .satnica-tablet {
+      height: 100%;
+      display: block !important;
+    }
+
 }
   
 
