@@ -87,6 +87,7 @@ export default {
 
   .satnica-mobile {
     height: 100%;
+    margin-top: 10px;
     display: block !important;
   }
 
