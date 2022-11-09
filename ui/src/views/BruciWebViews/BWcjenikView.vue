@@ -24,7 +24,9 @@
 
             <div class="cjenik-items" v-for="artikl in artikli[tag]" :key="artikl.id">
               <h1>{{ artikl.name }}</h1>
-              <h1>{{ artikl.volume }} L</h1>
+              <h1 v-if="artikl.tag!='OSTALO'">{{ artikl.volume }} L</h1>
+              <h1 v-else>{{ artikl.volume }}</h1>
+
               <h1>{{ artikl.priceHRK }} kn</h1>
               <h1>{{ artikl.priceEUR }} €</h1>
             </div>
