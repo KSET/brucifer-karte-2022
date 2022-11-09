@@ -192,8 +192,6 @@ export default {
     padding: 15px 30px;
 }
 
-.artist.popis {}
-
 .popis-element1 {
     border-bottom: white solid 2px !important;
     border-right: white solid 2px !important;
