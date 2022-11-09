@@ -66,7 +66,9 @@
                   <p><button class="button-icon" @click="orderDown(artikl)">
                       <img src="@/assets/icons/dopdwn-notopen-icon.svg"></button> </p>
 
-                  <p style="grid-column: 1/6;">{{ artikl.volume }} L</p>
+
+                  <p style="grid-column: 1/6;" v-if="artikl.tag != 'OSTALO'">{{ artikl.volume }} L</p>
+                  <p style="grid-column: 1/6;" v-else>{{ artikl.volume }}</p>
 
                   <p style="grid-column: 1/4;">{{ artikl.tag }}</p>
 
