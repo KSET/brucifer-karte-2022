@@ -33,10 +33,10 @@
 
         </div>
 
-        <div class="sponsorsPage-table">
+        <div class="sponsorsPage-table" style="margin-top: 5rem !important">
             <div class=row>
                 <table id="guests">
-                    <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto;" class="tbody">
+                    <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto;height: 35rem !important;" class="tbody">
                         <tr v-for="guest in sponsorGuests" :key="guest.id">
                             <td style="padding-left: 20% !important;">{{ guest.name }}</td>
                             <td style="padding-left: 10%% !important;"><button class="button-icon"
@@ -81,6 +81,7 @@ export default {
             guestIDs: '',
             sponsorGuests: [],
             guests: [],
+            guestsEnabled: '',
         };
     },
     mounted() {
@@ -100,8 +101,9 @@ export default {
                     this.guestCap = this.sponsorsInstance.guestCap;
 
                     this.currentImage = this.sponsorsInstance.image;
-
                     this.guestIDs = this.sponsorsInstance.guests;
+
+                    this.guestsEnabled = this.sponsorsInstance.guestsEnabled;
                 })
         }
         this.created();
@@ -196,7 +198,7 @@ export default {
     border-bottom: white solid 2px !important;
     border-right: white solid 2px !important;
     padding-left: 6%;
-    padding-top: 6.75rem;
+    padding-top: 5.5rem;
     padding-bottom: 5rem;
 }
 
