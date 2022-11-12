@@ -6,7 +6,7 @@
         </h1>
         <div lass="aircash-block">
           <div class="aircash">
-            <h1 class="bwh1" style="color: white;display:inline-block; vertical-align: middle;">Plaćaj 20% jeftinije uz
+            <h1 class="bwh1 cj" style="color: white;display:inline-block; vertical-align: middle;">Plaćaj 20% jeftinije uz
               Aircash!
             </h1>
 
@@ -24,7 +24,7 @@
 
             <div class="cjenik-items" v-for="artikl in artikli[tag]" :key="artikl.id">
               <h1>{{ artikl.name }}</h1>
-              <h1 v-if="artikl.tag!='OSTALO'">{{ artikl.volume }} L</h1>
+              <h1 v-if="artikl.tag != 'OSTALO'">{{ artikl.volume }} L</h1>
               <h1 v-else>{{ artikl.volume }}</h1>
 
               <h1>{{ artikl.priceHRK }} kn</h1>
@@ -213,7 +213,6 @@ export default {
 
   .disclamer-text {
     font-size: 14px;
-
   }
 }
 
@@ -227,6 +226,10 @@ export default {
     font-size: 14px;
     grid-template-columns: 47% 33% 20%;
     top: 5.5%;
+  }
+  .bwh1.cj{
+    font-size: 20px;
+    width: 90%;
   }
 }
 
