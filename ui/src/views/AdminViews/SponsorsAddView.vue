@@ -42,7 +42,7 @@
                     <h1 class="textfield">Popis </h1>
 
                     <label class="switch">
-                        <input id="switchSponsors" type="checkbox">
+                        <input id="switchPopis" type="checkbox">
                         <span class="slider round"></span>
                     </label>
 
@@ -100,6 +100,7 @@ export default {
             email: '',
             guestCap: '',
             formData: '',
+            guestsEnabled:'',
 
             uuid: uuid.v1(),
 
@@ -124,6 +125,8 @@ export default {
                     this.url = this.sponsorsInstance.url;
                     this.email = this.sponsorsInstance.email;
                     this.guestCap = this.sponsorsInstance.guestCap;
+                    this.guestsEnabled = this.sponsorsInstance.guestsEnabled;
+
 
                     this.currentImage = this.sponsorsInstance.image;
 
@@ -133,6 +136,14 @@ export default {
                     } else {
                         document.getElementById("switchSponsors").checked = false;
                     }
+
+                    if (this.guestsEnabled != '0') {
+                        document.getElementById("switchPopis").checked = true;
+                    } else {
+                        document.getElementById("switchPopis").checked = false;
+                    }
+
+                    console.log(this.guestsEnabled)
                 })
 
         } else {
@@ -227,6 +238,21 @@ export default {
                 } else {
                     formData.append("visible", "0");
                 }
+
+                if (document.getElementById("switchPopis").checked == true) {
+                    let closeTime = 1668276000000; // pravi closetime 12.11.2022 u 19.00
+                    console.log("gas")
+                    if(Date.now()>closeTime){
+                        formData.append("guestsEnabled", "2");
+
+                    }else{
+                        formData.append("guestsEnabled", "1");
+                    }
+
+                } else {
+                    formData.append("guestsEnabled", "0");
+                }
+                console.log(formData)
 
                 if (this.slug != "0") {
 

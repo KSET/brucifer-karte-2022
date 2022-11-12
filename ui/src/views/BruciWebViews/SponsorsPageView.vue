@@ -2,7 +2,8 @@
     <div class="bw-page-container sponsors-page">
         <NavbarBweb></NavbarBweb>
         <div class="popis">
-            <div class="popis-element1">
+
+            <div v-if="this.guestsEnabled != 0" class="popis-element1">
                 <h1 class="page-title">Popis uzvanika</h1>
 
                 <h1 class="textfield">Ime i prezime </h1>
@@ -14,33 +15,58 @@
                 </button>
             </div>
 
-            <div class="infofield">
-                <div class="artist">
-                    <div class="image-container">
-                        <img class="image-frame2" style="border: none;" :src="previewImage">
-                    </div>
-                </div>
+            <div>
+                <h1 v-if="this.guestsEnabled == 0" class="page-title-dis" style="margin-left: 50px; margin-top: 70px;">Popis
+                    uzvanika</h1>
 
-                <div class="infofield-element">
-                    <div class="grid-container">
-                        <h1 class="textfield" style="margin-bottom: 1em">Ograničenje</h1>
-                        <h1 class="textfield" style="font-weight: 400; margin-bottom: 1em">{{ this.guestCap }}</h1>
-                        <h1 class="textfield">Broj unesenih</h1>
-                        <h1 class="textfield" style="font-weight: 400">{{ this.guestsAdded }}</h1>
+                <div  v-if="this.guestsEnabled != 0" class="infofield">
+                    <div class="artist">
+                        <div class="image-container">
+                            <img class="image-frame2" style="border: none;" :src="previewImage">
+                        </div>
+                    </div>
+
+                    <div class="infofield-element">
+                        <div class="grid-container">
+                            <h1 class="textfield" style="margin-bottom: 1em">Ograničenje</h1>
+                            <h1 class="textfield" style="font-weight: 400; margin-bottom: 1em">{{ this.guestCap }}</h1>
+                            <h1 class="textfield">Broj unesenih</h1>
+                            <h1 class="textfield" style="font-weight: 400">{{ this.guestsAdded }}</h1>
+                        </div>
                     </div>
                 </div>
+                <div v-else class="infofield-tablet">
+                    <div class="artist tabb">
+                        <div class="image-container">
+                            <img class="image-frame2" style="border: none;" :src="previewImage">
+                        </div>
+                    </div>
+
+                    <div class="infofield-element">
+                        <div class="grid-container">
+                            <h1 class="textfield" style="margin-bottom: 1em">Ograničenje</h1>
+                            <h1 class="textfield" style="font-weight: 400; margin-bottom: 1em">{{ this.guestCap }}</h1>
+                            <h1 class="textfield">Broj unesenih</h1>
+                            <h1 class="textfield" style="font-weight: 400">{{ this.guestsAdded }}</h1>
+                        </div>
+                    </div>
+                </div>
+                <h1 v-if="this.guestsEnabled == 0" class="textfield dis" style="text-align: center;">Vrijeme za promjenu
+                    popisa je isteklo! <br>
+                    Ovo je vaš konačni popis!</h1>
+
             </div>
-
         </div>
 
-        <div class="sponsorsPage-table" style="margin-top: 5rem !important">
+        <div class="sponsorsPage-table">
             <div class=row>
                 <table id="guests">
-                    <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto;height: 35rem !important;" class="tbody">
+                    <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }"
+                        style="overflow:auto;height: 35rem !important;" class="tbody">
                         <tr v-for="guest in sponsorGuests" :key="guest.id">
                             <td style="padding-left: 20% !important;">{{ guest.name }}</td>
-                            <td style="padding-left: 10%% !important;"><button class="button-icon"
-                                    @click=sponsorDelete(guest)
+                            <td v-if="this.guestsEnabled != 0" style="padding-left: 10%% !important;"><button
+                                    class="button-icon" @click=sponsorDelete(guest)
                                     style="margin-left: 0.9rem;     background: transparent;"> <img
                                         src="@/assets/icons/trash-icon-white.svg"></button>
                             </td>
@@ -62,7 +88,7 @@ import NavbarBweb from '@/components/NavbarAndFooter/NavbarBweb.vue'
 import axios from 'axios'
 
 export default {
-    components: { Footer,NavbarBweb },
+    components: { Footer, NavbarBweb },
     data() {
         return {
             currentImage: undefined,
@@ -88,7 +114,7 @@ export default {
         this.slug = this.$route.params.slug;
         if (this.slug != '0') {
             axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.slug + "&search_fields=slug")
-                .then(response => {
+                .then(async response => {
                     this.sponsors = response.data;
                     if (this.sponsors.length == 0) {
                         this.$router.push({ path: '/admin/sponsors-add/0' });
@@ -104,8 +130,40 @@ export default {
                     this.guestIDs = this.sponsorsInstance.guests;
 
                     this.guestsEnabled = this.sponsorsInstance.guestsEnabled;
+
+
+
+                    console.log(this.guestsEnabled)
+                    if (this.guestsEnabled != 2) {
+                        let closeTime = 1668276000000; // pravi closetime 12.11.2022 u 19.00
+                        if (Date.now() > closeTime) {
+                            console.log("zatvaraaaaj")
+                            console.log(this.sponsorsInstance)
+
+                            let formData = new FormData();
+
+                            formData.append("guestsEnabled", 0);
+                            this.guestsEnabled = 0;
+
+
+                            const resp = await axios.put(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.sponsorsInstance.id + "/", formData,
+                                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                                {
+                                    headers: {
+                                        "Content-Type": "multipart/form-data"
+
+                                    }
+                                })
+
+                            console.log("posted")
+                        }
+                    }
+                    console.log(Date.now())
+
                 })
         }
+
+
         this.created();
     },
 
@@ -178,6 +236,25 @@ export default {
 </style>
 
 <style scoped>
+
+.page-title-dis{
+  vertical-align: middle;
+  display: inline-block;
+  padding-top: 3%;
+  padding-bottom: 3%;
+  padding-right: 5%;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 36px;
+  /* identical to box height, or 112% */
+
+  letter-spacing: -0.015em;
+
+  color: white;
+}
 .image-container {
     display: flex;
     justify-content: center;
@@ -196,7 +273,6 @@ export default {
 
 .popis-element1 {
     border-bottom: white solid 2px !important;
-    border-right: white solid 2px !important;
     padding-left: 6%;
     padding-top: 5.5rem;
     padding-bottom: 5rem;
@@ -230,6 +306,8 @@ export default {
     width: 100%;
     height: 100%;
     border-bottom: white solid 2px !important;
+    border-right: white solid 2px !important;
+
 }
 
 h1 {
@@ -265,8 +343,17 @@ h1 {
     display: flex;
     flex-direction: row;
     align-items: center;
-    border-right: white solid 2px !important;
     padding-left: 6%;
+    height: 100%;
+
+}
+
+.infofield-tablet{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 6%;
+    height: 100%;
 }
 
 #guests td {
@@ -285,19 +372,19 @@ h1 {
 }
 
 .footery {
-  background: #F6BB96;
+    background: #F6BB96;
 }
 
 .footery::after {
-  background: linear-gradient(to top, #F6BB96, transparent);
+    background: linear-gradient(to top, #F6BB96, transparent);
 }
 
 .navbar.bw {
-  background: #c15476;
+    background: #c15476;
 }
 
 .navbar.bw::after {
-  background: linear-gradient(#c15476, transparent);
+    background: linear-gradient(#c15476, transparent);
 }
 
 @media screen and (max-width: 980px) {
@@ -371,6 +458,25 @@ h1 {
         width: 100%;
         height: 9rem;
     }
+
+    .page-title-dis{
+        margin-top: 0px !important;
+        margin-bottom: 10px;
+    }
+
+    .infofield-tablet{
+        width: 100%;
+        margin-left: 10%;
+    }
+    
+    .textfield.dis{
+        margin-top: 30px;
+        margin-left: 45%;
+
+    }
+    .artist.tabb{
+        margin-right: 5%;
+    }
 }
 
 @media screen and (max-width: 550px) {
@@ -387,6 +493,16 @@ h1 {
 
     .popis {
         grid-template-columns: 60% auto;
+    }
+    .page-title-dis{
+        width: 150%;
+    }
+
+    .textfield.dis{
+        margin-top: 30px;
+        margin-left: 7%;
+        width: 150%;
+
     }
 }
 </style>
