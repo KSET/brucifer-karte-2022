@@ -218,18 +218,18 @@ export default {
 
 @media screen and (max-width: 550px) {
   .aircash-btn {
-    width: 155px;
+    width: 100%;
     height: 33px;
   }
 
   .aircash {
     font-size: 14px;
-    grid-template-columns: 45% 33% 20%;
+    grid-template-columns: 40% 37% 20%;
     top: 5.5%;
   }
   .bwh1.cj{
     font-size: 15px;
-    width: 70%;
+    width: 95%;
   }
 }
 
