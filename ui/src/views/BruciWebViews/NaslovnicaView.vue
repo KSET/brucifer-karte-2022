@@ -114,6 +114,11 @@ export default {
 
 }
 
+
+.countdown-timer{
+  display: none !important;
+}
+
 .countdown-timer {
   position: absolute;
   font-family: 'Antonio';
