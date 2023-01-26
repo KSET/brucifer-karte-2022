@@ -125,6 +125,8 @@ export default {
             tag: '',
             confCode: '',
 
+            reqs:[],
+
 
 
         }
@@ -141,7 +143,19 @@ export default {
             })
     },
     methods: {
-        searchGuest() {
+        async searchGuest() {
+            console.log("req sent")
+            this.reqs.push(this,this.search)
+            console.log(this.reqs)
+
+            await this.sleep(100000000)
+            console.log(this.reqs)
+            console.log("req sent")
+
+
+            /*
+            ideja za optimizaciju: svi seachovi se stavljaju u listu, svaki put se ceka par milisekundi te se izvrava zadnji search a lista se prazni
+            */
             var e = document.getElementById("selector").value;
             if (e == "...") {
                 e = " ";
@@ -226,6 +240,11 @@ export default {
                     this.guest.bought = changenum;
                 })
         },
+        sleep(ms) {
+      return new Promise(
+        resolve => setTimeout(resolve, ms)
+      );
+    }
     }
 }
 </script>
