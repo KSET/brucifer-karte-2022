@@ -3,7 +3,7 @@
     <Sidebar />
     <div class="admin-page-container" style="padding-top: 0px;">
       <div class="grid-container-contact" style="padding-top: 0px;">
-        <div style="border-right: 1px solid black; width: 95%">
+        <div style="border-right: 1px solid black; width: 100%">
           <h1 class="page-title lineup-title" style="padding-top: 20px">Popis Artikala</h1>
 
           <img v-if="this.showContactForm == false" style="margin-top: 15px;" class="dropdown-icon showmobile"
@@ -46,7 +46,7 @@
         </div>
 
         <div class="kontakt-table" style="padding-top: 20px">
-          <div class=row>
+          <div class=row style="border-left: 0px;">
             <table id="guests">
               <thead>
                 <th>Artikl</th>
@@ -271,6 +271,7 @@ export default {
   grid-template-columns: 35% 20% 25% 5% 5%;
   border-bottom: 1px solid black;
   row-gap: 20px;
+  padding-left: 5px;
 }
 
 .grid-container-contact {
