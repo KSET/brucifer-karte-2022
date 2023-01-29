@@ -1,6 +1,6 @@
 <template>
     <div class="footery">
-        <p id="text1"> KSET © Copyright 2022. All Rights Reserved.</p>
+        <p id="text1"> KSET © Copyright {{this.year }}. All Rights Reserved.</p>
 
         <router-link id="text2" to="/pravila-ponasanja">
             Pravila ponašanja
@@ -11,8 +11,14 @@
 
 <script>
 export default {
-    name: "Footer"
+    name: "Footer",
+    data() {
+        return {
+            year: new Date().getFullYear(),
+        }
+    }
 }
+
 </script>
 
 <style>
@@ -28,14 +34,14 @@ export default {
 }
 
 .footery::after {
-  position: absolute;
-  top: -8px;
-  right: 0;
-  left: 0;
-  z-index: 2;
-  height: 8px;
-  content: "";
-  /* background: linear-gradient(to top, #F6BB96, transparent); */
+    position: absolute;
+    top: -8px;
+    right: 0;
+    left: 0;
+    z-index: 2;
+    height: 8px;
+    content: "";
+    /* background: linear-gradient(to top, #F6BB96, transparent); */
 }
 
 #text1 {
