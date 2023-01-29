@@ -36,7 +36,6 @@ class MailerViewSet(viewsets.ModelViewSet):
             html_message = render_to_string('emails/sponsors_email.html',{
             'name': request.data.get('name', ''), 'link': request.data.get('link', '')})
 
-        print("eto ga mail")
         if subject and msg and settings.EMAIL_HOST_USER:
             try:
                 send_mail(subject, msg, "ZARI<"+settings.EMAIL_HOST_USER+">", [to],fail_silently=True,html_message=html_message)
