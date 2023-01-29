@@ -19,6 +19,7 @@ class MailerViewSet(viewsets.ModelViewSet):
     serializer_class = MailerSerializer
 
     @action(detail=True, methods=['post'])
+
     def send_mail(self,request,pk):  
         subject = request.data.get('subject', '')
         msg = request.data.get('message', '')
@@ -30,11 +31,12 @@ class MailerViewSet(viewsets.ModelViewSet):
             'name': request.data.get('name', ''), 'privilege_name': request.data.get('privilege_name', ''),})
         elif(template_name=="guest_email"):
             html_message = render_to_string('emails/guest_email.html',{
-            'name': request.data.get('name', ''), 'confCode': request.data.get('confCode', '')})
+            'name': request.data.get('name', ''), 'confCode': request.data.get('confCode', ''), 'qrSrc': "https://api.qrserver.com/v1/create-qr-code/?data="+request.data.get('confCode', '')+"&amp;size=300x300"},)
         elif(template_name=="sponsors_email"):
             html_message = render_to_string('emails/sponsors_email.html',{
             'name': request.data.get('name', ''), 'link': request.data.get('link', '')})
 
+        print("eto ga mail")
         if subject and msg and settings.EMAIL_HOST_USER:
             try:
                 send_mail(subject, msg, "ZARI<"+settings.EMAIL_HOST_USER+">", [to],fail_silently=True,html_message=html_message)
