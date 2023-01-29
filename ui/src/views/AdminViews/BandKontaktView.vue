@@ -3,7 +3,7 @@
     <Sidebar />
     <div class="admin-page-container" style="padding-top: 0px;">
       <div class="grid-container-contact" style="padding-top: 0px;">
-        <div style="border-right: 1px solid black; width: 95%">
+        <div style="border-right: 1px solid black; width: 100% !important">
           <h1 class="page-title lineup-title" style="padding-top: 20px">Popis kontakata</h1>
 
           <img v-if="this.showContactForm == false" style="margin-top: 15px;" class="dropdown-icon showmobile"
@@ -28,7 +28,7 @@
         </div>
 
         <div class="kontakt-table" style="padding-top: 20px">
-          <div class=row>
+          <div class=row style="border-left: 0px;">
             <table id="guests">
               <thead>
                 <th>Bend</th>
@@ -162,7 +162,7 @@ export default {
 .grid-container-contact {
   display: grid;
   grid-template-columns: 30% 40%;
-  width: 100vw;
+  width: 100%;
   height: 87vh;
   align-content: stretch;
   justify-items: center;
@@ -182,8 +182,9 @@ export default {
 }
 
 .row {
+  --bs-gutter-x: 0rem !important;
   padding: 0px;
-  border-left: 1px solid;
+  border-left: 0px solid;
 }
 
 #guests th {
