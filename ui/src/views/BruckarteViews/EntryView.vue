@@ -290,6 +290,7 @@ export default {
 }
 
 .inputfield {
+    border: 1px solid;
     left: 6%;
 
 }
