@@ -62,7 +62,7 @@ export default {
         }
     },
     created() {
-        this.onDecode("20133370-a03a-11ed-99c7-bd21e9b0b861")
+        //this.onDecode("20133370-a03a-11ed-99c7-bd21e9b0b861")
     },
     methods: {
         onDecode(text) {
@@ -83,7 +83,7 @@ export default {
                             this.surname = this.guest.surname;
                             this.jmbag = this.guest.jmbag;
 
-                            window.alert(this.guest)
+                            //window.alert(this.guest)
 
                             this.dialogGuest = true;
                         }
