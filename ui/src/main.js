@@ -29,6 +29,24 @@ app.component(VueCountdown.name, VueCountdown);
 app.use(Vuex)
 app.use(UUID)
 
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
+const vuetify = createVuetify({
+  components,
+  directives,
+})
+
+app.use(vuetify)
+
+import QrcodeStream from "vue-qrcode-reader";
+import VueQrcodeReader from "vue-qrcode-reader";
+
+app.use(VueQrcodeReader)
+app.component('QrcodeStream', QrcodeStream);
+
 
 app.component('VueNavigationBar', VueNavigationBar);
 
@@ -44,6 +62,7 @@ import { faTrashCan, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
 library.add(faTrashCan)
 library.add(faCheck)
 library.add(faXmark)
+
 
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.mount('#app')

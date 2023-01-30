@@ -1,7 +1,9 @@
 <template>
   <div>
     <Sidebar />
+
     <div class="admin-page-container" style="padding-top: 0px;">
+      <MobileEntry />
       <div class="grid-container-contact" style="padding-top: 0px;">
         <div style="border-right: 1px solid black; width: 100% !important">
           <h1 class="page-title lineup-title" style="padding-top: 20px">Popis kontakata</h1>
@@ -58,13 +60,15 @@
 
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+import MobileEntry from '@/components/Bruckarte/MobileEntry.vue'
 
 import axios from 'axios'
 
 export default {
   name: 'GuestsAdd',
   components: {
-    Sidebar
+    Sidebar,
+    MobileEntry
 
   },
   props: {
