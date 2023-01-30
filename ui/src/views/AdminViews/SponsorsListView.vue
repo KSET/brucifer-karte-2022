@@ -44,6 +44,8 @@ export default {
     }
   },
   created() {
+
+
     axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
       .then(response => {
         if (response.data == 0) {
@@ -58,6 +60,8 @@ export default {
         }
 
       })
+
+      this.test();
   },
   methods: {
     changeVisible() {
@@ -75,8 +79,19 @@ export default {
         .then(() => {
         })
     },
-    sleep(ms) {
-      return new Promise(
+    async test() {
+      console.log("1")
+
+      await this.sleep(3000)
+      console.log("1")
+      await this.sleep(1000000)
+      console.log("1")
+
+      await this.sleep(1000000)
+      console.log("1")
+    },
+    async sleep(ms) {
+      return await new Promise(
         resolve => setTimeout(resolve, ms)
       );
     },

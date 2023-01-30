@@ -23,16 +23,16 @@
                 <p>{{ guest.tag }} </p>
             </button>
         </div>
-        <div class="grid-item grid1-item3" :class="{ [$style.cFix]: true, [$style.cFixExpanded]: this.tag === 'Brucoši' }"
-            id="c">
+        <div class="grid-item grid1-item3"
+            :class="{ [$style.cFix]: true, [$style.cFixExpanded]: this.tag === 'Brucoši' }" id="c">
             <div class="grid-container2">
                 <h1 class="textfield span2">Ime </h1>
                 <input readonly class="inputfield span3" :disabled="this.id == ''" type="text" @input="changevalue"
                     v-model="name">
 
                 <h1 v-if="!this.tag.includes('Sponzor')" class="textfield span2">Prezime </h1>
-                <input  v-if="!this.tag.includes('Sponzor')" readonly class="inputfield span3" :disabled="this.id == ''" type="text" @input="changevalue"
-                    v-model="surname">
+                <input v-if="!this.tag.includes('Sponzor')" readonly class="inputfield span3" :disabled="this.id == ''"
+                    type="text" @input="changevalue" v-model="surname">
 
                 <h1 v-if="this.tag == 'Brucoši'" class="textfield span2">JMBAG </h1>
                 <input v-if="this.tag == 'Brucoši'" class="inputfield span3" readonly type="text" v-model="jmbag">
@@ -125,7 +125,7 @@ export default {
             tag: '',
             confCode: '',
 
-            reqs:[],
+            reqs: [],
 
 
 
@@ -144,13 +144,19 @@ export default {
     },
     methods: {
         async searchGuest() {
-            /*console.log("req sent")
-            this.reqs.push(this,this.search)
-            console.log(this.reqs)
+            //console.log("req sent")
+            //console.log(this.reqs)
+            this.reqs.push(this.search)
 
-            await this.sleep(100000000)
-            console.log(this.reqs)
-            console.log("req sent") */
+            await this.sleep(2000)
+
+            if(this.reqs.length==0){
+                return
+            }
+
+            //console.log(this.reqs[this.reqs.length-1])
+            this.reqs=[]
+            console.log("SEARCHING", this.search) 
 
 
             /*
@@ -240,11 +246,11 @@ export default {
                     this.guest.bought = changenum;
                 })
         },
-        sleep(ms) {
-      return new Promise(
-        resolve => setTimeout(resolve, ms)
-      );
-    }
+        async sleep(ms) {
+            return await new Promise(
+                resolve => setTimeout(resolve, ms)
+            );
+        },
     }
 }
 </script>
