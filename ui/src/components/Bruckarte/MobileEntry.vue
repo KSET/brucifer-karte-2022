@@ -23,7 +23,6 @@ export default {
         }
     },
     created() {
-        this.onDecode("2002caa0-a038-11ed-8d7c-538c6843e2f4")
     },
     methods: {
         onDecode(text) {
