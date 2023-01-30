@@ -9,33 +9,40 @@
       <div class="ccard-body">
         <h3 class="name"> {{ sponsor.name }} </h3>
         <a class="name" :href="sponsor.url" target="_blank" style="color: black;text-decoration: underline; ">{{
-            sponsor.url
+          sponsor.url
         }}</a>
 
         <div class="ccard-buttons">
-          <button @click="changesponsororder(sponsor, 'b')" class="ccard-button">
+          <button v-if="buttonEnabeled" @click="changesponsororder(sponsor, 'b')" class="ccard-button">
             <img src="../../assets/icons/arrow-left-icon.svg">
           </button>
+
+          <button v-else disabeled class="ccard-button">
+            <img src="../../assets/icons/arrow-left-gray-icon.svg">
+          </button>
+
           <button @click="editsponsor(sponsor)" class="ccard-button" style="padding-bottom: 5px;">
             <img src="../../assets/icons/edit-icon.svg">
           </button>
-          <button @click="changesponsororder(sponsor, 'f')" class="ccard-button">
+
+          <button v-if="buttonEnabeled" @click="changesponsororder(sponsor, 'f')" class="ccard-button">
             <img src="../../assets/icons/arrow-right-icon.svg">
+          </button>
+          <button v-else disabeled class="ccard-button">
+            <img src="../../assets/icons/arrow-right-gray-icon.svg">
           </button>
         </div>
       </div>
     </div>
-    <CircularLoading :dialog="dialogProgress"></CircularLoading>
 
   </div>
 </template>
 
 <script>
-import CircularLoading from '../Default/CircularLoading.vue';
 import axios from 'axios'
 export default {
   name: 'LineupTable',
-  components:{
+  components: {
     CircularLoading
   },
   props: {
@@ -46,7 +53,7 @@ export default {
       sponsors: [],
       sponsor: '',
       sponsor: '',
-      dialogProgress: false,
+      buttonEnabeled: true,
     }
 
   },
@@ -66,7 +73,8 @@ export default {
       this.$router.push({ path: '/admin/sponsors-add/' + sponsor.slug });
     },
     async changesponsororder(sponsor, direction) {
-      this.dialogProgress=true;
+      console.log("change")
+      this.buttonEnabeled = false;
       var nextsponsorobj = (this.sponsors.indexOf(sponsor));
 
       if (direction == "f") {
@@ -88,7 +96,7 @@ export default {
         { order: sponsor.order },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
-      this.dialogProgress=false;
+      this.buttonEnabeled = true;
       this.created();
 
 
