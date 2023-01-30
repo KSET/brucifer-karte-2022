@@ -25,14 +25,19 @@
         </div>
       </div>
     </div>
+    <CircularLoading :dialog="dialogProgress"></CircularLoading>
 
   </div>
 </template>
 
 <script>
+import CircularLoading from '../Default/CircularLoading.vue';
 import axios from 'axios'
 export default {
   name: 'LineupTable',
+  components:{
+    CircularLoading
+  },
   props: {
     msg: String
   },
@@ -41,6 +46,7 @@ export default {
       sponsors: [],
       sponsor: '',
       sponsor: '',
+      dialogProgress: false,
     }
 
   },
@@ -60,6 +66,7 @@ export default {
       this.$router.push({ path: '/admin/sponsors-add/' + sponsor.slug });
     },
     async changesponsororder(sponsor, direction) {
+      this.dialogProgress=true;
       var nextsponsorobj = (this.sponsors.indexOf(sponsor));
 
       if (direction == "f") {
@@ -81,6 +88,7 @@ export default {
         { order: sponsor.order },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
+      this.dialogProgress=false;
       this.created();
 
 
