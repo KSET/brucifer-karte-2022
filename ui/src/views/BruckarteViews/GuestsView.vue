@@ -1,6 +1,26 @@
 <template>
   <div class="guestss" style="margin-top: 3.75rem;">
+
+    <img id='barcode' src="https://api.qrserver.com/v1/create-qr-code/?data={{this.confCode}}&amp;size=100x100" alt="" title="HELLO" width="100" height="100" />
+
     <div class="header guests">
+      <div class="text-center">
+        <v-btn color="primary">
+          Open Dialog
+
+          <v-dialog v-model="dialog" activator="parent">
+            <v-card>
+              <v-card-text>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua.
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="primary" block @click="dialog = false">Close Dialog</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-btn>
+      </div>
 
       <input class="nosubmit search" @input="searchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
 
@@ -66,7 +86,7 @@ export default {
       deleted: '',
       nomatch: '',
       confCode: '',
-
+      dialog: false,
       uuid: uuid.v1(),
 
     }
@@ -190,6 +210,9 @@ export default {
 
 
       var email = e_name + e_surname + jmbagslice + "@fer.hr";
+
+      // za testiranje, maknuti u produkciji
+      email="pavleergovic@gmail.com"
 
       var msg = this.name + " " + this.surname + " " + guest.confCode
 

@@ -278,7 +278,7 @@ export default {
   display: grid;
   grid-template-columns: 30% 40%;
   width: 100vw;
-  height: 87vh;
+  height: 100%;
   align-content: stretch;
   justify-items: center;
 }

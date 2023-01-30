@@ -1,6 +1,35 @@
 <template>
     <div>
-        <StreamBarcodeReader @decode="onDecode" @loaded="onLoaded"></StreamBarcodeReader>
+        <v-btn color="primary">
+            OTVORI KAMERU
+
+            <v-dialog v-model="dialogCamera" activator="parent">
+                <v-card>
+                    <v-card-item>
+                        <StreamBarcodeReader @decode="onDecode" @loaded="onLoaded"></StreamBarcodeReader>
+                    </v-card-item>
+                    <v-card-actions>
+                        <v-btn color="primary" block @click="dialogCamera = false">Zatvori</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-btn>
+
+        <v-dialog v-model="dialogGuest" activator="parent">
+            <v-card>
+                <v-card-text>
+                    {{ this.name }}
+                    {{ this.surname }}
+                    {{ this.jmbag }}
+                    {{ this.bought }}
+                    {{ this.entered }}
+
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="primary" block @click="dialogGuest = false">Zatvori</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -19,6 +48,16 @@ export default {
     },
     data() {
         return {
+            guest: '',
+            name: '',
+            surname: '',
+            jmbag: '',
+            phone: '',
+            tag: '',
+            bought: '',
+            entered: '',
+            dialogCamera: false,
+            dialogGuest: false,
 
         }
     },
@@ -29,7 +68,15 @@ export default {
             if (this.checkUUID(text)) {
                 axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + text + "&search_fields=tag&search_fields=confCode",)
                     .then(response => {
-                        window.alert(response.data[0].name)
+                        this.guest = response.data[0]
+                        this.name = this.guest.name;
+                        this.id = this.guest.id;
+                        this.bought = this.guest.bought;
+                        this.entered = this.guest.entered;
+                        this.surname = this.guest.surname;
+                        this.jmbag = this.guest.jmbag;
+
+                        this.dialogGuest = true;
                     })
             } else {
                 window.alert("QR kod je očitan, ali ne sadrži kod za potvrdu koji bi trebao sadržavati, pokušajte ponovno očitati kodk, ili manualno unesite ime")
