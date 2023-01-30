@@ -3,7 +3,7 @@
         <v-btn color="primary">
             OTVORI KAMERU
 
-            <v-dialog v-model="dialogCamera" activator="parent">
+            <v-dialog v-model="dialogCamera" activator="parent" height="40rem" width="40rem">
                 <v-card>
                     <v-card-item>
                         <StreamBarcodeReader @decode="onDecode" @loaded="onLoaded"></StreamBarcodeReader>
@@ -15,7 +15,7 @@
             </v-dialog>
         </v-btn>
 
-        <v-dialog v-model="dialogGuest" activator="parent">
+        <v-dialog v-model="dialogGuest" activator="parent" height="40rem" width="40rem">
             <v-card>
                 <v-card-text>
                     {{ this.name }}
@@ -62,10 +62,12 @@ export default {
         }
     },
     created() {
+        this.onDecode("2002caa0-a038-11ed-8d7c-538c6843e2f4")
     },
     methods: {
         onDecode(text) {
             if (this.checkUUID(text)) {
+                console.log("adsadsd")
                 axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + text + "&search_fields=tag&search_fields=confCode",)
                     .then(response => {
                         this.guest = response.data[0]
