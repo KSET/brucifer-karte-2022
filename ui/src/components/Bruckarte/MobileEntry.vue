@@ -67,21 +67,30 @@ export default {
     methods: {
         onDecode(text) {
             if (this.checkUUID(text)) {
-                window.alert(text)
+                //window.alert(text)
                 axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + text + "&search_fields=tag&search_fields=confCode",)
                     .then(response => {
-                        this.guest = response.data[0]
-                        this.name = this.guest.name;
-                        this.id = this.guest.id;
-                        this.bought = this.guest.bought;
-                        this.entered = this.guest.entered;
-                        this.surname = this.guest.surname;
-                        this.jmbag = this.guest.jmbag;
+                        console.log(response.data.length)
 
-                        this.dialogGuest = true;
+                        if (response.data.length == 0) {
+                            window.alert("QR kod i konfirmacijski kod su okej, ali kod nije u bazi podataka,pokušajte ponovno očitati kod, ili manualno unesite ime")
+                        } else {
+                            this.guest = response.data[0]
+                            this.name = this.guest.name;
+                            this.id = this.guest.id;
+                            this.bought = this.guest.bought;
+                            this.entered = this.guest.entered;
+                            this.surname = this.guest.surname;
+                            this.jmbag = this.guest.jmbag;
+
+                            window.alert(this.guest)
+
+                            this.dialogGuest = true;
+                        }
+
                     })
             } else {
-                window.alert("QR kod je očitan, ali ne sadrži kod za potvrdu koji bi trebao sadržavati, pokušajte ponovno očitati kodk, ili manualno unesite ime")
+                window.alert("QR kod je očitan, ali ne sadrži kod za potvrdu koji bi trebao sadržavati, pokušajte ponovno očitati kod, ili manualno unesite ime")
             }
         },
         checkUUID(text) {
