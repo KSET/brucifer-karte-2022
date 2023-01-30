@@ -3,7 +3,7 @@
         <v-btn color="primary">
             OTVORI KAMERU
 
-            <v-dialog v-model="dialogCamera" activator="parent" height="40rem" width="40rem">
+            <v-dialog v-model="dialogCamera" activator="parent">
                 <v-card>
                     <v-card-item>
                         <StreamBarcodeReader @decode="onDecode" @loaded="onLoaded"></StreamBarcodeReader>
@@ -15,7 +15,7 @@
             </v-dialog>
         </v-btn>
 
-        <v-dialog v-model="dialogGuest" activator="parent" height="40rem" width="40rem">
+        <v-dialog v-model="dialogGuest" activator="parent">
             <v-card>
                 <v-card-text>
                     {{ this.name }}
