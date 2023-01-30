@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import { StreamBarcodeReader } from "vue-barcode-reader";
 import QrcodeStream from 'vue-qrcode-reader'
 export default {
@@ -21,11 +22,24 @@ export default {
 
         }
     },
+    created() {
+        this.onDecode("2002caa0-a038-11ed-8d7c-538c6843e2f4")
+    },
     methods: {
         onDecode(text) {
-            window.alert(`Decode text from QR code is ${text}`)
-            console.log(`Decode text from QR code is ${text}`)
+            if (this.checkUUID(text)) {
+                axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + text + "&search_fields=tag&search_fields=confCode",)
+                    .then(response => {
+                        window.alert(response.data[0].name)
+                    })
+            } else {
+                window.alert("QR kod je očitan, ali ne sadrži kod za potvrdu koji bi trebao sadržavati, pokušajte ponovno očitati kodk, ili manualno unesite ime")
+            }
         },
+        checkUUID(text) {
+            const regexExp = /^[0-9A-F]{8}-[0-9A-F]{4}-[1][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+            return regexExp.test(text);
+        }
     }
 }
 </script>
