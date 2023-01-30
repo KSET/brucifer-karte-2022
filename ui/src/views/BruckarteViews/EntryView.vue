@@ -144,13 +144,13 @@ export default {
     },
     methods: {
         async searchGuest() {
-            console.log("req sent")
+            /*console.log("req sent")
             this.reqs.push(this,this.search)
             console.log(this.reqs)
 
             await this.sleep(100000000)
             console.log(this.reqs)
-            console.log("req sent")
+            console.log("req sent") */
 
 
             /*
