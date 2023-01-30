@@ -1,12 +1,7 @@
 <template>
   <div class="guestss" style="margin-top: 3.75rem;">
 
-    <v-dialog v-model="dialogProgress" width="90px" >
-      <v-card  height="90px" style="overflow:hidden">
-        <v-progress-circular size="90px" indeterminate color="black"></v-progress-circular>
-      </v-card>
-
-    </v-dialog>
+    <CircularLoading :dialog="dialogProgress"></CircularLoading>
 
     <div class="header guests">
       <input class="nosubmit search" @input="searchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
@@ -74,12 +69,14 @@
 import { uuid } from 'vue-uuid';
 import GuestsAdd from '@/components/Bruckarte/GuestsAdd.vue'
 import GuestsTable from '@/components/Bruckarte/GuestsTable.vue'
+import CircularLoading from '@/components/Default/CircularLoading.vue';
 import axios from 'axios'
 export default {
   name: 'GuestsView',
   components: {
     GuestsTable,
-    GuestsAdd
+    GuestsAdd,
+    CircularLoading
   },
   data() {
     return {
