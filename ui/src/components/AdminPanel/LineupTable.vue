@@ -8,14 +8,22 @@
           <h3 class="name"> {{ lineup.name }}</h3>
 
           <div class="ccard-buttons">
-            <button @click="changelineuporder(lineup, 'b')" id="b4" class="ccard-button">
+            <button v-if="buttonEnabeled" @click="changelineuporder(lineup, 'b')" id="b4" class="ccard-button">
               <img src="../../assets/icons/arrow-left-icon.svg">
             </button>
+            <button v-else disabeled id="b4" class="ccard-button">
+              <img src="../../assets/icons/arrow-left-gray-icon.svg">
+            </button>
+
             <button @click="editlineup(lineup)" class="ccard-button" style="padding-bottom: 5px;">
               <img src="../../assets/icons/edit-icon.svg">
             </button>
-            <button @click="changelineuporder(lineup, 'f')" id="next" class="ccard-button">
+
+            <button v-if="buttonEnabeled" @click="changelineuporder(lineup, 'f')" id="next" class="ccard-button">
               <img src="../../assets/icons/arrow-right-icon.svg">
+            </button>
+            <button v-else disabeled id="next" class="ccard-button">
+              <img src="../../assets/icons/arrow-right-gray-icon.svg">
             </button>
           </div>
         </div>
@@ -37,6 +45,8 @@ export default {
       lineups: [],
       lineup: '',
       lineup: '',
+      buttonEnabeled: true,
+
     }
 
   },
@@ -55,6 +65,7 @@ export default {
       this.$router.push({ path: '/admin/lineup-add/' + lineup.slug });
     },
     async changelineuporder(lineup, direction) {
+      this.buttonEnabeled = false;
 
       var nextlineupobj = (this.lineups.indexOf(lineup));
       if (direction == "f") {
@@ -76,6 +87,7 @@ export default {
         { order: lineup.order },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } })
 
+      this.buttonEnabeled = true;
       this.created();
     }
   }

@@ -43,7 +43,6 @@ import axios from 'axios'
 export default {
   name: 'LineupTable',
   components: {
-    CircularLoading
   },
   props: {
     msg: String
@@ -73,7 +72,7 @@ export default {
       this.$router.push({ path: '/admin/sponsors-add/' + sponsor.slug });
     },
     async changesponsororder(sponsor, direction) {
-      console.log("change")
+      
       this.buttonEnabeled = false;
       var nextsponsorobj = (this.sponsors.indexOf(sponsor));
 
@@ -96,6 +95,7 @@ export default {
         { order: sponsor.order },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
+
       this.buttonEnabeled = true;
       this.created();
 
