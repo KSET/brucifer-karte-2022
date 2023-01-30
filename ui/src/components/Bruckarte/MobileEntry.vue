@@ -67,7 +67,7 @@ export default {
     methods: {
         onDecode(text) {
             if (this.checkUUID(text)) {
-                console.log("adsadsd")
+                window.alert(text)
                 axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + text + "&search_fields=tag&search_fields=confCode",)
                     .then(response => {
                         this.guest = response.data[0]
