@@ -1,6 +1,13 @@
 <template>
   <div class="guestss" style="margin-top: 3.75rem;">
 
+    <v-dialog v-model="dialogProgress" width="90px" >
+      <v-card  height="90px" style="overflow:hidden">
+        <v-progress-circular size="90px" indeterminate color="black"></v-progress-circular>
+      </v-card>
+
+    </v-dialog>
+
     <div class="header guests">
       <input class="nosubmit search" @input="searchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
 
@@ -32,6 +39,30 @@
       <h1 class="textfield">{{ this.confCode }} </h1>
     </div>
 
+
+    <v-dialog v-model="dialog">
+      <v-card>
+        <v-card-text style="height:150%">
+          <div class="grid-container guests">
+            <h1 class="textfield">Ime </h1>
+            <input class="inputfield" readonly type="text" v-model="name">
+
+            <h1 class="textfield">Prezime </h1>
+            <input class="inputfield" readonly type="text" v-model="surname">
+
+            <h1 class="textfield">JMBAG </h1>
+            <input class="inputfield" readonly type="text" v-model="jmbag">
+          </div>
+        </v-card-text>
+        <v-card-item>
+          Brucoš je uspješno kupio kartu, te mu je poslan konfirmacijski mail na: {{ this.email }}
+        </v-card-item>
+
+        <v-card-actions>
+          <v-btn color="primary" block @click="dialog = false">Zatvori</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 
 </template>
@@ -67,6 +98,8 @@ export default {
       nomatch: '',
       confCode: '',
       dialog: false,
+      dialogProgress: false,
+
       uuid: uuid.v1(),
 
     }
@@ -89,7 +122,9 @@ export default {
       }
     },
     changebought(guest, changenum) {
-
+      if (changenum == 1) {
+        this.dialogProgress = true;
+      }
       if (this.name == "" || this.surname == "") {
         window.alert("Ispunite polja ime i prezime!")
       } else {
@@ -136,6 +171,9 @@ export default {
             this.jmbag = '';
             this.confCode = '';
 
+          }
+          else if (this.guests.length > 1 && this.guests.length < 20) {
+            this.nomatch = `Pronađeno ${this.guests.length} podudaranja, nastavite upisivati`;
           }
           else {
             this.nomatch = "";
@@ -191,8 +229,9 @@ export default {
 
       var email = e_name + e_surname + jmbagslice + "@fer.hr";
 
+      this.email = email
       // za testiranje, maknuti u produkciji
-      email="pavleergovic@gmail.com"
+      email = "pavleergovic@gmail.com"
 
       var msg = this.name + " " + this.surname + " " + guest.confCode
 
@@ -218,6 +257,8 @@ export default {
         },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
+      this.dialogProgress = false;
+      this.dialog = true;
     },
   }
 
@@ -254,7 +295,26 @@ export default {
   align-items: stretch;
 }
 
+v-dialog {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+}
 
+v-card-actions {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+v-card-item {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+}
 
 input[type="search"] {
   border: none;
