@@ -16,6 +16,9 @@
             </div>
         </div>
         <div class="grid-item grid1-item2" id="b">
+
+        <v-progress-circular v-if="loading==true" size="90px" indeterminate color="black"></v-progress-circular>
+
             <button class="person" :class="$style.person"
                 v-bind:style="[(this.id == guest.id) ? { backgroundColor: '#D9D9D9' } : { backgroundColor: 'white' }]"
                 v-for="guest in guests" :key="guest.class" @click="chooseGuest(guest)">
@@ -66,36 +69,7 @@
     </div>
 </template>
 
-<style module lang="scss">
-.person {
 
-    p {
-        font-size: .6em;
-        font-family: 'Montserrat';
-    }
-}
-
-.span2Sm {
-    @media screen and (max-width: 550px) {
-        grid-column: span 2;
-    }
-}
-
-
-
-:global(#flex) .cFix {
-    @media screen and (max-width: 550px) {
-        display: flex !important;
-        flex-direction: column;
-        height: fit-content;
-        justify-content: flex-start;
-
-        &.cFixExpanded {
-            height: 100%;
-        }
-    }
-}
-</style>
 
 <script>
 import axios from 'axios';
@@ -124,6 +98,8 @@ export default {
             entered: '',
             tag: '',
             confCode: '',
+            loading: false,
+
 
             reqs: [],
 
@@ -144,11 +120,25 @@ export default {
     },
     methods: {
         async searchGuest() {
+            if (this.search == '') {
+                this.guests = [];
+                return  
+            }
+
+            this.guests = [];
+            this.loading = true;
+
             //console.log("req sent")
             //console.log(this.reqs)
             this.reqs.push(this.search)
 
-            await this.sleep(2000)
+            await this.sleep(300)
+
+            if(this.reqs.length==0){
+                return
+            }
+
+            await this.sleep(1700)
 
             if(this.reqs.length==0){
                 return
@@ -167,9 +157,13 @@ export default {
                 e = " ";
                 document.getElementById("selector").value = " ";
             }
-            axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + this.search + ' ' + e + "&search_fields=tag&search_fields=name&search_fields=surname",)
+
+            var currentSearch = this.search
+            axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + currentSearch + ' ' + e + "&search_fields=tag&search_fields=name&search_fields=surname",)
                 .then(response => {
-                    if (this.search != '' && this.search.length > 2) {
+                    this.loading = false;
+
+                    if (currentSearch != '' && currentSearch.length > 2 && this.search==currentSearch) {
                         this.guests = response.data;
 
                         this.guests.forEach(element => {
@@ -254,6 +248,37 @@ export default {
     }
 }
 </script>
+
+<style module lang="scss">
+.person {
+
+    p {
+        font-size: .6em;
+        font-family: 'Montserrat';
+    }
+}
+
+.span2Sm {
+    @media screen and (max-width: 550px) {
+        grid-column: span 2;
+    }
+}
+
+
+
+:global(#flex) .cFix {
+    @media screen and (max-width: 550px) {
+        display: flex !important;
+        flex-direction: column;
+        height: fit-content;
+        justify-content: flex-start;
+
+        &.cFixExpanded {
+            height: 100%;
+        }
+    }
+}
+</style>
 
 <style>
 .grid1-container {

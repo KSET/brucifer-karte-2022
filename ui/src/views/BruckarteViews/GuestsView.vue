@@ -48,10 +48,9 @@
             <h1 class="textfield">JMBAG </h1>
             <input class="inputfield" readonly type="text" v-model="jmbag">
           </div>
-        </v-card-text>
-        <v-card-item>
           Brucoš je uspješno kupio kartu, te mu je poslan konfirmacijski mail na: {{ this.email }}
-        </v-card-item>
+        </v-card-text>
+        
 
         <v-card-actions>
           <v-btn color="primary" block @click="dialog = false">Zatvori</v-btn>
