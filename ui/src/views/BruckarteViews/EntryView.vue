@@ -127,6 +127,7 @@ export default {
 
             this.guests = [];
             this.loading = true;
+            console.log(this.loading)
 
             this.name = "";
                         this.surname = '';
