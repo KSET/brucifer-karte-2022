@@ -17,7 +17,7 @@
         </div>
         <div class="grid-item grid1-item2" id="b">
 
-        <v-progress-circular v-if="loading==true" size="90px" indeterminate color="black"></v-progress-circular>
+            <v-progress-circular v-if="loading == true" size="90px" indeterminate color="black"></v-progress-circular>
 
             <button class="person" :class="$style.person"
                 v-bind:style="[(this.id == guest.id) ? { backgroundColor: '#D9D9D9' } : { backgroundColor: 'white' }]"
@@ -122,11 +122,17 @@ export default {
         async searchGuest() {
             if (this.search == '') {
                 this.guests = [];
-                return  
+                return
             }
 
             this.guests = [];
             this.loading = true;
+
+            this.name = "";
+                        this.surname = '';
+                        this.jmbag = '';
+                        this.tag = '';
+                        this.confCode = '';
 
             //console.log("req sent")
             //console.log(this.reqs)
@@ -134,19 +140,19 @@ export default {
 
             await this.sleep(300)
 
-            if(this.reqs.length==0){
+            if (this.reqs.length == 0) {
                 return
             }
 
             await this.sleep(1700)
 
-            if(this.reqs.length==0){
+            if (this.reqs.length == 0) {
                 return
             }
 
             //console.log(this.reqs[this.reqs.length-1])
-            this.reqs=[]
-            console.log("SEARCHING", this.search) 
+            this.reqs = []
+            console.log("SEARCHING", this.search)
 
 
             /*
@@ -163,7 +169,7 @@ export default {
                 .then(response => {
                     this.loading = false;
 
-                    if (currentSearch != '' && currentSearch.length > 2 && this.search==currentSearch) {
+                    if (currentSearch != '' && currentSearch.length > 2 && this.search == currentSearch) {
                         this.guests = response.data;
 
                         this.guests.forEach(element => {
@@ -171,7 +177,6 @@ export default {
                                 element.tag = (element.tag).slice(36, element.tag.length)
                             }
                         });
-
 
                         if (this.guests.length == 1) {
                             this.guest = this.guests[0];
