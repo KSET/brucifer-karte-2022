@@ -76,6 +76,7 @@ import { uuid } from 'vue-uuid';
 import axios from 'axios'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import store from '@/store/index.js';
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
 export default {
     name: "upload-image",
@@ -100,7 +101,7 @@ export default {
             email: '',
             guestCap: '',
             formData: '',
-            guestsEnabled:'',
+            guestsEnabled: '',
 
             uuid: uuid.v1(),
 
@@ -142,8 +143,6 @@ export default {
                     } else {
                         document.getElementById("switchPopis").checked = false;
                     }
-
-                    console.log(this.guestsEnabled)
                 })
 
         } else {
@@ -223,117 +222,131 @@ export default {
             }
         },
         async postSponsors() {
-            if (this.currentImage == undefined) {
-                window.alert("Uploadajte fotografiju")
+            var linkOK =0;
+            if (this.linkValidator(this.url)) {
+                linkOK = 1
             } else {
-
-                let formData = new FormData();
-                formData.append("name", this.name);
-                formData.append("url", this.url);
-                formData.append("email", this.email);
-                formData.append("guestCap", this.guestCap);
-
-                if (document.getElementById("switchSponsors").checked == true) {
-                    formData.append("visible", "1");
+                if (window.confirm("Link nije u ispravnom formatu ili nije unesen!! , klikom na OK se promjene spremaju, za promjenu kliknite Odustani")) {
+                    linkOK = 1
                 } else {
-                    formData.append("visible", "0");
+                    linkOK = 0
                 }
+            }
+            if (linkOK == 1) {
+                if (this.currentImage == undefined) {
+                    window.alert("Uploadajte fotografiju")
+                } else {
 
-                if (document.getElementById("switchPopis").checked == true) {
-                    let closeTime = 1668276000000; // pravi closetime 12.11.2022 u 19.00
-                    console.log("gas")
-                    if(Date.now()>closeTime){
-                        formData.append("guestsEnabled", "2");
+                    let formData = new FormData();
+                    formData.append("name", this.name);
+                    formData.append("url", this.url);
+                    formData.append("email", this.email);
+                    formData.append("guestCap", this.guestCap);
 
-                    }else{
-                        formData.append("guestsEnabled", "1");
+                    if (document.getElementById("switchSponsors").checked == true) {
+                        formData.append("visible", "1");
+                    } else {
+                        formData.append("visible", "0");
                     }
 
-                } else {
-                    formData.append("guestsEnabled", "0");
-                }
-                console.log(formData)
+                    if (document.getElementById("switchPopis").checked == true) {
+                        let closeTime = 1668276000000; // pravi closetime 12.11.2022 u 19.00
+                        console.log("gas")
+                        if (Date.now() > closeTime) {
+                            formData.append("guestsEnabled", "2");
 
-                if (this.slug != "0") {
-
-                    formData.append("id", this.id);
-                    formData.append("order", this.order);
-                    formData.append("slug", this.slug);
-
-
-                    if (this.currentImage instanceof File) {
-                        formData.append("image", this.currentImage);
-                    }
-
-                    const resp = await axios.put(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/", formData,
-                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                        {
-                            headers: {
-                                "Content-Type": "multipart/form-data"
-
-                            }
-                        })
-                } else {
-                    if (this.sponsorss.length != 1) {
-                        var ids = [];
-
-                        this.sponsorss.forEach(element => {
-                            ids.push(element.id);
-
-                        });
-                        for (let index = 0; index < ids.length; index++) {
-                            if (ids.includes(String(index)) == false) {
-                                this.nextId = index;
-                                break;
-                            }
-                        }
-                        if (this.nextId === '') {
-                            this.nextId = ids.length;
-                        }
-
-                        var lastOrder = this.sponsorss[this.sponsorss.length - 2].order;
-
-                        if (lastOrder[0] == "0") {
-                            if (lastOrder == "09") {
-                                this.nextOrder = "10"
-                            }
-                            else {
-                                this.nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
-                            }
                         } else {
-                            this.nextOrder = (parseInt(lastOrder) + 1).toString();
-
+                            formData.append("guestsEnabled", "1");
                         }
-
 
                     } else {
-                        this.nextId = 0;
-                        this.nextOrder = "00";
+                        formData.append("guestsEnabled", "0");
                     }
 
+                    if (this.slug != "0") {
 
-                    formData.append("id", this.nextId);
-                    formData.append("order", this.nextOrder);
-                    formData.append("image", this.currentImage);
-                    formData.append("slug", this.$uuid.v1());
+                        formData.append("id", this.id);
+                        formData.append("order", this.order);
+                        formData.append("slug", this.slug);
 
+                        if (this.currentImage instanceof File) {
+                            formData.append("image", this.currentImage);
+                        }
 
+                        const resp = await axios.put(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/", formData,
+                            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                            {
+                                headers: {
+                                    "Content-Type": "multipart/form-data"
+                                }
+                            })
+                    } else {
+                        if (this.sponsorss.length != 1) {
+                            var ids = [];
 
-                    const resp = await axios.post(process.env.VUE_APP_BASE_URL + "/sponsors/", formData,
-                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                        {
-                            headers: {
-                                "Content-Type": "multipart/form-data"
+                            this.sponsorss.forEach(element => {
+                                ids.push(element.id);
+
+                            });
+                            for (let index = 0; index < ids.length; index++) {
+                                if (ids.includes(String(index)) == false) {
+                                    this.nextId = index;
+                                    break;
+                                }
                             }
-                        },
-                    )
+                            if (this.nextId === '') {
+                                this.nextId = ids.length;
+                            }
+
+                            var lastOrder = this.sponsorss[this.sponsorss.length - 2].order;
+
+                            if (lastOrder[0] == "0") {
+                                if (lastOrder == "09") {
+                                    this.nextOrder = "10"
+                                }
+                                else {
+                                    this.nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
+                                }
+                            } else {
+                                this.nextOrder = (parseInt(lastOrder) + 1).toString();
+                            }
+
+                        } else {
+                            this.nextId = 0;
+                            this.nextOrder = "00";
+                        }
+
+                        formData.append("id", this.nextId);
+                        formData.append("order", this.nextOrder);
+                        formData.append("image", this.currentImage);
+                        formData.append("slug", this.$uuid.v1());
+
+                        const resp = await axios.post(process.env.VUE_APP_BASE_URL + "/sponsors/", formData,
+                            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                            {
+                                headers: {
+                                    "Content-Type": "multipart/form-data"
+                                }
+                            },
+                        )
+                    }
+                    this.$router.push({ path: '/admin/sponsors-list/' });
                 }
-                this.$router.push({ path: '/admin/sponsors-list/' });
-
-
             }
         },
+        linkValidator(text) { // provjerava je li uneseni link ispravan
+            console.log(text.slice(0, 7))
+            if (text != undefined) {
+                if ((text.slice(0, 8) == "https://") || (text.slice(0, 7) == "http://")) {
+                    return true
+                }
+            }
+            return false
+
+
+        }
     },
+
 
 };
 </script>

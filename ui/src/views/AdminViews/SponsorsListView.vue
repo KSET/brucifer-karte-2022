@@ -61,7 +61,6 @@ export default {
 
       })
 
-      this.test();
   },
   methods: {
     changeVisible() {
