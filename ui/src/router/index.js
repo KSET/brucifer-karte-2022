@@ -142,7 +142,7 @@ const routes = [
     component: Cjenik,
   },
   {
-    path: "/admin/page-not-found",
+    path: "/admin/:pathMatch(.*)*",
     name: "PageNotFound",
     component: PageNotFound,
   },
