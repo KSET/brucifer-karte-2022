@@ -29,6 +29,7 @@ app.component(VueCountdown.name, VueCountdown);
 app.use(Vuex)
 app.use(UUID)
 
+
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
@@ -62,6 +63,10 @@ import { faTrashCan, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
 library.add(faTrashCan)
 library.add(faCheck)
 library.add(faXmark)
+
+import naive from 'naive-ui'
+
+app.use(naive)
 
 
 app.component('font-awesome-icon', FontAwesomeIcon)

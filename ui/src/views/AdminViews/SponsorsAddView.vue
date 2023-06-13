@@ -180,49 +180,54 @@ export default {
                 const resp = await axios.get(process.env.VUE_APP_BASE_URL + "/mailer/")
                 let mailsent = 0;
 
-                resp.data.forEach(element => {
-                    if (element.message.includes(this.email)) {
-                        mailsent = 1;
+                let emails = this.email.split(",")
+
+                console.log(emails)
+
+                emails.forEach(async email => {
+
+                    resp.data.forEach(element => {
+                        if (element.message.includes(email)) {
+                            mailsent = 1;
+                        }
+                    });
+
+                    if (mailsent == 1) {
+                        if (window.confirm(`Sponzoru je već poslan mail na ${email}, klikom na 'OK' sponzoru će se ponovno poslati mail!!!`)) {
+                            mailsent = 0;
+                        }
+                    }
+                    if (mailsent == 0) {
+                        let msg = this.name + " " + email + " " + this.slug
+
+                        await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
+                            {
+                                subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
+                                template: "sponsors_email",
+                                message: msg,
+                                name: this.name,
+                                link: "https://brucosijada.kset.org/sponzori/" + this.slug,
+                                to_mail: email
+                            },
+                            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+                        )
+                        await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+                            {
+                                subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
+                                template: "sponsors_email",
+                                message: msg,
+                                name: this.name,
+                                link: "https://brucosijada.kset.org/sponzori/" + this.slug,
+                                to_mail: email
+                            },
+                            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+                        )
                     }
                 });
-
-                if (mailsent == 1) {
-                    if (window.confirm("Sponzoru je već poslan mail, klikom na 'OK' sponzoru će se ponovno poslati mail!!!")) {
-                        mailsent = 0;
-                    }
-                }
-                if (mailsent == 0) {
-                    let msg = this.name + " " + this.email + " " + this.slug
-
-                    let email = this.email
-
-                    await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
-                        {
-                            subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
-                            template: "sponsors_email",
-                            message: msg,
-                            name: this.name,
-                            link: "https://brucosijada.kset.org/sponzori/" + this.slug,
-                            to_mail: email
-                        },
-                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-                    )
-                    await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
-                        {
-                            subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
-                            template: "sponsors_email",
-                            message: msg,
-                            name: this.name,
-                            link: "https://brucosijada.kset.org/sponzori/" + this.slug,
-                            to_mail: email
-                        },
-                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-                    )
-                }
             }
         },
         async postSponsors() {
-            var linkOK =0;
+            var linkOK = 0;
             if (this.linkValidator(this.url)) {
                 linkOK = 1
             } else {
