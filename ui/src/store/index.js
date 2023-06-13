@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import createPersistedState from "vuex-persistedstate";
-
+import visibilityStore from "./visibilityStore";
 // this.$store.state.privilege
 
 export default createStore({
@@ -28,5 +28,8 @@ export default createStore({
     setTokenExp(state, value) {
       state.tokenExp = value;
     },
+  },
+  modules: {
+    visibilityStore,
   },
 });

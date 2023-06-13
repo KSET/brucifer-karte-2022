@@ -1,51 +1,65 @@
 from socket import if_indextoname
 from rest_framework import serializers, filters
-from .models import Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer
+from .models import Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer
+
 
 class GuestsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Guests
-        fields = ["id","name","surname","jmbag","email","tag","bought","entered","confCode"]
+        fields = ["id", "name", "surname", "jmbag",
+                  "email", "tag", "bought", "entered", "confCode"]
+
 
 class TagsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Tags
-        fields = ["id","name","count","bought","entered"]
+        fields = ["id", "name", "count", "bought", "entered"]
+
 
 class UsersSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Users
-        fields = ["id","name","email","privilege"]
-    
+        fields = ["id", "name", "email", "privilege"]
+
+
 class LineupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Lineup
-        fields = ["id","slug","order","visible","name","image"]
+        fields = ["id", "slug", "order", "visible", "name", "image"]
+
 
 class SponsorsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sponsors
-        fields = ["id","slug","order","visible","guestsEnabled","name","url","image","email","guestCap"]
+        fields = ["id", "slug", "order", "visible", "guestsEnabled",
+                  "name", "url", "image", "email", "guestCap"]
+
 
 class ContactSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Contact
-        fields = ["id","bandName","bookerName","bookerPhone"]
+        fields = ["id", "bandName", "bookerName", "bookerPhone"]
+
 
 class MailerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Mailer
-        fields = ["subject","message","to_mail"]
+        fields = ["subject", "message", "to_mail"]
+
 
 class CjenikSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Cjenik
-        fields = ["id","name","tag","order","priceHRK","priceEUR","volume"]
+        fields = ["id", "name", "tag", "order",
+                  "priceHRK", "priceEUR", "volume"]
+
+
+class VisibilitySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Visibility
+        fields = ["id", "name", "visible"]
+
 
 class DynamicSearchFilter(filters.SearchFilter):
     def get_search_fields(self, view, request):
         return request.GET.getlist('search_fields', [])
-
-
-
-
