@@ -1,6 +1,6 @@
 <template>
     <div v-if="SPONSORS_VISIBILITY == 1" class="sponsorsIcons">
-        <div v-for="sponsor in sponsors" :key="sponsor.id" class="sponsorr">
+        <div v-for="sponsor in sponsors" :key="sponsor.id" class="sponsorsIcon">
             <a v-bind:href="sponsor.url" rel="noreferrer noopener" target="_blank">
                 <div>
                     <img v-bind:src="sponsor.image">
@@ -11,15 +11,11 @@
 </template>
 
 <script>
-import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import axios from 'axios'
 import store from '@/store/visibilityStore'
+
 export default {
     name: 'SpoonsorsIcons',
-    components: { Footer },
-    props: {
-        msg: String
-    },
     data() {
         return {
             sponsors: [],
@@ -52,7 +48,7 @@ export default {
     align-items: center;
 }
 
-.sponsorr {
+.sponsorsIcon {
     border-radius: 18px;
     padding: 5px;
 }
