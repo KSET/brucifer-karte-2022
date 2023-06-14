@@ -12,6 +12,8 @@ export default createStore({
     TLOCRT_VISIBILITY: "",
     ULAZNICA_VISIBILITY: "",
     TIMER_VISIBILITY: "",
+    TIMER_TIME: "",
+    SPONSORS_INPUT_TIME: "",
   },
   plugins: [createPersistedState()],
   mutations: {
@@ -38,6 +40,12 @@ export default createStore({
     },
     setTIMER_VISIBILITY(state, value) {
       state.TIMER_VISIBILITY = value;
+    },
+    setTIMER_TIME(state, value) {
+      state.TIMER_TIME = value;
+    },
+    setSPONSORS_INPUT_TIME(state, value) {
+      state.SPONSORS_INPUT_TIME = value;
     },
   },
   actions: {
