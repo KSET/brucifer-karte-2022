@@ -99,35 +99,6 @@ export default {
   },
   created() {
     this.showNav = false;
-    axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?ordering=order',)
-      .then(response => {
-        var users = response.data;
-        if (users.length == 0) {
-          this.lineupVisible = 0;
-        } else {
-          this.lineupVisible = users[users.length - 1].visible;
-        }
-      })
-
-    axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
-      .then(response => {
-        var users = response.data;
-        if (users.length == 0) {
-          this.sponsorsVisible = 0;
-        } else {
-          this.sponsorsVisible = users[users.length - 1].visible;
-        }
-      })
-
-    axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/31/',)
-      .then(response => {
-        var cjenik = response.data.name;
-        if (cjenik == 0) {
-          this.cjenikVisible = 0;
-        } else {
-          this.cjenikVisible = 1;
-        }
-      })
   },
   methods: {
     toggleNav() {
