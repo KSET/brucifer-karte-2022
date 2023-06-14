@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
+import visibilityStore from "@/store/visibilityStore.js";
+import store from "@/store/index.js";
 
 /* Buckarte page Views */
 import Guests from "../views/BruckarteViews/GuestsView.vue";
@@ -37,8 +39,6 @@ import Tlocrt from "../views/BruciWebViews/TlocrtView.vue";
 import Satnica from "../views/BruciWebViews/SatnicaView.vue";
 
 import SponsorsPage from "../views/BruciWebViews/SponsorsPageView.vue";
-
-import store from "@/store/index.js";
 
 const routes = [
   {
@@ -199,7 +199,11 @@ const routes = [
     name: "naslovnica",
     component: Naslovnica,
   },
-  { path: "/:pathMatch(.*)*", component: BWPageNotFound },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "BWPageNotFound",
+    component: BWPageNotFound,
+  },
 
   {
     path: "/sponzori/:slug",
@@ -241,46 +245,57 @@ router.beforeEach((to, from, next) => {
     "",
     undefined,
   ];
-  if (String(to.path).split("/")[1] == "admin") {
-    if (String(to.path).split("/")[1] == "admin") {
-      if (Date.now() / 1000 > store.state.tokenExp && to.name != "logout") {
-        next({ path: "/admin/logout" });
-      } else {
-        if (store.state.id == "" && to.name != "login") {
-          next({ path: "/admin/login" });
-        } else if (store.state.privilege == 0 && to.name != "login") {
-          window.alert(
-            "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-          );
-          next({ path: "/admin/login" });
-        } else if (
-          store.state.privilege == 2 &&
-          !allowedRoutesForprivilege2.includes(to.name)
-        ) {
-          window.alert(
-            "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-          );
-          next({ path: "/admin/home" });
-        } else if (
-          store.state.privilege == 3 &&
-          !allowedRoutesForprivilege3.includes(to.name)
-        ) {
-          window.alert(
-            "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-          );
-          next({ path: "/admin/home" });
-        } else if (
-          store.state.privilege == 4 &&
-          !allowedRoutesForprivilege4.includes(to.name)
-        ) {
-          window.alert(
-            "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-          );
-          next({ path: "/admin/home" });
-        } else {
-          next();
-        }
-      }
+  if (to.path.startsWith("/admin")) {
+    if (Date.now() / 1000 > store.state.tokenExp && to.name !== "logout") {
+      next({ path: "/admin/logout" });
+    } else if (store.state.id === "" && to.name !== "login") {
+      next({ path: "/admin/login" });
+    } else if (store.state.privilege === 0 && to.name !== "login") {
+      window.alert(
+        "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
+      );
+      next({ path: "/admin/login" });
+    } else if (
+      store.state.privilege === 2 &&
+      !allowedRoutesForprivilege2.includes(to.name)
+    ) {
+      window.alert(
+        "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
+      );
+      next({ path: "/admin" });
+    } else if (
+      store.state.privilege === 3 &&
+      !allowedRoutesForprivilege3.includes(to.name)
+    ) {
+      window.alert(
+        "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
+      );
+      next({ path: "/admin" });
+    } else if (
+      store.state.privilege === 4 &&
+      !allowedRoutesForprivilege4.includes(to.name)
+    ) {
+      window.alert(
+        "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
+      );
+      next({ path: "/admin" });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+router.beforeEach((to, from, next) => {
+  /* check when coming soon is visible */
+  if (
+    !to.path.includes("admin") &&
+    to.name !== "naslovnica" &&
+    to.name !== "BWPageNotFound"
+  ) {
+    if (visibilityStore.state.COMINGSOON_VISIBILITY == 1) {
+      next({ name: "BWPageNotFound" });
     } else {
       next();
     }
