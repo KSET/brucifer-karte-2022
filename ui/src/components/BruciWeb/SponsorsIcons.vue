@@ -44,34 +44,12 @@ export default {
 <style scoped>
 .sponsorsIcons {
     position: absolute;
-    border: 2px solid red;
     top: 0px;
     padding-top: 47%;
     right: 6vw;
-    left: 20vw;
     display: grid;
     grid-template-columns: repeat(22, 4rem);
     align-items: center;
-}
-
-.image-container {
-    position: relative;
-}
-
-.image-container .image-sizer {
-    transition: padding-bottom .3s ease;
-    will-change: padding-bottom;
-}
-
-.image-container .image-frame {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: contain;
 }
 
 .sponsorr {
@@ -79,43 +57,27 @@ export default {
     padding: 5px;
 }
 
-@media screen and (max-width: 1550px) {
-    .sponsors {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-}
-
-@media screen and (max-width: 980px) {
-    .sponsors {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-@media screen and (max-width: 635px) {
-    .sponsors {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media screen and (max-width: 21.875rem) {
-    .sponsors {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
-    }
-}
-
-
-
 @media screen and (max-width: 980px) {
     .sponsorsIcons {
-        padding-top: 135%;
-        left: 6vw;
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1555px) {
+    .sponsorsIcons {
         grid-template-columns: repeat(22, 3.5rem);
     }
 }
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 1350px) {
     .sponsorsIcons {
-        display: none;
+        grid-template-columns: repeat(22, 3rem);
+    }
+}
+
+@media screen and (max-width: 1175px) {
+    .sponsorsIcons {
+        grid-template-columns: repeat(22, 3.5rem);
     }
 }
 </style>
