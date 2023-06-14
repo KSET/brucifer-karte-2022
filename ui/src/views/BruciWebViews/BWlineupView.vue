@@ -1,13 +1,13 @@
 <template>
     <div class="bw-page-container">
         <div class="lineup">
-            <div v-for="user in users" :key="user.id">
-                <div class="artist" title="{{ user.name }}">
+            <div v-for="lineup in lineups" :key="lineup.id">
+                <div class="artist" title="{{ lineup.name }}">
                     <div class="image-container">
                         <div class="image-sizer2"></div>
-                        <img class="image-frame2" v-bind:src="user.image">
+                        <img class="image-frame2" v-bind:src="lineup.image">
                     </div>
-                    <h3>{{ user.name }}</h3>
+                    <h3>{{ lineup.name }}</h3>
                 </div>
             </div>
         </div>
@@ -27,11 +27,7 @@ export default {
     },
     data() {
         return {
-            users: [],
-            id: '',
-            name: '',
-            email: '',
-            privilege: '',
+            lineups: [],
         }
     },
     mounted() {
@@ -41,27 +37,10 @@ export default {
         created() {
             axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?ordering=order&search=1&search_fields=visible',)
                 .then(response => {
-                    this.users = response.data;
-                    var ids = [];
-                    this.users.forEach(element => {
-                        ids.push(element.id);
-                    });
-                    if (ids.includes(String(314159)) == true) {
-                        this.users.splice(this.users.length - 1, 1);
-
-                    } else {
-                        this.users = [];
-                    }
-                })
-        },
-        searchUser() {
-            axios.get(process.env.VUE_APP_BASE_URL + '/users/?search=' + this.search,)
-                .then(response => {
-                    this.users = response.data;
+                    this.lineups = response.data;
                 })
         }
     }
-
 }
 </script>
 

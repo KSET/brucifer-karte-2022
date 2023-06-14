@@ -11,15 +11,6 @@
 
         <button class="button submit" style=" margin-top: 0px;  vertical-align: middle; " @click="sendMail">Pozovi
           sponzore</button>
-
-        <div class="switchdiv">
-          <h1 class="textfield" style="display: inline;">Vidljvo </h1>
-
-          <label class="switch" @click="toggleVisibility">
-            <input id="switch" type="checkbox" @input="changeVisible">
-            <span class="slider round"></span>
-          </label>
-        </div>
       </div>
 
       <sponsors-table></sponsors-table>
@@ -38,46 +29,7 @@ export default {
     SponsorsTable,
     Sidebar
   },
-  data() {
-    return {
-      isVisible: '',
-    }
-  },
-  created() {
-
-
-    axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
-      .then(response => {
-        if (response.data == 0) {
-          this.visible = 0;
-        } else {
-          this.isVisible = response.data[response.data.length - 1].visible;
-        }
-        if (this.isVisible == '1') {
-          document.getElementById("switch").checked = true;
-        } else {
-          document.getElementById("switch").checked = false;
-        }
-
-      })
-
-  },
   methods: {
-    changeVisible() {
-      if (this.isVisible == 1) {
-        var changenum = '0';
-        this.isVisible = '0';
-      } else {
-        var changenum = '1';
-        this.isVisible = '1';
-      }
-      axios.put(process.env.VUE_APP_BASE_URL + '/sponsors/314159/',
-        { visible: changenum },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
-        .then(() => {
-        })
-    },
     async test() {
       console.log("1")
 

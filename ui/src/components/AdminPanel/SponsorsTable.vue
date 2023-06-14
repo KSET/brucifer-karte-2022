@@ -61,15 +61,13 @@ export default {
       axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
         .then(response => {
           this.sponsors = response.data;
-          this.sponsors.splice(this.sponsors.length - 1, 1);
-
         });
     },
     editsponsor(sponsor) {
       this.$router.push({ path: '/admin/sponsors-add/' + sponsor.slug });
     },
     async changesponsororder(sponsor, direction) {
-      
+
       this.buttonEnabeled = false;
       var nextsponsorobj = (this.sponsors.indexOf(sponsor));
 

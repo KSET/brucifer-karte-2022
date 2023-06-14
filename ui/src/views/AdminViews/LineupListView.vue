@@ -9,15 +9,6 @@
           <img src="../../assets/icons/add-icon.svg">
         </router-link>
 
-        <div class="switchdiv" :class="$style.forceNewLine">
-
-          <h1 class="textfield" style="display: inline;">Vidljvo </h1>
-
-          <label class="switch" @click="toggleVisibility">
-            <input id="switch" type="checkbox" @input="changeVisible">
-            <span class="slider round"></span>
-          </label>
-        </div>
       </div>
 
       <lineup-table></lineup-table>
@@ -25,69 +16,19 @@
   </div>
 </template>
 
-<style lang="scss" module>
-:global(#app) .forceNewLine {
-  @media screen and (max-width: 550px) {
-    display: block;
-    position: relative;
-    text-align: right;
-  }
-}
-</style>
+
 
 <script>
 import LineupTable from '@/components/AdminPanel/LineupTable.vue'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
-
 import axios from 'axios'
+
 export default {
   name: 'SponsorsView',
   components: {
     LineupTable,
     Sidebar
-  },
-  data() {
-    return {
-      isVisible: '',
-    }
-  },
-  created() {
-    axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?ordering=order',)
-      .then(response => {
-        if (response.data == 0) {
-          this.visible = 0;
-        } else {
-          this.isVisible = response.data[response.data.length - 1].visible;
-        }
-        if (this.isVisible == '1') {
-          document.getElementById("switch").checked = true;
-        } else {
-          document.getElementById("switch").checked = false;
-        }
-
-      })
-  },
-  methods: {
-    changeVisible() {
-      if (this.isVisible == 1) {
-        var changenum = '0';
-        this.isVisible = '0';
-      } else {
-        var changenum = '1';
-        this.isVisible = '1';
-      }
-      axios.put(process.env.VUE_APP_BASE_URL + '/lineup/314159/',
-        { visible: changenum },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
-        .then(() => {
-        })
-
-
-    }
   }
-
-
 }
 </script>
 
@@ -164,5 +105,15 @@ input:checked+.slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+</style>
+
+<style lang="scss" module>
+:global(#app) .forceNewLine {
+  @media screen and (max-width: 550px) {
+    display: block;
+    position: relative;
+    text-align: right;
+  }
 }
 </style>
