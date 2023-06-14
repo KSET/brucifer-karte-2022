@@ -30,7 +30,7 @@ export default createStore({
       state.SATNICA_VISIBILITY = value;
     },
     setTLOCRT_VISIBILITY(state, value) {
-      state.TIMER_VISIBILITY = value;
+      state.TLOCRT_VISIBILITY = value;
     },
     setULAZNICA_VISIBILITY(state, value) {
       state.ULAZNICA_VISIBILITY = value;

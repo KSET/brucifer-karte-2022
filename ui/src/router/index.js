@@ -158,11 +158,17 @@ const routes = [
     path: "/sponsors",
     name: "bwsponsors",
     component: BWsponsors,
+    meta: {
+      visibilityCheck: "SPONSORS_VISIBILITY",
+    },
   },
   {
     path: "/lineup",
     name: "bwlineup",
     component: Bwlineup,
+    meta: {
+      visibilityCheck: "LINEUP_VISIBILITY",
+    },
   },
   {
     path: "/kontakt",
@@ -173,6 +179,9 @@ const routes = [
     path: "/ulaznice",
     name: "ulaznice",
     component: Ulaznice,
+    meta: {
+      visibilityCheck: "ULAZNICA_VISIBILITY",
+    },
   },
   {
     path: "/pravila-ponasanja",
@@ -183,16 +192,25 @@ const routes = [
     path: "/cjenik",
     name: "BWcjenik",
     component: BWcjenik,
+    meta: {
+      visibilityCheck: "CJENIK_VISIBILITY",
+    },
   },
   {
     path: "/tlocrt",
     name: "Tlocrt",
     component: Tlocrt,
+    meta: {
+      visibilityCheck: "TLOCRT_VISIBILITY",
+    },
   },
   {
     path: "/Satnica",
     name: "satnica",
     component: Satnica,
+    meta: {
+      visibilityCheck: "SATNICA_VISIBILITY",
+    },
   },
   {
     path: "/",
@@ -296,6 +314,23 @@ router.beforeEach((to, from, next) => {
   ) {
     if (visibilityStore.state.COMINGSOON_VISIBILITY == 1) {
       next({ name: "BWPageNotFound" });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+router.beforeEach((to, from, next) => {
+  /* check if page is visible */
+  if (!to.path.includes("admin")) {
+    if (to.meta.visibilityCheck != undefined) {
+      if (store.state[to.meta.visibilityCheck] == 0) {
+        next({ name: "BWPageNotFound" });
+      } else {
+        next();
+      }
     } else {
       next();
     }
