@@ -19,7 +19,7 @@
                 <h1 v-if="this.guestsEnabled == 0" class="page-title-dis" style="margin-left: 50px; margin-top: 70px;">Popis
                     uzvanika</h1>
 
-                <div  v-if="this.guestsEnabled != 0" class="infofield">
+                <div v-if="this.guestsEnabled != 0" class="infofield">
                     <div class="artist">
                         <div class="image-container">
                             <img class="image-frame2" style="border: none;" :src="previewImage">
@@ -61,8 +61,8 @@
         <div class="sponsorsPage-table">
             <div class=row>
                 <table id="guests">
-                    <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }"
-                        style="overflow:auto;height: 35rem !important;" class="tbody">
+                    <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto;height: 35rem !important;"
+                        class="tbody">
                         <tr v-for="guest in sponsorGuests" :key="guest.id">
                             <td style="padding-left: 20% !important;">{{ guest.name }}</td>
                             <td v-if="this.guestsEnabled != 0" style="padding-left: 10%% !important;"><button
@@ -84,7 +84,7 @@
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import NavbarBweb from '@/components/NavbarAndFooter/NavbarBweb.vue'
-
+import store from '@/store/visibilityStore'
 import axios from 'axios'
 
 export default {
@@ -135,7 +135,7 @@ export default {
 
                     console.log(this.guestsEnabled)
                     if (this.guestsEnabled != 2) {
-                        let closeTime = 1668276000000; // pravi closetime 12.11.2022 u 19.00
+                        let closeTime = Date.parse(store.state.SPONSORS_INPUT_TIME); // pravi closetime 12.11.2022 u 19.00
                         if (Date.now() > closeTime) {
                             console.log("zatvaraaaaj")
                             console.log(this.sponsorsInstance)
@@ -236,25 +236,25 @@ export default {
 </style>
 
 <style scoped>
+.page-title-dis {
+    vertical-align: middle;
+    display: inline-block;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    padding-right: 5%;
 
-.page-title-dis{
-  vertical-align: middle;
-  display: inline-block;
-  padding-top: 3%;
-  padding-bottom: 3%;
-  padding-right: 5%;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 36px;
+    /* identical to box height, or 112% */
 
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 36px;
-  /* identical to box height, or 112% */
+    letter-spacing: -0.015em;
 
-  letter-spacing: -0.015em;
-
-  color: white;
+    color: white;
 }
+
 .image-container {
     display: flex;
     justify-content: center;
@@ -348,7 +348,7 @@ h1 {
 
 }
 
-.infofield-tablet{
+.infofield-tablet {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -459,22 +459,23 @@ h1 {
         height: 9rem;
     }
 
-    .page-title-dis{
+    .page-title-dis {
         margin-top: 0px !important;
         margin-bottom: 10px;
     }
 
-    .infofield-tablet{
+    .infofield-tablet {
         width: 100%;
         margin-left: 10%;
     }
-    
-    .textfield.dis{
+
+    .textfield.dis {
         margin-top: 30px;
         margin-left: 45%;
 
     }
-    .artist.tabb{
+
+    .artist.tabb {
         margin-right: 5%;
     }
 }
@@ -494,11 +495,12 @@ h1 {
     .popis {
         grid-template-columns: 60% auto;
     }
-    .page-title-dis{
+
+    .page-title-dis {
         width: 150%;
     }
 
-    .textfield.dis{
+    .textfield.dis {
         margin-top: 30px;
         margin-left: 7%;
         width: 150%;
