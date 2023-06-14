@@ -105,11 +105,17 @@ export default {
 
 
 
-@media screen and (max-width: 1450px) {
-    .sponsorsIcons {}
+@media screen and (max-width: 980px) {
+    .sponsorsIcons {
+        padding-top: 135%;
+        left: 6vw;
+        grid-template-columns: repeat(22, 3.5rem);
+    }
 }
 
-@media screen and (max-width: 1325px) {
-    .sponsorsIcons {}
+@media screen and (max-width: 550px) {
+    .sponsorsIcons {
+        display: none;
+    }
 }
 </style>
