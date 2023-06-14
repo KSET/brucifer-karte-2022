@@ -5,6 +5,8 @@
         v-slot="{ days, hours, minutes, seconds }">
         {{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}
       </vue-countdown>
+
+      <SponsorsIcons></SponsorsIcons>
       <div class="homepage">
         <div class="image-container">
           <div class="image-sizer"></div>
@@ -32,10 +34,11 @@
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import store from '@/store/visibilityStore';
+import SponsorsIcons from '@/components/BruciWeb/SponsorsIcons.vue';
 
 export default {
   name: 'Naslovnica',
-  components: { Footer },
+  components: { Footer, SponsorsIcons },
   props: {
     msg: String
   },
