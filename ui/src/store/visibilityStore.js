@@ -3,36 +3,40 @@ import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   state: {
-    comingSoon: "",
-    lineup: "",
-    sponsors: "",
-    cjenik: "",
-    satnica: "",
-    ulaznica: "",
-    timer: "",
+    COMINGSOON_VISIBILITY: "",
+    LINEUP_VISIBILITY: "",
+    SPONSORS_VISIBILITY: "",
+    CJENIK_VISIBILITY: "",
+    SATNICA_VISIBILITY: "",
+    TLOCRT_VISIBILITY: "",
+    ULAZNICA_VISIBILITY: "",
+    TIMER_VISIBILITY: "",
   },
   plugins: [createPersistedState()],
   mutations: {
-    setComingSoon(state, value) {
-      state.comingSoon = value;
+    setCOMINGSOON_VISIBILITY(state, value) {
+      state.COMINGSOON_VISIBILITY = value;
     },
-    setLineup(state, value) {
-      state.lineup = value;
+    setLINEUP_VISIBILITY(state, value) {
+      state.LINEUP_VISIBILITY = value;
     },
-    setSponsors(state, value) {
-      state.sponsors = value;
+    setSPONSORS_VISIBILITY(state, value) {
+      state.SPONSORS_VISIBILITY = value;
     },
-    setCjenik(state, value) {
-      state.cjenik = value;
+    setCJENIK_VISIBILITY(state, value) {
+      state.CJENIK_VISIBILITY = value;
     },
-    setSatnica(state, value) {
-      state.satnica = value;
+    setSATNICA_VISIBILITY(state, value) {
+      state.SATNICA_VISIBILITY = value;
     },
-    setUlaznica(state, value) {
-      state.ulaznica = value;
+    setTLOCRT_VISIBILITY(state, value) {
+      state.TIMER_VISIBILITY = value;
     },
-    setTimer(state, value) {
-      state.timer = value;
+    setULAZNICA_VISIBILITY(state, value) {
+      state.ULAZNICA_VISIBILITY = value;
+    },
+    setTIMER_VISIBILITY(state, value) {
+      state.TIMER_VISIBILITY = value;
     },
   },
 });
