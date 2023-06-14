@@ -10,12 +10,6 @@
             src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleContactForm">
           <img v-else class="dropdown-icon  showmobile" style="margin-top: 15px;"
             src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleContactForm">
-          <h1 class="textfield">Popis </h1>
-
-          <label class="switch">
-            <input id="switch" type="checkbox" @input="changeVisible">
-            <span class="slider round"></span>
-          </label>
 
           <form v-if="showHid" id="hid" class="inputfields" onsubmit="return false">
 
@@ -24,8 +18,8 @@
             <input required class="inputfield kontakt" type="text" v-model="name">
 
             <h1 class="textfield">Kategorija Artikla </h1>
-            <select id="selector" class="inputfield entry" v-model="selectedTag" name={{selectedTag}}
-              @input="searchGuest" style="margin-bottom: 30px;">
+            <select id="selector" class="inputfield entry" v-model="selectedTag" name={{selectedTag}} @input="searchGuest"
+              style="margin-bottom: 30px;">
               <option v-for="(item, i) in tags" :key="i" class="menu-item">{{ item }}</option>
             </select>
 
@@ -85,7 +79,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -115,7 +108,6 @@ export default {
       priceEUR: '',
       artikli: [],
 
-      isVisible: '',
     }
   },
 
@@ -135,35 +127,6 @@ export default {
           });
         }
       });
-
-
-      axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/31/',)
-        .then(response => {
-          if (response.data.name == 0) {
-            this.visible = 0;
-          } else {
-            this.isVisible = 1;
-          }
-          if (this.isVisible == '1') {
-            document.getElementById("switch").checked = true;
-          } else {
-            document.getElementById("switch").checked = false;
-          }
-
-        })
-    },
-    changeVisible() {
-      if (this.isVisible == 1) {
-        var changenum = '0';
-        this.isVisible = '0';
-      } else {
-        var changenum = '1';
-        this.isVisible = '1';
-      }
-      axios.put(process.env.VUE_APP_BASE_URL + '/cjenik/31/',
-        { name: changenum },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
     },
 
     async orderUp(artikl) {

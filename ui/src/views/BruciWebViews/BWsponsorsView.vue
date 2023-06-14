@@ -1,6 +1,6 @@
 <template>
   <div class="bw-page-container">
-    <div class="sponsors" v-if="SPONSORS_VISIBILITY == 1">
+    <div class="sponsors">
       <div v-for="sponsor in sponsors" :key="sponsor.id" class="sponsor">
         <a v-bind:href="sponsor.url" rel="noreferrer noopener" target="_blank">
           <div class="image-container">
@@ -17,7 +17,6 @@
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import axios from 'axios'
-import store from '@/store/visibilityStore'
 
 export default {
   name: 'UsersTable',
@@ -28,7 +27,6 @@ export default {
   data() {
     return {
       sponsors: [],
-      SPONSORS_VISIBILITY: store.state.SPONSORS_VISIBILITY
     }
   },
   mounted() {

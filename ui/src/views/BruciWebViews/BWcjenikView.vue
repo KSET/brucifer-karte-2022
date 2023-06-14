@@ -1,6 +1,6 @@
 <template>
   <div class="bw-page-container">
-    <div v-if="this.cjenikVisible == '1'" class="contents">
+    <div class="contents">
       <section>
         <h1 class="bwh1" style="display:inline-block; vertical-align: middle; margin-top: 2rem;">CJENIK PIĆA
         </h1>
@@ -65,30 +65,17 @@ export default {
       tags: ["SOK", "PIVO", "DOLJEVI", "ALKOHOL", "OSTALO"],
       artikli: [],
 
-      cjenikVisible: 1,
-
     }
   },
   methods: {
     async created() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/31/',)
-        .then(response => {
-          var cjenik = response.data.name;
-          if (cjenik == 0) {
-            this.cjenikVisible = 0;
-          } else {
-            this.cjenikVisible = 1;
-          }
-        })
-      if (this.cjenikVisible == 1) {
-        this.artikli = [];
-        this.tags.forEach(async element => {
-          const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?ordering=order&search=' + element + '&search_fields=tag',)
-          if (resp.data.length != 0) {
-            this.artikli[element] = resp.data
-          }
-        });
-      }
+      this.artikli = [];
+      this.tags.forEach(async element => {
+        const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?ordering=order&search=' + element + '&search_fields=tag',)
+        if (resp.data.length != 0) {
+          this.artikli[element] = resp.data
+        }
+      });
     },
   }
 }
@@ -227,7 +214,8 @@ export default {
     grid-template-columns: 40% 37% 20%;
     top: 5.5%;
   }
-  .bwh1.cj{
+
+  .bwh1.cj {
     font-size: 15px;
     width: 95%;
   }
