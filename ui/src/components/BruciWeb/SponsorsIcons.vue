@@ -73,7 +73,7 @@ export default {
 
 @media screen and (max-width: 1175px) {
     .sponsorsIcons {
-        grid-template-columns: repeat(22, 3.5rem);
+        grid-template-columns: repeat(22, 2.5rem);
     }
 }
 </style>
