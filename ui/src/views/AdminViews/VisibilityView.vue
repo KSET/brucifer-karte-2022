@@ -5,9 +5,9 @@
             <h1 class="page-title">Visibility</h1>
 
             <div class="visibility-grid">
-                <div class="textfield">
+                <h1 class="textfield">
                     Prikaz stranice Coming soon
-                </div>
+                </h1>
                 <button v-if="COMINGSOON_VISIBILITY == 1" class="button change"
                     @click="changeVisibility('COMINGSOON_VISIBILITY', '0')">
                     <img src="../../assets/icons/yes-icon.svg">
@@ -17,9 +17,9 @@
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
 
-                <div class="textfield">
+                <h1 class="textfield">
                     Prikaz stranice Izvođača
-                </div>
+                </h1>
                 <button v-if="LINEUP_VISIBILITY == 1" class="button change"
                     @click="changeVisibility('LINEUP_VISIBILITY', '0')">
                     <img src="../../assets/icons/yes-icon.svg">
@@ -29,9 +29,9 @@
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
 
-                <div class="textfield">
+                <h1 class="textfield">
                     Prikaz stranice Sponzora
-                </div>
+                </h1>
                 <button v-if="SPONSORS_VISIBILITY == 1" class="button change"
                     @click="changeVisibility('SPONSORS_VISIBILITY', '0')">
                     <img src="../../assets/icons/yes-icon.svg">
@@ -41,9 +41,9 @@
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
 
-                <div class="textfield">
+                <h1 class="textfield">
                     Prikaz stranice Cjenik
-                </div>
+                </h1>
                 <button v-if="CJENIK_VISIBILITY == 1" class="button change"
                     @click="changeVisibility('CJENIK_VISIBILITY', '0')">
                     <img src="../../assets/icons/yes-icon.svg">
@@ -53,9 +53,9 @@
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
 
-                <div class="textfield">
+                <h1 class="textfield">
                     Prikaz stranice Tlocrt
-                </div>
+                </h1>
                 <button v-if="TLOCRT_VISIBILITY == 1" class="button change"
                     @click="changeVisibility('TLOCRT_VISIBILITY', '0')">
                     <img src="../../assets/icons/yes-icon.svg">
@@ -65,9 +65,9 @@
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
 
-                <div class="textfield">
+                <h1 class="textfield">
                     Prikaz stranice Satnica
-                </div>
+                </h1>
                 <button v-if="SATNICA_VISIBILITY == 1" class="button change"
                     @click="changeVisibility('SATNICA_VISIBILITY', '0')">
                     <img src="../../assets/icons/yes-icon.svg">
@@ -77,9 +77,9 @@
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
 
-                <div class="textfield">
+                <h1 class="textfield">
                     Prikaz stranice Ulaznica
-                </div>
+                </h1>
                 <button v-if="ULAZNICA_VISIBILITY == 1" class="button change"
                     @click="changeVisibility('ULAZNICA_VISIBILITY', '0')">
                     <img src="../../assets/icons/yes-icon.svg">
@@ -89,9 +89,9 @@
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
 
-                <div class="textfield">
+                <h1 class="textfield">
                     Prikaz stranice Timera
-                </div>
+                </h1>
                 <button v-if="TIMER_VISIBILITY == 1" class="button change"
                     @click="changeVisibility('TIMER_VISIBILITY', '0')">
                     <img src="../../assets/icons/yes-icon.svg">
@@ -154,6 +154,20 @@ export default {
     display: grid;
     grid-template-columns: 70% 30%;
     row-gap: 20px;
+    align-items: center;
+    width: 50%;
+}
+
+@media screen and (max-width: 980px) {
+    .visibility-grid {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .visibility-grid {
+        width: 90%;
+    }
 }
 </style>
 
