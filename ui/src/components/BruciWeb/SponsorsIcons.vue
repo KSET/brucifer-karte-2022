@@ -44,13 +44,12 @@ export default {
 <style scoped>
 .sponsorsIcons {
     position: absolute;
-    border: 2px solid red;
     top: 97vh;
     right: 6vw;
-    left: 35vw;
-
+    left: 20vw;
     display: grid;
-    grid-template-columns: repeat(13, 5rem);
+    grid-template-columns: repeat(22, 4rem);
+    align-items: center;
 }
 
 .image-container {
@@ -99,6 +98,20 @@ export default {
 @media screen and (max-width: 21.875rem) {
     .sponsors {
         grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+}
+
+
+
+@media screen and (max-width: 1450px) {
+    .sponsorsIcons {
+        top: 72%;
+    }
+}
+
+@media screen and (max-width: 1325px) {
+    .sponsorsIcons {
+        top: 66%;
     }
 }
 </style>
