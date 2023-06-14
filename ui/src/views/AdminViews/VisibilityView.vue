@@ -3,7 +3,6 @@
         <Sidebar />
         <div class="admin-page-container">
             <h1 class="page-title">Visibility</h1>
-            <CircularLoading :dialog="dialogProgress"></CircularLoading>
 
             <div class="visibility-grid">
                 <h1 class="textfield">
@@ -111,31 +110,37 @@
 import axios from 'axios'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import store from "@/store/visibilityStore.js";
-import CircularLoading from '@/components/Default/CircularLoading.vue';
-import { fas } from '@fortawesome/free-solid-svg-icons';
 
 export default {
-    name: 'GuestsTable',
-    props: {
-        msg: String
-    },
+    name: 'VisibilityView',
     components: {
         Sidebar,
-        CircularLoading
     },
-    data() {
-        return {
-            COMINGSOON_VISIBILITY: store.state.COMINGSOON_VISIBILITY,
-            LINEUP_VISIBILITY: store.state.LINEUP_VISIBILITY,
-            SPONSORS_VISIBILITY: store.state.SPONSORS_VISIBILITY,
-            CJENIK_VISIBILITY: store.state.CJENIK_VISIBILITY,
-            SATNICA_VISIBILITY: store.state.SATNICA_VISIBILITY,
-            TLOCRT_VISIBILITY: store.state.TLOCRT_VISIBILITY,
-            ULAZNICA_VISIBILITY: store.state.ULAZNICA_VISIBILITY,
-            TIMER_VISIBILITY: store.state.TIMER_VISIBILITY,
-
-            dialogProgress: false,
-        }
+    computed: {
+        COMINGSOON_VISIBILITY() {
+            return store.state.COMINGSOON_VISIBILITY;
+        },
+        LINEUP_VISIBILITY() {
+            return store.state.LINEUP_VISIBILITY;
+        },
+        SPONSORS_VISIBILITY() {
+            return store.state.SPONSORS_VISIBILITY;
+        },
+        CJENIK_VISIBILITY() {
+            return store.state.CJENIK_VISIBILITY;
+        },
+        SATNICA_VISIBILITY() {
+            return store.state.SATNICA_VISIBILITY;
+        },
+        TLOCRT_VISIBILITY() {
+            return store.state.TLOCRT_VISIBILITY;
+        },
+        ULAZNICA_VISIBILITY() {
+            return store.state.ULAZNICA_VISIBILITY;
+        },
+        TIMER_VISIBILITY() {
+            return store.state.TIMER_VISIBILITY;
+        },
     },
     methods: {
         async changeVisibility(changeField, val) {
@@ -144,18 +149,10 @@ export default {
                 { visible: val },
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
             )
-            this.dialogProgress = true;
-            await this.sleep(3000)
-            location.reload();
+            await store.dispatch("fetchVisibilityData")
 
-        },
-        async sleep(ms) {
-            return await new Promise(
-                resolve => setTimeout(resolve, ms)
-            );
-        },
+        }
     }
-
 }
 </script>
 

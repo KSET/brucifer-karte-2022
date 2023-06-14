@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import createPersistedState from "vuex-persistedstate";
+import axios from "axios";
 
 export default createStore({
   state: {
@@ -37,6 +38,29 @@ export default createStore({
     },
     setTIMER_VISIBILITY(state, value) {
       state.TIMER_VISIBILITY = value;
+    },
+  },
+  actions: {
+    async fetchVisibilityData({ commit }) {
+      return axios
+        .get(`${process.env.VUE_APP_BASE_URL}/visibility/`)
+        .then((response) => {
+          const visibilityResp = response.data.reduce((result, obj) => {
+            result[obj.name] = obj.visible;
+            return result;
+          }, {});
+
+          for (const key in visibilityResp) {
+            if (Object.prototype.hasOwnProperty.call(visibilityResp, key)) {
+              const value = visibilityResp[key];
+              const mutationName = `set${key}`;
+              commit(mutationName, value);
+            }
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to fetch visibility data:", error);
+        });
     },
   },
 });
