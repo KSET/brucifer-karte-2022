@@ -4,7 +4,7 @@
             <div class="grid2-container">
                 <div class="grid-item grid1-item">
                     <input class="nosubmit search entry" @input="searchGuest" type="form" v-model="search"
-                        placeholder="Unesi Ime">
+                        placeholder="Unesi Ime" style="width: 100% !important;">
 
                 </div>
                 <div class="grid-item grid1-item">
@@ -26,8 +26,8 @@
                 <p>{{ guest.tag }} </p>
             </button>
         </div>
-        <div class="grid-item grid1-item3"
-            :class="{ [$style.cFix]: true, [$style.cFixExpanded]: this.tag === 'Brucoši' }" id="c">
+        <div class="grid-item grid1-item3" :class="{ [$style.cFix]: true, [$style.cFixExpanded]: this.tag === 'Brucoši' }"
+            id="c">
             <div class="grid-container2">
                 <h1 class="textfield span2">Ime </h1>
                 <input readonly class="inputfield span3" :disabled="this.id == ''" type="text" @input="changevalue"
@@ -130,10 +130,10 @@ export default {
             console.log(this.loading)
 
             this.name = "";
-                        this.surname = '';
-                        this.jmbag = '';
-                        this.tag = '';
-                        this.confCode = '';
+            this.surname = '';
+            this.jmbag = '';
+            this.tag = '';
+            this.confCode = '';
 
             //console.log("req sent")
             //console.log(this.reqs)
