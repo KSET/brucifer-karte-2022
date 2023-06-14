@@ -1,11 +1,11 @@
 <template>
   <div class="bw-page-container">
-    <div class="sponsors">
-      <div v-for="user in users" :key="user.id" class="sponsor">
-        <a v-bind:href="user.url" rel="noreferrer noopener" target="_blank">
+    <div class="sponsors" v-if="SPONSORS_VISIBILITY == 1">
+      <div v-for="sponsor in sponsors" :key="sponsor.id" class="sponsor">
+        <a v-bind:href="sponsor.url" rel="noreferrer noopener" target="_blank">
           <div class="image-container">
             <div class="image-sizer2"></div>
-            <img class="image-frame2" v-bind:src="user.image">
+            <img class="image-frame2" v-bind:src="sponsor.image">
           </div>
         </a>
       </div>
@@ -17,6 +17,7 @@
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import axios from 'axios'
+import store from '@/store/visibilityStore'
 
 export default {
   name: 'UsersTable',
@@ -26,11 +27,8 @@ export default {
   },
   data() {
     return {
-      users: [],
-      id: '',
-      name: '',
-      email: '',
-      privilege: '',
+      sponsors: [],
+      SPONSORS_VISIBILITY: store.state.SPONSORS_VISIBILITY
     }
   },
   mounted() {
@@ -40,17 +38,7 @@ export default {
     created() {
       axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order&search=1&search_fields=visible',)
         .then(response => {
-          this.users = response.data;
-          var ids = [];
-          this.users.forEach(element => {
-            ids.push(element.id);
-          });
-          if (ids.includes(String(314159)) == true) {
-            this.users.splice(this.users.length - 1, 1);
-
-          } else {
-            this.users = [];
-          }
+          this.sponsors = response.data;
         })
     }
   }

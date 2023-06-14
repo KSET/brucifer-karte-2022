@@ -9,22 +9,22 @@
         :name="'Naslovnica'" :link="'/'">
       </RouterElement>
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.lineupVisible == '1'"
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.LINEUP_VISIBILITY == '1'"
         class="navbar-element hidetablet" :name="'Izvođači'" :link="'/lineup'">
       </RouterElement>
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }" class="navbar-element hidetablet"
-        :name="'Ulaznice'" :link="'/ulaznice'">
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }" v-if="this.ULAZNICA_VISIBILITY == '1'"
+        class="navbar-element hidetablet" :name="'Ulaznice'" :link="'/ulaznice'">
       </RouterElement>
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }" v-if="this.sponsorsVisible == '1'"
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }" v-if="this.SPONSORS_VISIBILITY == '1'"
         class="navbar-element hidetablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
 
       <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="navbar-element hidetablet"
         :name="'Kontakt'" :link="'/kontakt'">
       </RouterElement>
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('cjenik') }" v-if="this.cjenikVisible == '1'"
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('cjenik') }" v-if="this.CJENIK_VISIBILITY == '1'"
         class="navbar-element hidetablet" :name="'Cjenik'" :link="'/cjenik'">
       </RouterElement>
 
@@ -41,23 +41,24 @@
             :name="'Naslovnica'" :link="'/'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.lineupVisible == '1'"
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.LINEUP_VISIBILITY == '1'"
             class="overlay-element " :name="'Izvođači'" :link="'/lineup'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }" class="overlay-element "
-            :name="'Ulaznice'" :link="'/ulaznice'" @click="toggleNav()">
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }" v-if="this.ULAZNICA_VISIBILITY == '1'"
+            class="overlay-element " :name="'Ulaznice'" :link="'/ulaznice'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }" v-if="this.sponsorsVisible == '1'"
-            class="overlay-element " :name="'Sponzori'" :link="'/sponsors'" @click="toggleNav()">
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }"
+            v-if="this.SPONSORS_VISIBILITY == '1'" class="overlay-element " :name="'Sponzori'" :link="'/sponsors'"
+            @click="toggleNav()">
           </RouterElement>
 
           <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="overlay-element "
             :name="'Kontakt'" :link="'/kontakt'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('cjenik') }" v-if="this.cjenikVisible == '1'"
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('cjenik') }" v-if="this.CJENIK_VISIBILITY == '1'"
             class="overlay-element " :name="'Cjenik'" :link="'/cjenik'" @click="toggleNav()">
           </RouterElement>
 
@@ -78,6 +79,7 @@
 <script>
 import axios from 'axios';
 import RouterElement from '@/components/AdminPanel/RouterElement.vue'
+import store from '@/store/visibilityStore';
 
 export default {
   name: 'Navbar',
@@ -88,9 +90,11 @@ export default {
   data() {
     return {
       showNav: false,
-      lineupVisible: '1',
-      sponsorsVisible: '1',
-      cjenikVisible: '1',
+      LINEUP_VISIBILITY: store.state.LINEUP_VISIBILITY,
+      SPONSORS_VISIBILITY: store.state.SPONSORS_VISIBILITY,
+      ULAZNICA_VISIBILITY: store.state.ULAZNICA_VISIBILITY,
+      CJENIK_VISIBILITY: store.state.CJENIK_VISIBILITY,
+
     }
   },
   created() {

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavbarAdmin v-if="this.navtype == 'bruckarte'"></NavbarAdmin>
-    <NavbarBweb v-if="this.navtype == 'brucweb'"></NavbarBweb>
+    <NavbarBweb v-if="this.navtype == 'brucweb' && COMINGSOON_VISIBILITY == 0"></NavbarBweb>
     <router-view />
   </div>
 </template>
@@ -23,6 +23,7 @@ export default {
   data() {
     return {
       navtype: 'brucweb',
+      COMINGSOON_VISIBILITY: store.state.COMINGSOON_VISIBILITY
     }
 
   },

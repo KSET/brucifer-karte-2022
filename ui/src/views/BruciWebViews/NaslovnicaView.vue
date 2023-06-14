@@ -1,23 +1,37 @@
 <template>
   <div class="page-container">
-    <vue-countdown class="countdown-timer" :time=this.time :transform="transformSlotProps"
-      v-slot="{ days, hours, minutes, seconds }">
-      {{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}
-    </vue-countdown>
-    <div class="homepage">
-      <div class="image-container">
-        <div class="image-sizer"></div>
-        <div class="image-frame"></div>
-      </div>
+    <div v-if="COMINGSOON_VISIBILITY == 0" class="page-container" style="min-height: 100vh;">
+      <vue-countdown class="countdown-timer" :time=this.time :transform="transformSlotProps"
+        v-slot="{ days, hours, minutes, seconds }">
+        {{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}
+      </vue-countdown>
+      <div class="homepage">
+        <div class="image-container">
+          <div class="image-sizer"></div>
+          <div class="image-frame"></div>
+        </div>
 
+      </div>
+      <Footer></Footer>
     </div>
-    <Footer></Footer>
+
+    <div v-else>
+
+      <div class="comingSoon">
+        <div class="image-container">
+          <div class="image-sizer"></div>
+          <div class="image-frame"></div>
+        </div>
+
+      </div>
+    </div>
 
   </div>
 </template>
 
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
+import store from '@/store/visibilityStore';
 
 export default {
   name: 'Naslovnica',
@@ -28,6 +42,7 @@ export default {
   data() {
     return {
       time: '',
+      COMINGSOON_VISIBILITY: store.state.COMINGSOON_VISIBILITY
     }
 
   },
@@ -75,6 +90,12 @@ export default {
 
 }
 
+.comingSoon {
+  background-image: url("../../assets/bg/comingSoon/comingSoon-desktop.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 @media screen and (max-width: 980PX) {
   :root {
     --background-image-aspect-ratio: calc(962 / 601);
@@ -82,6 +103,10 @@ export default {
     --countdown-font-size: 8vw;
     --countdown-top-offset: 86.5%;
     --background-image: url("../../assets/bg/home/bg-tablet.svg");
+  }
+
+  .comingSoon {
+    background-image: url("../../assets/bg/comingSoon/comingSoon-tablet.svg");
   }
 }
 
@@ -105,7 +130,6 @@ export default {
   padding-bottom: 60px;
 }
 
-
 .homepage {
   /* Footer height */
   background-image: var(--background-image);
@@ -114,8 +138,7 @@ export default {
 
 }
 
-
-.countdown-timer{
+.countdown-timer {
   display: none !important;
 }
 
@@ -142,6 +165,7 @@ export default {
   display: block;
   padding-top: var(--countdown-top-offset);
 }
+
 
 @import url(../../bruciweb.css);
 </style>
