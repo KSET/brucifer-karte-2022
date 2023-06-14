@@ -22,6 +22,7 @@ import GuestAdd from "../views/AdminViews/GuestAddView.vue";
 import BandKontakt from "../views/AdminViews/BandKontaktView.vue";
 import Firme from "../views/AdminViews/FirmeView.vue";
 import Cjenik from "../views/AdminViews/CjenikView.vue";
+import Visibility from "../views/AdminViews/VisibilityView.vue";
 
 /* BruciWeb Views */
 import Bwlineup from "../views/BruciWebViews/BWlineupView.vue";
@@ -140,6 +141,11 @@ const routes = [
     path: "/admin/cjenik",
     name: "cjenik",
     component: Cjenik,
+  },
+  {
+    path: "/admin/visibility",
+    name: "visibility",
+    component: Visibility,
   },
   {
     path: "/admin/:pathMatch(.*)*",

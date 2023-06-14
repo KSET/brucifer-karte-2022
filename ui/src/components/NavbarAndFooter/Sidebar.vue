@@ -18,8 +18,8 @@
             <img style="z-index:-1" v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg">
 
         </div>
-        <RouterElement style="padding-left:3rem !important;" id="dpL1" class="sidebar-element"
-            :name="'Pregled Izvođača'" :link="'/admin/lineup-list'">
+        <RouterElement style="padding-left:3rem !important;" id="dpL1" class="sidebar-element" :name="'Pregled Izvođača'"
+            :link="'/admin/lineup-list'">
         </RouterElement>
 
         <a style="padding-left:3rem !important; color: black;" id="dpL2" class="sidebar-element"
@@ -36,8 +36,8 @@
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg">
 
         </div>
-        <RouterElement style="padding-left:3rem !important;" id="dpS1" class="sidebar-element"
-            :name="'Pregled Sponzora'" :link="'/admin/sponsors-list'">
+        <RouterElement style="padding-left:3rem !important;" id="dpS1" class="sidebar-element" :name="'Pregled Sponzora'"
+            :link="'/admin/sponsors-list'">
         </RouterElement>
 
         <a style="padding-left:3rem !important; color: black;" id="dpS2" class="sidebar-element"
@@ -47,6 +47,7 @@
         <RouterElement class="sidebar-element" :name="'Kontakt'" :link="'/admin/band-kontakt'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Firme'" :link="'/admin/firme'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Cjenik'" :link="'/admin/cjenik'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Visibility'" :link="'/admin/visibility'"></RouterElement>
 
     </div>
 </template>

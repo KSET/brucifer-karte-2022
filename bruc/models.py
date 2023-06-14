@@ -113,6 +113,6 @@ class Cjenik(models.Model):
 
 
 class Visibility(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100, default='', blank=True)
+    name = models.CharField(max_length=100, default='',
+                            blank=True, primary_key=True)
     visible = models.CharField(max_length=50, default='0', blank=True)

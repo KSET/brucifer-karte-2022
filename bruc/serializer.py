@@ -57,7 +57,7 @@ class CjenikSerializer(serializers.HyperlinkedModelSerializer):
 class VisibilitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Visibility
-        fields = ["id", "name", "visible"]
+        fields = ["name", "visible"]
 
 
 class DynamicSearchFilter(filters.SearchFilter):
