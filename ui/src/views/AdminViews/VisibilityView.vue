@@ -100,6 +100,24 @@
                     style="background-color: white;">
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
+
+                <h1 class="textfield">
+                    Vrijeme odbrojavanja Timera
+                </h1>
+                <label class="datetimePicker">
+                    <input @change="changeVisibility('TIMER_TIME', timerTime)" type="datetime-local" v-model="timerTime"
+                        class="datetimePickerInput">
+                    <span class="placeholderText">{{ formattedTimerTime }}</span>
+                </label>
+
+                <h1 class="textfield">
+                    Vrijeme sponzorima za unos
+                </h1>
+                <label class="datetimePicker">
+                    <input @change="changeVisibility('SPONSORS_INPUT_TIME', sponsorsInputTime)" type="datetime-local"
+                        v-model="sponsorsInputTime" class="datetimePickerInput">
+                    <span class="placeholderText">{{ formattedSponsorsInputTime }}</span>
+                </label>
             </div>
 
         </div>
@@ -115,6 +133,12 @@ export default {
     name: 'VisibilityView',
     components: {
         Sidebar,
+    },
+    data() {
+        return {
+            timerTime: '',
+            sponsorsInputTime: ''
+        }
     },
     computed: {
         COMINGSOON_VISIBILITY() {
@@ -141,15 +165,36 @@ export default {
         TIMER_VISIBILITY() {
             return store.state.TIMER_VISIBILITY;
         },
+        formattedTimerTime() {
+            const timerTime = store.state.TIMER_TIME;
+            const formattedDate = timerTime.substring(8, 10) + '.' + timerTime.substring(5, 7) + '.' + timerTime.substring(0, 4);
+            const formattedTime = timerTime.substring(11, 16);
+            return formattedDate + '. ' + formattedTime;
+        },
+        formattedSponsorsInputTime() {
+            const timerTime = store.state.SPONSORS_INPUT_TIME;
+            const formattedDate = timerTime.substring(8, 10) + '.' + timerTime.substring(5, 7) + '.' + timerTime.substring(0, 4);
+            const formattedTime = timerTime.substring(11, 16);
+            return formattedDate + '. ' + formattedTime;
+        },
     },
     methods: {
         async changeVisibility(changeField, val) {
-            console.log(process.env.AUTH_USER)
-            await axios.put(process.env.VUE_APP_BASE_URL + '/visibility/' + changeField + '/',
-                { visible: val },
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-            )
-            await store.dispatch("fetchVisibilityData")
+            if (changeField == "TIMER_TIME" || changeField == "SPONSORS_INPUT_TIME") {
+                if (window.confirm("Pokušavate promijeniti jedno od VREMENA, jeste li sigurni?")) {
+                    await axios.put(process.env.VUE_APP_BASE_URL + '/visibility/' + changeField + '/',
+                        { visible: val },
+                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+                    )
+                    await store.dispatch("fetchVisibilityData")
+                }
+            } else {
+                await axios.put(process.env.VUE_APP_BASE_URL + '/visibility/' + changeField + '/',
+                    { visible: val },
+                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+                )
+                await store.dispatch("fetchVisibilityData")
+            }
 
         }
     }
@@ -166,6 +211,12 @@ export default {
     width: 50%;
 }
 
+.datetimePicker {
+    border: 1px solid black;
+    font-size: 15px;
+    position: relative;
+}
+
 @media screen and (max-width: 980px) {
     .visibility-grid {
         width: 80%;
@@ -176,6 +227,18 @@ export default {
     .visibility-grid {
         width: 90%;
     }
+}
+
+.datetimePickerInput {
+    width: 20px;
+
+}
+
+.placeholderText {
+    position: absolute;
+    top: 50%;
+    left: 25px;
+    transform: translateY(-50%);
 }
 </style>
 

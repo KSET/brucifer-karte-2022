@@ -47,12 +47,14 @@ export default {
       time: '',
       COMINGSOON_VISIBILITY: store.state.COMINGSOON_VISIBILITY,
       TIMER_VISIBILITY: store.state.TIMER_VISIBILITY,
+      TIMER_TIME: store.state.TIMER_TIME,
     }
 
   },
   mounted() {
-    var seconds = new Date().getTime() / 1000;
-    this.time = (1686866400 - (seconds)) * 1000;
+    let timeMS = Date.parse(this.TIMER_TIME)
+    var seconds = new Date().getTime();
+    this.time = (timeMS - (seconds));
   },
   methods: {
     transformSlotProps(props) {
