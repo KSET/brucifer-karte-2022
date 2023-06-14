@@ -3,6 +3,7 @@
         <Sidebar />
         <div class="admin-page-container">
             <h1 class="page-title">Visibility</h1>
+            <CircularLoading :dialog="dialogProgress"></CircularLoading>
 
             <div class="visibility-grid">
                 <h1 class="textfield">
@@ -110,6 +111,8 @@
 import axios from 'axios'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import store from "@/store/visibilityStore.js";
+import CircularLoading from '@/components/Default/CircularLoading.vue';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 
 export default {
     name: 'GuestsTable',
@@ -117,7 +120,8 @@ export default {
         msg: String
     },
     components: {
-        Sidebar
+        Sidebar,
+        CircularLoading
     },
     data() {
         return {
@@ -129,20 +133,27 @@ export default {
             TLOCRT_VISIBILITY: store.state.TLOCRT_VISIBILITY,
             ULAZNICA_VISIBILITY: store.state.ULAZNICA_VISIBILITY,
             TIMER_VISIBILITY: store.state.TIMER_VISIBILITY,
+
+            dialogProgress: false,
         }
     },
     methods: {
-        changeVisibility(changeField, val) {
+        async changeVisibility(changeField, val) {
             console.log(process.env.AUTH_USER)
-            axios.put(process.env.VUE_APP_BASE_URL + '/visibility/' + changeField + '/',
+            await axios.put(process.env.VUE_APP_BASE_URL + '/visibility/' + changeField + '/',
                 { visible: val },
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
             )
-                .then(() => {
-                    location.reload();
-                })
+            this.dialogProgress = true;
+            await this.sleep(3000)
+            location.reload();
 
-        }
+        },
+        async sleep(ms) {
+            return await new Promise(
+                resolve => setTimeout(resolve, ms)
+            );
+        },
     }
 
 }
