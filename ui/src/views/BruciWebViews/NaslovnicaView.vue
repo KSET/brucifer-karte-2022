@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div v-if="COMINGSOON_VISIBILITY == 0" class="page-container" style="min-height: 100vh;">
-      <vue-countdown class="countdown-timer" :time=this.time :transform="transformSlotProps"
+      <vue-countdown v-if="TIMER_VISIBILITY == 1" class="countdown-timer" :time=this.time :transform="transformSlotProps"
         v-slot="{ days, hours, minutes, seconds }">
         {{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}
       </vue-countdown>
@@ -45,7 +45,8 @@ export default {
   data() {
     return {
       time: '',
-      COMINGSOON_VISIBILITY: store.state.COMINGSOON_VISIBILITY
+      COMINGSOON_VISIBILITY: store.state.COMINGSOON_VISIBILITY,
+      TIMER_VISIBILITY: store.state.TIMER_VISIBILITY,
     }
 
   },
@@ -139,10 +140,6 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
 
-}
-
-.countdown-timer {
-  display: none !important;
 }
 
 .countdown-timer {
