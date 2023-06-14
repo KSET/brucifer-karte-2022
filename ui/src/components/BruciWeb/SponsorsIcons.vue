@@ -44,7 +44,9 @@ export default {
 <style scoped>
 .sponsorsIcons {
     position: absolute;
-    top: 97vh;
+    border: 2px solid red;
+    top: 0px;
+    padding-top: 47%;
     right: 6vw;
     left: 20vw;
     display: grid;
@@ -104,14 +106,10 @@ export default {
 
 
 @media screen and (max-width: 1450px) {
-    .sponsorsIcons {
-        top: 72%;
-    }
+    .sponsorsIcons {}
 }
 
 @media screen and (max-width: 1325px) {
-    .sponsorsIcons {
-        top: 66%;
-    }
+    .sponsorsIcons {}
 }
 </style>
