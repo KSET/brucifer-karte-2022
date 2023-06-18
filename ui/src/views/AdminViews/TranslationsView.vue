@@ -6,7 +6,8 @@
 
             <div class="input-grid">
                 <input class="inputfield" type="text" placeholder="Unesite ključ" v-model="key">
-                <input class="inputfield" type="text" placeholder="Unesite vrijednost" v-model="value">
+                <textarea style="font-size: 12px;" class="inputfield" type="text" placeholder="Unesite vrijednost"
+                    v-model="value"></textarea>
                 <button class="button submit" @click="postTranslation">Dodaj</button>
             </div>
 
@@ -17,10 +18,10 @@
             </div>
 
             <div class="translations-grid">
-                <div class="translations-item" v-for="(translation) in translationsTable" :key="translation.key">
+                <div class="translations-item" v-for="( translation ) in  translationsTable " :key="translation.key">
                     <h1 class="textfield">{{ translation.key }}</h1>
-                    <div class="textfield" @input="changeTranslation(translation)" contenteditable="true"
-                        v-html="translation.value"></div>
+                    <div style="padding: 7px" class="textfield" @input="changeTranslation(translation)"
+                        contenteditable="true" v-html="translation.value"></div>
                     <button class="button-icon" @click="deleteTranslation(translation)"> <img
                             src="@/assets/icons/trash-icon.svg"></button>
                 </div>
@@ -70,18 +71,21 @@ export default {
             await translationsStore.dispatch("fetchTranslations")
         },
         async changeTranslation(translation) {
-            let changeVal = event.target.innerHTML;
+            let changeVal = event.target.innerHTML.replace(/<(?!br\s*\/?)[^>]+>/gi, '').replace('<br>', '\n\n')
             await axios.put(process.env.VUE_APP_BASE_URL + '/translations/' + translation.id + '/',
                 { key: translation.key, value: changeVal },
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
             )
+        },
+        changeValue() {
+            this.value = event.target.innerHTML.replace(/<(?!br\s*\/?)[^>]+>/gi, '').replace('<br>', '\n\n')
         }
     }
 }
 </script>
 
 
-<style scoped>
+<style scoped lang="scss">
 .inputfield {
     width: 90%;
 }
@@ -113,6 +117,15 @@ export default {
     padding: 0.5em 0 0.5em 0;
     border-top: 1px solid black;
     border-bottom: 1px solid black;
+}
+
+p {
+    font-family: "Montserrat" !important;
+    color: red;
+}
+
+.textfield {
+    white-space: pre-wrap;
 }
 </style>
 
