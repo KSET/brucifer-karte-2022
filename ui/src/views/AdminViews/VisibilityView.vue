@@ -227,11 +227,18 @@ export default {
     .visibility-grid {
         width: 90%;
     }
+
+    .placeholderText {
+        font-size: 12px;
+    }
+
+    .datetimePicker {
+        width: 140%;
+    }
 }
 
 .datetimePickerInput {
     width: 20px;
-
 }
 
 .placeholderText {
