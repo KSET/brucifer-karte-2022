@@ -26,46 +26,7 @@
                 <p>{{ guest.tag }} </p>
             </button>
         </div>
-        <div class="grid-item grid1-item3" :class="{ [$style.cFix]: true, [$style.cFixExpanded]: this.tag === 'Brucoši' }"
-            id="c">
-            <div class="grid-container2">
-                <h1 class="textfield span2">Ime </h1>
-                <input readonly class="inputfield span3" :disabled="this.id == ''" type="text" @input="changevalue"
-                    v-model="name">
-
-                <h1 v-if="!this.tag.includes('Sponzor')" class="textfield span2">Prezime </h1>
-                <input v-if="!this.tag.includes('Sponzor')" readonly class="inputfield span3" :disabled="this.id == ''"
-                    type="text" @input="changevalue" v-model="surname">
-
-                <h1 v-if="this.tag == 'Brucoši'" class="textfield span2">JMBAG </h1>
-                <input v-if="this.tag == 'Brucoši'" class="inputfield span3" readonly type="text" v-model="jmbag">
-
-                <h1 v-if="this.tag == 'Brucoši'" class="textfield" :class="$style.span2Sm">Karta </h1>
-
-                <button disabled v-if="this.tag == 'Brucoši' && this.bought == '1'" class="bttn button2-yes"
-                    @click="changeBought(guest, '0')">
-                    <img class="va" src="../../assets/icons/yes-icon.svg">
-                </button>
-                <button disabled class="bttn button2-no" v-if="this.tag == 'Brucoši' && this.bought == '0'"
-                    @click="changeBought(guest, '1')">
-                    <img class="va" src="../../assets/icons/no-icon.svg">
-                </button>
-                <br v-if="this.tag == 'Brucoši'" class="hidedesktop showmobile">
-                <h1 class="textfield" :class="$style.span2Sm">Ulaz </h1>
-
-                <button v-if="this.entered == '1'" type="button" :disabled="this.id == ''" class="bttn button2-yes"
-                    @click="changeEntered(guest, '0')">
-                    <img class="va" src="../../assets/icons/yes-icon.svg">
-                </button>
-                <button v-else @click="changeEntered(guest, '1')" :disabled="this.id == ''" type="button"
-                    class="bttn button2-no">
-                    <img class="va" src="../../assets/icons/no-icon.svg">
-                </button>
-
-                <h1 v-if="this.tag == 'Brucoši'" class="textfield span2">Potvrda </h1>
-                <h1 v-if="this.tag == 'Brucoši'" class="textfield span3">{{ this.confCode }} </h1>
-            </div>
-        </div>
+        <GuestInfo :guest="guest" :tag="'adsas'"></GuestInfo>
     </div>
 </template>
 
@@ -73,13 +34,12 @@
 
 <script>
 import axios from 'axios';
+import GuestInfo from '../../components/Bruckarte/GuestInfo.vue';
+
 export default {
     name: 'GuestsAdd',
     components: {
-
-    },
-    props: {
-        msg: String
+        GuestInfo
     },
     data() {
         return {
@@ -89,7 +49,7 @@ export default {
             bought: '',
             entered: '',
             guests: [],
-            guest: '',
+            guest: {},
             search: '',
             name: '',
             surname: '',
