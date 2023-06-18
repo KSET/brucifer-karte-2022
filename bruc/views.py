@@ -109,5 +109,6 @@ class TranslationsViewSet(viewsets.ModelViewSet):
     queryset = Translations.objects.all()
     serializer_class = TranslationsSerializer
 
-    filter_backends = [DynamicSearchFilter]
+    filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     search_fields = ['key']
+    ordering_fields = ['key']

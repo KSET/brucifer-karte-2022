@@ -63,7 +63,7 @@ class VisibilitySerializer(serializers.HyperlinkedModelSerializer):
 class TranslationsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Translations
-        fields = ["key", "value"]
+        fields = ["id", "key", "value"]
 
 
 class DynamicSearchFilter(filters.SearchFilter):

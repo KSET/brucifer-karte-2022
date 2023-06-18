@@ -1,5 +1,5 @@
 <template>
-    <div id="firme">
+    <div id="visibility">
         <Sidebar />
         <div class="admin-page-container">
             <h1 class="page-title">Visibility</h1>

@@ -35,7 +35,6 @@
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import store from '@/store/visibilityStore';
 import SponsorsIcons from '@/components/BruciWeb/SponsorsIcons.vue';
-
 export default {
   name: 'Naslovnica',
   components: { Footer, SponsorsIcons },

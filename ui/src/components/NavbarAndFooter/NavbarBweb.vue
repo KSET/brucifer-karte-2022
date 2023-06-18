@@ -1,8 +1,7 @@
 <template>
   <div class="navbar bw" :class="$style.page">
     <router-link class="navbar-title" to="/">
-      BRUCOŠIJADA FER-A
-    </router-link>
+      {{ translations.navbar.title }} </router-link>
     <div class="routes">
 
       <RouterElement :class="{ [$style.selected]: isCurrentPage('naslovnica') }" class="navbar-element hidetablet"
@@ -80,6 +79,7 @@
 import axios from 'axios';
 import RouterElement from '@/components/AdminPanel/RouterElement.vue'
 import store from '@/store/visibilityStore';
+import translationsStore from "@/store/translationsStore.js";
 
 export default {
   name: 'Navbar',
@@ -94,6 +94,8 @@ export default {
       SPONSORS_VISIBILITY: store.state.SPONSORS_VISIBILITY,
       ULAZNICA_VISIBILITY: store.state.ULAZNICA_VISIBILITY,
       CJENIK_VISIBILITY: store.state.CJENIK_VISIBILITY,
+
+      translations: translationsStore.state.translations,
 
     }
   },

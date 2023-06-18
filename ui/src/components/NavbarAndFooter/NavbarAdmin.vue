@@ -91,6 +91,8 @@
             :link="'/admin/cjenik'"></RouterElement>
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Visibility'" @click="toggleNav()"
             :link="'/admin/visibility'"></RouterElement>
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Tanslations'" @click="toggleNav()"
+            :link="'/admin/translations'"></RouterElement>
         </div>
       </div>
     </div>

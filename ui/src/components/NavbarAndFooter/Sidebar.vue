@@ -48,6 +48,7 @@
         <RouterElement class="sidebar-element" :name="'Firme'" :link="'/admin/firme'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Cjenik'" :link="'/admin/cjenik'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Visibility'" :link="'/admin/visibility'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Translations'" :link="'/admin/translations'"></RouterElement>
 
     </div>
 </template>
