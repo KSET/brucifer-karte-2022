@@ -11,7 +11,8 @@ import NavbarAdmin from './components/NavbarAndFooter/NavbarAdmin.vue'
 import NavbarBweb from './components/NavbarAndFooter/NavbarBweb.vue'
 import Footer from './components/NavbarAndFooter/Footer.vue'
 import axios from 'axios'
-import store from "@/store/visibilityStore.js";
+import visibilityStore from "@/store/visibilityStore.js";
+import translationsStore from "@/store/translationsStore.js";
 
 export default {
   name: 'app',
@@ -23,12 +24,14 @@ export default {
   data() {
     return {
       navtype: 'brucweb',
-      COMINGSOON_VISIBILITY: store.state.COMINGSOON_VISIBILITY
+      COMINGSOON_VISIBILITY: visibilityStore.state.COMINGSOON_VISIBILITY
     }
 
   },
   created() {
-    store.dispatch("fetchVisibilityData")
+    visibilityStore.dispatch("fetchVisibilityData")
+    translationsStore.dispatch("fetchTranslations")
+
   },
   mounted() {
     if (((String(window.location.href).split("/"))[3]) == "admin") {

@@ -1,7 +1,7 @@
 import imp
 from django.contrib import admin
 
-from .models import Visibility, Cjenik, Contact, Guests, Tags, Users, Lineup, Sponsors
+from .models import Translations, Visibility, Cjenik, Contact, Guests, Tags, Users, Lineup, Sponsors
 
 admin.site.register(Guests)
 admin.site.register(Tags)
