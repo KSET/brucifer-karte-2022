@@ -1,7 +1,7 @@
 <template>
   <div class="navbar bw" :class="$style.page">
     <router-link class="navbar-title" to="/">
-      {{ translations.navbar.title }} </router-link>
+      BRUCOŠIJADA FER-a </router-link>
     <div class="routes">
 
       <RouterElement :class="{ [$style.selected]: isCurrentPage('naslovnica') }" class="navbar-element hidetablet"
