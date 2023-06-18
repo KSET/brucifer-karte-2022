@@ -1,6 +1,6 @@
 from socket import if_indextoname
 from rest_framework import serializers, filters
-from .models import Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer
+from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer
 
 
 class GuestsSerializer(serializers.HyperlinkedModelSerializer):
@@ -58,6 +58,12 @@ class VisibilitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Visibility
         fields = ["name", "visible"]
+
+
+class TranslationsSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Translations
+        fields = ["key", "value"]
 
 
 class DynamicSearchFilter(filters.SearchFilter):

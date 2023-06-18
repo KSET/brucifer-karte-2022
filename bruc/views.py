@@ -2,9 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import filters
 from rest_framework import routers, serializers, viewsets
-from .models import Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer
+from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer
 from django_filters.rest_framework import DjangoFilterBackend
-from .serializer import VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer
+from .serializer import TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.mail import BadHeaderError, send_mail
@@ -103,3 +103,11 @@ class VisibilityViewSet(viewsets.ModelViewSet):
 
     filter_backends = [DynamicSearchFilter]
     search_fields = ['name']
+
+
+class TranslationsViewSet(viewsets.ModelViewSet):
+    queryset = Translations.objects.all()
+    serializer_class = TranslationsSerializer
+
+    filter_backends = [DynamicSearchFilter]
+    search_fields = ['key']

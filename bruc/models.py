@@ -116,3 +116,8 @@ class Visibility(models.Model):
     name = models.CharField(max_length=100, default='',
                             blank=True, primary_key=True)
     visible = models.CharField(max_length=50, default='0', blank=True)
+
+
+class Translations(models.Model):
+    key = models.CharField(max_length=500, default='', primary_key=True)
+    value = models.CharField(max_length=5000, default='', blank=True)
