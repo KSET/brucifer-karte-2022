@@ -2,7 +2,8 @@
   <div class="bw-page-container">
     <div class="contents">
       <section>
-        <h1 class="bwh1" style="display:inline-block; vertical-align: middle; margin-top: 2rem;">CJENIK PIĆA
+        <h1 class="bwh1" style="display:inline-block; vertical-align: middle; margin-top: 2rem;">{{
+          translations.cjenik.pagetitle ? translations.cjenik.pagetitle : "cjenik.pagetitle" }}
         </h1>
         <div lass="aircash-block">
           <div class="aircash">
@@ -33,12 +34,7 @@
           </div>
 
         </div>
-        <p class="disclamer-text">Prodaju pića vrši ElektroStudent d.o.o. (OIB: 18333034190) sa sjedištem u Unskoj 3, 10
-          000 Zagreb čiji je vlasnik udruga SS FER. Zabranjeno usluživanje i konzumiranje
-          alkoholnih pića mlađima od 18 godina!
-          Porez je uračunat u cijenu. Cijene izražene u eurima informativnog su karaktera. Konverzija u eure odrađena je
-          prema tečaju 1 EUR = 7,53450 HRK. Plaćanje je moguće samo u hrvatskim kunama gotovinom ili putem aplikacije
-          Aircash.</p>
+        <p class="disclamer-text">{{ translations.cjenik.text ? translations.cjenik.text : "cjenik.text" }}</p>
 
       </section>
     </div>
@@ -49,7 +45,7 @@
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import axios from 'axios';
-
+import translationsStore from '@/store/translationsStore';
 export default {
   name: 'KontaktView',
   components: { Footer },
@@ -65,6 +61,7 @@ export default {
       tags: ["SOK", "PIVO", "DOLJEVI", "ALKOHOL", "OSTALO"],
       artikli: [],
 
+      translations: translationsStore.state.translations
     }
   },
   methods: {
