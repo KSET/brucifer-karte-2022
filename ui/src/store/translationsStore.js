@@ -18,28 +18,29 @@ export default createStore({
   },
   actions: {
     async fetchTranslations({ commit }) {
-      return axios
-        .get(`${process.env.VUE_APP_BASE_URL}/translations/?ordering=key`)
-        .then((response) => {
-          commit("settranslationsTable", response.data);
+      try {
+        const response = await axios.get(
+          `${process.env.VUE_APP_BASE_URL}/translations/?ordering=key`
+        );
+        commit("settranslationsTable", response.data);
 
-          const transformedJson = {};
+        const transformedJson = {};
 
-          response.data.forEach((item) => {
-            const [key, subKey] = item.key.split(".");
+        response.data.forEach((item) => {
+          const [key, subKey] = item.key.split(".");
 
-            if (!transformedJson[key]) {
-              transformedJson[key] = {};
-            }
+          if (!transformedJson[key]) {
+            transformedJson[key] = {};
+          }
 
-            transformedJson[key][subKey] = item.value;
-          });
-          commit("settranslations", transformedJson);
-          console.log(transformedJson);
-        })
-        .catch((error) => {
-          console.error("Failed to fetch tanslations data:", error);
+          transformedJson[key][subKey] = item.value;
         });
+
+        commit("settranslations", transformedJson);
+        console.log(transformedJson);
+      } catch (error) {
+        console.error("Failed to fetch translations data:", error);
+      }
     },
   },
 });
