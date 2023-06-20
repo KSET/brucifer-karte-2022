@@ -44,5 +44,6 @@ export default {
 </script>
 
 <style>
-@import '~bootstrap/dist/css/bootstrap.css'
+@import '~bootstrap/dist/css/bootstrap.css';
+@import './assets/fonts/antonio/antonio.css';
 </style>

@@ -46,8 +46,6 @@ export default {
 
 
 <style>
-@import "@fontsource/antonio";
-
 .bw-page-container {
     margin-top: 0;
     flex: 1;

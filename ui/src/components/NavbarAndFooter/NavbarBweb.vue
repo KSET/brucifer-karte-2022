@@ -121,9 +121,6 @@ export default {
 
 </script>
 <style lang="css">
-@import "@fontsource/antonio";
-
-
 .overlay {
   height: 0%;
   width: 100%;
