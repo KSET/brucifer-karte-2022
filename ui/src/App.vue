@@ -28,10 +28,9 @@ export default {
     }
 
   },
-  created() {
-    visibilityStore.dispatch("fetchVisibilityData")
-    translationsStore.dispatch("fetchTranslations")
-
+  async beforeCreate() {
+    await visibilityStore.dispatch("fetchVisibilityData")
+    await translationsStore.dispatch("fetchTranslations")
   },
   mounted() {
     if (((String(window.location.href).split("/"))[3]) == "admin") {
