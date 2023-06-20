@@ -1,120 +1,21 @@
 <template>
   <div class="bw-page-container">
-    <div class="contents">
-      <section>
-        <h1 id="opća-pravila-brucošijade-fer-a">OPĆA PRAVILA BRUCOŠIJADE FER-A
-        </h1>
+    <div>
+      <div class="contents">
+        <div v-if="length != 0">
+          <section v-for="i in length" :key="i">
 
-        <p>
-          <br>
-          Kupovinom ulaznice posjetitelj bezuvjetno prihvaća pravila ponašanja mjesta događaja i organizatora.
-          <br>
+            <h1>{{ translations.pravilaponasanja["title" + i] }}</h1>
+            <p v-for="text in translations.pravilaponasanja['text' + i].split('\n\n')" :key="text">{{ text }}</p>
 
-          <br>
-          Za sve eventualne ozljede, oštećenja sluha i druge povrede organizator ne snosi odgovornost.
-          <br>
+          </section>
+        </div>
 
-          <br>
-          Organizator ne odgovara za izgubljene ili ukradene stvari.
-          <br>
-
-          <br>
-          Zabranjeno je točenje alkohola maloljetnicima i osobama u vidno alkoholiziranom stanju.
-          <br>
-
-          <br>
-          Zbog osobne sigurnosti publike organizator zadržava pravo zabrane ulaska osobama za koje smatra da mogu
-          prouzročiti probleme ili ugroziti sigurnost ostalih posjetitelja.
-          <br>
-
-          <br>
-          Kupnjom ulaznice pristajete da kao dio publike budete zvučno i/ili slikovno snimljeni te da snimke mogu biti
-          korištene u svakom trenutku u svrhu promocije Brucošijade FER-a.
-          <br>
-
-          <br>
-          Osobe mlađe od 18 godina uz kupljenu ulaznicu i pratnju punoljetne osobe mogu prisustvovati događaju.
-          <br>
-
-          <br>
-          Kupljena ulaznica omogućava jedan ulazak u prostor održavanja događaja.
-          <br>
-
-          <br>
-          Ponovni ulazak nakon izlaska iz prostora radi sigurnosnih razloga nije moguć.
-          <br>
-
-          <br>
-          Jednom kupljena ulaznica ne može se zamijeniti niti vratiti, osim u slučaju otkazivanja cijelog festivala od
-          strane organizatora.
-          <br>
-
-          <br>
-          Važeće su ulaznice kupljene samo na ovlaštenim prodajnim mjestima.
-          <br>
-
-          <br>
-          Organizator zadržava pravo izmjene programa događaja.
-          <br>
-
-          <br>
-          Organizator sugerira da u duhu nenasilja, tolerancije i jednakosti pripazite jedni na druge.
-          <br>
-
-        </p>
-        <br>
-        <h1 id="zabranjeno-je">ZABRANJENO JE:
-        </h1>
-
-        <p>
-          <br>
-          Unošenje hrane i pića u prostor događaja.
-          <br>
-
-          <br>
-          Unošenje narkotika.
-          <br>
-
-          <br>
-          Unošenje lako zapaljivih goriva, pirotehničkih i eksplozivnih sredstava.
-          <br>
-
-          <br>
-          Dovođenje kućnih ljubimaca.
-          <br>
-
-          <br>
-          Unošenje oružja, velikih kišobrana, boca i drugih oštrih predmeta koji mogu ugroziti sigurnost posjetitelja.
-          <br>
-
-          <br>
-          Unošenje kamera i profesionalnih fotoaparata te tehničke opreme i instrumenata bez dozvole organizatora.
-          <br>
-
-        </p>
-        <br>
-        <h1 id="dozvoljeno-je">DOZVOLJENO JE:
-        </h1>
-
-        <p>
-          <br>
-          Unošenje malih rasklopnih kišobrana.
-          <br>
-
-          <br>
-          Unošenje manjih ručnih torbi ili ruksaka uz obavezan pregled sadržaja torbi prilikom ulaska.
-          <br>
-
-          <br>
-          Unošenje mobilnih telefona.
-          <br>
-
-          <br>
-          Unošenje cigareta i upaljača.
-        </p>
-
-      </section>
-
+        <div v-else>
+          <h1>pravilaponasanja.title1</h1>
+          <h1>pravilaponasanja.text1</h1>
+        </div>
+      </div>
     </div>
     <Footer></Footer>
   </div>
@@ -122,13 +23,69 @@
 
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
+import translationsStore from '@/store/translationsStore';
 
 export default {
-  name: 'PravilaView',
+  name: 'PravilaPonasanjaView',
   components: { Footer },
+  data() {
+    return {
+      translations: translationsStore.state.translations,
+      length: '0',
+    }
+  },
+  created() {
+    if (this.translations.pravilaponasanja) {
+      this.length = Object.keys(this.translations.pravilaponasanja).length / 2
+    }
+  }
 }
 </script>
 
 <style>
+@import url('https://fonts.cdnfonts.com/css/myriad-pro');
+
+h1 {
+
+  font-family: 'Antonio';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 47px;
+
+  color: #000000;
+}
+
+p {
+  font-family: 'Myriad Pro';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 18px;
+
+  color: #000000;
+
+  transition: margin-top .3s ease;
+  will-change: margin-top;
+}
+
+.contents {
+  padding-top: 3.5em;
+  padding-left: 2.73%;
+  padding-right: 4.5%;
+  padding-bottom: 4.5%;
+
+
+
+}
+
+@media screen and (max-width: 1280px) {
+  #page-container {
+    background-image: url("../../assets/bg/default/bg-tablet.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
 @import url(../../bruciweb.css);
 </style>

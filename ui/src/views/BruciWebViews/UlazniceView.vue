@@ -2,41 +2,19 @@
   <div class="bw-page-container">
     <div>
       <div class="contents">
-        <section>
-          <h1 id="ulaznice">ULAZNICE</h1>
+        <div v-if="length != 0">
+          <section v-for="i in length" :key="i">
 
-          <p>Ulaznice po redovnoj cijeni od 80 kuna u prodaji su od 14. rujna do 12. studenog ili do isteka zaliha.
-            Ulaznice se mogu kupiti u KSET-u te u Dirty Old Shopu.</p>
+            <h1>{{ translations.ulaznice["title" + i] }}</h1>
+            <p v-for="text in translations.ulaznice['text' + i].split('\n\n')" :key="text">{{ text }}</p>
 
-          <p>Ulaznice za brucoše FER-a po cijeni od 50 kuna kreću u prodaju od 30. rujna, a moguće ih je kupiti
-            isključivo u KSET-u uz predočenje e-indeksa. Više informacija možete pronaći i na službenoj Facebook
-            stranici Brucošijade FER-a.</p>
+          </section>
+        </div>
 
-          <br>
-          <h1 id="pravila-ponašanja">PRAVILA PONAŠANJA</h1>
-
-          <p>Kupljena ulaznica omogućava jedan ulazak u prostor održavanja događaja. Ponovni ulazak nakon izlaska iz
-            prostora radi sigurnosnih razloga nije moguć.</p>
-
-          <p>Za sve eventualne ozljede, oštećenja sluha i druge povrede organizator ne snosi odgovornost.</p>
-
-          <p>Organizator ne odgovara za izgubljene ili ukradene stvari.</p>
-
-          <p>Zbog osobne sigurnosti publike, organizator zadržava pravo zabrane ulaska osobama za koje smatra da mogu
-            prouzročiti probleme ili ugroziti sigurnost ostalih posjetitelja.</p>
-
-          <p>Kupnjom ulaznice pristajete da kao dio publike budete zvučno i/ili slikovno snimljeni te da snimke mogu
-            biti korištene u svakom trenutku u svrhu promocije Brucošijade FER-a.</p>
-
-          <p>S obzirom na epidemiološku situaciju, događaj će se održati prema uputama Civilnog stožera koje će biti
-            važeće u trenutku održavanja.</p>
-
-          <p>Ova ulaznica obvezuje posjetitelje na poštivanje kućnog reda u prostoru održavanja događaja.</p>
-
-          <p>Ugodan provod žele vam KSET i SS FER!</p>
-
-
-        </section>
+        <div v-else>
+          <h1>ulaznice.title1</h1>
+          <h1>ulaznice.text1</h1>
+        </div>
       </div>
     </div>
     <Footer></Footer>
@@ -45,10 +23,22 @@
 
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
+import translationsStore from '@/store/translationsStore';
 
 export default {
   name: 'UlazniceView',
   components: { Footer },
+  data() {
+    return {
+      translations: translationsStore.state.translations,
+      length: '0',
+    }
+  },
+  created() {
+    if (this.translations.ulaznice) {
+      this.length = Object.keys(this.translations.ulaznice).length / 2
+    }
+  }
 }
 </script>
 
