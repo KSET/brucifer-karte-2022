@@ -60,8 +60,10 @@ export default {
 
       tags: ["SOK", "PIVO", "DOLJEVI", "ALKOHOL", "OSTALO"],
       artikli: [],
-
-      translations: translationsStore.state.translations
+    }
+  }, computed: {
+    translations() {
+      return translationsStore.state.translations;
     }
   },
   methods: {

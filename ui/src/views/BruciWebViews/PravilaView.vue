@@ -30,8 +30,12 @@ export default {
   components: { Footer },
   data() {
     return {
-      translations: translationsStore.state.translations,
       length: '0',
+    }
+  },
+  computed: {
+    translations() {
+      return translationsStore.state.translations;
     }
   },
   created() {
