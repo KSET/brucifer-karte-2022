@@ -3,7 +3,7 @@
     <div class="contents">
       <section>
         <h1 class="bwh1" style="display:inline-block; vertical-align: middle; margin-top: 2rem;">{{
-          translations.cjenik.pagetitle ? translations.cjenik.pagetitle : "cjenik.pagetitle" }}
+          translations?.cjenik.pagetitle ? translations.cjenik.pagetitle : "cjenik.pagetitle" }}
         </h1>
         <div lass="aircash-block">
           <div class="aircash">
@@ -34,7 +34,7 @@
           </div>
 
         </div>
-        <p class="disclamer-text">{{ translations.cjenik.text ? translations.cjenik.text : "cjenik.text" }}</p>
+        <p class="disclamer-text">{{ translations?.cjenik.text ? translations.cjenik.text : "cjenik.text" }}</p>
 
       </section>
     </div>
