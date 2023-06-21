@@ -1,7 +1,7 @@
 <template>
   <div class="navbar bw" :class="$style.page">
     <router-link class="navbar-title" to="/">
-      {{ translations.navbar.title ? translations.navbar.title : "navbar.title" }} </router-link>
+      ! {{ translations.navbar.title ? translations.navbar.title : "navbar.title" }} </router-link>
     <div class="routes">
 
       <RouterElement :class="{ [$style.selected]: isCurrentPage('naslovnica') }" class="navbar-element hidetablet"
@@ -90,17 +90,27 @@ export default {
   data() {
     return {
       showNav: false,
-      LINEUP_VISIBILITY: store.state.LINEUP_VISIBILITY,
-      SPONSORS_VISIBILITY: store.state.SPONSORS_VISIBILITY,
-      ULAZNICA_VISIBILITY: store.state.ULAZNICA_VISIBILITY,
-      CJENIK_VISIBILITY: store.state.CJENIK_VISIBILITY,
-
-      translations: translationsStore.state.translations,
-
+    }
+  }, computed: {
+    LINEUP_VISIBILITY() {
+      return store.state.LINEUP_VISIBILITY;
+    },
+    SPONSORS_VISIBILITY() {
+      return store.state.SPONSORS_VISIBILITY;
+    },
+    ULAZNICA_VISIBILITY() {
+      return store.state.ULAZNICA_VISIBILITY;
+    },
+    CJENIK_VISIBILITY() {
+      return store.state.CJENIK_VISIBILITY;
+    },
+    translations() {
+      return translationsStore.state.translations;
     }
   },
-  created() {
-    this.showNav = false;
+  async beforeCreate() {
+    await store.dispatch("fetchVisibilityData")
+    await translationsStore.dispatch("fetchTranslations")
   },
   methods: {
     toggleNav() {
