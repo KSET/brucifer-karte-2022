@@ -46,10 +46,15 @@
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import axios from 'axios';
 import translationsStore from '@/store/translationsStore';
+import visibilityStore from '@/store/visibilityStore';
+
 export default {
   name: 'KontaktView',
   components: { Footer },
   mounted() {
+    if (visibilityStore.state.CJENIK_VISIBILITY == 0) {
+      this.$router.push({ name: 'BWPageNotFound' });
+    }
     this.created();
   },
   data() {
