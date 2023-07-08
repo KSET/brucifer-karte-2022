@@ -8,10 +8,10 @@
 
                 </div>
                 <div class="grid-item grid1-item">
-                    <select id="selector" class="inputfield entry" v-model="selectedTag" name={{selectedTag}}
-                        @input="searchGuest">
+                    <select id="selector" class="inputfield entry" v-model="selectedTag" @change="searchGuest">
                         <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
                     </select>
+
                 </div>
             </div>
         </div>
@@ -80,6 +80,10 @@ export default {
     },
     methods: {
         async searchGuest() {
+            if (this.selectedTag == "...") {
+                this.selectedTag = " ";
+            }
+
             if (this.search == '') {
                 this.guests = [];
                 return
@@ -119,14 +123,10 @@ export default {
             /*
             ideja za optimizaciju: svi seachovi se stavljaju u listu, svaki put se ceka par milisekundi te se izvrava zadnji search a lista se prazni
             */
-            var e = document.getElementById("selector").value;
-            if (e == "...") {
-                e = " ";
-                document.getElementById("selector").value = " ";
-            }
+
 
             var currentSearch = this.search
-            axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + currentSearch + ' ' + e + "&search_fields=tag&search_fields=name&search_fields=surname",)
+            axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + currentSearch + ' ' + this.selectedTag + "&search_fields=tag&search_fields=name&search_fields=surname",)
                 .then(response => {
                     this.loading = false;
 
