@@ -1,40 +1,43 @@
 <template>
-    <div class="grid1-container" id="flex" style="margin-top: 3.75rem;">
+    <div class="grid1-container" id="flex" style="margin-top: 3.75rem">
         <div class="grid-item grid1-item1" id="a">
             <div class="grid2-container">
                 <div class="grid-item grid1-item">
-                    <input class="nosubmit search entry" @input="searchGuest" type="form" v-model="search"
-                        placeholder="Unesi Ime" style="width: 100% !important;">
-
+                    <input class="nosubmit search entry" @input="prepSearchGuest" type="form" v-model="search"
+                        placeholder="Unesi Ime" style="width: 100% !important" />
                 </div>
                 <div class="grid-item grid1-item">
                     <select id="selector" class="inputfield entry" v-model="selectedTag" @change="searchGuest">
-                        <option v-for="(item, i) in items" :key="i" class="menu-item">{{ item }}</option>
+                        <option v-for="(item, i) in items" :key="i" class="menu-item">
+                            {{ item }}
+                        </option>
                     </select>
-
                 </div>
             </div>
         </div>
         <div class="grid-item grid1-item2" id="b">
-
             <v-progress-circular v-if="loading == true" size="90px" indeterminate color="black"></v-progress-circular>
 
-            <button class="person" :class="$style.person"
-                v-bind:style="[(this.id == guest.id) ? { backgroundColor: '#D9D9D9' } : { backgroundColor: 'white' }]"
-                v-for="guest in guests" :key="guest.class" @click="chooseGuest(guest)">
-                <p><strong>{{ guest.name }} {{ guest.surname }}</strong></p>
-                <p>{{ guest.tag }} </p>
+            <button class="person" :class="$style.person" v-bind:style="[
+                this.guest.id == guest.id
+                    ? { backgroundColor: '#D9D9D9' }
+                    : { backgroundColor: 'white' },
+            ]" v-for="guest in guests" :key="guest.class" @click="chooseGuest(guest)">
+                <p>
+                    <strong>{{ guest.name }} {{ guest.surname }}</strong>
+                </p>
+                <p>{{ guest.tag }}</p>
             </button>
         </div>
         <GuestInfo :guest="guest" :tag="'adsas'"></GuestInfo>
     </div>
 </template>
 
-
-
 <script>
 import axios from 'axios';
 import GuestInfo from '../../components/Bruckarte/GuestInfo.vue';
+import debounce from 'lodash/debounce';
+
 
 export default {
     name: 'GuestsAdd',
@@ -46,28 +49,17 @@ export default {
             items: [],
             selectedTag: '',
             id: '',
-            bought: '',
-            entered: '',
+
             guests: [],
             guest: {},
             search: '',
-            name: '',
-            surname: '',
-            jmbag: '',
-            bought: '',
-            entered: '',
-            tag: '',
-            confCode: '',
+
             loading: false,
-
-
-            reqs: [],
-
-
-
         }
     },
     mounted() {
+        this.searchGuest = debounce(this.searchGuest, 1000);
+
         axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
             .then(response => {
                 var itemss = response.data;
@@ -79,58 +71,25 @@ export default {
             })
     },
     methods: {
-        async searchGuest() {
+        prepSearchGuest() {
             if (this.selectedTag == "...") {
                 this.selectedTag = " ";
             }
 
-            if (this.search == '') {
-                this.guests = [];
-                return
-            }
-
             this.guests = [];
-            this.loading = true;
-            console.log(this.loading)
+            this.guest = {};
 
-            this.name = "";
-            this.surname = '';
-            this.jmbag = '';
-            this.tag = '';
-            this.confCode = '';
-
-            //console.log("req sent")
-            //console.log(this.reqs)
-            this.reqs.push(this.search)
-
-            await this.sleep(300)
-
-            if (this.reqs.length == 0) {
-                return
+            if (this.search != '' && this.search.length > 2) {
+                this.loading = true;
             }
+            this.searchGuest()
+        },
+        async searchGuest() {
+            if (this.search != '' && this.search.length > 2) {
+                console.log("SEARCHING", this.search)
 
-            await this.sleep(1700)
-
-            if (this.reqs.length == 0) {
-                return
-            }
-
-            //console.log(this.reqs[this.reqs.length-1])
-            this.reqs = []
-            console.log("SEARCHING", this.search)
-
-
-            /*
-            ideja za optimizaciju: svi seachovi se stavljaju u listu, svaki put se ceka par milisekundi te se izvrava zadnji search a lista se prazni
-            */
-
-
-            var currentSearch = this.search
-            axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + currentSearch + ' ' + this.selectedTag + "&search_fields=tag&search_fields=name&search_fields=surname",)
-                .then(response => {
-                    this.loading = false;
-
-                    if (currentSearch != '' && currentSearch.length > 2 && this.search == currentSearch) {
+                axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + this.search + ' ' + this.selectedTag + "&search_fields=tag&search_fields=name&search_fields=surname",)
+                    .then(response => {
                         this.guests = response.data;
 
                         this.guests.forEach(element => {
@@ -141,75 +100,20 @@ export default {
 
                         if (this.guests.length == 1) {
                             this.guest = this.guests[0];
-                            this.name = this.guest.name;
-                            this.id = this.guest.id;
-                            this.bought = this.guest.bought;
-                            this.entered = this.guest.entered;
-                            this.surname = this.guest.surname;
-                            this.jmbag = this.guest.jmbag;
-                            this.tag = this.guest.tag;
-                            this.confCode = this.guest.confCode;
-
-                        } else if (this.guests.length == 0) {
-                            this.name = "";
-                            this.surname = '';
-                            this.jmbag = '';
-                            this.tag = '';
-                            this.confCode = '';
-
-
-                        }
-                    } else {
-                        this.name = "";
-                        this.surname = '';
-                        this.jmbag = '';
-                        this.tag = '';
-                        this.confCode = '';
-                        if (this.search != '') {
-                            this.guests = [];
+                            this.id=this.guest.id;
+                        } else if (this.guests.length < 1) {
+                            this.guest = {}
+                            if (this.search != '') {
+                                this.guests = [];
+                            }
                         }
 
-                    }
-                })
+                    })
+            }
+            this.loading = false;
         },
         chooseGuest(guest) {
             this.guest = guest;
-            this.name = guest.name;
-            this.id = guest.id;
-
-            this.surname = guest.surname;
-            this.jmbag = guest.jmbag;
-            this.bought = guest.bought;
-            this.entered = guest.entered;
-            this.tag = guest.tag;
-            this.confCode = guest.confCode;
-
-
-        },
-        changeEntered(guest, changenum) {
-            axios.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
-                { entered: changenum },
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-            )
-                .then(() => {
-                    this.entered = changenum;
-                    this.guest.entered = changenum;
-                })
-        },
-        changeBought(guest, changenum) {
-            axios.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
-                { bought: changenum },
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-            )
-                .then(() => {
-                    this.bought = changenum;
-                    this.guest.bought = changenum;
-                })
-        },
-        async sleep(ms) {
-            return await new Promise(
-                resolve => setTimeout(resolve, ms)
-            );
         },
     }
 }
@@ -217,10 +121,9 @@ export default {
 
 <style module lang="scss">
 .person {
-
     p {
-        font-size: .6em;
-        font-family: 'Montserrat';
+        font-size: 0.6em;
+        font-family: "Montserrat";
     }
 }
 
@@ -229,8 +132,6 @@ export default {
         grid-column: span 2;
     }
 }
-
-
 
 :global(#flex) .cFix {
     @media screen and (max-width: 550px) {
@@ -252,7 +153,7 @@ export default {
     grid-template-columns: auto 34.47%;
     grid-template-rows: auto 80.76%;
     width: 100vw;
-    height: 87vh;
+    height: 93vh;
 }
 
 .grid3-container {
@@ -261,8 +162,6 @@ export default {
     grid-template-columns: 23.6% auto;
     padding: 10px;
     grid-gap: 6%;
-
-
 }
 
 .grid-item {
@@ -289,7 +188,6 @@ export default {
 .inputfield {
     border: 1px solid;
     left: 6%;
-
 }
 
 #inputfield {
@@ -325,7 +223,6 @@ export default {
 
     width: 25%;
 
-
     background: #000000;
     border: 1px solid #000000;
     border-radius: 6px;
@@ -338,7 +235,6 @@ export default {
     background-color: white !important;
     border: 1px solid #000000;
     border-radius: 6px;
-
 }
 
 .va {
@@ -358,7 +254,6 @@ export default {
 .grid1-item {
     width: 50% !important;
     display: inline-block !important;
-
 }
 
 .grid-container2 {
@@ -391,7 +286,6 @@ export default {
     .showmobile {
         display: none !important;
     }
-
 }
 
 @media screen and (max-width: 550px) {
@@ -405,8 +299,6 @@ export default {
 
     .grid3-container {
         display: block !important;
-
-
     }
 
     .grid-item {
@@ -432,14 +324,13 @@ export default {
 
     #b {
         order: 3;
-        height: 50%
+        height: 50%;
     }
 
     #c {
         order: 2;
     }
 }
-
 
 @media screen and (max-width: 550px) {
     .grid1-item {
@@ -459,7 +350,6 @@ export default {
 
     .grid1-item2 {
         border-left: none;
-
     }
 
     .textfield {

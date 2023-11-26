@@ -112,7 +112,7 @@ export default {
     grid-template-columns: auto 34.47%;
     grid-template-rows: auto 80.76%;
     width: 100vw;
-    height: 87vh;
+    height: 93vh;
 }
 
 .grid3-container {
