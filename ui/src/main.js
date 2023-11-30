@@ -34,9 +34,31 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
+const customTheme = {
+  dark: false,
+  colors: {
+    background: '#FFFFFF',
+    surface: '#FFFFFF',
+    primary: 'black',
+    'primary-darken-1': 'black',
+    secondary: 'black',
+    'secondary-darken-1': 'black',
+    error: 'black',
+    info: 'black',
+    success: 'black',
+    warning: 'black',
+  },
+}
+
 const vuetify = createVuetify({
   components,
   directives,
+  theme: {
+    defaultTheme: 'customTheme',
+    themes: {
+      customTheme,
+    },
+  },
 })
 
 app.use(vuetify)

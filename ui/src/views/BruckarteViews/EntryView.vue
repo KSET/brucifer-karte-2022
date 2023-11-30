@@ -1,7 +1,7 @@
 <template>
     <div class="grid1-container" id="flex" style="margin-top: 3.75rem">
         <div class="grid-item grid1-item1" id="a">
-            <div class="grid2-container">
+            <div class="grid2-container" style="width: 100%">
                 <div class="grid-item grid1-item">
                     <input class="nosubmit search entry" @input="prepSearchGuest" type="form" v-model="search"
                         placeholder="Unesi Ime" style="width: 100% !important" />
@@ -15,7 +15,7 @@
                 </div>
             </div>
         </div>
-        <div class="grid-item grid1-item2" id="b">
+        <div class="grid-item grid1-item2" id="b" style="padding: 0px;">
             <v-progress-circular v-if="loading == true" size="90px" indeterminate color="black"></v-progress-circular>
 
             <button class="person" :class="$style.person" v-bind:style="[
@@ -171,6 +171,8 @@ export default {
 }
 
 .grid1-item1 {
+    display: flex;
+    align-items: center;
     border-bottom: 1px solid #000000;
 }
 
@@ -195,8 +197,8 @@ export default {
 }
 
 .nosubmit.search {
+    height: 39px;
     position: relative;
-    margin-top: 2.375rem;
     width: 20%;
     margin-left: 6%;
 }

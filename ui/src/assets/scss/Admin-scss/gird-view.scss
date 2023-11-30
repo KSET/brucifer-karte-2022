@@ -62,12 +62,11 @@
 }
 
 .grid-container {
-    left: 6%;
     display: grid;
     grid-template-columns: 15% auto;
     padding: 0px !important;
     grid-gap: 15%;
-    row-gap: 15%;
+    row-gap: 3rem;
     align-items: center;
 }
 

@@ -45,4 +45,5 @@ export default {
 <style>
 @import '~bootstrap/dist/css/bootstrap.css';
 @import './assets/fonts/antonio/antonio.css';
+@import './assets/scss/Admin-scss/global.scss';
 </style>
