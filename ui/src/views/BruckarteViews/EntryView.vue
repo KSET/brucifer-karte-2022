@@ -35,6 +35,9 @@
         <div class="overlayEntry showMobile" v-if="overlayEntry">
             <div class="overlayEntry-container">
                 <GuestInfo  :guest="guest"></GuestInfo>
+                <div class="closeBtn" @click="overlayEntry=false">
+                    Zatvori
+                </div>
             </div>            
         </div>
     </div>
@@ -301,6 +304,15 @@ export default {
 
 .showMobile {
     display: none;
+}
+
+.closeBtn{
+    width: 93%;
+    text-align: center;
+    height: 30px;
+    border: 1px solid black;
+    margin: -10px 10px 10px 10px;
+    border-radius: 10px;
 }
 
 @media screen and (max-width: 980px) {

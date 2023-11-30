@@ -20,6 +20,9 @@
                 <v-card-text>
                     <GuestInfo  :guest="guest"></GuestInfo>
                 </v-card-text>
+                <div class="closeBtn" @click="dialogGuest = false">
+                    Zatvori
+                </div>
                 <v-card-actions>
                     <v-btn color="primary" block @click="dialogGuest = false">Zatvori</v-btn>
                 </v-card-actions>
@@ -90,6 +93,13 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.closeBtn{
+    width: 93%;
+    text-align: center;
+    height: 30px;
+    border: 1px solid black;
+    margin: -10px 10px 10px 10px;
+    border-radius: 10px;
+}
 </style>
