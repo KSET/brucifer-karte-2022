@@ -18,12 +18,7 @@
         <v-dialog v-model="dialogGuest" activator="parent">
             <v-card>
                 <v-card-text>
-                    {{ this.name }}
-                    {{ this.surname }}
-                    {{ this.jmbag }}
-                    {{ this.bought }}
-                    {{ this.entered }}
-
+                    <GuestInfo  :guest="guest"></GuestInfo>
                 </v-card-text>
                 <v-card-actions>
                     <v-btn color="primary" block @click="dialogGuest = false">Zatvori</v-btn>
@@ -37,15 +32,17 @@
 import axios from "axios";
 import { StreamBarcodeReader } from "vue-barcode-reader";
 import QrcodeStream from 'vue-qrcode-reader'
+import GuestInfo from "./GuestInfo.vue";
 export default {
     name: 'MobileEntry',
     props: {
         msg: String
     },
     components: {
-        QrcodeStream,
-        StreamBarcodeReader
-    },
+    QrcodeStream,
+    StreamBarcodeReader,
+    GuestInfo
+},
     data() {
         return {
             guest: '',
@@ -76,14 +73,6 @@ export default {
                             window.alert("QR kod i konfirmacijski kod su okej, ali kod nije u bazi podataka,pokušajte ponovno očitati kod, ili manualno unesite ime")
                         } else {
                             this.guest = response.data[0]
-                            this.name = this.guest.name;
-                            this.id = this.guest.id;
-                            this.bought = this.guest.bought;
-                            this.entered = this.guest.entered;
-                            this.surname = this.guest.surname;
-                            this.jmbag = this.guest.jmbag;
-
-                            //window.alert(this.guest)
 
                             this.dialogGuest = true;
                         }
