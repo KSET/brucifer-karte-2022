@@ -21,11 +21,11 @@
           <td>{{ guest.surname }}</td>
           <td>{{ guest.jmbag }}</td>
           <td>
-            <button @click="changebought(guest, '1')" v-if="guest.bought == '0'" class="btn btn-xs btn-danger"
+            <button @click="changeBought(guest, '1')" v-if="guest.bought == '0'" class="btn btn-xs btn-danger"
               id="gumbarn">
               <font-awesome-icon icon="fa-solid fa-xmark" />
             </button>
-            <button v-else class="btn btn-xs btn-success" id="gumbary" @click="changebought(guest, '0')">
+            <button v-else class="btn btn-xs btn-success" id="gumbary" @click="changeBought(guest, '0')">
               <font-awesome-icon icon="fa-solid fa-check" />
             </button>
           </td>
@@ -76,7 +76,7 @@ export default {
 
         })
     },
-    changebought(guest, changenum) {
+    changeBought(guest, changenum) {
       axios.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
         { bought: changenum },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }

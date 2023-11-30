@@ -242,6 +242,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  console.log(to.name);
   //provjera auth i privilegija
   var allowedRoutesForprivilege2 = [
     "home",

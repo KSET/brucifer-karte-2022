@@ -8,10 +8,10 @@
             <form onsubmit="return false">
                 <div class="grid-container" style="row-gap: 5%;">
                     <h1 class="textfield">Ime: </h1>
-                    <input required class="inputfield" type="text" @input="changevalue" v-model="name">
+                    <input required class="inputfield" type="text" @input="changeValue" v-model="name">
 
                     <h1 class="textfield">Prezime: </h1>
-                    <input required class="inputfield" type="text" @input="changevalue" v-model="surname">
+                    <input required class="inputfield" type="text" @input="changeValue" v-model="surname">
 
                     <h1 class="textfield">Tag: </h1>
 

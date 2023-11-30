@@ -7,10 +7,10 @@
 
             <div class="grid-container" style="row-gap: 5%;">
                 <h1 class="textfield">Ime i prezime </h1>
-                <input required class="inputfield" type="text" @input="changevalue" v-model="name">
+                <input required class="inputfield" type="text" @input="changeValue" v-model="name">
 
                 <h1 class="textfield">KSET e-adresa </h1>
-                <input required class="inputfield" type="text" @input="changevalue" v-model="email">
+                <input required class="inputfield" type="text" @input="changeValue" v-model="email">
 
                 <h1 class="textfield">Privilegija </h1>
 

@@ -3,12 +3,12 @@
         id="c">
         <div class="grid-container2">
             <h1 class="textfield span2">Ime </h1>
-            <input readonly class="inputfield span3" :disabled="guest?.id == ''" type="text" @input="changevalue"
+            <input readonly class="inputfield span3" :disabled="guest?.id == ''" type="text" @input="changeValue"
                 v-model="guest.name">
 
             <h1 v-if="guest?.tag !== undefined && !guest?.tag.includes('Sponzor')" class="textfield span2">Prezime</h1>
             <input v-if="guest?.tag !== undefined && !guest?.tag.includes('Sponzor')" readonly class="inputfield span3"
-                :disabled="guest?.id == ''" type="text" @input="changevalue" v-model="guest.surname">
+                :disabled="guest?.id == ''" type="text" @input="changeValue" v-model="guest.surname">
 
             <h1 v-if="guest?.tag == 'Brucoši'" class="textfield span2">JMBAG </h1>
             <input v-if="guest?.tag == 'Brucoši'" class="inputfield span3" readonly type="text" v-model="guest.jmbag">

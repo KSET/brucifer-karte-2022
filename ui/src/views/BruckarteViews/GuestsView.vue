@@ -1,20 +1,20 @@
 <template>
   <div class="guestss" style="margin-top: 3.75rem;">
-
     <CircularLoading :dialog="dialogProgress"></CircularLoading>
 
     <div class="header guests">
-      <input class="nosubmit search" @input="searchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
+      <input class="nosubmit search" @input="prepSearchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
 
-      <h1 class="textfield" style="display: inline-block; margin-left: 12rem">{{ this.nomatch }} </h1>
+      <v-progress-circular v-if="loading == true" size="90px" indeterminate color="black"></v-progress-circular>
+      <h1 class="textfield"> {{ this.nomatch }}</h1>
     </div>
 
     <div class="grid-container guests">
       <h1 class="textfield">Ime </h1>
-      <input class="inputfield" :disabled="this.id == ''" type="text" @input="changevalue" v-model="name">
+      <input class="inputfield" :disabled="this.id == ''" type="text" @input="changeValue" v-model="name">
 
       <h1 class="textfield">Prezime </h1>
-      <input class="inputfield" :disabled="this.id == ''" type="text" @input="changevalue" v-model="surname">
+      <input class="inputfield" :disabled="this.id == ''" type="text" @input="changeValue" v-model="surname">
 
       <h1 class="textfield">JMBAG </h1>
       <input class="inputfield" readonly type="text" v-model="jmbag">
@@ -22,10 +22,10 @@
       <h1 class="textfield">Karta </h1>
 
       <button class="button change" :disabled="this.id == ''" v-if="guest.bought == '1'"
-        @click="changebought(guest, '0')">
+        @click="prepChangebought(guest, '0')">
         <img src="../../assets/icons/yes-icon.svg">
       </button>
-      <button class="button change" :disabled="this.id == ''" v-else @click="changebought(guest, '1')"
+      <button class="button change" :disabled="this.id == ''" v-else @click="prepChangebought(guest, '1')"
         style="background-color: white;">
         <img class="image1" src="../../assets/icons/no-icon.svg">
       </button>
@@ -50,7 +50,7 @@
           </div>
           Brucoš je uspješno kupio kartu, te mu je poslan konfirmacijski mail na: {{ this.email }}
         </v-card-text>
-        
+
 
         <v-card-actions>
           <v-btn color="primary" block @click="dialog = false">Zatvori</v-btn>
@@ -58,7 +58,6 @@
       </v-card>
     </v-dialog>
   </div>
-
 </template>
 
 
@@ -70,6 +69,8 @@ import GuestsAdd from '@/components/Bruckarte/GuestsAdd.vue'
 import GuestsTable from '@/components/Bruckarte/GuestsTable.vue'
 import CircularLoading from '@/components/Default/CircularLoading.vue';
 import axios from 'axios'
+import debounce from 'lodash/debounce';
+
 export default {
   name: 'GuestsView',
   components: {
@@ -96,31 +97,35 @@ export default {
       dialog: false,
       dialogProgress: false,
 
+      loading: false,
+
       uuid: uuid.v1(),
 
     }
   },
   mounted() {
-    this.created();
+    this.searchGuest = debounce(this.searchGuest, 1000);
+    this.changeValue = debounce(this.changeValue, 1000);
+    this.changeBought = debounce(this.changeBought, 1000);
+
   },
   methods: {
-    loggg() {
-    },
-    created() {
-
-    },
-    changevalue() {
+    changeValue() {
       if (this.guest != '') {
         axios.put(process.env.VUE_APP_BASE_URL + '/guests/' + this.guest.id + '/',
           { name: this.name, surname: this.surname },
           { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
         )
       }
-    },
-    changebought(guest, changenum) {
+    }, 
+    prepChangebought(guest, changenum) {
       if (changenum == 1) {
         this.dialogProgress = true;
       }
+
+      this.changeBought(guest, changenum)
+    },
+    changeBought(guest, changenum) {
       if (this.name == "" || this.surname == "") {
         window.alert("Ispunite polja ime i prezime!")
       } else {
@@ -145,9 +150,17 @@ export default {
           })
       }
     },
+    prepSearchGuest() {
+      this.nomatch = ""
+      this.loading = true;
+
+      this.searchGuest()
+    },
     searchGuest() {
       axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=jmbag",)
         .then(response => {
+          this.loading = false;
+
           this.guests = response.data;
           if (this.guests.length == 1) {
             this.nomatch = "";
@@ -261,7 +274,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 @import url('https://fonts.cdnfonts.com/css/montserrat');
 @import '../../assets/scss/Admin-scss/gird-view.scss';
 
@@ -269,11 +282,14 @@ export default {
   height: 7.188rem;
   width: 100%;
   border-bottom: 1px solid black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
 }
 
 .nosubmit.search {
-  position: absolute;
-  margin-top: 2.375rem;
+  margin-top: 0rem;
   width: 20%;
   left: 0% !important;
 }
