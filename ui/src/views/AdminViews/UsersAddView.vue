@@ -5,7 +5,7 @@
 
             <h1 class="page-title" style="margin-bottom: 40px;">Dodavanje Korisnka</h1>
 
-            <div class="grid-container" style="row-gap: 5%;">
+            <div class="grid-container" style="row-gap: 3rem;">
                 <h1 class="textfield">Ime i prezime </h1>
                 <input required class="inputfield" type="text" @input="changeValue" v-model="name">
 

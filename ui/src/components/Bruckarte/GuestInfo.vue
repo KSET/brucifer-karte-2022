@@ -23,7 +23,7 @@
                 @click="changeBought(guest, '1')">
                 <img class="va" src="../../assets/icons/no-icon.svg">
             </button>
-            <br v-if="guest?.tag == 'Brucoši'" class="hidedesktop showmobile">
+            <br v-if="guest?.tag == 'Brucoši'" class="hideDesktop showMobile">
             <h1 class="textfield" :class="$style.span2Sm">Ulaz </h1>
 
             <button v-if="guest?.entered == '1'" type="button" :disabled="guest?.id == ''" class="bttn button2-yes"
@@ -53,9 +53,8 @@ export default {
     props: {
         guest: {
             type: Object,
-            default: () => ({}), // Provide an empty object as the default value
+            default: () => ({}),
         },
-        tag: String
     },
     data() {
         return {
@@ -227,20 +226,20 @@ export default {
     grid-template-columns: 15% auto;
     padding: 10px;
     grid-gap: 15%;
-    row-gap: 13%;
+    row-gap: 3rem;
     align-items: center;
 }
 
-.showmobile {
+.showMobile {
     display: none;
 }
 
 @media screen and (max-width: 980px) {
-    .hidedesktop {
+    .hideDesktop {
         display: inline-block !important;
     }
 
-    .hidetablet {
+    .hideTablet {
         display: none;
     }
 
@@ -248,7 +247,7 @@ export default {
         font-size: 14px;
     }
 
-    .showmobile {
+    .showMobile {
         display: none !important;
     }
 
@@ -355,11 +354,11 @@ export default {
         padding-top: 3px;
 
         grid-gap: 15%;
-        row-gap: 5%;
+        row-gap: 3rem;
         align-items: center;
     }
 
-    .showmobile {
+    .showMobile {
         display: block !important;
     }
 }

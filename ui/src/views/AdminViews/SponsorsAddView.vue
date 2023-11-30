@@ -6,11 +6,11 @@
                 <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje sponzora</h1>
                 <h1 v-else class="page-title">Uređivanje sponzora</h1>
             </div>
-            <img class="image-preview hidedesktop" style="display: block; margin-bottom: 5%; margin-left: 5%;"
+            <img class="image-preview hideDesktop" style="display: block; margin-bottom: 5%; margin-left: 5%;"
                 :src="previewImage" alt="" />
 
             <form class="sponsors-form" onsubmit="return false">
-                <div class="grid-container" style="row-gap:10%;">
+                <div class="grid-container" style="row-gap:3rem;">
 
                     <h1 class="textfield">Ime </h1>
                     <input required class="inputfield" type="text" v-model="name">
@@ -64,7 +64,7 @@
 
                 </div>
             </form>
-            <img class="image-preview hidetablet" :src="previewImage" alt="" />
+            <img class="image-preview hideTablet" :src="previewImage" alt="" />
 
         </div>
     </div>
@@ -367,7 +367,7 @@ export default {
     }
 
     .grid-container {
-        row-gap: 5%;
+        row-gap: 3rem;
     }
 
     .button.submit {

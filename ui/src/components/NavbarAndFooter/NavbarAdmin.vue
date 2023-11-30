@@ -5,16 +5,16 @@
     </router-link>
 
     <div class="routes">
-      <RouterElement v-if="privilege == '1' || privilege == '3' || privilege == '4'" class="navbar-element hidemobile"
+      <RouterElement v-if="privilege == '1' || privilege == '3' || privilege == '4'" class="navbar-element hideMobile"
         :name="'Brucoši'" :link="'/admin/guests'"></RouterElement>
 
-      <RouterElement v-if="privilege == '1' || privilege == '2' || privilege == '4'" class="navbar-element hidemobile"
+      <RouterElement v-if="privilege == '1' || privilege == '2' || privilege == '4'" class="navbar-element hideMobile"
         :name="'Ulaz'" :link="'/admin/entry'"></RouterElement>
 
-      <router-link v-if="privilege == '1'" class="navbar-element hidetablet" to="/admin/admin-panel">
+      <router-link v-if="privilege == '1'" class="navbar-element hideTablet" to="/admin/admin-panel">
         <img src="../../assets/icons/nav-burger.svg" />
       </router-link>
-      <div id="nav-icon3" style="margin-left: 70px" v-if="privilege != ''" class="navbar-element hidedesktop"
+      <div id="nav-icon3" style="margin-left: 70px" v-if="privilege != ''" class="navbar-element hideDesktop"
         @click="toggleNav">
         <span></span>
         <span></span>
@@ -27,11 +27,11 @@
 
       <div id="myNav" class="overlay admin">
         <div class="overlay-content admin">
-          <RouterElement class="overlay-element admin hidetablet showmobile"
+          <RouterElement class="overlay-element admin hideTablet showMobile"
             v-if="privilege == '1' || privilege == '3' || privilege == '4'" @click="toggleNav()" :name="'Brucoši'"
             :link="'/admin/guests'">
           </RouterElement>
-          <RouterElement class="overlay-element admin hidetablet showmobile"
+          <RouterElement class="overlay-element admin hideTablet showMobile"
             v-if="privilege == '1' || privilege == '2' || privilege == '4'" @click="toggleNav()" :name="'Ulaz'"
             :link="'/admin/entry'">
           </RouterElement>
@@ -176,7 +176,7 @@ export default {
   },
 };
 </script>
-<style module lang="scss">
+<style module lang="scss" scoped>
 .hideOnSmall {
   @media screen and (max-width: 369px) {
     display: none;
@@ -304,16 +304,16 @@ export default {
   vertical-align: middle;
 }
 
-.showmobile {
+.showMobile {
   display: none !important;
 }
 
 @media screen and (max-width: 980px) {
-  .hidedesktop {
+  .hideDesktop {
     display: inline-block !important;
   }
 
-  .hidetablet {
+  .hideTablet {
     display: none;
   }
 
@@ -321,7 +321,7 @@ export default {
     font-size: 14px;
   }
 
-  .showmobile {
+  .showMobile {
     display: none !important;
   }
 }
@@ -331,11 +331,11 @@ export default {
     width: 100%;
   }
 
-  .hidetablet {
+  .hideTablet {
     display: none !important;
   }
 
-  .hidemobile {
+  .hideMobile {
     display: none;
   }
 
@@ -347,7 +347,7 @@ export default {
     font-size: 12px;
   }
 
-  .showmobile {
+  .showMobile {
     display: inline-block !important;
   }
 

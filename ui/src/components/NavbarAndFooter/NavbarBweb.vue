@@ -4,30 +4,30 @@
       {{ translations?.navbar.title ? translations.navbar.title : "navbar.title" }} </router-link>
     <div class="routes">
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('naslovnica') }" class="navbar-element hidetablet"
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('naslovnica') }" class="navbar-element hideTablet"
         :name="'Naslovnica'" :link="'/'">
       </RouterElement>
 
       <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.LINEUP_VISIBILITY == '1'"
-        class="navbar-element hidetablet" :name="'Izvođači'" :link="'/lineup'">
+        class="navbar-element hideTablet" :name="'Izvođači'" :link="'/lineup'">
       </RouterElement>
 
       <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }" v-if="this.ULAZNICA_VISIBILITY == '1'"
-        class="navbar-element hidetablet" :name="'Ulaznice'" :link="'/ulaznice'">
+        class="navbar-element hideTablet" :name="'Ulaznice'" :link="'/ulaznice'">
       </RouterElement>
 
       <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }" v-if="this.SPONSORS_VISIBILITY == '1'"
-        class="navbar-element hidetablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
+        class="navbar-element hideTablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="navbar-element hidetablet"
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="navbar-element hideTablet"
         :name="'Kontakt'" :link="'/kontakt'">
       </RouterElement>
 
       <RouterElement :class="{ [$style.selected]: isCurrentPage('cjenik') }" v-if="this.CJENIK_VISIBILITY == '1'"
-        class="navbar-element hidetablet" :name="'Cjenik'" :link="'/cjenik'">
+        class="navbar-element hideTablet" :name="'Cjenik'" :link="'/cjenik'">
       </RouterElement>
 
-      <div id="nav-icon3" class="hidedesktop" @click="toggleNav">
+      <div id="nav-icon3" class="hideDesktop" @click="toggleNav">
         <span></span>
         <span></span>
         <span></span>
@@ -300,16 +300,16 @@ export default {
   left: 50%;
 }
 
-.hidedesktop {
+.hideDesktop {
   display: none !important;
 }
 
 @media screen and (max-width: 980px) {
-  .hidedesktop {
+  .hideDesktop {
     display: inline-block !important;
   }
 
-  .hidetablet {
+  .hideTablet {
     display: none;
   }
 
@@ -324,7 +324,7 @@ export default {
     width: 100%;
   }
 
-  .hidemobile {
+  .hideMobile {
     display: none;
   }
 

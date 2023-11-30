@@ -14,7 +14,7 @@
         <table id="guests">
           <tbody>
             <div class="users-container" v-for="user in users" :key="user.id">
-              <div class="users-element hidedesktop hidetablett showmobile"><button class="button-priv"
+              <div class="users-element hideDesktop hideTablett showMobile"><button class="button-priv"
                   style="border: none; opacity: 0.25;" @click="deleteUser(user)">
                   <img src="@/assets/icons/trash-icon.svg"></button></div>
               <div class="users-element userinfo" style="flex: 2;"
@@ -35,7 +35,7 @@
 
 
 
-              <div class="users-element hidemobile"><button class="button-priv" style="border:0px"
+              <div class="users-element hideMobile"><button class="button-priv" style="border:0px"
                   @click="deleteUser(user)">
                   <img src="@/assets/icons/trash-icon.svg">
                 </button>
@@ -251,7 +251,7 @@ export default {
 }
 
 @media screen and (max-width: 980px) {
-  .hidetablett {
+  .hideTablett {
     display: none !important;
   }
 
@@ -291,7 +291,7 @@ export default {
     font-size: 20px;
   }
 
-  .hidetablett {
+  .hideTablett {
     display: block !important;
   }
 }

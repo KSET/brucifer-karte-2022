@@ -114,10 +114,6 @@ export default {
 
     },
     mounted: function () {
-        if (!window.location.hash) {
-            window.location = window.location + '#loaded';
-            window.location.reload();
-        }
         let googleScript = document.createElement('script');
         googleScript.src = 'https://accounts.google.com/gsi/client';
         document.head.appendChild(googleScript);

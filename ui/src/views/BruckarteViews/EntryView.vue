@@ -29,7 +29,14 @@
                 <p>{{ guest.tag }}</p>
             </button>
         </div>
-        <GuestInfo :guest="guest" :tag="'adsas'"></GuestInfo>
+        <div class="hideMobile">
+            <GuestInfo  :guest="guest"></GuestInfo>
+        </div>
+        <div class="overlayEntry showMobile" v-if="overlayEntry">
+            <div class="overlayEntry-container">
+                <GuestInfo  :guest="guest"></GuestInfo>
+            </div>            
+        </div>
     </div>
 </template>
 
@@ -53,6 +60,8 @@ export default {
             guests: [],
             guest: {},
             search: '',
+
+            overlayEntry: false,
 
             loading: false,
         }
@@ -99,6 +108,7 @@ export default {
                         });
 
                         if (this.guests.length == 1) {
+                            this.overlayEntry=true
                             this.guest = this.guests[0];
                             this.id=this.guest.id;
                         } else if (this.guests.length < 1) {
@@ -114,6 +124,7 @@ export default {
         },
         chooseGuest(guest) {
             this.guest = guest;
+            this.overlayEntry=true
         },
     }
 }
@@ -264,20 +275,40 @@ export default {
     grid-template-columns: 15% auto;
     padding: 10px;
     grid-gap: 15%;
-    row-gap: 13%;
+    row-gap: 3rem;
     align-items: center;
 }
 
-.showmobile {
+.overlayEntry{
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.overlayEntry-container{
+    background-color: white;
+    width: 80%;
+    height: fit-content;
+    border-radius: 15px;
+}
+
+.showMobile {
     display: none;
 }
 
 @media screen and (max-width: 980px) {
-    .hidedesktop {
+    .hideDesktop {
         display: inline-block !important;
     }
 
-    .hidetablet {
+    .hideTablet {
         display: none;
     }
 
@@ -285,7 +316,7 @@ export default {
         font-size: 14px;
     }
 
-    .showmobile {
+    .showMobile {
         display: none !important;
     }
 }
@@ -344,6 +375,7 @@ export default {
 
     .nosubmit.search.entry {
         width: 90% !important;
+        font-size: 12px;
     }
 
     .inputfield.entry {
@@ -355,7 +387,7 @@ export default {
     }
 
     .textfield {
-        font-size: 12px;
+        font-size: 5px;
     }
 
     .bttn {
@@ -387,12 +419,16 @@ export default {
         padding-top: 3px;
 
         grid-gap: 15%;
-        row-gap: 5%;
+        row-gap: 1rem;
         align-items: center;
     }
 
-    .showmobile {
+    .showMobile {
         display: block !important;
+    }
+
+    .overlayEntry{
+        display: flex !important;
     }
 }
 </style>

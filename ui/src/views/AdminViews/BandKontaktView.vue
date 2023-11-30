@@ -8,9 +8,9 @@
         <div style="border-right: 1px solid black; width: 100% !important">
           <h1 class="page-title lineup-title" style="padding-top: 20px">Popis kontakata</h1>
 
-          <img v-if="this.showContactForm == false" style="margin-top: 15px;" class="dropdown-icon showmobile"
+          <img v-if="this.showContactForm == false" style="margin-top: 15px;" class="dropdown-icon showMobile"
             src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleContactForm">
-          <img v-else class="dropdown-icon  showmobile" style="margin-top: 15px;"
+          <img v-else class="dropdown-icon  showMobile" style="margin-top: 15px;"
             src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleContactForm">
 
           <form v-if="showHid" id="hid" class="inputfields" onsubmit="return false">
