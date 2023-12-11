@@ -391,7 +391,7 @@ export default {
 
     #b {
         order: 3;
-        height: 50%;
+        height: 100%;
     }
 
     #c {
