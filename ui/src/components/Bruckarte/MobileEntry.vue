@@ -62,10 +62,9 @@ export default {
         //this.onDecode("20133370-a03a-11ed-99c7-bd21e9b0b861")
     },
     methods: {
-        onDecode(text) {
-            if (this.checkUUID(text)) {
-                //window.alert(text)
-                axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + 'eab15e30-8f8c-11ee-8e44-7b7b9f5160b5' + "&search_fields=tag&search_fields=confCode",)
+        onDecode(uuid) {
+            if (this.checkUUID(uuid)) {
+                axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + uuid + "&search_fields=tag&search_fields=confCode",)
                     .then(response => {
                         console.log(response.data.length)
 
@@ -82,9 +81,9 @@ export default {
                 window.alert("QR kod je očitan, ali ne sadrži kod za potvrdu koji bi trebao sadržavati, pokušajte ponovno očitati kod, ili manualno unesite ime")
             }
         },
-        checkUUID(text) {
+        checkUUID(uuid) {
             const regexExp = /^[0-9A-F]{8}-[0-9A-F]{4}-[1][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
-            return regexExp.test(text);
+            return regexExp.test(uuid);
         }
     }
 }
