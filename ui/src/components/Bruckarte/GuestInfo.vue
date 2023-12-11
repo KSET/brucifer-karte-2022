@@ -1,19 +1,19 @@
 <template>
     <div class="grid-item grid1-item3" :class="{ [$style.cFix]: true, [$style.cFixExpanded]: guest?.tag === 'Brucoši' }"
         id="c">
-        <div class="grid-container2">
-            <h1 class="textfield span2">Ime </h1>
-            <input readonly class="inputfield span3" :disabled="guest?.id == ''" type="text" @input="changeValue"
+        <div class="grid-container3">
+            <h1 class="textfield">Ime </h1>
+            <input readonly class="inputfield " :disabled="guest?.id == ''" type="text" @input="changeValue"
                 v-model="guest.name">
 
-            <h1 v-if="guest?.tag !== undefined && !guest?.tag.includes('Sponzor')" class="textfield span2">Prezime</h1>
-            <input v-if="guest?.tag !== undefined && !guest?.tag.includes('Sponzor')" readonly class="inputfield span3"
+            <h1 v-if="guest?.tag !== undefined && !guest?.tag.includes('Sponzor')" class="textfield ">Prezime</h1>
+            <input v-if="guest?.tag !== undefined && !guest?.tag.includes('Sponzor')" readonly class="inputfield "
                 :disabled="guest?.id == ''" type="text" @input="changeValue" v-model="guest.surname">
 
-            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield span2">JMBAG </h1>
-            <input v-if="guest?.tag == 'Brucoši'" class="inputfield span3" readonly type="text" v-model="guest.jmbag">
+            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield ">JMBAG </h1>
+            <input v-if="guest?.tag == 'Brucoši'" class="inputfield " readonly type="text" v-model="guest.jmbag">
 
-            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield" :class="$style.span2Sm">Karta </h1>
+            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield">Karta </h1>
 
             <button disabled v-if="guest?.tag == 'Brucoši' && guest?.bought == '1'" class="bttn button2-yes"
                 @click="changeBought(guest, '0')">
@@ -23,8 +23,7 @@
                 @click="changeBought(guest, '1')">
                 <img class="va" src="../../assets/icons/no-icon.svg">
             </button>
-            <br v-if="guest?.tag == 'Brucoši'" class="hideDesktop showMobile">
-            <h1 class="textfield" :class="$style.span2Sm">Ulaz </h1>
+            <h1 class="textfield">Ulaz </h1>
 
             <button v-if="guest?.entered == '1'" type="button" :disabled="guest?.id == ''" class="bttn button2-yes"
                 @click="changeEntered(guest, '0')">
@@ -35,8 +34,8 @@
                 <img class="va" src="../../assets/icons/no-icon.svg">
             </button>
 
-            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield span2">Potvrda </h1>
-            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield span3" style="width: 100%">{{ guest?.confCode }} </h1>
+            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield">Potvrda </h1>
+            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield" style="width: 100%">{{ guest?.confCode }} </h1>
         </div>
     </div>
 </template>
@@ -83,12 +82,6 @@ export default {
     }
 }
 
-.span2Sm {
-    @media screen and (max-width: 550px) {
-        grid-column: span 2;
-    }
-}
-
 
 
 :global(#flex) .cFix {
@@ -106,6 +99,13 @@ export default {
 </style>
 
 <style scoped>
+.grid-container3 {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    row-gap: 25px;
+    align-items: center;
+}
+
 .inputfield {
     width: 100%;
 }
@@ -139,7 +139,6 @@ export default {
 }
 
 .grid1-item2 {
-    grid-row: span 2;
     border-left: 1px solid #000000;
     overflow: auto;
     margin-right: 5px;
@@ -339,15 +338,6 @@ export default {
         height: 19px;
         margin-top: 3px;
         vertical-align: top;
-    }
-
-    .span2 {
-        grid-column: 1/2;
-    }
-
-    .span3 {
-        grid-column: 3/6;
-        height: 35px !important;
     }
 
     .grid-container2 {

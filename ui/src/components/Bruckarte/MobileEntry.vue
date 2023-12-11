@@ -17,15 +17,12 @@
 
         <v-dialog v-model="dialogGuest" activator="parent">
             <v-card>
-                <v-card-text>
+                <div>
                     <GuestInfo :guest="guest"></GuestInfo>
-                </v-card-text>
+                </div>
                 <div class="closeBtn" @click="dialogGuest = false">
                     Zatvori
                 </div>
-                <v-card-actions>
-                    <v-btn color="primary" block @click="dialogGuest = false">Zatvori</v-btn>
-                </v-card-actions>
             </v-card>
         </v-dialog>
     </div>
@@ -68,7 +65,7 @@ export default {
         onDecode(text) {
             if (this.checkUUID(text)) {
                 //window.alert(text)
-                axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + text + "&search_fields=tag&search_fields=confCode",)
+                axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + 'eab15e30-8f8c-11ee-8e44-7b7b9f5160b5' + "&search_fields=tag&search_fields=confCode",)
                     .then(response => {
                         console.log(response.data.length)
 
