@@ -6,6 +6,9 @@
                     <input class="nosubmit search entry" @input="prepSearchGuest" type="form" v-model="search"
                         placeholder="Unesi Ime" style="width: 100% !important" />
                 </div>
+                <div class="showMobile qr-scan">
+                    <MobileEntry />
+                </div>
                 <div class="grid-item grid1-item">
                     <select id="selector" class="inputfield entry" v-model="selectedTag" @change="searchGuest">
                         <option v-for="(item, i) in items" :key="i" class="menu-item">
@@ -30,15 +33,15 @@
             </button>
         </div>
         <div class="hideMobile">
-            <GuestInfo  :guest="guest"></GuestInfo>
+            <GuestInfo :guest="guest"></GuestInfo>
         </div>
         <div class="overlayEntry showMobile" v-if="overlayEntry">
             <div class="overlayEntry-container">
-                <GuestInfo  :guest="guest"></GuestInfo>
-                <div class="closeBtn" @click="overlayEntry=false">
+                <GuestInfo :guest="guest"></GuestInfo>
+                <div class="closeBtn" @click="overlayEntry = false">
                     Zatvori
                 </div>
-            </div>            
+            </div>
         </div>
     </div>
 </template>
@@ -46,13 +49,15 @@
 <script>
 import axios from 'axios';
 import GuestInfo from '../../components/Bruckarte/GuestInfo.vue';
+import MobileEntry from '@/components/Bruckarte/MobileEntry.vue'
 import debounce from 'lodash/debounce';
 
 
 export default {
     name: 'GuestsAdd',
     components: {
-        GuestInfo
+        GuestInfo,
+        MobileEntry
     },
     data() {
         return {
@@ -111,9 +116,9 @@ export default {
                         });
 
                         if (this.guests.length == 1) {
-                            this.overlayEntry=true
+                            this.overlayEntry = true
                             this.guest = this.guests[0];
-                            this.id=this.guest.id;
+                            this.id = this.guest.id;
                         } else if (this.guests.length < 1) {
                             this.guest = {}
                             if (this.search != '') {
@@ -127,7 +132,7 @@ export default {
         },
         chooseGuest(guest) {
             this.guest = guest;
-            this.overlayEntry=true
+            this.overlayEntry = true
         },
     }
 }
@@ -190,6 +195,11 @@ export default {
     border-bottom: 1px solid #000000;
 }
 
+.grid2-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
 .grid1-item2 {
     grid-row: span 2;
     border-left: 1px solid #000000;
@@ -224,6 +234,16 @@ export default {
     background-color: white;
     border: 0px;
     border-bottom: 1px solid #000000 !important;
+}
+
+.qr-scan {
+    grid-row: span 2;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    margin: 5px;
+    border-radius: 5px;
 }
 
 .menu-item {
@@ -268,8 +288,10 @@ export default {
 }
 
 .grid1-item {
-    width: 50% !important;
-    display: inline-block !important;
+    width: 95%;
+    display: block !important;
+    padding: 10px 0px;
+    align-items: center;
 }
 
 .grid-container2 {
@@ -282,7 +304,7 @@ export default {
     align-items: center;
 }
 
-.overlayEntry{
+.overlayEntry {
     display: none;
     align-items: center;
     justify-content: center;
@@ -295,7 +317,7 @@ export default {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.overlayEntry-container{
+.overlayEntry-container {
     background-color: white;
     width: 80%;
     height: fit-content;
@@ -306,7 +328,7 @@ export default {
     display: none;
 }
 
-.closeBtn{
+.closeBtn {
     width: 93%;
     text-align: center;
     height: 30px;
@@ -379,19 +401,19 @@ export default {
 
 @media screen and (max-width: 550px) {
     .grid1-item {
-        display: inline-block !important;
+        display: flex !important;
         margin: 0px;
-        padding: 0px;
-        width: 50% !important;
+        padding: 7px 0px;
+        width: 95% !important;
     }
 
     .nosubmit.search.entry {
-        width: 90% !important;
+        width: 100% !important;
         font-size: 12px;
     }
 
     .inputfield.entry {
-        width: 90% !important;
+        width: 100% !important;
     }
 
     .grid1-item2 {
@@ -439,7 +461,11 @@ export default {
         display: block !important;
     }
 
-    .overlayEntry{
+    .qr-scan {
+        display: flex !important;
+    }
+
+    .overlayEntry {
         display: flex !important;
     }
 }

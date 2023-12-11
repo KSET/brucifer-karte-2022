@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-btn color="primary">
-            OTVORI KAMERU
+        <div color="primary">
+            <img style="height: 50px;" src="../../assets/icons/qr-code-icon.svg">
 
             <v-dialog v-model="dialogCamera" activator="parent">
                 <v-card>
@@ -13,12 +13,12 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-        </v-btn>
+        </div>
 
         <v-dialog v-model="dialogGuest" activator="parent">
             <v-card>
                 <v-card-text>
-                    <GuestInfo  :guest="guest"></GuestInfo>
+                    <GuestInfo :guest="guest"></GuestInfo>
                 </v-card-text>
                 <div class="closeBtn" @click="dialogGuest = false">
                     Zatvori
@@ -42,10 +42,10 @@ export default {
         msg: String
     },
     components: {
-    QrcodeStream,
-    StreamBarcodeReader,
-    GuestInfo
-},
+        QrcodeStream,
+        StreamBarcodeReader,
+        GuestInfo
+    },
     data() {
         return {
             guest: '',
@@ -94,7 +94,7 @@ export default {
 </script>
 
 <style scoped>
-.closeBtn{
+.closeBtn {
     width: 93%;
     text-align: center;
     height: 30px;

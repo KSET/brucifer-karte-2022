@@ -36,7 +36,7 @@
             </button>
 
             <h1 v-if="guest?.tag == 'Brucoši'" class="textfield span2">Potvrda </h1>
-            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield span3">{{ guest?.confCode }} </h1>
+            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield span3" style="width: 100%">{{ guest?.confCode }} </h1>
         </div>
     </div>
 </template>
@@ -105,7 +105,11 @@ export default {
 }
 </style>
 
-<style>
+<style scoped>
+.inputfield {
+    width: 100%;
+}
+
 .grid1-container {
     display: grid;
     grid-template-columns: auto 34.47%;
@@ -223,7 +227,7 @@ export default {
 .grid-container2 {
     left: 6%;
     display: grid;
-    grid-template-columns: 15% auto;
+    grid-template-columns: 5% auto !important;
     padding: 10px;
     grid-gap: 15%;
     row-gap: 3rem;
