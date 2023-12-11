@@ -101,7 +101,7 @@ export default {
 <style scoped>
 .grid-container3 {
     display: grid;
-    grid-template-columns: 20% 80%;
+    grid-template-columns: 25% 75%;
     row-gap: 25px;
     align-items: center;
 }
