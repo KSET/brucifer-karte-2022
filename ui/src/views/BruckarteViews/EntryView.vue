@@ -9,12 +9,13 @@
                 <div class="showMobile qr-scan">
                     <MobileEntry />
                 </div>
-                <div class="grid-item grid1-item">
+                <div class="grid-item grid1-item" style="position: relative">
                     <select id="selector" class="inputfield entry" v-model="selectedTag" @change="searchGuest">
                         <option v-for="(item, i) in items" :key="i" class="menu-item">
                             {{ item }}
                         </option>
                     </select>
+                    <div class="dropdown-arrow"></div>
                 </div>
             </div>
         </div>
@@ -167,6 +168,19 @@ export default {
 </style>
 
 <style>
+.dropdown-arrow {
+    position: absolute;
+    right: 10px;
+    top: 55%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    background-image: url('../../assets/icons/dopdwn-notopen-icon.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
 .grid1-container {
     display: grid;
     grid-template-columns: auto 34.47%;
@@ -278,13 +292,13 @@ export default {
 }
 
 .nosubmit.search.entry {
-    width: 90%;
+    width: 100%;
     left: 0px;
     margin: 0px;
 }
 
 .inputfield.entry {
-    width: 90%;
+    width: 100%;
 }
 
 .grid1-item {
@@ -356,6 +370,10 @@ export default {
 }
 
 @media screen and (max-width: 550px) {
+    .dropdown-arrow {
+        top: 50%
+    }
+
     .grid1-container {
         display: block !important;
     }
