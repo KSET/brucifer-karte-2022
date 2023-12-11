@@ -17,8 +17,23 @@
 
         <v-dialog v-model="dialogGuest" activator="parent">
             <v-card>
-                <div>
+                <div v-if="success == 'true'">
                     <GuestInfo :guest="guest"></GuestInfo>
+                </div>
+                <div v-else-if="success == 'not-in-db'">
+                    <p style="height: 80px;">
+                        QR kod i konfirmacijski kod su okej, ali kod nije u bazi podataka,pokušajte ponovno očitati kod, ili
+                        manualno unesite ime </p>
+                </div>
+                <div v-else-if="success == 'invalid-qr'">
+                    <p style="height: 80px;">
+                        QR kod je očitan, ali ne sadrži kod za potvrdu koji bi trebao sadržavati, pokušajte ponovno očitati
+                        kod, ili manualno unesite ime
+                    </p>
+                </div>
+                <div v-else>
+                    <p style="height: 80px;">
+                        Dogodila se nepoznata greška, javite se administratoru </p>
                 </div>
                 <div class="closeBtn" @click="dialogGuest = false">
                     Zatvori
@@ -46,13 +61,9 @@ export default {
     data() {
         return {
             guest: '',
-            name: '',
-            surname: '',
-            jmbag: '',
-            phone: '',
-            tag: '',
-            bought: '',
-            entered: '',
+
+            success: '',
+
             dialogCamera: false,
             dialogGuest: false,
 
@@ -66,20 +77,18 @@ export default {
             if (this.checkUUID(uuid)) {
                 axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + uuid + "&search_fields=tag&search_fields=confCode",)
                     .then(response => {
-                        console.log(response.data.length)
-
                         if (response.data.length == 0) {
-                            window.alert("QR kod i konfirmacijski kod su okej, ali kod nije u bazi podataka,pokušajte ponovno očitati kod, ili manualno unesite ime")
+                            this.success = 'not-in-db'
                         } else {
                             this.guest = response.data[0]
-
-                            this.dialogGuest = true;
+                            this.success = 'true';
                         }
 
                     })
             } else {
-                window.alert("QR kod je očitan, ali ne sadrži kod za potvrdu koji bi trebao sadržavati, pokušajte ponovno očitati kod, ili manualno unesite ime")
+                this.success = 'invalid-qr'
             }
+            this.dialogGuest = true;
         },
         checkUUID(uuid) {
             const regexExp = /^[0-9A-F]{8}-[0-9A-F]{4}-[1][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
