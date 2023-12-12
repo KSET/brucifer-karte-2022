@@ -47,8 +47,8 @@
         <RouterElement class="sidebar-element" :name="'Kontakt'" :link="'/admin/band-kontakt'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Firme'" :link="'/admin/firme'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Cjenik'" :link="'/admin/cjenik'"></RouterElement>
-        <RouterElement class="sidebar-element" :name="'Visibility'" :link="'/admin/visibility'"></RouterElement>
-        <RouterElement class="sidebar-element" :name="'Translations'" :link="'/admin/translations'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Prikazi'" :link="'/admin/Prikazi'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Prijevodi'" :link="'/admin/Prijevodi'"></RouterElement>
 
     </div>
 </template>

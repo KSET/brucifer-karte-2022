@@ -1,3 +1,36 @@
+p {
+    font-family: 'Myriad Pro';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 18px;
+
+    color: #000000;
+
+    padding-bottom: 20px;
+
+    transition: margin-top .3s ease;
+    will-change: margin-top;
+}
+
+h1 {
+
+    font-family: 'Antonio';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 47px;
+
+    color: #000000;
+}
+
+.contents {
+    padding-top: 3.5em;
+    padding-left: 2.73%;
+    padding-right: 4.5%;
+    padding-bottom: 4.5%;
+}
+
 #app {
     display: flex;
     flex-direction: column;
@@ -28,6 +61,14 @@ main {
     }
 }
 
+@media screen and (max-width: 1280px) {
+    #page-container {
+        background-image: url("../src/assets/bg/default/bg-tablet.svg");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+}
+
 .contents h1,
 .contents h3,
 .contents h4,
@@ -46,6 +87,7 @@ main {
     transition: margin-top .3s ease;
     will-change: margin-top;
 }
+
 .image-container .image-sizer {
     padding-bottom: calc(var(--background-image-aspect-ratio) * 110%);
     transition: padding-bottom .3s ease;

@@ -2,7 +2,7 @@
     <div class="bw-page-container">
         <div class="lineup">
             <div v-for="lineup in lineups" :key="lineup.id">
-                <div class="artist" title="{{ lineup.name }}">
+                <div class="artist">
                     <div class="image-container">
                         <div class="image-sizer2"></div>
                         <img class="image-frame2" v-bind:src="lineup.image">
@@ -112,6 +112,7 @@ export default {
     transition-duration: .2s;
     transition-timing-function: ease;
     transition-property: font-size;
+    font-weight: 700;
 }
 
 @media screen and (max-width: 1550px) {

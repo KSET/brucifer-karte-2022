@@ -6,8 +6,9 @@
           <section v-for="i in length" :key="i">
 
             <h1>{{ translations.kontakt["title" + i] }}</h1>
-            <p v-for="text in translations.kontakt['text' + i].split('\n\n')" :key="text">{{ text }}</p>
-
+            <div class="text">
+              <p v-for="text in translations.kontakt['text' + i].split('\n\n')" :key="text">{{ text }}</p>
+            </div>
           </section>
         </div>
 
@@ -50,45 +51,18 @@ export default {
 @import url('https://fonts.cdnfonts.com/css/myriad-pro');
 
 h1 {
-
-  font-family: 'Antonio';
-  font-style: normal;
   font-weight: 700;
   font-size: 36px;
   line-height: 47px;
-
-  color: #000000;
 }
 
 p {
-  font-family: 'Myriad Pro';
-  font-style: normal;
-  font-weight: 300;
-  font-size: 20px;
-  line-height: 18px;
-
-  color: #000000;
-
-  transition: margin-top .3s ease;
-  will-change: margin-top;
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
 
-.contents {
-  padding-top: 3.5em;
-  padding-left: 2.73%;
-  padding-right: 4.5%;
-  padding-bottom: 4.5%;
-
-
-
-}
-
-@media screen and (max-width: 1280px) {
-  #page-container {
-    background-image: url("../../assets/bg/default/bg-tablet.svg");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
+.text {
+  background: #00000026;
 }
 
 @import url(../../bruciweb.css);

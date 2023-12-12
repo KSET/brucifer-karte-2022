@@ -6,8 +6,9 @@
           <section v-for="i in length" :key="i">
 
             <h1>{{ translations.pravilaponasanja["title" + i] }}</h1>
-            <p v-for="text in translations.pravilaponasanja['text' + i].split('\n\n')" :key="text">{{ text }}</p>
-
+            <div class="text">
+              <p v-for="text in translations.pravilaponasanja['text' + i].split('\n\n')" :key="text">{{ text }}</p>
+            </div>
           </section>
         </div>
 
@@ -63,9 +64,12 @@ h1 {
 p {
   font-family: 'Myriad Pro';
   font-style: normal;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 20px;
   line-height: 18px;
+
+  padding-bottom: 10px;
+  padding-top: 10px;
 
   color: #000000;
 
@@ -73,14 +77,15 @@ p {
   will-change: margin-top;
 }
 
+.text {
+  background: #00000026;
+}
+
 .contents {
   padding-top: 3.5em;
   padding-left: 2.73%;
   padding-right: 4.5%;
   padding-bottom: 4.5%;
-
-
-
 }
 
 @media screen and (max-width: 1280px) {
