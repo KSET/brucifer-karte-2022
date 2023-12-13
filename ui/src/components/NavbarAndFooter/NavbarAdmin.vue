@@ -90,7 +90,7 @@
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Cjenik'" @click="toggleNav()"
             :link="'/admin/cjenik'"></RouterElement>
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Prikaz'" @click="toggleNav()"
-            :link="'/admin/Prikaz'"></RouterElement>
+            :link="'/admin/visibility'"></RouterElement>
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Prijevodi'" @click="toggleNav()"
             :link="'/admin/translations'"></RouterElement>
         </div>

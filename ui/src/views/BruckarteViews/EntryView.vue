@@ -2,11 +2,12 @@
     <div class="grid1-container" id="flex" style="margin-top: 3.75rem">
         <div class="grid-item grid1-item1" id="a">
             <div class="grid2-container" style="width: 100%">
-                <div class="grid-item grid1-item">
+                <div class="grid-item grid1-item" style="position: relative">
                     <input class="nosubmit search entry" @input="prepSearchGuest" type="form" v-model="search"
                         placeholder="Unesi Ime" style="width: 100% !important" />
-                </div>
-                <div class="showMobile qr-scan">
+                        <div class="remove-icon" @click="removeSearch"></div>
+                    </div>
+                <div class="qr-scan">
                     <MobileEntry />
                 </div>
                 <div class="grid-item grid1-item" style="position: relative">
@@ -15,7 +16,7 @@
                             {{ item }}
                         </option>
                     </select>
-                    <div class="dropdown-arrow"></div>
+                    <div class="tagDropdown-icon"></div>
                 </div>
             </div>
         </div>
@@ -135,11 +136,16 @@ export default {
             this.guest = guest;
             this.overlayEntry = true
         },
+        removeSearch(){
+            this.search=""
+            this.guests = [];
+            this.guest = {};
+        }
     }
 }
 </script>
 
-<style module lang="scss">
+<style module lang="scss" scoped>
 .person {
     p {
         font-size: 0.6em;
@@ -168,18 +174,26 @@ export default {
 </style>
 
 <style>
-.dropdown-arrow {
+.tagDropdown-icon, .remove-icon {
     position: absolute;
     right: 10px;
     top: 55%;
     transform: translateY(-50%);
     cursor: pointer;
-    background-image: url('../../assets/icons/dopdwn-notopen-icon.svg');
     background-size: contain;
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;
 }
+
+.tagDropdown-icon{
+    background-image: url('../../assets/icons/dopdwn-notopen-icon.svg');
+}
+
+.remove-icon{
+    background-image: url('../../assets/icons/remove-icon.svg');
+}
+
 
 .grid1-container {
     display: grid;
@@ -252,7 +266,7 @@ export default {
 
 .qr-scan {
     grid-row: span 2;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid black;

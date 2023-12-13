@@ -47,8 +47,8 @@
         <RouterElement class="sidebar-element" :name="'Kontakt'" :link="'/admin/band-kontakt'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Firme'" :link="'/admin/firme'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Cjenik'" :link="'/admin/cjenik'"></RouterElement>
-        <RouterElement class="sidebar-element" :name="'Prikazi'" :link="'/admin/Prikazi'"></RouterElement>
-        <RouterElement class="sidebar-element" :name="'Prijevodi'" :link="'/admin/Prijevodi'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Prikazi'" :link="'/admin/visibility'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Prijevodi'" :link="'/admin/translations'"></RouterElement>
 
     </div>
 </template>
@@ -208,7 +208,7 @@ export default {
     font-size: 28px;
     /* Increased text to enable scrolling */
     padding: 10px 10px;
-    height: 91vh;
+    height: 93vh;
     overflow: hidden;
 }
 

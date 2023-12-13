@@ -37,12 +37,12 @@
                 <th>Kontakt</th>
                 <th>Opcije</th>
               </thead>
-              <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto;" class="tbody">
+              <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" class="tbody">
                 <tr v-for="bandcontact in bandcontacts" :key="bandcontact.id">
                   <td>{{ bandcontact.bandName }}</td>
                   <td>{{ bandcontact.bookerName }}</td>
                   <td @click="call(bandcontact)"><a>{{ bandcontact.bookerPhone }}</a></td>
-                  <td><button class="button-icon" @click="deleteBandContact(bandcontact)">
+                  <td style="padding-left: 30px"><button class="button-icon" @click="deleteBandContact(bandcontact)">
                       <img src="@/assets/icons/trash-icon.svg"></button>
                   </td>
                 </tr>
@@ -158,9 +158,15 @@ export default {
 </style>
 
 <style>
+
+.tbody{
+  height: 100%;
+  overflow: auto;
+}
+
 .grid-container-contact {
   display: grid;
-  grid-template-columns: 30% 40%;
+  grid-template-columns: 30% 70%;
   width: 100%;
   height: 87vh;
   align-content: stretch;
@@ -171,6 +177,7 @@ export default {
   position: relative;
   width: 100%;
   margin-left: 0px;
+  height: 100%;
 }
 
 .inputfield.kontakt {
@@ -184,10 +191,11 @@ export default {
   --bs-gutter-x: 0rem !important;
   padding: 0px;
   border-left: 0px solid;
+  height: 100%;
 }
 
-#guests th {
-  padding-left: 20px
+#guests {
+  height: 100%;
 }
 
 @media screen and (max-width: 900px) {
@@ -196,8 +204,6 @@ export default {
     display: grid;
     grid-template-columns: 40% 60%;
     padding: 10px;
-    width: 100vw;
-    height: 87vh;
   }
 }
 

@@ -3,7 +3,7 @@
         <div color="primary">
             <img style="height: 50px;" src="../../assets/icons/qr-code-icon.svg">
 
-            <v-dialog v-model="dialogCamera" activator="parent">
+            <v-dialog style="max-width: 600px;" v-model="dialogCamera" activator="parent">
                 <v-card>
                     <v-card-item>
                         <StreamBarcodeReader @decode="onDecode" @loaded="onLoaded"></StreamBarcodeReader>

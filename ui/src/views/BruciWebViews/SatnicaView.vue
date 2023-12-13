@@ -30,7 +30,7 @@ export default {
 <style scoped>
 .satnica {
   width: 100%;
-  min-height: 91vh;
+  min-height: 93vh;
   padding-top: 3rem;
 }
 
