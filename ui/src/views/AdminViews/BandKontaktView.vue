@@ -5,14 +5,15 @@
     <div class="admin-page-container" style="padding-top: 0px;">
       <div class="grid-container-contact" style="padding-top: 0px;">
         <div style="border-right: 1px solid black; width: 100% !important">
-          <h1 class="page-title lineup-title" style="padding-top: 20px">Popis kontakata</h1>
+          <div style="display: flex;">
+            <h1 class="page-title lineup-title" style="padding-top: 20px">Popis kontakata</h1>
 
-          <img v-if="this.showContactForm == false" style="margin-top: 15px;" class="dropdown-icon showMobile"
-            src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleContactForm">
-          <img v-else class="dropdown-icon  showMobile" style="margin-top: 15px;"
-            src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleContactForm">
-
-          <form v-if="showHid" id="hid" class="inputfields" onsubmit="return false">
+            <img v-if="this.showContactForm == false" style="margin-top: 15px;" class="dropdown-icon showMobile"
+              src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleContactForm">
+            <img v-else class="dropdown-icon  showMobile" style="margin-top: 15px;"
+              src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleContactForm">
+          </div>
+          <form v-if="showHid" id="hid" class="inputfields" @submit.prevent="postBandContact">
 
             <h1 class="textfield">Ime Benda </h1>
             <input required class="inputfield kontakt" type="text" v-model="bandName">
@@ -23,7 +24,7 @@
             <h1 class="textfield">Broj mobitela bookera </h1>
             <input required class="inputfield kontakt" type="text" v-model="bookerPhone">
 
-            <button class="button submit" @click="postBandContact">Dodaj</button>
+            <button type="submit" class="button submit">Dodaj</button>
 
           </form>
         </div>
@@ -111,32 +112,33 @@ export default {
     },
 
     postBandContact() {
-      var ids = [];
-      this.nextId = '';
-      this.bandcontacts.forEach(element => {
-        ids.push(element.id);
-      });
-      for (let index = 0; index < ids.length; index++) {
-        if (ids.includes(String(index)) == false) {
-          this.nextId = index;
-          break;
+      if (this.bandName && this.bookerName && this.bookerPhone) {
+        var ids = [];
+        this.nextId = '';
+        this.bandcontacts.forEach(element => {
+          ids.push(element.id);
+        });
+        for (let index = 0; index < ids.length; index++) {
+          if (ids.includes(String(index)) == false) {
+            this.nextId = index;
+            break;
+          }
         }
-      }
-      if (this.nextId === '') {
-        this.nextId = ids.length;
-      }
+        if (this.nextId === '') {
+          this.nextId = ids.length;
+        }
 
-      axios.post(process.env.VUE_APP_BASE_URL + '/contact/',
-        { id: this.nextId, bandName: this.bandName, bookerName: this.bookerName, bookerPhone: this.bookerPhone },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
-        .then(() => {
-          this.bookerName = "";
-          this.bookerPhone = "";
-          this.bandName = "";
-          this.created();
-        })
-
+        axios.post(process.env.VUE_APP_BASE_URL + '/contact/',
+          { id: this.nextId, bandName: this.bandName, bookerName: this.bookerName, bookerPhone: this.bookerPhone },
+          { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+        )
+          .then(() => {
+            this.bookerName = "";
+            this.bookerPhone = "";
+            this.bandName = "";
+            this.created();
+          })
+      }
     },
     deleteBandContact(bandcontact) {
       axios.delete(process.env.VUE_APP_BASE_URL + '/contact/' + bandcontact.id + '/',
@@ -151,15 +153,14 @@ export default {
 }
 </script>
 
-<style module>
+<style module scoped>
 :global(#app) .tbodyHigh {
   height: 100%;
 }
 </style>
 
 <style>
-
-.tbody{
+.tbody {
   height: 100%;
   overflow: auto;
 }

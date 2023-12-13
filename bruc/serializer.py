@@ -50,8 +50,7 @@ class MailerSerializer(serializers.HyperlinkedModelSerializer):
 class CjenikSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Cjenik
-        fields = ["id", "name", "tag", "order",
-                  "priceHRK", "priceEUR", "volume"]
+        fields = ["id", "name", "tag", "order", "priceEUR", "volume"]
 
 
 class VisibilitySerializer(serializers.HyperlinkedModelSerializer):

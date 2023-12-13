@@ -107,7 +107,6 @@ class Cjenik(models.Model):
     name = models.CharField(max_length=100, default='', blank=True)
     tag = models.CharField(max_length=50, default='0', blank=True)
     order = models.IntegerField(default='', blank=True)
-    priceHRK = models.CharField(max_length=50, default='0', blank=True)
     priceEUR = models.CharField(max_length=50, default='0', blank=True)
     volume = models.CharField(max_length=50, default='0', blank=True)
 
