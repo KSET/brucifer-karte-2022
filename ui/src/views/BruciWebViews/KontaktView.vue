@@ -7,7 +7,7 @@
 
             <h1>{{ translations.kontakt["title" + i] }}</h1>
             <div class="text">
-              <p v-for="text in translations.kontakt['text' + i].split('\n\n')" :key="text">{{ text }}</p>
+              <p class="pText" v-for="text in translations.kontakt['text' + i].split('\n\n')" :key="text">{{ text }}</p>
             </div>
           </section>
         </div>

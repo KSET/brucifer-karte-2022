@@ -7,7 +7,8 @@
 
             <h1>{{ translations.pravilaponasanja["title" + i] }}</h1>
             <div class="text">
-              <p v-for="text in translations.pravilaponasanja['text' + i].split('\n\n')" :key="text">{{ text }}</p>
+              <p class="pText" v-for="text in translations.pravilaponasanja['text' + i].split('\n\n')" :key="text">{{ text
+              }}</p>
             </div>
           </section>
         </div>
@@ -68,8 +69,7 @@ p {
   font-size: 20px;
   line-height: 18px;
 
-  padding-bottom: 10px;
-  padding-top: 10px;
+
 
   color: #000000;
 

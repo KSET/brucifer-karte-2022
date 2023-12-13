@@ -7,7 +7,7 @@
 
             <h1>{{ translations.ulaznice["title" + i] }}</h1>
             <div class="text">
-              <p v-for="text in translations.ulaznice['text' + i].split('\n\n')" :key="text">{{ text }}</p>
+              <p class="pText" v-for="text in translations.ulaznice['text' + i].split('\n\n')" :key="text">{{ text }}</p>
             </div>
           </section>
         </div>

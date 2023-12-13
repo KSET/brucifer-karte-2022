@@ -13,6 +13,11 @@ p {
     will-change: margin-top;
 }
 
+.pText {
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
 h1 {
 
     font-family: 'Antonio';
