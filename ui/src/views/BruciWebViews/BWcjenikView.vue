@@ -28,7 +28,6 @@
               <h1 v-if="artikl.tag != 'OSTALO'">{{ artikl.volume }} L</h1>
               <h1 v-else>{{ artikl.volume }}</h1>
 
-              <h1>{{ artikl.priceHRK }} kn</h1>
               <h1>{{ artikl.priceEUR }} €</h1>
             </div>
           </div>

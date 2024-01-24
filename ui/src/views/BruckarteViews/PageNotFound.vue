@@ -1,25 +1,42 @@
 <template>
-  <section style="padding:20%">
-    <h1>404 Page not found
-    </h1>
+    <div class="contents">
+      <section>
+        <h1 class="opa">...OPA!
+        </h1>
 
-    <p>
-      Izgleda da si pronašao stranicu koja ne postoji
-    </p>
-    <br>
-    <RouterElement class="overlay-element" :name="'Naslovnica'" :link="'/admin/'"></RouterElement>
+        <p class="p404">
+          Izgleda da tražena stranica ne postoji!         <br>
+          Obrati se svom savjetniku za pomoć.
+        </p>
+        
 
-  </section>
+      </section>
 
+    </div>
 </template>
   
 <script>
-import RouterElement from '@/components/AdminPanel/RouterElement.vue'
-
 
 export default {
-  name: 'KontaktView',
-  components: { RouterElement }
-
+  name: 'PageNotFound',
 }
 </script>
+  
+<style>
+
+.opa {
+  font-size: 128px !important;
+  font-weight: 700 !important;
+  text-align: center;
+  margin-bottom: 5rem !important;
+  margin-top: 5rem !important;
+
+}
+
+.p404 {
+  font-size: 24px !important;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 5rem !important;
+}
+</style>
