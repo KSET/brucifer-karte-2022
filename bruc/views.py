@@ -62,6 +62,17 @@ class GuestsViewSet(viewsets.ModelViewSet):
     serializer_class = GuestsSerializer
     filter_backends = [DynamicSearchFilter]
 
+    @action(detail=False, methods=['post'], url_path='bulk-import')
+    def bulk_import(self, request):
+        guests_data = json.loads(request.body)
+        guests_serializer = GuestsSerializer(data=guests_data, many=True)  # 'many=True' is important for bulk operations
+        
+        if guests_serializer.is_valid():
+            # Using atomic transactions to ensure all-or-nothing
+            with transaction.atomic():
+                Guests.objects.bulk_create([Guests(**data) for data in guests_serializer.validated_data])
+                return Response({'message': 'Bulk guests import successful'}, status=status.HTTP_201_CREATED)
+
 
 class TagsViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
