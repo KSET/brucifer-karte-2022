@@ -88,8 +88,7 @@ class Sponsors(models.Model):
 
 
 class Contact(models.Model):
-    id = models.CharField(max_length=50, primary_key=True,
-                          default=0, blank=False)
+    id = models.AutoField(primary_key=True)
     bandName = models.CharField(max_length=49, default='', blank=True)
     bookerName = models.CharField(max_length=50, default='0', blank=True)
     bookerPhone = models.CharField(max_length=50, default='0', blank=True)
