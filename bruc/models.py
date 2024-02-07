@@ -36,8 +36,7 @@ class Tags(models.Model):
 
 
 class Lineup(models.Model):
-    id = models.CharField(max_length=50, primary_key=True,
-                          default=0, blank=False)
+    id = models.AutoField(primary_key=True)
     slug = models.CharField(max_length=200, default='', blank=True)
     order = models.IntegerField(default='', blank=True)
     visible = models.CharField(max_length=200, default='', blank=True)
@@ -60,8 +59,7 @@ class Lineup(models.Model):
 
 
 class Sponsors(models.Model):
-    id = models.CharField(max_length=50, primary_key=True,
-                          default=0, blank=False)
+    id = models.AutoField(primary_key=True)
     slug = models.CharField(max_length=200, default='', blank=True)
     order = models.IntegerField(default='', blank=True)
     visible = models.CharField(max_length=200, default='', blank=True)

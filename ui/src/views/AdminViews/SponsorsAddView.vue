@@ -9,14 +9,14 @@
             <img class="image-preview hideDesktop" style="display: block; margin-bottom: 5%; margin-left: 5%;"
                 :src="previewImage" alt="" />
 
-            <form class="sponsors-form" onsubmit="return false">
+            <form class="sponsors-form" @submit.prevent="postSponsors">
                 <div class="grid-container" style="row-gap:3rem;">
 
                     <h1 class="textfield">Ime </h1>
                     <input required class="inputfield" type="text" v-model="name">
 
                     <h1 class="textfield">Link </h1>
-                    <input required class="inputfield" type="text" v-model="url">
+                    <input required class="inputfield" type="url" v-model="url">
 
 
                     <h1 class="textfield">Slika </h1>
@@ -46,10 +46,11 @@
                         <span class="slider round"></span>
                     </label>
 
-                    <button v-if="(this.slug == '0')" class="button submit" style=" margin-top: 0px "
-                        @click="postSponsors">Dodaj</button>
-                    <button v-else class="button submit" style=" margin-top: 0px" @click="postSponsors">Spremi
+
+                    <button type="submit" class="button submit" style="margin-top: 0px" v-if="slug === '0'">Dodaj</button>
+                    <button type="submit" class="button submit" style="margin-top: 0px" v-else>Spremi
                         promjene</button>
+
 
                     <button v-if="(this.slug != '0')" class="button submit del"
                         style="background-color: white; margin-top: 0px; " @click="deleteSponsors">
@@ -93,7 +94,6 @@ export default {
             name: '',
             id: '',
             len: '',
-            nextId: '',
             nextOrder: '',
             visible: '',
             url: '',
@@ -222,116 +222,88 @@ export default {
             }
         },
         async postSponsors() {
-            var linkOK =0;
-            if (this.linkValidator(this.url)) {
-                linkOK = 1
+            if (this.currentImage == undefined) {
+                window.alert("Uploadajte fotografiju")
             } else {
-                if (window.confirm("Link nije u ispravnom formatu ili nije unesen!! , klikom na OK se promjene spremaju, za promjenu kliknite Odustani")) {
-                    linkOK = 1
+
+                let formData = new FormData();
+                formData.append("name", this.name);
+                formData.append("url", this.url);
+                formData.append("email", this.email);
+                formData.append("guestCap", this.guestCap);
+
+                if (document.getElementById("switchSponsors").checked == true) {
+                    formData.append("visible", "1");
                 } else {
-                    linkOK = 0
+                    formData.append("visible", "0");
                 }
-            }
-            if (linkOK == 1) {
-                if (this.currentImage == undefined) {
-                    window.alert("Uploadajte fotografiju")
+
+                if (document.getElementById("switchPopis").checked == true) {
+                    let closeTime = 1668276000000; // pravi closetime 12.11.2022 u 19.00
+                    console.log("gas")
+                    if (Date.now() > closeTime) {
+                        formData.append("guestsEnabled", "2");
+
+                    } else {
+                        formData.append("guestsEnabled", "1");
+                    }
+
                 } else {
+                    formData.append("guestsEnabled", "0");
+                }
 
-                    let formData = new FormData();
-                    formData.append("name", this.name);
-                    formData.append("url", this.url);
-                    formData.append("email", this.email);
-                    formData.append("guestCap", this.guestCap);
+                if (this.slug != "0") {
 
-                    if (document.getElementById("switchSponsors").checked == true) {
-                        formData.append("visible", "1");
-                    } else {
-                        formData.append("visible", "0");
-                    }
+                    formData.append("id", this.id);
+                    formData.append("order", this.order);
+                    formData.append("slug", this.slug);
 
-                    if (document.getElementById("switchPopis").checked == true) {
-                        let closeTime = 1668276000000; // pravi closetime 12.11.2022 u 19.00
-                        console.log("gas")
-                        if (Date.now() > closeTime) {
-                            formData.append("guestsEnabled", "2");
-
-                        } else {
-                            formData.append("guestsEnabled", "1");
-                        }
-
-                    } else {
-                        formData.append("guestsEnabled", "0");
-                    }
-
-                    if (this.slug != "0") {
-
-                        formData.append("id", this.id);
-                        formData.append("order", this.order);
-                        formData.append("slug", this.slug);
-
-                        if (this.currentImage instanceof File) {
-                            formData.append("image", this.currentImage);
-                        }
-
-                        const resp = await axios.put(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/", formData,
-                            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                            {
-                                headers: {
-                                    "Content-Type": "multipart/form-data"
-                                }
-                            })
-                    } else {
-                        if (this.sponsorss.length != 1) {
-                            var ids = [];
-
-                            this.sponsorss.forEach(element => {
-                                ids.push(element.id);
-
-                            });
-                            for (let index = 0; index < ids.length; index++) {
-                                if (ids.includes(String(index)) == false) {
-                                    this.nextId = index;
-                                    break;
-                                }
-                            }
-                            if (this.nextId === '') {
-                                this.nextId = ids.length;
-                            }
-
-                            var lastOrder = this.sponsorss[this.sponsorss.length - 2].order;
-
-                            if (lastOrder[0] == "0") {
-                                if (lastOrder == "09") {
-                                    this.nextOrder = "10"
-                                }
-                                else {
-                                    this.nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
-                                }
-                            } else {
-                                this.nextOrder = (parseInt(lastOrder) + 1).toString();
-                            }
-
-                        } else {
-                            this.nextId = 0;
-                            this.nextOrder = "00";
-                        }
-
-                        formData.append("id", this.nextId);
-                        formData.append("order", this.nextOrder);
+                    if (this.currentImage instanceof File) {
                         formData.append("image", this.currentImage);
-                        formData.append("slug", this.$uuid.v1());
-
-                        const resp = await axios.post(process.env.VUE_APP_BASE_URL + "/sponsors/", formData,
-                            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                            {
-                                headers: {
-                                    "Content-Type": "multipart/form-data"
-                                }
-                            },
-                        )
                     }
-                    this.$router.push({ path: '/admin/sponsors-list/' });
+
+                    const resp = await axios.put(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.id + "/", formData,
+                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        })
+                } else {
+                    if (this.sponsorss.length != 1) {
+
+                        var lastOrder = this.sponsorss[this.sponsorss.length - 2].order;
+
+                        if (lastOrder[0] == "0") {
+                            if (lastOrder == "09") {
+                                this.nextOrder = "10"
+                            }
+                            else {
+                                this.nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
+                            }
+                        } else {
+                            this.nextOrder = (parseInt(lastOrder) + 1).toString();
+                        }
+
+                    } else {
+                        this.nextOrder = "00";
+                    }
+
+                    formData.append("order", this.nextOrder);
+                    formData.append("image", this.currentImage);
+                    formData.append("slug", this.$uuid.v1());
+
+                    const resp = await axios.post(process.env.VUE_APP_BASE_URL + "/sponsors/", formData,
+                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        },
+                    )
                 }
+                this.$router.push({ path: '/admin/sponsors-list/' });
+
             }
         },
         linkValidator(text) { // provjerava je li uneseni link ispravan

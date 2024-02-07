@@ -21,7 +21,6 @@
 <script>
 import LineupTable from '@/components/AdminPanel/LineupTable.vue'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
-import axios from 'axios'
 
 export default {
   name: 'SponsorsView',

@@ -64,7 +64,6 @@ export default {
             name: '',
             id: '',
             len: '',
-            nextId: '',
             nextOrder: '',
             order: '',
             visible: '',
@@ -156,22 +155,6 @@ export default {
                         })
                 } else {
                     if (this.lineups.length != 1) {
-                        var ids = [];
-
-                        this.lineups.forEach(element => {
-                            ids.push(element.id);
-
-                        });
-                        for (let index = 0; index < ids.length; index++) {
-                            if (ids.includes(String(index)) == false) {
-                                this.nextId = index;
-                                break;
-                            }
-                        }
-                        if (this.nextId === '') {
-                            this.nextId = ids.length;
-                        }
-
                         var lastOrder = this.lineups[this.lineups.length - 2].order;
 
                         if (lastOrder[0] == "0") {
@@ -188,12 +171,10 @@ export default {
 
 
                     } else {
-                        this.nextId = 0;
                         this.nextOrder = "00";
                     }
                     let r = (Math.random() + 1).toString(36).substring(7);
 
-                    formData.append("id", this.nextId);
                     formData.append("order", this.nextOrder);
                     formData.append("image", this.currentImage);
                     formData.append("slug", r);
