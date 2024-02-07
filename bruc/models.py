@@ -27,8 +27,7 @@ class Users(models.Model):
 
 
 class Tags(models.Model):
-    id = models.CharField(max_length=50, primary_key=True,
-                          default=0, blank=False)
+    id = models.AutoField(primary_key=True)
     slug = models.CharField(max_length=200, default='', blank=True)
     name = models.CharField(max_length=49, default='', blank=True)
     count = models.CharField(max_length=50, default='0', blank=True)

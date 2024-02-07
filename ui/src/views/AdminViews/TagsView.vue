@@ -6,14 +6,12 @@
         <h1 class="page-title">Tagovi</h1>
         <form onsubmit="return false" style="display: inline-block;  vertical-align: middle;">
           <input required type="text" class="inputtag" v-model="name" placeholder="Unesi ime taga">
-          <button class="button-icon" @click="postTag"> <img class="add-icon"
-              src="@/assets/icons/add-icon.svg"></button>
+          <button class="button-icon" @click="postTag"> <img class="add-icon" src="@/assets/icons/add-icon.svg"></button>
         </form>
       </div>
-      <tags-table></tags-table>
+      <TagsTable :tags="tags" @refreshTags="fetchTags" />
     </div>
   </div>
-
 </template>
 
 <script>
@@ -30,14 +28,13 @@ export default {
     return {
       tags: [],
       name: '',
-      nextId: '',
     }
   },
-  mounted() {
-    this.created();
+  created() {
+    this.fetchTags();
   },
   methods: {
-    created() {
+    fetchTags() {
       axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
         .then(response => {
           this.tags = response.data;
@@ -45,29 +42,13 @@ export default {
     },
     postTag() {
       if (this.name != "") {
-        var ids = [];
-
-        this.tags.forEach(element => {
-          ids.push(element.id);
-        });
-        for (let index = 0; index < ids.length; index++) {
-          if (ids.includes(String(index)) == false) {
-            this.nextId = index;
-            break;
-          }
-        }
-        if (this.nextId === '') {
-          this.nextId = ids.length;
-        }
-
-
         axios.post(process.env.VUE_APP_BASE_URL + '/tags/',
-          { id: this.nextId, name: this.name },
+          { name: this.name },
           { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
         )
           .then(() => {
             this.name = "";
-            location.reload();
+            this.fetchTags();
           })
       }
     }
@@ -81,7 +62,9 @@ export default {
   display: inline-block;
 }
 
-
+.tags-table {
+  height: 100%;
+}
 
 .inputtag {
   height: 40px;
@@ -96,6 +79,8 @@ export default {
   font-weight: 700;
 
   font-size: 16px;
+
+  border: 1px solid black;
 }
 
 .add-icon {

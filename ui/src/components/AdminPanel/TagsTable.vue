@@ -23,20 +23,15 @@
 
     </div>
   </div>
-
-
 </template>
 
 <script>
 import axios from 'axios'
 export default {
   name: 'TagsTable',
-  props: {
-    msg: String
-  },
+  props: ['tags'],
   data() {
     return {
-      tags: [],
       id: '',
       name: '',
       surname: '',
@@ -53,84 +48,78 @@ export default {
 
   },
   mounted() {
-    this.created();
+    this.processTags();
   },
   methods: {
-    created() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
-        .then(response => {
-          this.tags = response.data;
-          this.tags.forEach(element => {
-            axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + element.name + '&search_fields=tag',)
-              .then(response => {
+    processTags() {
+      this.tags.forEach(element => {
+        axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + element.name + '&search_fields=tag',)
+          .then(response => {
 
-                if (element.name == "VIP") {
-                  this.numc = 0;
-                  this.numb = 0;
-                  this.nume = 0;
-                  response.data.forEach(element => {
-                    if (element.tag == "VIP") {
-                      this.numc++;
-                      if (element.bought == 1) {
-                        this.numb++;
-                      }
-                      if (element.entered == 1) {
-                        this.nume++;
-                      }
-                    }
-                  });
-                  if (String(this.numc) != String(element.count) || this.numb != element.bought || this.nume != element.entered) {
-
-                    axios.put(process.env.VUE_APP_BASE_URL + '/tags/' + element.id + '/',
-                      { count: this.numc, bought: this.numb, entered: this.nume },
-                      { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-
-                    )
-
-                    this.created();
-
+            if (element.name == "VIP") {
+              this.numc = 0;
+              this.numb = 0;
+              this.nume = 0;
+              response.data.forEach(element => {
+                if (element.tag == "VIP") {
+                  this.numc++;
+                  if (element.bought == 1) {
+                    this.numb++;
                   }
-                } else {
-                  this.numc = 0;
-                  this.numb = 0;
-                  this.nume = 0;
-                  response.data.forEach(element => {
-                    this.numc++;
-                    if (element.bought == 1) {
-                      this.numb++;
-                    }
-                    if (element.entered == 1) {
-                      this.nume++;
-                    }
-
-
-                  });
-                  if (String(this.numc) != String(element.count) || this.numb != element.bought || this.nume != element.entered) {
-
-                    axios.put(process.env.VUE_APP_BASE_URL + '/tags/' + element.id + '/',
-                      { count: this.numc, bought: this.numb, entered: this.nume },
-                      { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-
-                    )
-
-                    this.created();
-
+                  if (element.entered == 1) {
+                    this.nume++;
                   }
                 }
+              });
+              if (String(this.numc) != String(element.count) || this.numb != element.bought || this.nume != element.entered) {
 
-              })
+                axios.put(process.env.VUE_APP_BASE_URL + '/tags/' + element.id + '/',
+                  { count: this.numc, bought: this.numb, entered: this.nume },
+                  { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+
+                )
+
+                this.$emit('refreshTags');
+              }
+            } else {
+              this.numc = 0;
+              this.numb = 0;
+              this.nume = 0;
+              response.data.forEach(element => {
+                this.numc++;
+                if (element.bought == 1) {
+                  this.numb++;
+                }
+                if (element.entered == 1) {
+                  this.nume++;
+                }
 
 
-          });
-        })
+              });
+              if (String(this.numc) != String(element.count) || this.numb != element.bought || this.nume != element.entered) {
 
+                axios.put(process.env.VUE_APP_BASE_URL + '/tags/' + element.id + '/',
+                  { count: this.numc, bought: this.numb, entered: this.nume },
+                  { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+
+                )
+
+                this.$emit('refreshTags');
+
+              }
+            }
+
+          })
+
+
+      });
     },
     deleteTag(tag) {
       axios.delete(process.env.VUE_APP_BASE_URL + '/tags/' + tag.id + '/',
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
-          this.created();
+          this.$emit('refreshTags');
         })
     }
   }
@@ -155,7 +144,6 @@ tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
-  /* even columns width , fix width of table too*/
 }
 </style>
 

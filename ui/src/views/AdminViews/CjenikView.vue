@@ -58,9 +58,9 @@
               <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto; " class="tbody">
                 <div class="grid-artikli" v-for="artikl in artikli" :key="artikl.id">
                   <p>{{ artikl.name }}</p>
+                  <p>{{ artikl.priceEUR }}</p>
                   <p v-if="artikl.tag != 'OSTALO'">{{ artikl.volume }} L</p>
                   <p v-else>{{ artikl.volume }}</p>
-                  <p>{{ artikl.priceEUR }}</p>
                   <p><button class="button-icon" @click="orderUp(artikl)">
                       <img src="@/assets/icons/arrow-up-icon.svg"></button> </p>
 
