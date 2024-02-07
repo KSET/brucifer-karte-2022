@@ -43,7 +43,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -257,64 +256,33 @@ export default {
     importUsers(event) {
       this.file = event.target.files ? event.target.files[0] : null;
       readXlsxFile(this.file).then(async (rows) => {
+        const usersData = rows.slice(1).map(row => {
+          const [name, email, privilege] = row;
+          return { name: name || "", email: email || "", privilege: privilege || "" };
+        });
 
-        const users = [];
-        let error = 0;
+        console.log(usersData)
 
-        for (let index = 1; index < rows.length; index++) {
-          const element = rows[index];
-
-          const obj = {};
-          obj["id"] = "";
-          obj["name"] = "";
-          obj["email"] = "";
-          obj["privilege"] = "";
-
-          for (let indexy = 0; indexy < rows[0].length; indexy++) {
-            obj[rows[0][indexy]] = element[indexy];
-            if (obj[rows[0][indexy]] == null) {
-              obj[rows[0][indexy]] = "";
+        try {
+          const response = await axios.post(`${process.env.VUE_APP_BASE_URL}/users/bulk-import/`,
+            usersData,
+            {
+              auth: {
+                username: process.env.VUE_APP_DJANGO_USER,
+                password: process.env.VUE_APP_DJANGO_PASS
+              }
             }
-          }
+          );
 
-          var nextId;
-
-          for (let index = 0; index < this.idsusers.length; index++) {
-            if (this.idsusers.includes(String(index)) == false) {
-              nextId = index;
-              break;
-            }
-          }
-          if (nextId == '') {
-            nextId = this.idsusers.length;
-          }
-
-          obj["id"] = nextId;
-
-          this.idsusers.push(String(nextId));
-          let resp = await axios.post(process.env.VUE_APP_BASE_URL + '/users/',
-            { id: obj.id, name: obj.name, email: obj.email, privilege: obj.privilege },
-            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-          ).catch(function (error) {
-            console.error("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE", error);
-            error = 1;
-          });
-          if (resp == undefined) {
-            error = 1;
-          }
-          this.importstatusUsers = (`Imported ${index}/${rows.length} users`);
-
-          users.push(obj);
+          // Handle success response
+          this.importstatusUsers = `Import successful! Imported ${usersData.length} users.`;
+        } catch (error) {
+          console.error("Bulk import unsuccessful for some users", error);
+          this.importstatusUsers = "Import unsuccessful!";
         }
-        if (error == 0) {
-          this.importstatusUsers = "Import uspješan!"
-        } else {
-          this.importstatusUsers = "Import neuspješan!"
-        }
-      })
-
-
+      });
     }
+
   }
 }
 </script>

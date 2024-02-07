@@ -19,8 +19,7 @@ class Guests(models.Model):
 
 
 class Users(models.Model):
-    id = models.CharField(max_length=50, primary_key=True,
-                          default='', blank=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50, default='', blank=True)
     email = models.CharField(max_length=50, default='', blank=True)
     privilege = models.CharField(max_length=50, default='', blank=True)

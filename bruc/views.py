@@ -13,6 +13,12 @@ from rest_framework.decorators import action
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import action
+from django.db import transaction
+import json
+
 # Create your views here.
 
 
@@ -67,6 +73,19 @@ class UsersViewSet(viewsets.ModelViewSet):
     serializer_class = UsersSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'email']
+
+    @action(detail=False, methods=['post'], url_path='bulk-import')
+    def bulk_import(self, request):
+        user_data = json.loads(request.body)
+        user_serializer = UsersSerializer(data=user_data, many=True)  # 'many=True' is important for bulk operations
+        
+        if user_serializer.is_valid():
+            # Using atomic transactions to ensure all-or-nothing
+            with transaction.atomic():
+                Users.objects.bulk_create([Users(**data) for data in user_serializer.validated_data])
+                return Response({'message': 'Bulk user import successful'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LineupViewSet(viewsets.ModelViewSet):
