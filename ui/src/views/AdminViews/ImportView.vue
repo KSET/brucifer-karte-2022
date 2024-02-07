@@ -300,7 +300,7 @@ ul.list {
 li {
   font-family: 'Montserrat';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 400;
   font-size: 16px;
 }
 </style>
