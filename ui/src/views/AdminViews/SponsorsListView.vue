@@ -75,43 +75,48 @@ export default {
           }
         }
         if (mailsent == 0) {
-          resp.data.splice(0, 1);
+          let emails = [];
 
           resp.data.forEach(async element => {
             if (element.guestCap != 0) {
-
-              await this.sleep(element.id * 1000);
 
               let msg = element.name + " " + element.email + " " + element.slug
 
               let email = element.email
 
-              const respp = await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
-                {
-                  subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
-                  template: "sponsors_email",
-                  message: msg,
-                  name: element.name,
-                  link: "https://brucosijada.kset.org/sponzori/" + element.slug,
-                  to_mail: email
-                },
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-              )
-              const resppp = await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
-                {
-                  subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
-                  template: "sponsors_email",
-                  message: msg,
-                  name: element.name,
-                  link: "https://brucosijada.kset.org/sponzori/" + element.slug,
-                  to_mail: email
-                },
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-              )
-              console.log("mail poslan")
+              email = email.split(",")
 
+              email.forEach((e) => {
+                emails.push({
+                  subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
+                  template: "sponsors_email",
+                  message: msg,
+                  name: element.name,
+                  link: "https://brucosijada.kset.org/sponzori/" + element.slug,
+                  to_mail: e
+                })
+              })
+              await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+                {
+                  subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
+                  template: "sponsors_email",
+                  message: msg,
+                  name: element.name,
+                  link: "https://brucosijada.kset.org/sponzori/" + element.slug,
+                  to_mail: email.join(", ")
+                },
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+              )
             }
           });
+
+          await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/send_mail/',
+            {
+              emails: emails
+            },
+            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+          )
+
         }
       }
 

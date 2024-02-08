@@ -13,42 +13,60 @@ from rest_framework.decorators import action
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+from django.core.mail import EmailMultiAlternatives
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.conf import settings
+from rest_framework.decorators import action
+from rest_framework import viewsets
+
 # Create your views here.
+
 
 
 class MailerViewSet(viewsets.ModelViewSet):
     queryset = Mailer.objects.all()
     serializer_class = MailerSerializer
 
-    @action(detail=True, methods=['post'])
-    def send_mail(self, request, pk):
-        subject = request.data.get('subject', '')
-        msg = request.data.get('message', '')
-        to = request.data.get('to_mail', '')
-        template_name = request.data.get('template', '')
+    @action(detail=False, methods=['post'])
+    def send_mail(self, request):
+        emails = request.data.get('emails', [])  # Expecting a list of email details
 
-        if (template_name == "user_email"):
-            html_message = render_to_string('emails/user_email.html', {
-                'name': request.data.get('name', ''), 'privilege_name': request.data.get('privilege_name', ''), })
-        elif (template_name == "guest_email"):
-            html_message = render_to_string('emails/guest_email.html', {
-                'name': request.data.get('name', ''), 'confCode': request.data.get('confCode', ''), 'qrSrc': "https://api.qrserver.com/v1/create-qr-code/?data="+request.data.get('confCode', '')+"&amp;size=300x300"},)
-        elif (template_name == "sponsors_email"):
-            html_message = render_to_string('emails/sponsors_email.html', {
-                'name': request.data.get('name', ''), 'link': request.data.get('link', '')})
+        messages = []
+        for email in emails:
+            subject = email.get('subject', '')
+            msg = email.get('message', '')
+            to = email.get('to_mail', '')
+            template_name = email.get('template', '')
+            html_message = ''
 
-        if subject and msg and settings.EMAIL_HOST_USER:
+            if template_name == "user_email":
+                html_message = render_to_string('emails/user_email.html', {
+                    'name': email.get('name', ''), 'privilege_name': email.get('privilege_name', ''), })
+            elif template_name == "guest_email":
+                html_message = render_to_string('emails/guest_email.html', {
+                    'name': email.get('name', ''), 'confCode': email.get('confCode', ''),
+                    'qrSrc': "https://api.qrserver.com/v1/create-qr-code/?data="+email.get('confCode', '')+"&amp;size=300x300"})
+            elif template_name == "sponsors_email":
+                html_message = render_to_string('emails/sponsors_email.html', {
+                    'name': email.get('name', ''), 'link': email.get('link', '')})
+
+            if subject and msg and to and html_message:
+                text_content = strip_tags(html_message)
+                msg = EmailMultiAlternatives(subject, text_content, "ZARI<"+settings.EMAIL_HOST_USER+">", [to])
+                msg.attach_alternative(html_message, "text/html")
+                messages.append(msg)
+
+        if messages:
             try:
-                send_mail(subject, msg, "ZARI<"+settings.EMAIL_HOST_USER +
-                          ">", [to], fail_silently=True, html_message=html_message)
-                x = 1
-            except BadHeaderError:
-                return HttpResponse('Invalid header found.')
-            return HttpResponse('Passed')
+                for msg in messages:
+                    msg.send()
+                return HttpResponse('Emails sent successfully.')
+            except Exception as e:
+                return HttpResponse(f'An error occurred: {str(e)}')
         else:
-            # In reality we'd use a form class
-            # to get proper validation errors.
-            return HttpResponse('Make sure all fields are entered and valid.')
+            return HttpResponse('Make sure all fields are entered and valid for each email.')
 
 
 class GuestsViewSet(viewsets.ModelViewSet):

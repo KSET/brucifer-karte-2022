@@ -68,7 +68,7 @@ class Sponsors(models.Model):
     url = models.CharField(max_length=400, default='0', blank=True)
     image = models.ImageField(
         upload_to='uploads/sponsors', blank=True, null=True)
-    email = models.CharField(max_length=49, default='', blank=True)
+    email = models.CharField(max_length=20000, default='', blank=True)
     guestCap = models.CharField(max_length=49, default='', blank=True)
 
     '''def get_image(self):
@@ -93,9 +93,9 @@ class Contact(models.Model):
 
 
 class Mailer(models.Model):
-    subject = models.CharField(max_length=200, default=0, blank=False)
-    message = models.CharField(max_length=1000, default=0, blank=False)
-    to_mail = models.CharField(max_length=50, default=0, blank=False)
+    subject = models.CharField(max_length=20000, default=0, blank=False)
+    message = models.CharField(max_length=20000, default=0, blank=False)
+    to_mail = models.CharField(max_length=20000, default=0, blank=False)
 
 
 class Cjenik(models.Model):
