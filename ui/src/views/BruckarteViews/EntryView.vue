@@ -5,8 +5,8 @@
                 <div class="grid-item grid1-item" style="position: relative">
                     <input class="nosubmit search entry" @input="prepSearchGuest" type="form" v-model="search"
                         placeholder="Unesi Ime" style="width: 100% !important" />
-                        <div class="remove-icon" @click="removeSearch"></div>
-                    </div>
+                    <div class="remove-icon" @click="removeSearch"></div>
+                </div>
                 <div class="qr-scan">
                     <MobileEntry />
                 </div>
@@ -92,7 +92,7 @@ export default {
     methods: {
         prepSearchGuest() {
             if (this.selectedTag == "...") {
-                this.selectedTag = " ";
+                this.selectedTag = "";
             }
 
             this.guests = [];
@@ -104,6 +104,9 @@ export default {
             this.searchGuest()
         },
         async searchGuest() {
+            if (this.selectedTag == "...") {
+                this.selectedTag = ""
+            }
             if (this.search != '' && this.search.length > 2) {
                 console.log("SEARCHING", this.search)
 
@@ -136,8 +139,8 @@ export default {
             this.guest = guest;
             this.overlayEntry = true
         },
-        removeSearch(){
-            this.search=""
+        removeSearch() {
+            this.search = ""
             this.guests = [];
             this.guest = {};
         }
@@ -174,7 +177,8 @@ export default {
 </style>
 
 <style>
-.tagDropdown-icon, .remove-icon {
+.tagDropdown-icon,
+.remove-icon {
     position: absolute;
     right: 10px;
     top: 55%;
@@ -186,11 +190,11 @@ export default {
     height: 16px;
 }
 
-.tagDropdown-icon{
+.tagDropdown-icon {
     background-image: url('../../assets/icons/dopdwn-notopen-icon.svg');
 }
 
-.remove-icon{
+.remove-icon {
     background-image: url('../../assets/icons/remove-icon.svg');
 }
 
