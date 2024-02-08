@@ -48,7 +48,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <style module lang="scss">
@@ -143,14 +142,17 @@ export default {
 
       var email = user.email
 
-      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
+      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/send_mail/',
         {
-          subject: "[#BRUCIFER22] Promjena privilegije",
-          template: "user_email",
-          message: user.name + " " + privilege_name,
-          name: to_user_name,
-          privilege_name: privilege_name,
-          to_mail: email
+          emails:
+            [{
+              subject: "[#BRUCIFER22] Promjena privilegije",
+              template: "user_email",
+              message: user.name + " " + privilege_name,
+              name: to_user_name,
+              privilege_name: privilege_name,
+              to_mail: email
+            }]
         },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
