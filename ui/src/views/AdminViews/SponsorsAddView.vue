@@ -76,11 +76,9 @@ import { uuid } from 'vue-uuid';
 
 import axios from 'axios'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
-import store from '@/store/index.js';
-import { faL } from '@fortawesome/free-solid-svg-icons';
 
 export default {
-    name: "upload-image",
+    name: "sponsors-add",
     components: { Sidebar },
     data() {
         return {
@@ -196,14 +194,23 @@ export default {
 
                     let email = this.email
 
-                    await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
-                        {
+                    email = email.split(",")
+
+                    let emails = [];
+                    email.forEach((e) => {
+                        emails.push({
                             subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
                             template: "sponsors_email",
                             message: msg,
                             name: this.name,
                             link: "https://brucosijada.kset.org/sponzori/" + this.slug,
-                            to_mail: email
+                            to_mail: e
+                        })
+                    })
+
+                    await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/send_mail/',
+                        {
+                            emails: emails
                         },
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                     )
@@ -214,7 +221,7 @@ export default {
                             message: msg,
                             name: this.name,
                             link: "https://brucosijada.kset.org/sponzori/" + this.slug,
-                            to_mail: email
+                            to_mail: email.join(", ")
                         },
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                     )

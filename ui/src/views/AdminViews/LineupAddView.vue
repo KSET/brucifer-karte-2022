@@ -1,13 +1,15 @@
 <template>
     <div id="lineup-add">
         <Sidebar />
-        <div class="admin-page-container" style="overflow: auto">
+        <div class="admin-page-container" style="overflow: auto; display: flex; flex-direction: column">
             <div class="header">
                 <h1 v-if="(this.slug == '0')" class="page-title">Dodavanje izvođača</h1>
                 <h1 v-else class="page-title">Uređivanje izvođača</h1>
             </div>
             <img class="image-preview hideTablet showMobile" style="display: block; margin-bottom: 5%; margin-left: 5%;"
                 :src="previewImage" alt="" />
+
+            <img class="image-preview hideMobile" :src="previewImage" alt="" />
 
             <form onsubmit="return false" class="lineup-form">
                 <div class="grid-container">
@@ -27,22 +29,18 @@
                         <input id="switchLineup" type="checkbox">
                         <span class="slider round"></span>
                     </label>
-
-                    <button v-if="(this.slug == '0')" class="button submit" @click="postLineup">Dodaj</button>
-                    <button v-else class="button submit" @click="postLineup">Spremi promjene</button>
-
-                    <button v-if="(this.slug != '0')" class="button submit del" style="background-color: white"
-                        @click="deleteLineup">
-                        <img class="va" src="../../assets/icons/trash-icon.svg">
-                    </button>
                 </div>
+                <button v-if="(this.slug == '0')" class="button submit" @click="postLineup">Dodaj</button>
+                <button v-else class="button submit" @click="postLineup">Spremi promjene</button>
+
+                <button v-if="(this.slug != '0')" class="button submit del" style="background-color: white; margin-left: 10px"
+                    @click="deleteLineup">
+                    <img class="va" src="../../assets/icons/trash-icon.svg">
+                </button>
             </form>
-            <img class="image-preview hideMobile" :src="previewImage" alt="" />
 
         </div>
     </div>
-
-
 </template>
   
 <script>
@@ -211,6 +209,10 @@ export default {
 
 .button.submit.del {
     margin-left: 0px;
+}
+
+.image-preview{
+    margin: 20px 0px;
 }
 
 @media screen and (max-width: 900px) {

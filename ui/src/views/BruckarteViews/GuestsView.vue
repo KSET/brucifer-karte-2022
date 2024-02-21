@@ -48,10 +48,11 @@
             <h1 class="textfield">JMBAG </h1>
             <input class="inputfield" readonly type="text" v-model="jmbag">
 
-            <h1 class="textfield" style="grid-column: span 2;"> Brucoš je uspješno kupio kartu, te mu je poslan konfirmacijski mail na: {{ this.email }}
+            <h1 class="textfield" style="grid-column: span 2;"> Brucoš je uspješno kupio kartu, te mu je poslan
+              konfirmacijski mail na: {{ this.email }}
             </h1>
           </div>
-          
+
         </v-card-text>
 
 
@@ -120,7 +121,7 @@ export default {
           { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
         )
       }
-    }, 
+    },
     prepChangebought(guest, changenum) {
       if (changenum == 1) {
         this.dialogProgress = true;
@@ -247,14 +248,17 @@ export default {
 
       var msg = this.name + " " + this.surname + " " + guest.confCode
 
-      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/0/send_mail/',
+      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/send_mail/',
         {
-          subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
-          template: "guest_email",
-          message: msg,
-          name: this.name,
-          confCode: guest.confCode,
-          to_mail: email
+          emails: [
+            {
+              subject: "[#BRUCIFER22] Potvrda za kupljenu kartu",
+              template: "guest_email",
+              message: msg,
+              name: this.name,
+              confCode: guest.confCode,
+              to_mail: email
+            }]
         },
         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )

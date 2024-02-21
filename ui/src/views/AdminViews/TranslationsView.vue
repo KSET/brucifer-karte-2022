@@ -19,8 +19,9 @@
 
             <div class="translations-grid">
                 <div class="translations-item" v-for="( translation ) in  translationsTable " :key="translation.key">
-                    <h1 class="textfield">{{ translation.key }}</h1>
-                    <div style="padding: 7px" class="textfield" @input="changeTranslation(translation)"
+                    <div class="textfield" @input="changeTranslationKey(translation)"
+                    contenteditable="true" v-html="translation.key"></div>
+                    <div style="padding: 7px" class="textfield" @input="changeTranslationValue(translation)"
                         contenteditable="true" v-html="translation.value"></div>
                     <button class="button-icon" @click="deleteTranslation(translation)"> <img
                             src="@/assets/icons/trash-icon.svg"></button>
@@ -70,10 +71,17 @@ export default {
             )
             await translationsStore.dispatch("fetchTranslations")
         },
-        async changeTranslation(translation) {
+        async changeTranslationValue(translation) {
             let changeVal = event.target.innerHTML.replace(/<(?!br\s*\/?)[^>]+>/gi, '').replace('<br>', '\n\n')
             await axios.put(process.env.VUE_APP_BASE_URL + '/translations/' + translation.id + '/',
-                { key: translation.key, value: changeVal },
+                { value: changeVal },
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+            )
+        },
+        async changeTranslationKey(translation) {
+            let changeKey = event.target.innerHTML.replace(/<(?!br\s*\/?)[^>]+>/gi, '').replace('<br>', '\n\n')
+            await axios.put(process.env.VUE_APP_BASE_URL + '/translations/' + translation.id + '/',
+                { key: changeKey },
                 { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
             )
         },
