@@ -43,7 +43,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -183,138 +182,79 @@ export default {
       XLSX.utils.book_append_sheet(wb, ws, "People");
       XLSX.writeFile(wb, filename);
     },
-    importGuests(event) {
+    async importGuests(event) {
       this.file = event.target.files ? event.target.files[0] : null;
-      let error = 0;
-      readXlsxFile(this.file).then(async (rows) => {
-        const gosti = [];
 
-        for (let index = 1; index < rows.length; index++) {
-          const element = rows[index];
-
-          const obj = {};
-          obj["name"] = "";
-          obj["id"] = "";
-          obj["surname"] = "";
-          obj["jmbag"] = "";
-          obj["email"] = "";
-          obj["tag"] = "";
-          obj["bought"] = "";
-          obj["entered"] = "";
-
-          for (let indexy = 0; indexy < rows[0].length; indexy++) {
-            obj[rows[0][indexy]] = element[indexy];
-            if (obj[rows[0][indexy]] == null) {
-              obj[rows[0][indexy]] = "";
-            }
-          }
-
-          var nextId;
-
-          for (let index = 0; index < this.idsguests.length; index++) {
-            if (this.idsguests.includes(String(index)) == false) {
-              nextId = index;
-              break;
-            }
-          }
-          if (nextId == '') {
-            nextId = this.idsguests.length;
-          }
-
-          obj["id"] = nextId;
-          if (obj["tag"] == "") {
-            obj["tag"] = "Brucoši";
-          }
-          if (obj["bought"] == "") {
-            obj["bought"] = "0";
-          }
-          if (obj["entered"] == "") {
-            obj["entered"] = "0";
-          }
-
-          this.idsguests.push(String(nextId));
-          let resp = await axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
-            { id: obj.id, name: obj.name, surname: obj.surname, jmbag: obj.jmbag, tag: obj.tag, bought: obj.bought, entered: obj.entered },
-            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-          ).catch(function (error) {
-            console.error("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE", error);
-            error = 1;
+      try {
+        const rows = await readXlsxFile(this.file);
+        const headerRow = rows[0];
+        const guestsData = rows.slice(1).map(row => {
+          const guest = {};
+          headerRow.forEach((columnName, columnIndex) => {
+            guest[columnName.toLowerCase()] = row[columnIndex] || "";
           });
-          if (resp == undefined) {
-            error = 1;
+
+          // Set default values for tag, bought, and entered fields if they are empty or 0
+          guest.tag = guest.tag || "Brucoši";
+          guest.bought = guest.bought || "0";
+          guest.entered = guest.entered || "0";
+
+          return guest;
+        });
+
+        console.log(guestsData);
+
+        const response = await axios.post(`${process.env.VUE_APP_BASE_URL}/guests/bulk-import/`,
+          guestsData,
+          {
+            auth: {
+              username: process.env.VUE_APP_DJANGO_USER,
+              password: process.env.VUE_APP_DJANGO_PASS
+            }
           }
-          this.importstatusGuests = (`Imported ${index}/${rows.length} guests`);
-          gosti.push(obj);
-        }
-        if (error == 0) {
-          this.importstatusGuests = "Import uspješan!"
-        } else {
-          this.importstatusGuests = "Import neuspješan!"
-        }
+        );
+
+        this.importstatusGuests = `Import successful! Imported ${guestsData.length} guests.`;
+      } catch (error) {
+        console.error("Import unsuccessful!", error);
+        this.importstatusGuests = "Import unsuccessful!";
       }
-      )
-    },
-    importUsers(event) {
-      this.file = event.target.files ? event.target.files[0] : null;
-      readXlsxFile(this.file).then(async (rows) => {
-
-        const users = [];
-        let error = 0;
-
-        for (let index = 1; index < rows.length; index++) {
-          const element = rows[index];
-
-          const obj = {};
-          obj["id"] = "";
-          obj["name"] = "";
-          obj["email"] = "";
-          obj["privilege"] = "";
-
-          for (let indexy = 0; indexy < rows[0].length; indexy++) {
-            obj[rows[0][indexy]] = element[indexy];
-            if (obj[rows[0][indexy]] == null) {
-              obj[rows[0][indexy]] = "";
-            }
-          }
-
-          var nextId;
-
-          for (let index = 0; index < this.idsusers.length; index++) {
-            if (this.idsusers.includes(String(index)) == false) {
-              nextId = index;
-              break;
-            }
-          }
-          if (nextId == '') {
-            nextId = this.idsusers.length;
-          }
-
-          obj["id"] = nextId;
-
-          this.idsusers.push(String(nextId));
-          let resp = await axios.post(process.env.VUE_APP_BASE_URL + '/users/',
-            { id: obj.id, name: obj.name, email: obj.email, privilege: obj.privilege },
-            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-          ).catch(function (error) {
-            console.error("IMPORT NEUSPJEŠAN ZA NEKE KORISNIKE", error);
-            error = 1;
-          });
-          if (resp == undefined) {
-            error = 1;
-          }
-          this.importstatusUsers = (`Imported ${index}/${rows.length} users`);
-
-          users.push(obj);
-        }
-        if (error == 0) {
-          this.importstatusUsers = "Import uspješan!"
-        } else {
-          this.importstatusUsers = "Import neuspješan!"
-        }
-      })
-
-
     }
+    ,
+    async importUsers(event) {
+      this.file = event.target.files ? event.target.files[0] : null;
+
+      try {
+        const rows = await readXlsxFile(this.file);
+        const headerRow = rows[0];
+        const usersData = rows.slice(1).map(row => {
+          const user = {};
+          headerRow.forEach((columnName, columnIndex) => {
+            user[columnName.toLowerCase()] = row[columnIndex] || "";
+          });
+          return user;
+        });
+
+        console.log(usersData);
+
+        const response = await axios.post(`${process.env.VUE_APP_BASE_URL}/users/bulk-import/`,
+          usersData,
+          {
+            auth: {
+              username: process.env.VUE_APP_DJANGO_USER,
+              password: process.env.VUE_APP_DJANGO_PASS
+            }
+          }
+        );
+
+        this.importstatusUsers = `Import successful! Imported ${usersData.length} users.`;
+      } catch (error) {
+        console.error("Bulk import unsuccessful for some users", error);
+        this.importstatusUsers = "Import unsuccessful!";
+      }
+    }
+
+
   }
 }
 </script>
@@ -360,7 +300,7 @@ ul.list {
 li {
   font-family: 'Montserrat';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 400;
   font-size: 16px;
 }
 </style>
