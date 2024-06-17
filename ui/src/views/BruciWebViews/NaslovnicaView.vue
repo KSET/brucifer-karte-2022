@@ -1,30 +1,29 @@
 <template>
   <div class="page-container">
-    <div v-if="COMINGSOON_VISIBILITY == 0" class="page-container" style="min-height: 100vh;">
-      <vue-countdown v-if="TIMER_VISIBILITY == 1" class="countdown-timer" :time=this.time :transform="transformSlotProps"
+    <div v-if="comingSoonVisible" class="page-container" style="min-height: 100vh;">
+      <vue-countdown v-if="timerVisible" class="countdown-timer" :time="countdownTime" :transform="transformSlotProps"
         v-slot="{ days, hours, minutes, seconds }">
         {{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}
       </vue-countdown>
 
-      <SponsorsIcons></SponsorsIcons>
+      <SponsorsIcons />
       <div class="homepage">
         <div class="image-container">
           <div class="image-sizer"></div>
           <div class="image-frame"></div>
         </div>
-
       </div>
-      <Footer></Footer>
+      
+      <Footer />
+
     </div>
 
     <div v-else>
-
       <div class="comingSoon">
         <div class="image-container">
           <div class="image-sizer"></div>
           <div class="image-frame"></div>
         </div>
-
       </div>
     </div>
 
@@ -32,28 +31,28 @@
 </template>
 
 <script>
-import Footer from '@/components/NavbarAndFooter/Footer.vue'
+import Footer from '@/components/NavbarAndFooter/Footer.vue';
 import store from '@/store/visibilityStore';
 import SponsorsIcons from '@/components/BruciWeb/SponsorsIcons.vue';
+
 export default {
   name: 'Naslovnica',
   components: { Footer, SponsorsIcons },
   props: {
-    msg: String
+    msg: String,
   },
-  data() {
-    return {
-      time: '',
-      COMINGSOON_VISIBILITY: store.state.COMINGSOON_VISIBILITY,
-      TIMER_VISIBILITY: store.state.TIMER_VISIBILITY,
-      TIMER_TIME: store.state.TIMER_TIME,
-    }
-
-  },
-  mounted() {
-    let timeMS = Date.parse(this.TIMER_TIME)
-    var seconds = new Date().getTime();
-    this.time = (timeMS - (seconds));
+  computed: {
+    comingSoonVisible() {
+      return store.state.COMINGSOON_VISIBILITY === 0;
+    },
+    timerVisible() {
+      return store.state.TIMER_VISIBILITY === 1;
+    },
+    countdownTime() {
+      const timeMS = Date.parse(store.state.TIMER_TIME);
+      const seconds = new Date().getTime();
+      return timeMS - seconds;
+    },
   },
   methods: {
     transformSlotProps(props) {
@@ -64,10 +63,11 @@ export default {
       });
 
       return formattedProps;
-    }
-  }
-}
+    },
+  },
+};
 </script>
+
 
 <style>
 :root {
@@ -76,7 +76,7 @@ export default {
   var(--background-default); -> default images on other pages
   */
 
-  --background-image: url("../../assets/bg/home/bg-desktop.svg");
+  --background-image: url("../../assets/bg/home/bg-desktop.png");
   --background-default: url("../../assets/bg/default/bg-desktop.svg");
   --background-image-aspect-ratio: calc(1080 / 1920);
 
@@ -114,7 +114,7 @@ export default {
     --countdown-right-offset: 9vw;
     --countdown-font-size: 8vw;
     --countdown-top-offset: 86.5%;
-    --background-image: url("../../assets/bg/home/bg-tablet.svg");
+    --background-image: url("../../assets/bg/home/bg-tablet.png");
   }
 
   .comingSoon {
@@ -132,7 +132,7 @@ export default {
     --countdown-right-offset: 9vw;
     --countdown-font-size: 8vw;
     --countdown-top-offset: 86.5%;
-    --background-image: url("../../assets/bg/home/bg-tablet.svg");
+    --background-image: url("../../assets/bg/home/bg-tablet.png");
   }
 
   .comingSoon {
