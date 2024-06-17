@@ -53,7 +53,8 @@ export default {
     position: relative;
     background-repeat: repeat;
     background-size: cover;
-    background-color: linear-gradient(red, #F6BB96);
+    background-color: linear-gradient(red, #0E315B;
+);
     min-height: 100vh;
     padding-bottom: 60px;
 }

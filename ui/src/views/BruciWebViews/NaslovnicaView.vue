@@ -96,9 +96,16 @@ export default {
 }
 
 .comingSoon {
-  background-image: url("../../assets/bg/comingSoon/comingSoon-desktop.svg");
+  background-image: url("../../assets/bg/comingSoon/comingSoon-desktop.png");
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.page-container {
+  position: relative;
+  background-color: #0E315B;
+  min-height: 93vh;
+  flex: 1;
 }
 
 @media screen and (max-width: 980PX) {
@@ -111,16 +118,33 @@ export default {
   }
 
   .comingSoon {
-    background-image: url("../../assets/bg/comingSoon/comingSoon-tablet.svg");
+    background-image: url("../../assets/bg/comingSoon/comingSoon-tablet.png");
+  }
+
+  .page-container {
+    background-color: #002142;
   }
 }
 
-.page-container {
-  position: relative;
-  background-color: #F6BB96;
-  min-height: 93vh;
-  flex: 1;
+@media screen and (max-width: 550PX) {
+  :root {
+    --background-image-aspect-ratio: calc(962 / 601);
+    --countdown-right-offset: 9vw;
+    --countdown-font-size: 8vw;
+    --countdown-top-offset: 86.5%;
+    --background-image: url("../../assets/bg/home/bg-tablet.svg");
+  }
+
+  .comingSoon {
+    background-image: url("../../assets/bg/comingSoon/comingSoon-mobitel.png");
+  }
+
+  .page-container {
+    background-color: #002142;
+  }
 }
+
+
 
 .bw-page-container {
   margin-top: 0;
@@ -130,7 +154,8 @@ export default {
   background-image: var(--background-default);
   background-repeat: repeat;
   background-size: cover;
-  background-color: #F6BB96;
+  background-color: #0E315B;
+;
   min-height: 93vh;
   padding-bottom: 60px;
 }

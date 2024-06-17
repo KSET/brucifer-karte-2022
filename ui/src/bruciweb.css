@@ -94,7 +94,7 @@ main {
 }
 
 .image-container .image-sizer {
-    padding-bottom: calc(var(--background-image-aspect-ratio) * 110%);
+    padding-bottom: calc(var(--background-image-aspect-ratio) * 100%);
     transition: padding-bottom .3s ease;
     will-change: padding-bottom;
 }

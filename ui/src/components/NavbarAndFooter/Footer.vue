@@ -29,7 +29,8 @@ export default {
     width: 100%;
     height: 60px;
     position: absolute;
-    /* background: #F6BB96; */
+    /* background: #0E315B;
+; */
     background: transparent;
 }
 
@@ -41,7 +42,8 @@ export default {
     z-index: 2;
     height: 8px;
     content: "";
-    /* background: linear-gradient(to top, #F6BB96, transparent); */
+    /* background: linear-gradient(to top, #0E315B;
+, transparent); */
 }
 
 #text1 {

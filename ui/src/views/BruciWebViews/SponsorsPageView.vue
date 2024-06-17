@@ -372,11 +372,13 @@ h1 {
 }
 
 .footery {
-    background: #F6BB96;
+    background: #0E315B;
+;
 }
 
 .footery::after {
-    background: linear-gradient(to top, #F6BB96, transparent);
+    background: linear-gradient(to top, #0E315B;
+, transparent);
 }
 
 .navbar.bw {
