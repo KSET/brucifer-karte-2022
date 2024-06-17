@@ -13,7 +13,7 @@
           <div class="image-frame"></div>
         </div>
       </div>
-      
+
       <Footer />
 
     </div>
@@ -43,10 +43,10 @@ export default {
   },
   computed: {
     comingSoonVisible() {
-      return store.state.COMINGSOON_VISIBILITY === 0;
+      return store.state.COMINGSOON_VISIBILITY == 0;
     },
     timerVisible() {
-      return store.state.TIMER_VISIBILITY === 1;
+      return store.state.TIMER_VISIBILITY == 1;
     },
     countdownTime() {
       const timeMS = Date.parse(store.state.TIMER_TIME);
@@ -155,7 +155,7 @@ export default {
   background-repeat: repeat;
   background-size: cover;
   background-color: #0E315B;
-;
+  ;
   min-height: 93vh;
   padding-bottom: 60px;
 }
