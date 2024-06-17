@@ -65,7 +65,7 @@
                         class="tbody">
                         <tr v-for="guest in sponsorGuests" :key="guest.id">
                             <td style="padding-left: 20% !important;">{{ guest.name }}</td>
-                            <td v-if="this.guestsEnabled != 0" style="padding-left: 10%% !important;"><button
+                            <td v-if="this.guestsEnabled != 0" style="padding-left: 10% !important;"><button
                                     class="button-icon" @click=sponsorDelete(guest)
                                     style="margin-left: 0.9rem;     background: transparent;"> <img
                                         src="@/assets/icons/trash-icon-white.svg"></button>
@@ -377,8 +377,7 @@ h1 {
 }
 
 .footery::after {
-    background: linear-gradient(to top, #0E315B;
-, transparent);
+    background: linear-gradient(to top, #0E315B, transparent);
 }
 
 .navbar.bw {
