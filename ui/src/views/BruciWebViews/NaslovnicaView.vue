@@ -108,6 +108,30 @@ export default {
   flex: 1;
 }
 
+.countdown-timer {
+  position: absolute;
+  font-family: 'CooperBits';
+  top: 0;
+  width: 100%;
+  right: 0;
+  padding-right: var(--countdown-right-offset);
+  text-align: right;
+  font-size: var(--countdown-font-size);
+  color: #E0C5FF;
+  text-shadow: .062em 0 black;
+  pointer-events: none;
+  user-select: none;
+  padding-bottom: min(calc(var(--background-image-aspect-ratio) * 100%),
+      calc(100vh - var(--topbar-height) - var(--footer-height) - var(--countdown-font-size) - var(--countdown-top-offset)));
+  overflow: hidden;
+}
+
+.countdown-timer::before {
+  content: "";
+  display: block;
+  padding-top: var(--countdown-top-offset);
+}
+
 @media screen and (max-width: 980PX) {
   :root {
     --background-image-aspect-ratio: calc(962 / 601);
@@ -123,6 +147,10 @@ export default {
 
   .page-container {
     background-color: #002142;
+  }
+
+  .countdown-timer {
+    padding-top: 27%;
   }
 }
 
@@ -141,6 +169,10 @@ export default {
 
   .page-container {
     background-color: #002142;
+  }
+
+  .countdown-timer {
+    padding-top: 30%;
   }
 }
 
@@ -166,30 +198,6 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
 
-}
-
-.countdown-timer {
-  position: absolute;
-  font-family: 'CooperBits';
-  top: 0;
-  width: 100%;
-  right: 0;
-  padding-right: var(--countdown-right-offset);
-  text-align: right;
-  font-size: var(--countdown-font-size);
-  color: #E0C5FF;
-  text-shadow: .062em 0 black;
-  pointer-events: none;
-  user-select: none;
-  padding-bottom: min(calc(var(--background-image-aspect-ratio) * 100%),
-      calc(100vh - var(--topbar-height) - var(--footer-height) - var(--countdown-font-size) - var(--countdown-top-offset)));
-  overflow: hidden;
-}
-
-.countdown-timer::before {
-  content: "";
-  display: block;
-  padding-top: var(--countdown-top-offset);
 }
 
 

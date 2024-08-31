@@ -44,7 +44,7 @@ export default {
     padding-top: 36%;
     right: 3vw;
     display: grid;
-    grid-template-columns: repeat(18, 4rem);
+    grid-template-columns: repeat(16, 4rem);
     align-items: center;
 }
 
@@ -61,19 +61,19 @@ export default {
 
 @media screen and (max-width: 1555px) {
     .sponsorsIcons {
-        grid-template-columns: repeat(18, 3.5rem);
+        grid-template-columns: repeat(16, 3.5rem);
     }
 }
 
 @media screen and (max-width: 1350px) {
     .sponsorsIcons {
-        grid-template-columns: repeat(18, 3rem);
+        grid-template-columns: repeat(16, 3rem);
     }
 }
 
 @media screen and (max-width: 1175px) {
     .sponsorsIcons {
-        grid-template-columns: repeat(18, 2.5rem);
+        grid-template-columns: repeat(16, 2.5rem);
     }
 }
 </style>
