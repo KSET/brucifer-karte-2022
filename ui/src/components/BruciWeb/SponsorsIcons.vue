@@ -41,10 +41,10 @@ export default {
 .sponsorsIcons {
     position: absolute;
     top: 0px;
-    padding-top: 47%;
-    right: 6vw;
+    padding-top: 36%;
+    right: 3vw;
     display: grid;
-    grid-template-columns: repeat(22, 4rem);
+    grid-template-columns: repeat(18, 4rem);
     align-items: center;
 }
 
@@ -61,19 +61,19 @@ export default {
 
 @media screen and (max-width: 1555px) {
     .sponsorsIcons {
-        grid-template-columns: repeat(22, 3.5rem);
+        grid-template-columns: repeat(18, 3.5rem);
     }
 }
 
 @media screen and (max-width: 1350px) {
     .sponsorsIcons {
-        grid-template-columns: repeat(22, 3rem);
+        grid-template-columns: repeat(18, 3rem);
     }
 }
 
 @media screen and (max-width: 1175px) {
     .sponsorsIcons {
-        grid-template-columns: repeat(22, 2.5rem);
+        grid-template-columns: repeat(18, 2.5rem);
     }
 }
 </style>
