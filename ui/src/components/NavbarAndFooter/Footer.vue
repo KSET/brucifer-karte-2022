@@ -62,7 +62,7 @@ export default {
 
     letter-spacing: -0.022em;
 
-    color: #000000;
+    color: #FFFFFF;
 }
 
 #text2 {
@@ -82,6 +82,6 @@ export default {
     text-align: right;
     letter-spacing: -0.022em;
 
-    color: #000000;
+    color: #FFFFFF;
 }
 </style>

@@ -138,13 +138,13 @@ export default {
   z-index: -1;
   top: 0;
   left: 0;
-  background-color: #DC5E88;
+  background-color: #00142B;
   overflow-x: hidden;
   transition: 0.5s;
 }
 
 .overlay.bw {
-  background-color: #DC5E88;
+  background-color: #00142B;
 
 }
 
@@ -170,7 +170,7 @@ export default {
   padding-left: 5%;
   text-decoration: none;
   font-size: 22px;
-  color: black;
+  color: #FFFFFF;
   display: block;
   transition: 0.3s;
 
@@ -242,7 +242,7 @@ export default {
   position: absolute;
   height: 6px;
   width: 100%;
-  background: black;
+  background: #FFFFFF;
   border-radius: 6px;
   opacity: 1;
   left: 0;

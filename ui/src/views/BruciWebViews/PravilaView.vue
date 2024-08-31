@@ -59,7 +59,7 @@ h1 {
   font-size: 36px;
   line-height: 47px;
 
-  color: #000000;
+  color: #FFFFFF;
 }
 
 p {
@@ -71,7 +71,7 @@ p {
 
 
 
-  color: #000000;
+  color: #FFFFFF;
 
   transition: margin-top .3s ease;
   will-change: margin-top;

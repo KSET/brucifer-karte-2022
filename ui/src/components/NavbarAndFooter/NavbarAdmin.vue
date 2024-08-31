@@ -246,7 +246,7 @@ export default {
 
   letter-spacing: -0.015em;
 
-  color: #000000;
+  color: #FFFFFF;
 }
 
 .routes {
@@ -262,7 +262,7 @@ export default {
   font-family: inherit;
   margin-left: 70px;
   vertical-align: middle;
-  color: black;
+  color: #FFFFFF;
   border: none;
   background: none;
   text-align: left;
@@ -302,6 +302,7 @@ export default {
   font-weight: 700;
   font-size: 16px;
   vertical-align: middle;
+  color: black;
 }
 
 .showMobile {
