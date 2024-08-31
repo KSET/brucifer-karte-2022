@@ -33,3 +33,10 @@
     font-weight: 600;
     src: url('./Antonio-Bold.ttf') format('truetype');
 }
+
+@font-face {
+    font-family: 'Cooperbits';
+    src: url('CooperBits.ttf') format('truetype'); /* Adjust the path as necessary */
+    font-weight: normal;
+    font-style: normal;
+  }

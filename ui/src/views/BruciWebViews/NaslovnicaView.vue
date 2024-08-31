@@ -89,9 +89,9 @@ export default {
 
   /* COUNTDOWN */
 
-  --countdown-right-offset: 7vw;
+  --countdown-right-offset: 3vw;
   --countdown-font-size: 8.5vw;
-  --countdown-top-offset: 16%;
+  --countdown-top-offset: 26%;
 
 }
 
@@ -170,14 +170,14 @@ export default {
 
 .countdown-timer {
   position: absolute;
-  font-family: 'Antonio';
+  font-family: 'CooperBits';
   top: 0;
   width: 100%;
   right: 0;
   padding-right: var(--countdown-right-offset);
   text-align: right;
   font-size: var(--countdown-font-size);
-  color: white;
+  color: #E0C5FF;
   text-shadow: .062em 0 black;
   pointer-events: none;
   user-select: none;
