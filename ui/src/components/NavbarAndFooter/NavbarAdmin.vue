@@ -182,6 +182,17 @@ export default {
     display: none;
   }
 }
+</style >
+
+<style scoped>
+  .navbar-title{
+    color: black;
+  }
+
+  .navbar-element{
+    color: black;
+  }
+
 </style>
 <style lang="scss">
 .overlay-element.admin {
@@ -189,6 +200,7 @@ export default {
 }
 
 .navbar {
+  color: black;
   overflow: hidden;
   position: absolute;
   /* Set the navbar to fixed position */

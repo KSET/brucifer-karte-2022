@@ -234,7 +234,11 @@ export default {
 }
 </style>
 
-<style>
+<style scoped>
+
+p{
+  color:black;
+}
 .dropdownTab-icon {
   position: absolute;
   right: 10px;

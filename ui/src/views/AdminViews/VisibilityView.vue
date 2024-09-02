@@ -206,7 +206,7 @@ export default {
 .visibility-grid {
     display: grid;
     grid-template-columns: 70% 30%;
-    row-gap: 20px;
+    row-gap: 10px;
     align-items: center;
     width: 50%;
 }
