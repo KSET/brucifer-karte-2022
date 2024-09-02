@@ -6,39 +6,39 @@ from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineu
 class GuestsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Guests
-        fields = ["id", "name", "surname", "jmbag",
+        fields = ["name", "surname", "jmbag",
                   "email", "tag", "bought", "entered", "confCode"]
 
 
 class TagsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Tags
-        fields = ["id", "name", "count", "bought", "entered"]
+        fields = ["name", "count", "bought", "entered"]
 
 
 class UsersSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Users
-        fields = ["id", "name", "email", "privilege"]
+        fields = ["name", "email", "privilege"]
 
 
 class LineupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Lineup
-        fields = ["id", "slug", "order", "visible", "name", "image"]
+        fields = ["slug", "order", "visible", "name", "image"]
 
 
 class SponsorsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sponsors
-        fields = ["id", "slug", "order", "visible", "guestsEnabled",
+        fields = ["slug", "order", "visible", "guestsEnabled",
                   "name", "url", "image", "email", "guestCap"]
 
 
 class ContactSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Contact
-        fields = ["id", "bandName", "bookerName", "bookerPhone"]
+        fields = ["bandName", "bookerName", "bookerPhone"]
 
 
 class MailerSerializer(serializers.HyperlinkedModelSerializer):
@@ -50,7 +50,7 @@ class MailerSerializer(serializers.HyperlinkedModelSerializer):
 class CjenikSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Cjenik
-        fields = ["id", "name", "tag", "order", "priceEUR", "volume"]
+        fields = ["name", "tag", "order", "priceEUR", "volume"]
 
 
 class VisibilitySerializer(serializers.HyperlinkedModelSerializer):
@@ -62,7 +62,7 @@ class VisibilitySerializer(serializers.HyperlinkedModelSerializer):
 class TranslationsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Translations
-        fields = ["id", "key", "value"]
+        fields = ["key", "value"]
 
 
 class DynamicSearchFilter(filters.SearchFilter):
