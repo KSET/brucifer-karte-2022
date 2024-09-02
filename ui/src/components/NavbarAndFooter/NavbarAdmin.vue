@@ -243,7 +243,6 @@ export default {
   letter-spacing: -0.022em;
   font-style: normal;
   /* background: #DC5E88; */
-  background: transparent;
   overflow: initial;
   position: absolute;
 }
