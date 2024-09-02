@@ -59,7 +59,6 @@ export default {
         return {
             users: [],
             privilege: '',
-            nextId: '',
         }
     },
 
@@ -81,23 +80,8 @@ export default {
                 window.alert("Unesite sve podatke");
             } else {
 
-                var ids = [];
-
-                this.users.forEach(element => {
-                    ids.push(element.id);
-                });
-                for (let index = 0; index < ids.length; index++) {
-                    if (ids.includes(String(index)) == false) {
-                        this.nextId = index;
-                        break;
-                    }
-                }
-                if (this.nextId === '') {
-                    this.nextId = ids.length;
-                }
-
                 await axios.post(process.env.VUE_APP_BASE_URL + '/users/',
-                    { id: this.nextId, name: this.name, email: this.email, privilege: this.privilege },
+                    { name: this.name, email: this.email, privilege: this.privilege },
                     { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                 )
                     .then(() => {

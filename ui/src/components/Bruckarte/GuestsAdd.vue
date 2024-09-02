@@ -52,22 +52,8 @@ export default {
   },
   methods: {
     postGuest() {
-      var ids = [];
-      this.guests.forEach(element => {
-        ids.push(element.id);
-      });
-      for (let index = 0; index < ids.length; index++) {
-        if (ids.includes(String(index)) == false) {
-          this.nextId = index;
-          break;
-        }
-      }
-      if (this.nextId === '') {
-        this.nextId = ids.length;
-      }
-
       axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
-        { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: '0', entered: '0' },
+        { name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: '0', entered: '0' },
         { auth: { username: process.env.AUTH_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {

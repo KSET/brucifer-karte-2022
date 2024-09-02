@@ -62,7 +62,6 @@ export default {
                     this.users = response.data;
 
                     var ids = [];
-                    var nextId = -1;
                     var registeredEmail = false;
 
 
@@ -80,20 +79,10 @@ export default {
                             }
                         }
                     });
-                    for (let index = 0; index < ids.length; index++) {
-                        if (ids.includes(String(index)) == false) {
-                            nextId = index;
-                            break;
-                        }
-                    }
-
-                    if (nextId == -1) {
-                        nextId = ids.length;
-                    }
 
                     if (!registeredEmail) {
                         axios.post(process.env.VUE_APP_BASE_URL + '/users/',
-                            { id: nextId, name: decodeURIComponent(escape(responsePayload.name)), email: responsePayload.email, privilege: '0' },
+                            { name: decodeURIComponent(escape(responsePayload.name)), email: responsePayload.email, privilege: '0' },
                             { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                         )
                         store.commit('setPrivilege', '0')

@@ -82,7 +82,6 @@ export default {
             len: '',
             services: ['Brucoši', 'KSET', 'VIP'],
             selectedTag: '',
-            nextId: '',
 
         }
     },
@@ -158,18 +157,8 @@ export default {
 
                 if (post == 1) {
 
-                    for (let index = 0; index < ids.length; index++) {
-                        if (ids.includes(String(index)) == false) {
-                            this.nextId = index;
-                            break;
-                        }
-                    }
-                    if (this.nextId === '') {
-                        this.nextId = ids.length;
-                    }
-
                     axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
-                        { id: this.nextId, name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
+                        { name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                     )
                         .then(() => {
