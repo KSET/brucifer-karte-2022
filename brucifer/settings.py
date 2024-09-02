@@ -78,6 +78,9 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:8080',
     'https://brucosijada.kset.org',
     'https://bruc-test.josip.igr.ec',]
 
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'Lax' 
+
 ROOT_URLCONF = 'brucifer.urls'
 
 TEMPLATES = [
