@@ -194,10 +194,21 @@ export default {
     color: black;
   }
 
+  #nav-icon1 span,
+#nav-icon3 span,
+#nav-icon4 span {
+  background: black;
+
+  .overlay-element.admin{
+    color: black;
+  }
+}
+
 </style>
 <style lang="scss">
 .overlay-element.admin {
   height: 2.5rem;
+  color: black;
 }
 
 .navbar {
