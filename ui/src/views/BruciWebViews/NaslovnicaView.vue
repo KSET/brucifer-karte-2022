@@ -3,7 +3,10 @@
     <div v-if="comingSoonVisible" class="page-container" style="min-height: 100vh;">
       <vue-countdown v-if="timerVisible" class="countdown-timer" :time="countdownTime" :transform="transformSlotProps"
         v-slot="{ days, hours, minutes, seconds }">
-        {{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}
+        <h5 class="countdown-textfield">{{ days }}</h5> :
+        <h5 class="countdown-textfield">{{ hours }}</h5> :
+        <h5 class="countdown-textfield">{{ minutes }}</h5> :
+        <h5 class="countdown-textfield">{{ seconds }}</h5>
       </vue-countdown>
 
       <SponsorsIcons />
@@ -89,9 +92,9 @@ export default {
 
   /* COUNTDOWN */
 
-  --countdown-right-offset: 3vw;
-  --countdown-font-size: 8.5vw;
-  --countdown-top-offset: 26%;
+  --countdown-right-offset: 4vw;
+  --countdown-font-size: 70px;
+  --countdown-top-offset: 32%;
 
 }
 
@@ -132,6 +135,11 @@ export default {
   padding-top: var(--countdown-top-offset);
 }
 
+.countdown-textfield{
+  display: inline;
+  margin: 0px -15px;
+}
+
 @media screen and (max-width: 980PX) {
   :root {
     --background-image-aspect-ratio: calc(962 / 601);
@@ -146,11 +154,16 @@ export default {
   }
 
   .page-container {
-    background-color: #002142;
+    background-color: #0E315B;
   }
 
   .countdown-timer {
-    padding-top: 27%;
+    padding-top: 35%;
+  }
+
+  .countdown-textfield{
+    display: inline;
+    margin: 0px -10px;
   }
 }
 
@@ -160,7 +173,7 @@ export default {
     --countdown-right-offset: 9vw;
     --countdown-font-size: 8vw;
     --countdown-top-offset: 86.5%;
-    --background-image: url("../../assets/bg/home/bg-tablet.png");
+    --background-image: url("../../assets/bg/home/bg-mobile.png");
   }
 
   .comingSoon {
@@ -168,11 +181,16 @@ export default {
   }
 
   .page-container {
-    background-color: #002142;
+    background-color: #0E315B;
   }
 
   .countdown-timer {
-    padding-top: 30%;
+    padding-top: 48%;
+  }
+
+  .countdown-textfield{
+    display: inline;
+    margin: 0px -5px;
   }
 }
 

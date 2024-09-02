@@ -1,6 +1,6 @@
 <template>
     <div class="footery">
-        <p id="text1"> KSET © Copyright {{this.year }}. All Rights Reserved.</p>
+        <p id="text1"> © KSET</p>
 
         <router-link id="text2" to="/pravila-ponasanja">
             Pravila ponašanja
@@ -23,6 +23,7 @@ export default {
 
 <style>
 .footery {
+    background-color: #0E315B;
     position: absolute;
     padding: 0px;
     bottom: 0;
@@ -31,7 +32,6 @@ export default {
     position: absolute;
     /* background: #0E315B;
 ; */
-    background: transparent;
 }
 
 .footery::after {

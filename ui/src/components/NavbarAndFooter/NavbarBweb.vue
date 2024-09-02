@@ -4,10 +4,6 @@
       {{ translations?.navbar.title ? translations.navbar.title : "navbar.title" }} </router-link>
     <div class="routes">
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('naslovnica') }" class="navbar-element hideTablet"
-        :name="'Naslovnica'" :link="'/'">
-      </RouterElement>
-
       <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.LINEUP_VISIBILITY == '1'"
         class="navbar-element hideTablet" :name="'Izvođači'" :link="'/lineup'">
       </RouterElement>
@@ -36,16 +32,14 @@
 
       <div id="myNav" class="overlay bw">
         <div class="overlay-content bw">
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('naslovnica') }" class=" overlay-element"
-            :name="'Naslovnica'" :link="'/'" @click="toggleNav()">
-          </RouterElement>
 
           <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.LINEUP_VISIBILITY == '1'"
             class="overlay-element " :name="'Izvođači'" :link="'/lineup'" @click="toggleNav()">
           </RouterElement>
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }" v-if="this.ULAZNICA_VISIBILITY == '1'"
-            class="overlay-element " :name="'Ulaznice'" :link="'/ulaznice'" @click="toggleNav()">
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }"
+            v-if="this.ULAZNICA_VISIBILITY == '1'" class="overlay-element " :name="'Ulaznice'" :link="'/ulaznice'"
+            @click="toggleNav()">
           </RouterElement>
 
           <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }"
@@ -130,6 +124,26 @@ export default {
 
 
 </script>
+
+<style scoped>
+.navbar-title {
+  font-family: 'Ubuntu';
+  font-size: 20px ;
+}
+
+.navbar-title:hover{
+  color: #dbe9f4;
+}
+
+.navbar-element {
+  font-family: 'Ubuntu';
+}
+
+.overlay-element {
+  font-family: 'Ubuntu';
+}
+</style>
+
 <style lang="css">
 .overlay {
   height: 0%;
@@ -187,9 +201,7 @@ export default {
 }
 
 .overlay-element:hover,
-.overlay-element:focus {
-  color: #f1f1f1;
-}
+.overlay-element:focus {}
 
 .overlay .closebtn {
   position: absolute;
@@ -240,7 +252,7 @@ export default {
 #nav-icon4 span {
   display: block;
   position: absolute;
-  height: 6px;
+  height: 1px;
   width: 100%;
   background: #FFFFFF;
   border-radius: 6px;
@@ -267,15 +279,15 @@ export default {
 
 #nav-icon3 span:nth-child(2),
 #nav-icon3 span:nth-child(3) {
-  top: 10px;
+  top: 8px;
 }
 
 #nav-icon3 span:nth-child(4) {
-  top: 20px;
+  top: 16px;
 }
 
 #nav-icon3.open span:nth-child(1) {
-  top: 10px;
+  top: 8px;
   width: 0%;
   left: 50%;
 }
@@ -337,5 +349,3 @@ export default {
   }
 }
 </style>
-
-

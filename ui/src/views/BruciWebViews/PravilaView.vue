@@ -53,7 +53,7 @@ export default {
 
 h1 {
 
-  font-family: 'Antonio';
+  font-family: 'Ubuntu';
   font-style: normal;
   font-weight: 700;
   font-size: 36px;
@@ -63,7 +63,7 @@ h1 {
 }
 
 p {
-  font-family: 'Myriad Pro';
+  font-family: 'Ubuntu';
   font-style: normal;
   font-weight: 400;
   font-size: 20px;

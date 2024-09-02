@@ -178,14 +178,12 @@ export default {
 /* On mouse-over */
 .sidenav a:hover,
 .dropdown-btn:hover {
-    color: darkgray;
 }
 
 /* Main content */
 
 /* Add an active class to the active dropdown button */
 .active {
-    background-color: gray;
     color: white;
 }
 

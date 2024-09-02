@@ -187,6 +187,7 @@ export default {
 <style scoped>
   .navbar-title{
     color: black;
+    font-family: 'Ubuntu'
   }
 
   .navbar-element{
@@ -220,6 +221,7 @@ export default {
 }
 
 .navbar.bw {
+  background-color: #00142B;
   font-family: "Antonio";
   font-style: normal;
   font-weight: 400;
