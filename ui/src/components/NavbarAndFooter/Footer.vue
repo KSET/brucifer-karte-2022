@@ -1,6 +1,6 @@
 <template>
     <div class="footery">
-        <p id="text1"> © KSET</p>
+        <p id="text1"> © KSET {{year}}</p>
 
         <router-link id="text2" to="/pravila-ponasanja">
             Pravila ponašanja
@@ -53,7 +53,7 @@ export default {
     top: 37.5%;
     bottom: 20%;
 
-    font-family: 'Antonio';
+    font-family: 'Ubuntu';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -72,7 +72,7 @@ export default {
     top: 37.5%;
     bottom: 20%;
 
-    font-family: 'Antonio';
+    font-family: 'Ubuntu';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
