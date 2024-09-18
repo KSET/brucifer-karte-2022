@@ -152,7 +152,7 @@ export default {
                             }
                         })
                 } else {
-                    if (this.lineups.length != 1) {
+                    if (this.lineups.length > 0) {
                         var lastOrder = this.lineups[this.lineups.length - 2].order;
 
                         if (lastOrder[0] == "0") {
