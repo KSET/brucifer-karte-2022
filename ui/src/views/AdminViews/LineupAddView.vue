@@ -153,7 +153,7 @@ export default {
                         })
                 } else {
                     if (this.lineups.length > 0) {
-                        var lastOrder = this.lineups[this.lineups.length - 2].order;
+                        var lastOrder = this.lineups[this.lineups.length - 1].order;
 
                         if (lastOrder[0] == "0") {
                             if (lastOrder == "09") {
