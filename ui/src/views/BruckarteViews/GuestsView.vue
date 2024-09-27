@@ -244,7 +244,7 @@ export default {
 
       this.email = email
       // za testiranje, maknuti u produkciji
-      email = "pavleergovic@gmail.com"
+      // email = "pavleergovic@gmail.com"
 
       var msg = this.name + " " + this.surname + " " + guest.confCode
 
