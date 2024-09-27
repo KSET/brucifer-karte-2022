@@ -10,7 +10,7 @@
           <th>Opcije</th>
         </thead>
         <tbody>
-          <tr style="overflow:auto; height=200px;" v-for="tag in tags" :key="tag.id">
+          <tr style="overflow:auto;" v-for="tag in tags" :key="tag.id">
             <td>{{ tag.name }}</td>
             <td>{{ tag.count }}</td>
             <td>{{ tag.bought }}</td>
