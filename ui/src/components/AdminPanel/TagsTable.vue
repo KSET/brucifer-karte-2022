@@ -45,10 +45,13 @@ export default {
       numb: '',
       nume: '',
     }
-
   },
-  mounted() {
-    this.processTags();
+  watch: {
+    tags(newTags) {
+      if (newTags && newTags.length > 0) {
+        this.processTags();
+      }
+    }
   },
   methods: {
     processTags() {

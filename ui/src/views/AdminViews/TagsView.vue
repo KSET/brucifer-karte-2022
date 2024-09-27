@@ -6,7 +6,8 @@
         <h1 class="page-title">Tagovi</h1>
         <form onsubmit="return false" style="display: inline-block;  vertical-align: middle;">
           <input required type="text" class="inputtag" v-model="name" placeholder="Unesi ime taga">
-          <button class="button-icon" @click="postTag"> <img class="add-icon" src="@/assets/icons/add-icon.svg"></button>
+          <button class="button-icon" @click="postTag"> <img class="add-icon"
+              src="@/assets/icons/add-icon.svg"></button>
         </form>
       </div>
       <TagsTable :tags="tags" @refreshTags="fetchTags" />
@@ -34,11 +35,9 @@ export default {
     this.fetchTags();
   },
   methods: {
-    fetchTags() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
-        .then(response => {
-          this.tags = response.data;
-        })
+    async fetchTags() {
+      const response = await axios.get(process.env.VUE_APP_BASE_URL + '/tags/');
+      this.tags = response.data;
     },
     postTag() {
       if (this.name != "") {
@@ -57,7 +56,7 @@ export default {
 </script>
 
 
-<style >
+<style>
 #title0 {
   display: inline-block;
 }
