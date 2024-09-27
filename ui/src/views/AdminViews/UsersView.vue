@@ -146,7 +146,7 @@ export default {
         {
           emails:
             [{
-              subject: "[#BRUCIFER22] Promjena privilegije",
+              subject: "[#BRUCIFER24] Promjena privilegije",
               template: "user_email",
               message: user.name + " " + privilege_name,
               name: to_user_name,
@@ -159,7 +159,7 @@ export default {
 
       await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
         {
-          subject: "[#BRUCIFER22] Promjena privilegije",
+          subject: "[#BRUCIFER24] Promjena privilegije",
           template: "user_email",
           message: user.name + " " + privilege_name,
           name: to_user_name,
