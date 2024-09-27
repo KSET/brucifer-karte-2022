@@ -46,59 +46,75 @@ export default {
 
     },
     methods: {
-
+        base64UrlDecode(str) {
+            return decodeURIComponent(atob(str.replace(/-/g, '+').replace(/_/g, '/')));
+        },
         handleCredentialResponse(res) {
-            const responsePayload = VueJwtDecode.decode(res.credential);
+            const tokenParts = res.credential.split('.'); // JWT format: header.payload.signature
+            if (tokenParts.length === 3) {
+                const payload = this.base64UrlDecode(tokenParts[1]);
+                const responsePayload = JSON.parse(payload);
 
-            store.commit('setId', responsePayload.sub)
-            store.commit('setName', decodeURIComponent(escape(responsePayload.name)));
-            store.commit('setEmail', responsePayload.email)
-            store.commit('setTokenExp', responsePayload.exp)
-
-
-
-            axios.get(process.env.VUE_APP_BASE_URL + '/users/',)
-                .then(response => {
+                // Proceed with your existing logic
+                store.commit('setId', responsePayload.sub);
+                store.commit('setName', decodeURIComponent(escape(responsePayload.name)));
+                store.commit('setEmail', responsePayload.email);
+                store.commit('setTokenExp', responsePayload.exp);
+                // Fetch users from the server
+                axios.get(`${process.env.VUE_APP_BASE_URL}/users/`).then(response => {
                     this.users = response.data;
 
-                    var ids = [];
-                    var registeredEmail = false;
-
-
-                    this.users.forEach(element => {
-                        ids.push(element.id);
-
-                        if (element.email == responsePayload.email) {
-                            registeredEmail = true
-                            store.commit('setPrivilege', element.privilege)
-                            if (element.name == "") {
-                                axios.put(process.env.VUE_APP_BASE_URL + '/users/' + element.id + '/',
-                                    { name: decodeURIComponent(escape(responsePayload.name)) },
-                                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-                                )
+                    let registeredEmail = this.users.some(user => {
+                        if (user.email === responsePayload.email) {
+                            // Update privilege and check for empty name to update
+                            store.commit('setPrivilege', user.privilege);
+                            if (!user.name) {
+                                axios.put(`${process.env.VUE_APP_BASE_URL}/users/${user.id}/`, {
+                                    name: decodeURIComponent(escape(responsePayload.name)),
+                                }, {
+                                    auth: {
+                                        username: process.env.VUE_APP_DJANGO_USER,
+                                        password: process.env.VUE_APP_DJANGO_PASS,
+                                    }
+                                });
                             }
+                            return true; // Email is registered
                         }
+                        return false; // Continue checking
                     });
 
+                    // Register new user if email not found
                     if (!registeredEmail) {
-                        axios.post(process.env.VUE_APP_BASE_URL + '/users/',
-                            { name: decodeURIComponent(escape(responsePayload.name)), email: responsePayload.email, privilege: '0' },
-                            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-                        )
-                        store.commit('setPrivilege', '0')
+                        axios.post(`${process.env.VUE_APP_BASE_URL}/users/`, {
+                            name: decodeURIComponent(escape(responsePayload.name)),
+                            email: responsePayload.email,
+                            privilege: '0',
+                        }, {
+                            auth: {
+                                username: process.env.VUE_APP_DJANGO_USER,
+                                password: process.env.VUE_APP_DJANGO_PASS,
+                            }
+                        });
+                        store.commit('setPrivilege', '0');
                     }
-                    if (this.privilege == 2) {
-                        this.$router.push({ name: 'entry' })
-                    } else if (this.privilege == 3) {
-                        this.$router.push({ name: 'guests' })
-                    } else {
-                        this.$router.push({ name: 'home' })
+
+                    // Redirect based on privilege level
+                    switch (this.privilege) {
+                        case 2:
+                            this.$router.push({ name: 'entry' });
+                            break;
+                        case 3:
+                            this.$router.push({ name: 'guests' });
+                            break;
+                        default:
+                            this.$router.push({ name: 'home' });
                     }
-                })
-
-
-
+                });
+            } else {
+                console.error("Invalid JWT format");
+            }
         }
+
 
 
     },
@@ -124,7 +140,7 @@ export default {
 }
 </script>
 
-<style >
+<style>
 #signin_button {
     text-align: center;
     justify-content: center;
