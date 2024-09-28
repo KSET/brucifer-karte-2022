@@ -153,6 +153,7 @@ export default {
     p {
         font-size: 0.6em;
         font-family: "Montserrat";
+        color: black;
     }
 }
 

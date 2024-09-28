@@ -21,18 +21,18 @@
                     <GuestInfo :guest="guest"></GuestInfo>
                 </div>
                 <div v-else-if="success == 'not-in-db'">
-                    <p style="height: 80px;">
+                    <p class="error-text">
                         QR kod i konfirmacijski kod su okej, ali kod nije u bazi podataka,pokušajte ponovno očitati kod, ili
                         manualno unesite ime </p>
                 </div>
                 <div v-else-if="success == 'invalid-qr'">
-                    <p style="height: 80px;">
+                    <p class="error-text">
                         QR kod je očitan, ali ne sadrži kod za potvrdu koji bi trebao sadržavati, pokušajte ponovno očitati
                         kod, ili manualno unesite ime
                     </p>
                 </div>
                 <div v-else>
-                    <p style="height: 80px;">
+                    <p class="error-text">
                         Dogodila se nepoznata greška, javite se administratoru </p>
                 </div>
                 <div class="closeBtn" @click="dialogGuest = false">
@@ -106,5 +106,11 @@ export default {
     border: 1px solid black;
     margin: -10px 10px 10px 10px;
     border-radius: 10px;
+}
+
+.error-text{
+    height: 80px;
+    color: black;
+    padding: 2%;
 }
 </style>
