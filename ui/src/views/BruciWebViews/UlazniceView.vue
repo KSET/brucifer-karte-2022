@@ -4,21 +4,23 @@
       <div class="contents">
 
         <!-- Pretix Widget -->
-        <pretix-widget event="https://karte.kset.org/kset/brucosijada/" data-domain="karte.kset.org" data-embed="true"></pretix-widget>
+        <pretix-widget event="https://karte.kset.org/kset/brucosijada/" data-domain="karte.kset.org"
+          data-embed="true"></pretix-widget>
         <noscript>
           <div class="pretix-widget">
             <div class="pretix-widget-info-message">
-              JavaScript is disabled in your browser. To access our ticket shop without JavaScript, please 
+              JavaScript is disabled in your browser. To access our ticket shop without JavaScript, please
               <a target="_blank" rel="noopener" href="https://karte.kset.org/kset/brucosijada/">click here</a>.
             </div>
           </div>
         </noscript>
 
-        <div v-if="length != 0">
-          <section v-for="i in length" :key="i">
+        <div v-if="translationsLength != 0">
+          <section v-for="i in translationsLength" :key="i">
             <h1>{{ translations.ulaznice["title" + i] }}</h1>
             <div class="text">
-              <p class="pText" v-for="text in translations.ulaznice['text' + i].split('\n\n')" :key="text">{{ text }}</p>
+              <p class="pText" v-for="text in translations.ulaznice['text' + i].split('\n\n')" :key="text">{{ text }}
+              </p>
             </div>
           </section>
         </div>
@@ -43,17 +45,14 @@ export default {
   components: { Footer },
   data() {
     return {
-      length: '0',
     }
   },
   computed: {
     translations() {
       return translationsStore.state.translations;
-    }
-  },
-  created() {
-    if (this.translations.ulaznice) {
-      this.length = Object.keys(this.translations.ulaznice).length / 2;
+    },
+    translationsLength() {
+      return this.translations.ulaznice ? Object.keys(this.translations.ulaznice).length / 2 : 0;
     }
   },
   mounted() {
@@ -68,7 +67,7 @@ export default {
 </script>
 
 
-<style >
+<style>
 h1 {
   font-weight: 700;
   font-size: 36px;
@@ -84,7 +83,7 @@ p {
   background: #00000026;
 }
 
-.pretix-widget{
+.pretix-widget {
   background-color: white;
 }
 

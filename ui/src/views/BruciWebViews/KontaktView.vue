@@ -2,8 +2,8 @@
   <div class="bw-page-container">
     <div>
       <div class="contents">
-        <div v-if="length != 0">
-          <section v-for="i in length" :key="i">
+        <div v-if="translationsLength != 0">
+          <section v-for="i in translationsLength" :key="i">
 
             <h1>{{ translations.kontakt["title" + i] }}</h1>
             <div class="text">
@@ -31,17 +31,14 @@ export default {
   components: { Footer },
   data() {
     return {
-      length: '0',
     }
   },
   computed: {
     translations() {
       return translationsStore.state.translations;
-    }
-  },
-  created() {
-    if (this.translations.kontakt) {
-      this.length = Object.keys(this.translations.kontakt).length / 2
+    },
+    translationsLength() {
+      return this.translations.kontakt ? Object.keys(this.translations.kontakt).length / 2 : 0;
     }
   }
 }
