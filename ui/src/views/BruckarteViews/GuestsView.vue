@@ -244,7 +244,7 @@ export default {
 
       this.email = email
       // za testiranje, maknuti u produkciji
-       email = "test-0sww2d9fm@srv1.mail-tester.com"
+       email = "nika.milicevic20002@gmail.com"
 
       var msg = this.name + " " + this.surname + " " + guest.confCode
 
