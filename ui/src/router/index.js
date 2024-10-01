@@ -242,7 +242,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(to.name);
   //provjera auth i privilegija
   var allowedRoutesForprivilege2 = [
     "home",
@@ -272,7 +271,6 @@ router.beforeEach((to, from, next) => {
     undefined,
   ];
 
-  console.log(store.state.privilege, to.name)
   if (to.path.startsWith("/admin")) {
     if (Date.now() / 1000 > store.state.tokenExp && to.name !== "logout") {
       next({ path: "/admin/logout" });
