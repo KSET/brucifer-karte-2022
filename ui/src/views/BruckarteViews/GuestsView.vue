@@ -8,6 +8,7 @@
       <v-progress-circular v-if="loading == true" size="90px" indeterminate color="black"></v-progress-circular>
       <h1 class="textfield"> {{ this.nomatch }}</h1>
     </div>
+    <p style="color: black; text-align: center;">Napomenite brucošima da karta dolazi na mail i da dolazi u SPAM/JUNK!</p>
 
     <div class="grid-container guests">
       <h1 class="textfield">Ime </h1>
