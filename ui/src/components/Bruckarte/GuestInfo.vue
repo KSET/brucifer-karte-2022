@@ -10,16 +10,16 @@
             <input v-if="guest?.tag !== undefined && !guest?.tag.includes('Sponzor')" readonly class="inputfield "
                 :disabled="guest?.id == ''" type="text" @input="changeValue" v-model="guest.surname">
 
-            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield ">JMBAG </h1>
-            <input v-if="guest?.tag == 'Brucoši'" class="inputfield " readonly type="text" v-model="guest.jmbag">
+            <h1 v-if="guest?.tag?.includes('Brucoši')" class="textfield ">JMBAG </h1>
+            <input v-if="guest?.tag?.includes('Brucoši')" class="inputfield " readonly type="text" v-model="guest.jmbag">
 
-            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield">Karta </h1>
+            <h1 v-if="guest?.tag?.includes('Brucoši')" class="textfield">Karta </h1>
 
-            <button disabled v-if="guest?.tag == 'Brucoši' && guest?.bought == '1'" class="bttn button2-yes"
+            <button disabled v-if="guest?.tag?.includes('Brucoši') && guest?.bought == '1'" class="bttn button2-yes"
                 @click="changeBought(guest, '0')">
                 <img class="va" src="../../assets/icons/yes-icon.svg">
             </button>
-            <button disabled class="bttn button2-no" v-if="guest?.tag == 'Brucoši' && guest?.bought == '0'"
+            <button disabled class="bttn button2-no" v-if="guest?.tag?.includes('Brucoši') && guest?.bought == '0'"
                 @click="changeBought(guest, '1')">
                 <img class="va" src="../../assets/icons/no-icon.svg">
             </button>
@@ -34,8 +34,8 @@
                 <img class="va" src="../../assets/icons/no-icon.svg">
             </button>
 
-            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield">Potvrda </h1>
-            <h1 v-if="guest?.tag == 'Brucoši'" class="textfield" style="width: 100%">{{ guest?.confCode }} </h1>
+            <h1 v-if="guest?.tag?.includes('Brucoši')" class="textfield">Potvrda </h1>
+            <h1 v-if="guest?.tag?.includes('Brucoši')" class="textfield" style="width: 100%">{{ guest?.confCode }} </h1>
         </div>
     </div>
 </template>

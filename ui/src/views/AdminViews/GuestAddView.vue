@@ -110,7 +110,7 @@ export default {
         },
         checkJMBAGdisplay() {
             var e = document.getElementById("tagselect").value;
-            if (e == "Brucoši") {
+            if (e.includes("Brucoši")) {
                 document.getElementById("jmbagselect").style.display = "inline-block";
                 document.getElementById("jmbagselectt").style.display = "inline-block";
 
@@ -148,7 +148,7 @@ export default {
 
                 let post = 1;
 
-                if (this.selectedTag == "Brucoši") {
+                if (this.selectedTag.includes("Brucoši")) {
                     if (jmbags.includes(String(this.jmbag))) {
                         window.alert("Gost s ovim JMBAG-om već postoji!!")
                         post = 0;
