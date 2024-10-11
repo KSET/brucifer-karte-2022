@@ -38,6 +38,7 @@ import BWPageNotFound from "../views/BruciWebViews/BWPageNotFound.vue";
 import BWcjenik from "../views/BruciWebViews/BWcjenikView.vue";
 import Tlocrt from "../views/BruciWebViews/TlocrtView.vue";
 import Satnica from "../views/BruciWebViews/SatnicaView.vue";
+import Igrica from "../views/BruciWebViews/IgricaView.vue";
 
 import SponsorsPage from "../views/BruciWebViews/SponsorsPageView.vue";
 
@@ -216,6 +217,14 @@ const routes = [
     component: Satnica,
     meta: {
       visibilityCheck: "SATNICA_VISIBILITY",
+    },
+  },
+  {
+    path: "/igrica",
+    name: "igrica",
+    component: Igrica,
+    meta: {
+      visibilityCheck: "IGRICA_VISIBILITY",
     },
   },
   {

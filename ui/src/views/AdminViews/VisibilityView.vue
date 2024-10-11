@@ -90,6 +90,18 @@
                 </button>
 
                 <h1 class="textfield">
+                    Prikaz stranice Igrice
+                </h1>
+                <button v-if="IGRICA_VISIBILITY == 1" class="button change"
+                    @click="changeVisibility('IGRICA_VISIBILITY', '0')">
+                    <img src="../../assets/icons/yes-icon.svg">
+                </button>
+                <button v-else class="button change" @click="changeVisibility('IGRICA_VISIBILITY', '1')"
+                    style="background-color: white;">
+                    <img class="image1" src="../../assets/icons/no-icon.svg">
+                </button>
+
+                <h1 class="textfield">
                     Prikaz stranice Timera
                 </h1>
                 <button v-if="TIMER_VISIBILITY == 1" class="button change"
@@ -164,6 +176,9 @@ export default {
         },
         TIMER_VISIBILITY() {
             return store.state.TIMER_VISIBILITY;
+        },
+        IGRICA_VISIBILITY() {
+            return store.state.IGRICA_VISIBILITY;
         },
         formattedTimerTime() {
             const timerTime = store.state.TIMER_TIME;

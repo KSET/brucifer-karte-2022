@@ -2,9 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import filters
 from rest_framework import routers, serializers, viewsets
-from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer
+from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard
 from django_filters.rest_framework import DjangoFilterBackend
-from .serializer import TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer
+from .serializer import TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.mail import BadHeaderError, send_mail
@@ -159,3 +159,11 @@ class TranslationsViewSet(viewsets.ModelViewSet):
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     search_fields = ['key']
     ordering_fields = ['key']
+
+class GameLeaderboardViewSet(viewsets.ModelViewSet):
+    queryset = GameLeaderboard.objects.all()
+    serializer_class = GameLeaderboardSerializer
+
+    filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
+    search_fields = ['email']
+    ordering_fields = ['score']

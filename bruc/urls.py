@@ -2,7 +2,7 @@
 from django.urls import path, include
 
 from rest_framework import routers, views
-from .views import TranslationsViewSet, VisibilityViewSet, CjenikViewSet, ContactViewSet, GuestsViewSet, MailerViewSet, TagsViewSet, UsersViewSet, LineupViewSet, SponsorsViewSet, send_mail
+from .views import GameLeaderboardViewSet, TranslationsViewSet, VisibilityViewSet, CjenikViewSet, ContactViewSet, GuestsViewSet, MailerViewSet, TagsViewSet, UsersViewSet, LineupViewSet, SponsorsViewSet, send_mail
 
 router = routers.DefaultRouter()
 router.register('guests', GuestsViewSet)
@@ -15,6 +15,7 @@ router.register('mailer', MailerViewSet)
 router.register('cjenik', CjenikViewSet)
 router.register('visibility', VisibilityViewSet)
 router.register('translations', TranslationsViewSet)
+router.register('gameLeaderboard', GameLeaderboardViewSet)
 
 
 urlpatterns = [

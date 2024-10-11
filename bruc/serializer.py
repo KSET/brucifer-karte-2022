@@ -1,6 +1,6 @@
 from socket import if_indextoname
 from rest_framework import serializers, filters
-from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer
+from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard
 
 
 class GuestsSerializer(serializers.HyperlinkedModelSerializer):
@@ -63,6 +63,11 @@ class TranslationsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Translations
         fields = ["id", "key", "value"]
+
+class GameLeaderboardSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = GameLeaderboard
+        fields = ["id", "name", "email", "score"]
 
 
 class DynamicSearchFilter(filters.SearchFilter):

@@ -115,3 +115,9 @@ class Translations(models.Model):
     id = models.AutoField(primary_key=True)
     key = models.CharField(max_length=5000, default='', blank=True)
     value = models.CharField(max_length=5000, default='', blank=True)
+
+class GameLeaderboard(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50, default='', blank=True)
+    email = models.CharField(max_length=50, default='', blank=True)
+    score = models.IntegerField(default='', blank=True)

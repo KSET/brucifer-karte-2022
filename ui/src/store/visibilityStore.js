@@ -12,6 +12,7 @@ export default createStore({
     TLOCRT_VISIBILITY: "",
     ULAZNICA_VISIBILITY: "",
     TIMER_VISIBILITY: "",
+    IGRICA_VISIBILITY: "",
     TIMER_TIME: "",
     SPONSORS_INPUT_TIME: "",
   },
@@ -40,6 +41,9 @@ export default createStore({
     },
     setTIMER_VISIBILITY(state, value) {
       state.TIMER_VISIBILITY = value;
+    },
+    setIGRICA_VISIBILITY(state, value) {
+      state.IGRICA_VISIBILITY = value;
     },
     setTIMER_TIME(state, value) {
       state.TIMER_TIME = value;

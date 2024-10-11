@@ -15,6 +15,10 @@
       <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }" v-if="this.SPONSORS_VISIBILITY == '1'"
         class="navbar-element hideTablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
 
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('igrica') }" v-if="this.IGRICA_VISIBILITY == '1'"
+        class="navbar-element hideTablet" :name="'Igrica'" :link="'/igrica'">
+      </RouterElement>
+
       <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="navbar-element hideTablet"
         :name="'Kontakt'" :link="'/kontakt'">
       </RouterElement>
@@ -45,6 +49,10 @@
           <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }"
             v-if="this.SPONSORS_VISIBILITY == '1'" class="overlay-element " :name="'Sponzori'" :link="'/sponsors'"
             @click="toggleNav()">
+          </RouterElement>
+
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('igrica') }" v-if="this.IGRICA_VISIBILITY == '1'"
+            class="overlay-element " :name="'Igrica'" :link="'/igrica'" @click="toggleNav()">
           </RouterElement>
 
           <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="overlay-element "
@@ -98,6 +106,9 @@ export default {
     CJENIK_VISIBILITY() {
       return store.state.CJENIK_VISIBILITY;
     },
+    IGRICA_VISIBILITY() {
+      return store.state.IGRICA_VISIBILITY;
+    },
     translations() {
       return translationsStore.state.translations;
     }
@@ -128,10 +139,10 @@ export default {
 <style scoped>
 .navbar-title {
   font-family: 'Ubuntu';
-  font-size: 20px ;
+  font-size: 20px;
 }
 
-.navbar-title:hover{
+.navbar-title:hover {
   color: #dbe9f4;
 }
 
