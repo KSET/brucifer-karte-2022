@@ -4,12 +4,16 @@
             <section>
                 <h1 class="bwh1" style="display:inline-block; vertical-align: middle; margin-top: 2rem;">{{
                     translations?.leaderboard?.pagetitle ? translations.leaderboard.pagetitle : "leaderboard.pagetitle"
-                }}
+                    }}
                 </h1>
 
+                <div class="igrica-container">
+                    <iframe src="/igrica/Brucifer 2024.html" class="igrica-frame"></iframe>
+                </div>
                 <div class="leaderboard-table">
                     <div class="leaderboard-title">
-                        <h1>{{ translations?.leaderboard?.placementTableTitle ? translations.leaderboard.placementTableTitle :
+                        <h1>{{ translations?.leaderboard?.placementTableTitle ?
+                            translations.leaderboard.placementTableTitle :
                             "leaderboard.placementTableTitle" }}</h1>
                         <h1>{{ translations?.leaderboard?.nameTableTitle ? translations.leaderboard.nameTableTitle :
                             "leaderboard.nameTableTitle" }}</h1>
@@ -21,7 +25,7 @@
                                 "leaderboard.scoreTableTitle" }}</h1>
 
                         <div class="leaderboard-items" v-for="(player, index) in leaderboardData" :key="player.id">
-                            <h1>#{{index + 1}}</h1>
+                            <h1>#{{ index + 1 }}</h1>
                             <h1>{{ player.name }}</h1>
                             <h1>{{ player.email }} </h1>
                             <h1>{{ player.score }}</h1>
@@ -43,13 +47,14 @@ import translationsStore from '@/store/translationsStore';
 import visibilityStore from '@/store/visibilityStore';
 
 export default {
-    name: 'KontaktView',
+    name: 'IgricaView',
     components: { Footer },
     mounted() {
-        if (visibilityStore.state.ULAZNICA_VISIBILITY == 0) {
+        if (visibilityStore.state.IGRICA_VISIBILITY == 0) {
             this.$router.push({ name: 'BWPageNotFound' });
         }
         this.fetchLeaderboardData();
+        window.addEventListener("message", this.receiveScore);
     },
     data() {
         return {
@@ -72,12 +77,36 @@ export default {
             } catch (error) {
                 console.error('Error fetching leaderboard data:', error);
             }
+        },
+        receiveScore(event) {
+            if (event.data && event.data.submittedScore) {
+                this.sendScoreToBackend(event.submittedScore);
+            }
+        },
+        async sendScoreToBackend(score) {
+            console.log("CONSOLE",score)
         }
+    },
+    beforeDestroy() {
+        window.removeEventListener("message", this.receiveScore);
     }
 }
 </script>
 
 <style>
+.igrica-container {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 1%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.igrica-frame {
+    height: 720px;
+    width: 480px;
+}
+
 .leaderboard-table {
     width: 100%;
     background-color: rgba(0, 0, 0, 0.3);
