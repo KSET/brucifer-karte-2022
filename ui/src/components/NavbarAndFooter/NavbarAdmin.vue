@@ -38,6 +38,8 @@
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Tagovi'"
             :link="'/admin/tags'">
           </RouterElement>
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Dnevni izvještaj'" @click="toggleNav()"
+            :link="'/admin/daily-report'"></RouterElement>
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Privilegije'"
             :link="'/admin/privileges'"></RouterElement>
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Korisnici'"

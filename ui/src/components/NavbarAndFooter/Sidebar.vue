@@ -1,6 +1,7 @@
 <template>
     <div class="sidenav">
         <RouterElement class="sidebar-element" :name="'Tagovi'" :link="'/admin/tags'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Dnevni izvještaj'" :link="'/admin/daily-report'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Privilegije'" :link="'/admin/privileges'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Korisnici'" :link="'/admin/users'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Uvoz'" :link="'/admin/import'"></RouterElement>

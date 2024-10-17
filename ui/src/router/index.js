@@ -26,6 +26,7 @@ import Firme from "../views/AdminViews/FirmeView.vue";
 import Cjenik from "../views/AdminViews/CjenikView.vue";
 import Visibility from "../views/AdminViews/VisibilityView.vue";
 import Translations from "../views/AdminViews/TranslationsView.vue";
+import DailyReport from "../views/AdminViews/DailyReportView.vue";
 
 /* BruciWeb Views */
 import Bwlineup from "../views/BruciWebViews/BWlineupView.vue";
@@ -153,6 +154,11 @@ const routes = [
     path: "/admin/translations",
     name: "translations",
     component: Translations,
+  },
+  {
+    path: "/admin/daily-report",
+    name: "dailyReport",
+    component: DailyReport,
   },
   {
     path: "/admin/:pathMatch(.*)*",

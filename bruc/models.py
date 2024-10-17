@@ -15,6 +15,7 @@ class Guests(models.Model):
     bought = models.CharField(max_length=50, default='0', blank=True)
     entered = models.CharField(max_length=50, default='', blank=True)
     confCode = models.CharField(max_length=50, default='', blank=True)
+    boughtTicketTime = models.DateTimeField(null=True, blank=True)
 
 
 class Users(models.Model):

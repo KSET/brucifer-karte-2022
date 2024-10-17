@@ -8,7 +8,8 @@
       <v-progress-circular v-if="loading == true" size="90px" indeterminate color="black"></v-progress-circular>
       <h1 class="textfield"> {{ this.nomatch }}</h1>
     </div>
-    <p style="color: black; text-align: center;">Napomenite brucošima da karta dolazi na mail i da dolazi u SPAM/JUNK!</p>
+    <p style="color: black; text-align: center;">Napomenite brucošima da karta dolazi na mail i da dolazi u SPAM/JUNK!
+    </p>
 
     <div class="grid-container guests">
       <h1 class="textfield">Ime </h1>
@@ -33,6 +34,9 @@
 
       <h1 class="textfield">Potvrda </h1>
       <h1 class="textfield">{{ this.confCode }} </h1>
+
+      <h1 class="textfield">Vrijeme kupnje karte </h1>
+      <h1 class="textfield">{{ formatDate(this.boughtTicketTime) }} </h1>
     </div>
 
 
@@ -99,6 +103,7 @@ export default {
       deleted: '',
       nomatch: '',
       confCode: '',
+      boughtTicketTime: '',
       dialog: false,
       dialogProgress: false,
 
@@ -136,17 +141,21 @@ export default {
       } else {
         if (changenum == 1) {
           var confCode = this.$uuid.v1();
+          var boughtTicketTime = new Date().toISOString()
 
         } else {
           var confCode = "";
+          var boughtTicketTime = null;
         }
         axios.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
-          { bought: changenum, confCode: confCode },
+          { bought: changenum, confCode: confCode, boughtTicketTime: boughtTicketTime },
           { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
         )
           .then(() => {
             guest.bought = changenum;
             guest.confCode = confCode;
+            guest.boughtTicketTime = boughtTicketTime;
+            this.boughtTicketTime = boughtTicketTime;
             this.confCode = confCode;
 
             if (changenum == 1) {
@@ -174,8 +183,8 @@ export default {
             this.name = this.guest.name;
             this.surname = this.guest.surname;
             this.jmbag = this.guest.jmbag;
-            this.jmbag = this.guest.jmbag;
             this.confCode = this.guest.confCode;
+            this.boughtTicketTime = this.guest.boughtTicketTime;
 
           } else if (this.guests.length == 0) {
             this.nomatch = "JMBAG nije pronađen!";
@@ -184,6 +193,7 @@ export default {
             this.surname = '';
             this.jmbag = '';
             this.confCode = '';
+            this.boughtTicketTime = '';
 
           }
           else if (this.guests.length > 1 && this.guests.length < 20) {
@@ -196,6 +206,7 @@ export default {
             this.surname = '';
             this.jmbag = '';
             this.confCode = '';
+            this.boughtTicketTime = '';
 
             this.bought = '0';
           }
@@ -277,6 +288,19 @@ export default {
       this.dialogProgress = false;
       this.dialog = true;
     },
+    formatDate(date) {
+      if(date==''){
+        return ''
+      }
+      const d = new Date(date);
+      const day = d.getDate().toString().padStart(2, '0');
+      const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-based, thus add 1
+      const year = d.getFullYear();
+      const hours = d.getHours().toString().padStart(2, '0');
+      const minutes = d.getMinutes().toString().padStart(2, '0');
+      const seconds = d.getSeconds().toString().padStart(2, '0');
+      return `${day}.${month}.${year}. ${hours}:${minutes}:${seconds}`;
+    },
   }
 
 }
@@ -335,4 +359,3 @@ export default {
 
 }
 </style>
-
