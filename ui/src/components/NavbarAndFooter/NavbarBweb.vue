@@ -15,9 +15,13 @@
       <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }" v-if="this.SPONSORS_VISIBILITY == '1'"
         class="navbar-element hideTablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
 
+      <!-- MAKNUTI KADA IGRICA KRENE U PRODUKCIJU
+
       <RouterElement :class="{ [$style.selected]: isCurrentPage('igrica') }" v-if="this.IGRICA_VISIBILITY == '1'"
         class="navbar-element hideTablet" :name="'Igrica'" :link="'/igrica'">
       </RouterElement>
+
+       -->
 
       <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="navbar-element hideTablet"
         :name="'Kontakt'" :link="'/kontakt'">
@@ -51,9 +55,13 @@
             @click="toggleNav()">
           </RouterElement>
 
+          <!-- MAKNUTI KADA IGRICA KRENE U PRODUKCIJU
+
           <RouterElement :class="{ [$style.selected]: isCurrentPage('igrica') }" v-if="this.IGRICA_VISIBILITY == '1'"
             class="overlay-element " :name="'Igrica'" :link="'/igrica'" @click="toggleNav()">
           </RouterElement>
+
+        -->
 
           <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="overlay-element "
             :name="'Kontakt'" :link="'/kontakt'" @click="toggleNav()">

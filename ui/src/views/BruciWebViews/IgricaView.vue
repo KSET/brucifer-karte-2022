@@ -4,7 +4,7 @@
             <section>
                 <h1 class="bwh1" style="display:inline-block; vertical-align: middle; margin-top: 2rem;">{{
                     translations?.leaderboard?.pagetitle ? translations.leaderboard.pagetitle : "leaderboard.pagetitle"
-                    }}
+                }}
                 </h1>
 
                 <div class="igrica-container">
@@ -72,19 +72,38 @@ export default {
     methods: {
         async fetchLeaderboardData() {
             try {
-                const response = await axios.get('http://localhost:8000/api/gameLeaderboard/?ordering=-score'); // Assuming descending order by score
+                const response = await axios.get(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/?ordering=-score');
                 this.leaderboardData = response.data;
             } catch (error) {
                 console.error('Error fetching leaderboard data:', error);
             }
         },
         receiveScore(event) {
-            if (event.data && event.data.submittedScore) {
-                this.sendScoreToBackend(event.submittedScore);
+            if (event.data && event.data.score && event.data.mail && event.data.nickname) {
+                console.log("CONSOLE", event.data.mail)
+                console.log("CONSOLE", event.data.nickname)
+                console.log("CONSOLE", event.data.score)
+
+                this.sendScoreToBackend(event.data);
             }
         },
-        async sendScoreToBackend(score) {
-            console.log("CONSOLE",score)
+        async sendScoreToBackend(scoreData) {
+            console.log("CONSOLE", scoreData)
+
+            const response = await axios.get(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/?email=' +
+                scoreData.email + '&search_fields=email');
+
+            if (response.data) {
+                console.log(response.data)
+            }
+
+            await axios.post(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/',
+                { name: scoreData.nickname, email: scoreData.mail, score: scoreData.score },
+                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+            )
+
+            this.fetchLeaderboardData()
+
         }
     },
     beforeDestroy() {
