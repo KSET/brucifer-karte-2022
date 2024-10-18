@@ -26,109 +26,81 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
+
 export default {
   name: 'TagsTable',
-  props: ['tags'],
   data() {
     return {
-      id: '',
-      name: '',
-      surname: '',
-      jmbag: '',
-      phone: '',
-      tag: '',
-      bought: '',
-      entered: '',
-      deleted: '',
-      numc: '',
-      numb: '',
-      nume: '',
-    }
+      tags: [],
+      tagStatistics: {
+        numc: 0,
+        numb: 0,
+        nume: 0,
+      },
+    };
   },
   watch: {
-    tags(newTags) {
-      if (newTags && newTags.length > 0) {
-        this.processTags();
+    'tagsUpdateKey': {
+      deep: true,
+      handler() {
+        this.fetchTags();
       }
     }
   },
+  created() {
+    this.fetchTags();
+  },
   methods: {
-    processTags() {
-      this.tags.forEach(element => {
-        axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + element.name + '&search_fields=tag',)
-          .then(response => {
-
-            if (element.name == "VIP") {
-              this.numc = 0;
-              this.numb = 0;
-              this.nume = 0;
-              response.data.forEach(element => {
-                if (element.tag == "VIP") {
-                  this.numc++;
-                  if (element.bought == 1) {
-                    this.numb++;
-                  }
-                  if (element.entered == 1) {
-                    this.nume++;
-                  }
-                }
-              });
-              if (String(this.numc) != String(element.count) || this.numb != element.bought || this.nume != element.entered) {
-
-                axios.put(process.env.VUE_APP_BASE_URL + '/tags/' + element.id + '/',
-                  { count: this.numc, bought: this.numb, entered: this.nume },
-                  { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-
-                )
-
-                this.$emit('refreshTags');
-              }
-            } else {
-              this.numc = 0;
-              this.numb = 0;
-              this.nume = 0;
-              response.data.forEach(element => {
-                this.numc++;
-                if (element.bought == 1) {
-                  this.numb++;
-                }
-                if (element.entered == 1) {
-                  this.nume++;
-                }
-
-
-              });
-              if (String(this.numc) != String(element.count) || this.numb != element.bought || this.nume != element.entered) {
-
-                axios.put(process.env.VUE_APP_BASE_URL + '/tags/' + element.id + '/',
-                  { count: this.numc, bought: this.numb, entered: this.nume },
-                  { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-
-                )
-
-                this.$emit('refreshTags');
-
-              }
-            }
-
-          })
-
-
-      });
+    async fetchTags() {
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_BASE_URL}/tags/`);
+        this.processTags(response.data);
+      } catch (error) {
+        console.error('Failed to fetch tags:', error);
+      }
     },
-    deleteTag(tag) {
-      axios.delete(process.env.VUE_APP_BASE_URL + '/tags/' + tag.id + '/',
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
-        .then(() => {
-          this.$emit('refreshTags');
-        })
+    async processTags(tags) {
+      console.log(tags)
+      try {
+        for (const tag of tags) {
+          const response = await axios.get(`${process.env.VUE_APP_BASE_URL}/guests/?search=${tag.name}&search_fields=tag`);
+          let { numc, numb, nume } = { numc: 0, numb: 0, nume: 0 };
+
+          response.data.forEach(guest => {
+            numc++;
+            if (guest.bought == 1) numb++;
+            if (guest.entered == 1) nume++;
+          });
+
+          if (`${numc}` != `${tag.count}` || numb != tag.bought || nume != tag.entered) {
+            await axios.put(`${process.env.VUE_APP_BASE_URL}/tags/${tag.id}/`, 
+              { count: numc, bought: numb, entered: nume },
+              { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+            );
+
+            Object.assign(tag, { count: numc, bought: numb, entered: nume });
+          }
+        }
+        this.tags = [...tags];
+      } catch (error) {
+        console.error('Failed to process tags:', error);
+      }
+    },
+    async deleteTag(tag) {
+      try {
+        await axios.delete(`${process.env.VUE_APP_BASE_URL}/tags/${tag.id}/`, 
+          { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+        );
+        this.fetchTags();
+      } catch (error) {
+        console.error('Failed to delete tag:', error);
+      }
     }
   }
-
-}
+};
 </script>
+
 <style>
 .button-icon {
   border: 0px;

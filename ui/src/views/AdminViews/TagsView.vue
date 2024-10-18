@@ -10,7 +10,7 @@
               src="@/assets/icons/add-icon.svg"></button>
         </form>
       </div>
-      <TagsTable :tags="tags" @refreshTags="fetchTags" />
+      <TagsTable :key="tagsUpdateKey"/>
     </div>
   </div>
 </template>
@@ -29,16 +29,12 @@ export default {
     return {
       tags: [],
       name: '',
+      tagsUpdateKey: 0,
     }
   },
   created() {
-    this.fetchTags();
   },
   methods: {
-    async fetchTags() {
-      const response = await axios.get(process.env.VUE_APP_BASE_URL + '/tags/');
-      this.tags = response.data;
-    },
     postTag() {
       if (this.name != "") {
         axios.post(process.env.VUE_APP_BASE_URL + '/tags/',
@@ -47,7 +43,7 @@ export default {
         )
           .then(() => {
             this.name = "";
-            this.fetchTags();
+            this.tagsUpdateKey++; // Change the key to trigger update
           })
       }
     }
