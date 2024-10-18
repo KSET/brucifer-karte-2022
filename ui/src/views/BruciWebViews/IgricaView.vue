@@ -7,23 +7,23 @@
                 }}
                 </h1>
 
+                <div class="igrica-container">
+                    <iframe src="/igrica/Brucifer 2024.html" class="igrica-frame"></iframe>
+                </div>
                 <div class="leaderboard-table">
                     <div class="leaderboard-title">
-                        <h1>{{ translations?.leaderboard?.placementTableTitle ? translations.leaderboard.placementTableTitle :
+                        <h1>{{ translations?.leaderboard?.placementTableTitle ?
+                            translations.leaderboard.placementTableTitle :
                             "leaderboard.placementTableTitle" }}</h1>
                         <h1>{{ translations?.leaderboard?.nameTableTitle ? translations.leaderboard.nameTableTitle :
                             "leaderboard.nameTableTitle" }}</h1>
-                        <h1>
-                            {{ translations?.leaderboard?.emailTableTitle ? translations.leaderboard.emailTableTitle :
-                                "leaderboard.emailTableTitle" }}</h1>
                         <h1>
                             {{ translations?.leaderboard?.scoreTableTitle ? translations.leaderboard.scoreTableTitle :
                                 "leaderboard.scoreTableTitle" }}</h1>
 
                         <div class="leaderboard-items" v-for="(player, index) in leaderboardData" :key="player.id">
-                            <h1>#{{index + 1}}</h1>
+                            <h1>#{{ index + 1 }}</h1>
                             <h1>{{ player.name }}</h1>
-                            <h1>{{ player.email }} </h1>
                             <h1>{{ player.score }}</h1>
 
                         </div>
@@ -41,15 +41,19 @@ import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import axios from 'axios';
 import translationsStore from '@/store/translationsStore';
 import visibilityStore from '@/store/visibilityStore';
+import debounce from 'lodash/debounce';
 
 export default {
-    name: 'KontaktView',
+    name: 'IgricaView',
     components: { Footer },
     mounted() {
-        if (visibilityStore.state.ULAZNICA_VISIBILITY == 0) {
+        this.sendScoreToBackend = debounce(this.sendScoreToBackend, 500);
+
+        if (visibilityStore.state.IGRICA_VISIBILITY == 0) {
             this.$router.push({ name: 'BWPageNotFound' });
         }
         this.fetchLeaderboardData();
+        window.addEventListener("message", this.receiveScore);
     },
     data() {
         return {
@@ -67,17 +71,76 @@ export default {
     methods: {
         async fetchLeaderboardData() {
             try {
-                const response = await axios.get('http://localhost:8000/api/gameLeaderboard/?ordering=-score'); // Assuming descending order by score
+                const response = await axios.get(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/?ordering=-score');
                 this.leaderboardData = response.data;
             } catch (error) {
                 console.error('Error fetching leaderboard data:', error);
             }
-        }
+        },
+        receiveScore(event) {
+            if (event.data && event.data.score && event.data.mail && event.data.nickname) {
+                this.sendScoreToBackend(event.data);
+            }
+        },
+        async sendScoreToBackend(scoreData) {
+
+            const response = await axios.get(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/?search=' +
+                scoreData.mail + '&search_fields=email');
+
+            if (response.data.length > 0) {
+                let user = response.data[0];
+                if (user.score < scoreData.score) {
+                    await axios.delete(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/' + user.id + '/',
+                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } });
+                    await axios.post(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/', {
+                        name: scoreData.nickname,
+                        email: scoreData.mail,
+                        score: scoreData.score
+                    }, {
+                        auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS }
+                    });
+                } else {
+                    await axios.put(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/' + user.id + '/', {
+                        name: scoreData.nickname
+                    }, {
+                        auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS }
+                    });
+                }
+            } else {
+                await axios.post(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/', {
+                    name: scoreData.nickname,
+                    email: scoreData.mail,
+                    score: scoreData.score
+                }, {
+                    auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS }
+                });
+            }
+
+            this.fetchLeaderboardData();
+        },
+    },
+
+
+    beforeDestroy() {
+        window.removeEventListener("message", this.receiveScore);
     }
 }
 </script>
 
 <style>
+.igrica-container {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 1%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.igrica-frame {
+    height: 720px;
+    width: 480px;
+}
+
 .leaderboard-table {
     width: 100%;
     background-color: rgba(0, 0, 0, 0.3);
@@ -91,7 +154,7 @@ export default {
 
 .leaderboard-title {
     display: grid;
-    grid-template-columns: 15% 35% 35% 15%;
+    grid-template-columns: 25% 50% 25%;
 }
 
 .leaderboard-title h1 {
@@ -112,7 +175,7 @@ export default {
 
 .leaderboard-items {
     display: grid;
-    grid-template-columns: 15% 35% 35% 15%;
+    grid-template-columns: 25% 50% 25%;
     grid-column: span 4;
 
 }

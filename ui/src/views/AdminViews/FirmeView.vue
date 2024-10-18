@@ -3,6 +3,7 @@
         <Sidebar />
         <div class="admin-page-container">
             <h1 class="page-title">AAAAAAAAAAAAAAAAA TESTTTTTTTT GITTTTT</h1>
+            
             <h1 class="page-title">Firme</h1>
 
             <h1 class="textfield">Ime Firme</h1>
