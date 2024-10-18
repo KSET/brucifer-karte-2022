@@ -289,7 +289,7 @@ export default {
       this.dialog = true;
     },
     formatDate(date) {
-      if(date==''){
+      if(date=='' || date==null){
         return ''
       }
       const d = new Date(date);
