@@ -2,26 +2,33 @@
     <div class="footery">
         <p id="text1" class="footer-text"> © KSET {{ year }}</p>
 
-
         <div class="footer-left-container">
-            <router-link to="/uvjeti-koristenja">
-                <p class="footer-text">Uvjeti korištenja</p>
-            </router-link>
+            <div v-if="IGRICA_VISIBILITY != 0">
+                <router-link class="footer-text" to="/uvjeti-koristenja">
+                    <p class="footer-text">Uvjeti korištenja</p>
+                </router-link>
+            </div>
             <router-link class="footer-text" style="margin-left:30px" to="/pravila-ponasanja">
                 <p class="footer-text">Pravila ponašanja</p>
-
             </router-link>
         </div>
-
     </div>
 </template>
 
+
 <script>
+import visibilityStore from '@/store/visibilityStore';
+
 export default {
     name: "Footer",
     data() {
         return {
             year: new Date().getFullYear(),
+        }
+    },
+    computed: {
+        IGRICA_VISIBILITY() {
+            return visibilityStore.state.IGRICA_VISIBILITY;
         }
     }
 }

@@ -26,13 +26,19 @@
   <script>
   import Footer from '@/components/NavbarAndFooter/Footer.vue'
   import translationsStore from '@/store/translationsStore';
-  
+  import visibilityStore from '@/store/visibilityStore';
+
   export default {
     name: 'uvjetikoristenjaView',
     components: { Footer },
     data() {
       return {
       }
+    },
+    mounted() {
+        if (visibilityStore.state.IGRICA_VISIBILITY == 0) {
+            this.$router.push({ name: 'BWPageNotFound' });
+        }
     },
     computed: {
       translations() {
