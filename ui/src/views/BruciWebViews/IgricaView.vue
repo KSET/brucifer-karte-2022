@@ -8,7 +8,7 @@
                 </h1>
 
                 <div class="igrica-container">
-                    <iframe src="/game/igrica/Brucifer 2024.html" class="igrica-frame"></iframe>
+                    <iframe src="/igrica/Brucifer 2024.html" class="igrica-frame"></iframe>
                 </div>
                 <div class="leaderboard-table">
                     <div class="leaderboard-title">
@@ -43,6 +43,8 @@ import translationsStore from '@/store/translationsStore';
 import visibilityStore from '@/store/visibilityStore';
 import debounce from 'lodash/debounce';
 
+
+
 export default {
     name: 'IgricaView',
     components: { Footer },
@@ -62,6 +64,7 @@ export default {
             tbodyHigh: false,
 
             leaderboardData: [],
+
         }
     }, computed: {
         translations() {
