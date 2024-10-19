@@ -1,20 +1,34 @@
 <template>
     <div class="footery">
-        <p id="text1"> © KSET {{year}}</p>
+        <p id="text1" class="footer-text"> © KSET {{ year }}</p>
 
-        <router-link id="text2" to="/pravila-ponasanja">
-            Pravila ponašanja
-        </router-link>
-
+        <div class="footer-left-container">
+            <div v-if="IGRICA_VISIBILITY != 0">
+                <router-link class="footer-text" to="/uvjeti-koristenja">
+                    <p class="footer-text">Uvjeti korištenja</p>
+                </router-link>
+            </div>
+            <router-link class="footer-text" style="margin-left:30px" to="/pravila-ponasanja">
+                <p class="footer-text">Pravila ponašanja</p>
+            </router-link>
+        </div>
     </div>
 </template>
 
+
 <script>
+import visibilityStore from '@/store/visibilityStore';
+
 export default {
     name: "Footer",
     data() {
         return {
             year: new Date().getFullYear(),
+        }
+    },
+    computed: {
+        IGRICA_VISIBILITY() {
+            return visibilityStore.state.IGRICA_VISIBILITY;
         }
     }
 }
@@ -49,29 +63,22 @@ export default {
 #text1 {
     position: absolute;
     left: 2.73%;
-    right: 56.25%;
     top: 37.5%;
     bottom: 20%;
-
-    font-family: 'Ubuntu';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 14px;
-    /* or 100% */
-
-    letter-spacing: -0.022em;
-
-    color: #FFFFFF;
 }
 
-#text2 {
+.footer-left-container {
+
+    display: flex;
     position: absolute;
 
     right: 5.86%;
     top: 37.5%;
     bottom: 20%;
 
+}
+
+.footer-text {
     font-family: 'Ubuntu';
     font-style: normal;
     font-weight: 400;
@@ -83,5 +90,9 @@ export default {
     letter-spacing: -0.022em;
 
     color: #FFFFFF;
+}
+
+.footer-text:hover {
+    color: #dbe9f4;
 }
 </style>

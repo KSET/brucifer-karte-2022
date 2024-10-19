@@ -40,6 +40,7 @@ import BWcjenik from "../views/BruciWebViews/BWcjenikView.vue";
 import Tlocrt from "../views/BruciWebViews/TlocrtView.vue";
 import Satnica from "../views/BruciWebViews/SatnicaView.vue";
 import Igrica from "../views/BruciWebViews/IgricaView.vue";
+import UvjetiKoristenja from "../views/BruciWebViews/UvjetiKoristenjaView.vue";
 
 import SponsorsPage from "../views/BruciWebViews/SponsorsPageView.vue";
 
@@ -200,6 +201,11 @@ const routes = [
     path: "/pravila-ponasanja",
     name: "pravila-ponasanja",
     component: Pravila,
+  },
+  {
+    path: "/uvjeti-koristenja",
+    name: "uvjeti-koristenja",
+    component: UvjetiKoristenja,
   },
   {
     path: "/cjenik",
