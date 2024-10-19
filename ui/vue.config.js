@@ -1,22 +1,18 @@
-// vue.config.js
-const { defineConfig } = require('@vue/cli-service');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const path = require('path');
-
-module.exports = defineConfig({
+module.exports = {
   transpileDependencies: true,
 
   chainWebpack: config => {
     config.module
-      .rule('assets')
-      .test(/\.(html|js|png|jpg|gif|mp3|json|txt)$/)
-      .use('file-loader')
-      .loader('file-loader')
+      .rule('html')
+      .test(/\.html$/)
+      .use('html-loader')
+      .loader('html-loader')
       .tap(options => {
         return {
           ...options,
-          name: 'assets/[name].[hash:8].[ext]',
+          minimize: false, // You can set this to true if you want to minify HTML files
         };
       });
   },
-});
+};
+
