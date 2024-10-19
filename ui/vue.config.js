@@ -1,3 +1,4 @@
+// vue.config.js
 const { defineConfig } = require('@vue/cli-service');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
@@ -7,42 +8,37 @@ module.exports = defineConfig({
 
   configureWebpack: {
     plugins: [
-      // Copy the game files from src/assets/igrica to dist/igrica
+      // Copy the game files from src/assets/igrica to dist/assets/igrica
       new CopyWebpackPlugin({
         patterns: [
           {
             from: path.resolve(__dirname, 'src/assets/igrica'),
-            to: 'igrica',
+            to: 'assets/igrica',
+            noErrorOnMissing: true, // Prevent errors if the source folder is missing
           },
         ],
       }),
     ],
-    module: {
-      rules: [
-        // Use file-loader for HTML files in the igrica directory
-        {
-          test: /\.html$/,
-          include: path.resolve(__dirname, 'src/assets/igrica'),
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-            outputPath: 'igrica',
-          },
-        },
-      ],
-    },
   },
 
   chainWebpack: config => {
-    // Exclude the 'igrica' directory from Webpack's processing
+    const igricaPath = path.resolve(__dirname, 'src/assets/igrica');
+
+    // Exclude the 'igrica' directory from default asset processing rules
+    config.module.rule('images').exclude.add(igricaPath).end();
+    config.module.rule('media').exclude.add(igricaPath).end();
+    config.module.rule('fonts').exclude.add(igricaPath).end();
+    config.module.rule('svg').exclude.add(igricaPath).end();
+
+    // Create a new rule to handle files in 'igrica' directory without processing
     config.module
-      .rule('exclude-igrica')
-      .test(() => true)
-      .pre()
-      .include.add(path.resolve(__dirname, 'src/assets/igrica'))
+      .rule('copy-igrica')
+      .test(/\.(html|js|json|data|mem|wasm|png|jpe?g|gif|mp3|ogg|wav|mp4|webm|css)$/i)
+      .include.add(igricaPath)
       .end()
-      .use('null-loader')
-      .loader('null-loader')
-      .end();
+      .type('asset/resource')
+      .set('generator', {
+        filename: 'assets/igrica/[name][ext]',
+      });
   },
 });

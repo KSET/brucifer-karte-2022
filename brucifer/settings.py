@@ -161,9 +161,8 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 IGRICA_URL = '/game/'
 IGRICA_ROOT = BASE_DIR / 'game/'
 
-STATICIFILES_DIRS=[
-    os.path.join(BASE_DIR, 'public'),
-    os.path.join(BASE_DIR, 'boot'),
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'ui/public'),
 ]
 
 # Default primary key field type

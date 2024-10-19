@@ -6,9 +6,9 @@
                     translations?.leaderboard?.pagetitle ? translations.leaderboard.pagetitle : "leaderboard.pagetitle"
                 }}
                 </h1>
-
+                git 22
                 <div class="igrica-container">
-                    <iframe src="/igrica/Brucifer 2024.html" class="igrica-frame"></iframe>
+                    <iframe :src="gameUrl" class="igrica-frame"></iframe>
                 </div>
                 <div class="leaderboard-table">
                     <div class="leaderboard-title">
@@ -64,6 +64,8 @@ export default {
             tbodyHigh: false,
 
             leaderboardData: [],
+
+            gameUrl: require('@/assets/igrica/Brucifer 2024.html'),
 
         }
     }, computed: {
