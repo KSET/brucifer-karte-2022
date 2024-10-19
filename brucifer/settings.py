@@ -158,8 +158,8 @@ STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
 
-IGRICA_URL = '/igrica/'
-IGRICA_ROOT = BASE_DIR / 'igrica/'
+IGRICA_URL = '/game/'
+IGRICA_ROOT = BASE_DIR / 'game/'
 
 STATICIFILES_DIRS=[
     os.path.join(BASE_DIR, 'public'),
