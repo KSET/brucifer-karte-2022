@@ -8,7 +8,7 @@
                 </h1>
 
                 <div class="igrica-container">
-                    <iframe src="/igrica/Brucifer 2024.html" class="igrica-frame"></iframe>
+                    <iframe src="/game/igrica/Brucifer 2024.html" class="igrica-frame"></iframe>
                 </div>
                 <div class="leaderboard-table">
                     <div class="leaderboard-title">
