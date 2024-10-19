@@ -6,7 +6,7 @@
                     translations?.leaderboard?.pagetitle ? translations.leaderboard.pagetitle : "leaderboard.pagetitle"
                 }}
                 </h1>
-                git 22
+                git 23
                 <div class="igrica-container">
                     <iframe :src="gameUrl" class="igrica-frame"></iframe>
                 </div>
