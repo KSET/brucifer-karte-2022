@@ -24,8 +24,5 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/', include('bruc.urls'))
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += static('/public/', document_root=os.path.join(settings.BASE_DIR, 'public'))
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.IGRICA_URL, document_root=settings.IGRICA_ROOT)
 

@@ -157,6 +157,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
+
+IGRICA_URL = '/igrica/'
+IGRICA_ROOT = BASE_DIR / 'igrica/'
+
 STATICIFILES_DIRS=[
     os.path.join(BASE_DIR, 'public'),
     os.path.join(BASE_DIR, 'boot'),
