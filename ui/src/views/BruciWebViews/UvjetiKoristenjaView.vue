@@ -36,9 +36,6 @@
       }
     },
     mounted() {
-        if (visibilityStore.state.IGRICA_VISIBILITY == 0) {
-            this.$router.push({ name: 'BWPageNotFound' });
-        }
     },
     computed: {
       translations() {

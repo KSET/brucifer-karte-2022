@@ -48,17 +48,8 @@ export default {
     name: 'IgricaView',
     components: { Footer },
     mounted() {
-        // Load the Godot engine script
-        const script = document.createElement("script");
-        script.src = "../../assets/igrica/Brucifer 2024.js"; // Adjust path if needed
-        script.onload = this.initializeGodot;
-        document.body.appendChild(script);
-
         this.sendScoreToBackend = debounce(this.sendScoreToBackend, 500);
 
-        if (visibilityStore.state.IGRICA_VISIBILITY == 0) {
-            this.$router.push({ name: 'BWPageNotFound' });
-        }
         this.fetchLeaderboardData();
         window.addEventListener("message", this.receiveScore);
     },
@@ -78,24 +69,6 @@ export default {
         }
     },
     methods: {
-        initializeGodot() {
-            // Initialize the Godot game by creating a canvas element and calling the engine start function
-            const container = this.$refs.godotContainer;
-            const gameInstance = {
-                canvas: document.createElement("canvas"),
-            };
-            container.appendChild(gameInstance.canvas);
-
-            window.Engine.startGame({
-                gameInstance,
-                locateFile: (file) => `../../assets/igrica/${file}`,
-            }).then(() => {
-                console.log("Godot game loaded successfully");
-            }).catch((error) => {
-                console.error("Failed to load Godot game:", error);
-            });
-        },
-
         async fetchLeaderboardData() {
             try {
                 const response = await axios.get(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/?ordering=-score');

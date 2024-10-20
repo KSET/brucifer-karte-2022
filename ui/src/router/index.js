@@ -206,6 +206,9 @@ const routes = [
     path: "/uvjeti-koristenja",
     name: "uvjeti-koristenja",
     component: UvjetiKoristenja,
+    meta: {
+      visibilityCheck: "IGRICA_VISIBILITY",
+    },
   },
   {
     path: "/cjenik",
