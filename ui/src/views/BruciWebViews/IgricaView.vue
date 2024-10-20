@@ -4,11 +4,11 @@
             <section>
                 <h1 class="bwh1" style="display:inline-block; vertical-align: middle; margin-top: 2rem;">{{
                     translations?.leaderboard?.pagetitle ? translations.leaderboard.pagetitle : "leaderboard.pagetitle"
-                }}
+                    }}
                 </h1>
-                git 23
+                git 24
                 <div class="igrica-container">
-                    <iframe :src="gameUrl" class="igrica-frame"></iframe>
+                <iframe  src="https://brucifer-igrica.vercel.app/" class="igrica-frame"></iframe>
                 </div>
                 <div class="leaderboard-table">
                     <div class="leaderboard-title">
@@ -49,6 +49,12 @@ export default {
     name: 'IgricaView',
     components: { Footer },
     mounted() {
+        // Load the Godot engine script
+        const script = document.createElement("script");
+        script.src = "../../assets/igrica/Brucifer 2024.js"; // Adjust path if needed
+        script.onload = this.initializeGodot;
+        document.body.appendChild(script);
+
         this.sendScoreToBackend = debounce(this.sendScoreToBackend, 500);
 
         if (visibilityStore.state.IGRICA_VISIBILITY == 0) {
@@ -65,7 +71,6 @@ export default {
 
             leaderboardData: [],
 
-            gameUrl: require('@/assets/igrica/Brucifer 2024.html'),
 
         }
     }, computed: {
@@ -74,6 +79,24 @@ export default {
         }
     },
     methods: {
+        initializeGodot() {
+            // Initialize the Godot game by creating a canvas element and calling the engine start function
+            const container = this.$refs.godotContainer;
+            const gameInstance = {
+                canvas: document.createElement("canvas"),
+            };
+            container.appendChild(gameInstance.canvas);
+
+            window.Engine.startGame({
+                gameInstance,
+                locateFile: (file) => `../../assets/igrica/${file}`,
+            }).then(() => {
+                console.log("Godot game loaded successfully");
+            }).catch((error) => {
+                console.error("Failed to load Godot game:", error);
+            });
+        },
+
         async fetchLeaderboardData() {
             try {
                 const response = await axios.get(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/?ordering=-score');
