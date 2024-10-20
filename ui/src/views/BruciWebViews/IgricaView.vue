@@ -6,7 +6,6 @@
                     translations?.leaderboard?.pagetitle ? translations.leaderboard.pagetitle : "leaderboard.pagetitle"
                     }}
                 </h1>
-                git 24
                 <div class="igrica-container">
                 <iframe  src="https://brucifer-igrica.vercel.app/" class="igrica-frame"></iframe>
                 </div>
