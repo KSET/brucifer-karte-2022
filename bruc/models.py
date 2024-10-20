@@ -115,7 +115,7 @@ class Visibility(models.Model):
 class Translations(models.Model):
     id = models.AutoField(primary_key=True)
     key = models.CharField(max_length=5000, default='', blank=True)
-    value = models.CharField(max_length=5000, default='', blank=True)
+    value = models.CharField(max_length=500000, default='', blank=True)
 
 class GameLeaderboard(models.Model):
     id = models.AutoField(primary_key=True)
