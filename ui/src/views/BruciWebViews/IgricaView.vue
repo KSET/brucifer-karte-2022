@@ -137,7 +137,7 @@ export default {
 }
 
 .igrica-frame {
-    height: 720px;
+    height: 650px;
     width: 480px;
 }
 
