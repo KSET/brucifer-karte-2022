@@ -199,7 +199,7 @@ export default {
                     let emails = [];
                     email.forEach((e) => {
                         emails.push({
-                            subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
+                            subject: "[KSET] Link za uređivanje popisa za 41. Brucošijadu FER-a",
                             template: "sponsors_email",
                             message: msg,
                             name: this.name,
@@ -216,7 +216,7 @@ export default {
                     )
                     await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
                         {
-                            subject: "[KSET] Link za uređivanje popisa za 40. Brucošijadu FER-a",
+                            subject: "[KSET] Link za uređivanje popisa za 41. Brucošijadu FER-a",
                             template: "sponsors_email",
                             message: msg,
                             name: this.name,
