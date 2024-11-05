@@ -72,7 +72,7 @@ export default {
         async fetchLeaderboardData() {
             try {
                 const response = await axios.get(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/?ordering=-score');
-                this.leaderboardData = response.data.slice.slice(0, 20);;
+                this.leaderboardData = response.data.slice(0, 20);;
             } catch (error) {
                 console.error('Error fetching leaderboard data:', error);
             }
