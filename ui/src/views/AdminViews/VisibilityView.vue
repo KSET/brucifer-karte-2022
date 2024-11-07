@@ -130,16 +130,27 @@
                         v-model="sponsorsInputTime" class="datetimePickerInput">
                     <span class="placeholderText">{{ formattedSponsorsInputTime }}</span>
                 </label>
+
+                <div>
+                    <label for="startIndex">Start Index:</label>
+                    <input v-model="startIndex" type="number" id="startIndex" placeholder="Enter start index" />
+
+                    <label for="endIndex">End Index:</label>
+                    <input v-model="endIndex" type="number" id="endIndex" placeholder="Enter end index" />
+
+                    <button @click="sendEmailsInRange(startIndex, endIndex)">Send Emails</button>
+                </div>
             </div>
 
         </div>
     </div>
 </template>
-  
+
 <script>
 import axios from 'axios'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import store from "@/store/visibilityStore.js";
+import { result } from 'lodash';
 
 export default {
     name: 'VisibilityView',
@@ -149,7 +160,11 @@ export default {
     data() {
         return {
             timerTime: '',
-            sponsorsInputTime: ''
+            sponsorsInputTime: '',
+            startIndex: 0,
+            endIndex: 0,
+            guests: [],
+            sentGuestIds: new Set(), // Track sent guest IDs
         }
     },
     computed: {
@@ -211,7 +226,127 @@ export default {
                 await store.dispatch("fetchVisibilityData")
             }
 
-        }
+        },
+        async sendEmailsInRange(start, end) {
+            try {
+                // Fetch all guests who bought a ticket
+                let res = await axios.get(`${process.env.VUE_APP_BASE_URL}/guests/?search=1&search_fields=bought`);
+                this.guests = res.data;
+
+                // Initialize counter
+                let sentCount = 0;
+                const totalToSend = end - start + 1;
+
+                // Loop through the specified range
+                for (let i = start; i <= end && i < this.guests.length; i++) {
+                    const guest = this.guests[i];
+
+                    // Check if the guest has already been sent an email in this session
+                    if (!this.sentGuestIds.has(guest.id)) {
+                        await this.sendMail(guest);
+                        this.sentGuestIds.add(guest.id); // Mark guest as sent
+                        sentCount++; // Increment counter
+
+                        // Display progress in the console
+                        console.log(`Email sent to ${guest.jmbag} (${sentCount}/${totalToSend})`);
+                    }
+                }
+
+                console.log("Emails sent successfully within the specified range.");
+            } catch (error) {
+                console.error("Error sending emails:", error);
+            }
+        },
+
+        async sendMail(guest) {
+            console.log("Sending email...");
+
+
+            var jmbagslice = guest.jmbag;
+            if (jmbagslice.slice(0, 3) == "003") {
+                jmbagslice = jmbagslice.slice(4, 9);
+            } else if (jmbagslice.slice(0, 1) == "0") {
+                jmbagslice = jmbagslice.slice(0, 9);
+            } else {
+                jmbagslice = jmbagslice.slice(2, 7);
+            }
+
+            var e_name = guest.name[0].toLowerCase()
+            if (e_name == "č") {
+                e_name = "c";
+            } else if (e_name == "š") {
+                e_name = "s";
+            } else if (e_name == "ž") {
+                e_name = "z";
+            } else if (e_name == "đ") {
+                e_name = "d";
+            } else if (e_name == "ć") {
+                e_name = "c";
+            }
+
+            var e_surname = guest.surname[0].toLowerCase()
+            if (e_surname == "č") {
+                e_surname = "c";
+            } else if (e_surname == "š") {
+                e_surname = "s";
+            } else if (e_surname == "ž") {
+                e_surname = "z";
+            } else if (e_surname == "đ") {
+                e_surname = "d";
+            } else if (e_surname == "ć") {
+                e_surname = "c";
+            }
+
+
+            var email = e_name + e_surname + jmbagslice + "@fer.hr";
+
+            // za testiranje, maknuti u produkciji
+            // email = "pavleergovic@gmail.com"
+
+            var msg = guest.name + " " + guest.surname + " " + guest.confCode
+
+            try {
+                // Send email
+                await axios.post(
+                    `${process.env.VUE_APP_BASE_URL}/mailer/send_mail/`,
+                    {
+                        emails: [
+                            {
+                                subject: "[#BRUCIFER24] Potvrda za kupljenu kartu",
+                                template: "guest_email",
+                                message: msg,
+                                name: guest.name,
+                                confCode: guest.confCode,
+                                to_mail: email,
+                            },
+                        ],
+                    },
+                    {
+                        auth: {
+                            username: process.env.VUE_APP_DJANGO_USER,
+                            password: process.env.VUE_APP_DJANGO_PASS,
+                        },
+                    }
+                );
+
+                console.log(`Email sent to ${email}`);
+            } catch (error) {
+                console.error(`Failed to send email to ${email}`, error);
+            }
+        },
+
+        sendEmails() {
+            const start = parseInt(this.startIndex, 10);
+            const end = parseInt(this.endIndex, 10);
+
+            if (!isNaN(start) && !isNaN(end) && start <= end) {
+                this.sendEmailsInRange(start, end);
+            } else {
+                alert("Please enter valid start and end indices.");
+            }
+        },
+
+
     }
 }
 </script>
@@ -263,7 +398,3 @@ export default {
     transform: translateY(-50%);
 }
 </style>
-
-  
-  
-  
