@@ -78,6 +78,8 @@ export default {
             }
         },
         receiveScore(event) {
+            // IGRICA GOTOVA
+            return
             if (event.data && event.data.score && event.data.mail && event.data.nickname) {
                 this.sendScoreToBackend(event.data);
             }
