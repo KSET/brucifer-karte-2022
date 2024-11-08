@@ -19,11 +19,15 @@ export default {
     data() {
         return {
             sponsors: [],
-            SPONSORS_VISIBILITY: store.state.SPONSORS_VISIBILITY
         }
     },
     mounted() {
         this.created();
+    },
+    computed: {
+        SPONSORS_VISIBILITY() {
+            return store.state.SPONSORS_VISIBILITY;
+        },
     },
     methods: {
         created() {
