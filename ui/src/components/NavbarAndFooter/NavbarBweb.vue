@@ -12,6 +12,14 @@
         class="navbar-element hideTablet" :name="'Ulaznice'" :link="'/ulaznice'">
       </RouterElement>
 
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('satnica') }" v-if="this.SATNICA_VISIBILITY == '1'"
+        class="navbar-element hideTablet" :name="'Satnica'" :link="'/satnica'">
+      </RouterElement>
+
+      <RouterElement :class="{ [$style.selected]: isCurrentPage('tlocrt') }" v-if="this.TLOCRT_VISIBILITY == '1'"
+        class="navbar-element hideTablet" :name="'Tlocrt'" :link="'/tlocrt'">
+      </RouterElement>
+
       <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }" v-if="this.SPONSORS_VISIBILITY == '1'"
         class="navbar-element hideTablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
 
@@ -44,6 +52,14 @@
           <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }"
             v-if="this.ULAZNICA_VISIBILITY == '1'" class="overlay-element " :name="'Ulaznice'" :link="'/ulaznice'"
             @click="toggleNav()">
+          </RouterElement>
+
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('satnica') }" v-if="this.SATNICA_VISIBILITY == '1'"
+            class="overlay-element " :name="'Satnica'" :link="'/satnica'" @click="toggleNav()">
+          </RouterElement>
+
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('tlocrt') }" v-if="this.TLOCRT_VISIBILITY == '1'"
+            class="overlay-element " :name="'Tlocrt'" :link="'/tlocrt'" @click="toggleNav()">
           </RouterElement>
 
           <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }"
@@ -108,6 +124,12 @@ export default {
     },
     IGRICA_VISIBILITY() {
       return store.state.IGRICA_VISIBILITY;
+    },
+    SATNICA_VISIBILITY() {
+      return store.state.SATNICA_VISIBILITY;
+    },
+    TLOCRT_VISIBILITY() {
+      return store.state.TLOCRT_VISIBILITY;
     },
     translations() {
       return translationsStore.state.translations;
