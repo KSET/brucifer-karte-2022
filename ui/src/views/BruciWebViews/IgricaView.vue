@@ -9,6 +9,7 @@
                 <div class="igrica-container">
                 <iframe  src="https://brucifer-igrica.vercel.app/" class="igrica-frame"></iframe>
                 </div>
+                <!--
                 <div class="leaderboard-table">
                     <div class="leaderboard-title">
                         <h1>{{ translations?.leaderboard?.placementTableTitle ?
@@ -29,6 +30,7 @@
                     </div>
 
                 </div>
+                -->
             </section>
         </div>
         <Footer></Footer>
@@ -80,9 +82,6 @@ export default {
         receiveScore(event) {
             // IGRICA GOTOVA
             return
-            if (event.data && event.data.score && event.data.mail && event.data.nickname) {
-                this.sendScoreToBackend(event.data);
-            }
         },
         async sendScoreToBackend(scoreData) {
 
