@@ -6,6 +6,21 @@
         <img class="tlocrt-desktop" src="../../assets/tlocrt/tlocrt-desktop.svg" alt="Brucifer Tlocrt" />
         <img class="tlocrt-tablet" src="../../assets/tlocrt/tlocrt-tablet.svg" alt="Brucifer Tlocrt" />
         <img class="tlocrt-mobile" src="../../assets/tlocrt/tlocrt-mobile.svg" alt="Brucifer Tlocrt" />
+        <div class="tlocrt-grid">
+          <img class="tlocrt-desktop" src="../../assets/tlocrt/menza-desktop.svg" alt="Brucifer Tlocrt" />
+          <img class="tlocrt-desktop" src="../../assets/tlocrt/galerija-desktop.svg" alt="Brucifer Tlocrt" />
+          <img class="tlocrt-desktop" src="../../assets/tlocrt/mm-desktop.svg" alt="Brucifer Tlocrt" />
+          <img class="tlocrt-desktop" src="../../assets/tlocrt/teatar-desktop.svg" alt="Brucifer Tlocrt" />
+        </div>
+        <img class="tlocrt-tablet" src="../../assets/tlocrt/menza-desktop.svg" alt="Brucifer Tlocrt" />
+        <img class="tlocrt-tablet" src="../../assets/tlocrt/galerija-desktop.svg" alt="Brucifer Tlocrt" />
+        <img class="tlocrt-tablet" src="../../assets/tlocrt/mm-desktop.svg" alt="Brucifer Tlocrt" />
+        <img class="tlocrt-tablet" src="../../assets/tlocrt/teatar-desktop.svg" alt="Brucifer Tlocrt" />
+
+        <img class="tlocrt-mobile" src="../../assets/tlocrt/menza-desktop.svg" alt="Brucifer Tlocrt" />
+        <img class="tlocrt-mobile" src="../../assets/tlocrt/galerija-desktop.svg" alt="Brucifer Tlocrt" />
+        <img class="tlocrt-mobile" src="../../assets/tlocrt/mm-desktop.svg" alt="Brucifer Tlocrt" />
+        <img class="tlocrt-mobile" src="../../assets/tlocrt/teatar-desktop.svg" alt="Brucifer Tlocrt" />
       </div>
 
     </div>
@@ -13,7 +28,7 @@
 
   </div>
 </template>
-  
+
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import NavbarBweb from '@/components/NavbarAndFooter/NavbarBweb.vue'
@@ -26,7 +41,7 @@ export default {
   },
 }
 </script>
-  
+
 <style scoped>
 .tlocrt {
   width: 100%;
@@ -59,6 +74,11 @@ export default {
 
 .navbar.bw::after {
   background: #00142B;
+}
+
+.tlocrt-grid {
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
 }
 
 @media screen and (max-width: 980px) {
@@ -94,4 +114,3 @@ export default {
 
 @import url(../../bruciweb.css);
 </style>
-  
