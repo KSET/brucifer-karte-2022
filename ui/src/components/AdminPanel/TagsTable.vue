@@ -110,14 +110,14 @@ export default {
 
 tbody {
   display: block;
-  height: 100%;
+  height: 80%;
   overflow: auto;
 }
 
 thead,
 tbody tr {
   display: table;
-  width: 100%;
+  width: 80%;
   table-layout: fixed;
 }
 </style>
