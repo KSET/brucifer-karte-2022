@@ -47,6 +47,38 @@
             </form>
 
         </div>
+
+        <v-dialog v-model="dialog" max-width="500">
+            <v-card>
+                <v-card-text>
+                    <div v-if="dialogType === 'success'">
+                        <h1 class="textfield">Uspjeh</h1>
+                        <p>{{ dialogMessage }}</p>
+                    </div>
+                    <div v-else-if="dialogType === 'error'">
+                        <h1 class="textfield">Greška</h1>
+                        <p>{{ dialogMessage }}</p>
+                    </div>
+                    <div class="grid-container guests" v-if="dialogType === 'success'">
+                        <h1 class="textfield">Ime</h1>
+                        <input class="inputfield" readonly type="text" v-model="name">
+
+                        <h1 class="textfield">Prezime</h1>
+                        <input class="inputfield" readonly type="text" v-model="surname">
+
+                        <h1 v-if="jmbag" class="textfield">JMBAG</h1>
+                        <input v-if="jmbag" class="inputfield" readonly type="text" v-model="jmbag">
+
+                        <h1 class="textfield">Tag</h1>
+                        <input class="inputfield" readonly type="text" v-model="selectedTag">
+                    </div>
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-btn color="primary" block @click="dialogClose">Zatvori</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -83,6 +115,8 @@ export default {
             services: ['Brucoši', 'KSET', 'VIP'],
             selectedTag: '',
 
+            dialog: false,
+            dialogProgress: false,
         }
     },
 
@@ -162,18 +196,31 @@ export default {
                         { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                     )
                         .then(() => {
-                            this.name = ''
-                            this.surname = ''
-                            this.selectedTag = ''
-                            this.jmbag = ''
-                            this.karta = '1';
-                            this.ulaz = '1';
-                            document.getElementById("jmbagselect").style.display = "none";
-                            document.getElementById("jmbagselectt").style.display = "none";
-                            this.created()
+                            this.dialogProgress = false;
+                            this.dialog = true;
+                            this.dialogMessage = 'Gost je uspješno dodan!';
+                            this.dialogType = 'success';
                         })
+                        .catch((error) => {
+                            this.dialogProgress = false;
+                            this.dialog = true;
+                            this.dialogMessage = `Greška prilikom dodavanja gosta: ${error.response?.data?.detail || error.message}`;
+                            this.dialogType = 'error';
+                        });
                 }
             }
+        },
+        dialogClose() {
+            this.dialog = false;
+            this.name = ''
+            this.surname = ''
+            this.selectedTag = ''
+            this.jmbag = ''
+            this.karta = '1';
+            this.ulaz = '1';
+            document.getElementById("jmbagselect").style.display = "none";
+            document.getElementById("jmbagselectt").style.display = "none";
+            this.created()
         }
     }
 }
