@@ -106,7 +106,7 @@ export default {
 
 .page-container {
   position: relative;
-  background-color: #0E315B;
+  background-color: #001723;
   min-height: 93vh;
   flex: 1;
 }
@@ -154,7 +154,7 @@ export default {
   }
 
   .page-container {
-    background-color: #0E315B;
+    background-color: #001723;
   }
 
   .countdown-timer {
@@ -181,7 +181,7 @@ export default {
   }
 
   .page-container {
-    background-color: #0E315B;
+    background-color: #001723;
   }
 
   .countdown-timer {

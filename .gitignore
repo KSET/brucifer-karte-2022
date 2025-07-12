@@ -7,3 +7,4 @@ docker-compose.override.yml
 db.sqlite3
 **/__pycache__/
 .idea
+venv
