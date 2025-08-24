@@ -4,7 +4,7 @@
       <div class="contents">
 
         <!-- Pretix Widget -->
-        <pretix-widget event="https://karte.kset.org/kset/brucosijada/" data-domain="karte.kset.org"
+        <pretix-widget event="https://karte.kset.org/kset/42-brucosijada/" data-domain="karte.kset.org"
           data-embed="true"></pretix-widget>
         <noscript>
           <div class="pretix-widget">
