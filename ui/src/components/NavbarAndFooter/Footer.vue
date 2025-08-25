@@ -37,60 +37,36 @@ export default {
 
 <style>
 .footery {
-    background-color: var(--bw-footer-color);
-    position: absolute;
-    padding: 0px;
-    bottom: 0;
-    width: 100%;
-    height: 60px;
-    position: absolute;
-}
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
 
-.footery::after {
-    position: absolute;
-    top: -8px;
-    right: 0;
-    left: 0;
-    z-index: 2;
-    height: 8px;
-    content: "";
-    /* background: linear-gradient(to top, var(--bw-footer-color);
-, transparent); */
-}
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-#text1 {
-    position: absolute;
-    left: 2.73%;
-    top: 37.5%;
-    bottom: 20%;
+  background: var(--bw-footer-color);
+  padding: 0 3%;
 }
 
 .footer-left-container {
-
-    display: flex;
-    position: absolute;
-
-    right: 5.86%;
-    top: 37.5%;
-    bottom: 20%;
-
+  display: flex;
+  align-items: center;
+  gap: 30px; 
 }
 
 .footer-text {
-    font-family: 'Ubuntu';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 14px;
-    /* or 100% */
-
-    text-align: right;
-    letter-spacing: -0.022em;
-
-    color: #FFFFFF;
+  margin: 0; 
+  font: 400 14px/14px Ubuntu, sans-serif;
+  letter-spacing: -0.022em;
+  text-align: right;
+  color: #fff;
+  text-decoration: none; 
 }
 
 .footer-text:hover {
-    color: #dbe9f4;
+  color: #dbe9f4;
 }
 </style>

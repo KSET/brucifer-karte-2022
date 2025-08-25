@@ -1,39 +1,33 @@
 <template>
   <div class="navbar bw" :class="$style.page">
     <router-link class="navbar-title" to="/">
-      {{ translations?.navbar?.title ? translations.navbar.title : "navbar.title" }} </router-link>
+      {{ translations?.navbar?.title ? translations.navbar.title : "navbar.title" }}
+    </router-link>
+
     <div class="routes">
+      <RouterElement v-if="LINEUP_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwlineup') }"
+        class="navbar-element hideTablet" name="Izvođači" link="/lineup" />
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.LINEUP_VISIBILITY == '1'"
-        class="navbar-element hideTablet" :name="'Izvođači'" :link="'/lineup'">
-      </RouterElement>
+      <RouterElement v-if="ULAZNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('ulaznice') }"
+        class="navbar-element hideTablet" name="Ulaznice" link="/ulaznice" />
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }" v-if="this.ULAZNICA_VISIBILITY == '1'"
-        class="navbar-element hideTablet" :name="'Ulaznice'" :link="'/ulaznice'">
-      </RouterElement>
+      <RouterElement v-if="SATNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('satnica') }"
+        class="navbar-element hideTablet" name="Satnica" link="/satnica" />
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('satnica') }" v-if="this.SATNICA_VISIBILITY == '1'"
-        class="navbar-element hideTablet" :name="'Satnica'" :link="'/satnica'">
-      </RouterElement>
+      <RouterElement v-if="TLOCRT_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('tlocrt') }"
+        class="navbar-element hideTablet" name="Tlocrt" link="/tlocrt" />
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('tlocrt') }" v-if="this.TLOCRT_VISIBILITY == '1'"
-        class="navbar-element hideTablet" :name="'Tlocrt'" :link="'/tlocrt'">
-      </RouterElement>
+      <RouterElement v-if="SPONSORS_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwsponsors') }"
+        class="navbar-element hideTablet" name="Sponzori" link="/sponsors" />
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }" v-if="this.SPONSORS_VISIBILITY == '1'"
-        class="navbar-element hideTablet" :name="'Sponzori'" :link="'/sponsors'"></RouterElement>
-
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('igrica') }" v-if="this.IGRICA_VISIBILITY == '1'"
-        class="navbar-element hideTablet" :name="'Igrica'" :link="'/igrica'">
-      </RouterElement>
+      <RouterElement v-if="IGRICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('igrica') }"
+        class="navbar-element hideTablet" name="Igrica" link="/igrica" />
 
       <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="navbar-element hideTablet"
-        :name="'Kontakt'" :link="'/kontakt'">
-      </RouterElement>
+        name="Kontakt" link="/kontakt" />
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('cjenik') }" v-if="this.CJENIK_VISIBILITY == '1'"
-        class="navbar-element hideTablet" :name="'Cjenik'" :link="'/cjenik'">
-      </RouterElement>
+      <RouterElement v-if="CJENIK_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('cjenik') }"
+        class="navbar-element hideTablet" name="Cjenik" link="/cjenik" />
 
       <div id="nav-icon3" class="hideDesktop" @click="toggleNav">
         <span></span>
@@ -44,47 +38,35 @@
 
       <div id="myNav" class="overlay bw">
         <div class="overlay-content bw">
+          <RouterElement v-if="LINEUP_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwlineup') }"
+            class="overlay-element" name="Izvođači" link="/lineup" @click="toggleNav" />
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.LINEUP_VISIBILITY == '1'"
-            class="overlay-element " :name="'Izvođači'" :link="'/lineup'" @click="toggleNav()">
-          </RouterElement>
+          <RouterElement v-if="ULAZNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('ulaznice') }"
+            class="overlay-element" name="Ulaznice" link="/ulaznice" @click="toggleNav" />
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('ulaznice') }"
-            v-if="this.ULAZNICA_VISIBILITY == '1'" class="overlay-element " :name="'Ulaznice'" :link="'/ulaznice'"
-            @click="toggleNav()">
-          </RouterElement>
+          <RouterElement v-if="SATNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('satnica') }"
+            class="overlay-element" name="Satnica" link="/satnica" @click="toggleNav" />
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('satnica') }" v-if="this.SATNICA_VISIBILITY == '1'"
-            class="overlay-element " :name="'Satnica'" :link="'/satnica'" @click="toggleNav()">
-          </RouterElement>
+          <RouterElement v-if="TLOCRT_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('tlocrt') }"
+            class="overlay-element" name="Tlocrt" link="/tlocrt" @click="toggleNav" />
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('tlocrt') }" v-if="this.TLOCRT_VISIBILITY == '1'"
-            class="overlay-element " :name="'Tlocrt'" :link="'/tlocrt'" @click="toggleNav()">
-          </RouterElement>
+          <RouterElement v-if="SPONSORS_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwsponsors') }"
+            class="overlay-element" name="Sponzori" link="/sponsors" @click="toggleNav" />
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('bwsponsors') }"
-            v-if="this.SPONSORS_VISIBILITY == '1'" class="overlay-element " :name="'Sponzori'" :link="'/sponsors'"
-            @click="toggleNav()">
-          </RouterElement>
+          <RouterElement v-if="IGRICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('igrica') }"
+            class="overlay-element" name="Igrica" link="/igrica" @click="toggleNav" />
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('igrica') }" v-if="this.IGRICA_VISIBILITY == '1'"
-            class="overlay-element " :name="'Igrica'" :link="'/igrica'" @click="toggleNav()">
-          </RouterElement>
+          <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="overlay-element" name="Kontakt"
+            link="/kontakt" @click="toggleNav" />
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="overlay-element "
-            :name="'Kontakt'" :link="'/kontakt'" @click="toggleNav()">
-          </RouterElement>
-
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('cjenik') }" v-if="this.CJENIK_VISIBILITY == '1'"
-            class="overlay-element " :name="'Cjenik'" :link="'/cjenik'" @click="toggleNav()">
-          </RouterElement>
-
+          <RouterElement v-if="CJENIK_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('cjenik') }"
+            class="overlay-element" name="Cjenik" link="/cjenik" @click="toggleNav" />
         </div>
       </div>
-
     </div>
   </div>
 </template>
+
 
 <style module>
 .page .selected {
@@ -155,7 +137,6 @@ export default {
   }
 }
 
-
 </script>
 
 <style scoped>
@@ -190,124 +171,52 @@ export default {
   transition: 0.5s;
 }
 
-.overlay.bw {
-  background-color: var(--bw-navbar-color);
-
-}
-
-.overlay.admin {
-  background-color: white;
-
-}
-
 .overlay-content {
   position: relative;
   width: 100%;
   text-align: left;
   margin-top: 4rem;
-}
-
-.overlay-content.bw {
   top: 17%;
 }
 
-
-
 .overlay-element {
   padding-left: 5%;
-  text-decoration: none;
   font-size: 22px;
   color: #FFFFFF;
   display: block;
   transition: 0.3s;
-
-  font-family: inherit;
-
   border: none;
   background: none;
   cursor: pointer;
   outline: none;
-
   height: 60px;
-  font-style: normal;
   font-weight: 500;
+  font-style: normal;
 }
 
-.overlay-element:hover,
-.overlay-element:focus {}
-
-.overlay .closebtn {
-  position: absolute;
-  top: 20px;
-  right: 45px;
-  font-size: 60px;
-}
-
-@media screen and (max-height: 450px) {
-  .overlay-element {
-    font-size: 20px
-  }
-
-  .overlay .closebtn {
-    font-size: 40px;
-    top: 15px;
-    right: 35px;
-  }
-
-  .overlay-element.LS {
-    width: 5%;
-  }
-}
-
-
-#nav-icon1,
-#nav-icon2,
-#nav-icon3,
-#nav-icon4 {
+#nav-icon3 {
   display: inline-block;
   width: 32px;
   height: 20px;
   position: relative;
-  margin: 20px;
-  -webkit-transform: rotate(0deg);
-  -moz-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
-  transform: rotate(0deg);
-  -webkit-transition: .5s ease-in-out;
-  -moz-transition: .5s ease-in-out;
-  -o-transition: .5s ease-in-out;
-  transition: .5s ease-in-out;
+  margin: 20px 0px;
+  transition: 0.5s ease-in-out;
   cursor: pointer;
 }
 
-#nav-icon1 span,
-#nav-icon3 span,
-#nav-icon4 span {
+#nav-icon3 span {
   display: block;
   position: absolute;
   height: 1px;
   width: 100%;
   background: #FFFFFF;
   border-radius: 6px;
-  opacity: 1;
   left: 0;
-  -webkit-transform: rotate(0deg);
-  -moz-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
-  transform: rotate(0deg);
-  -webkit-transition: .25s ease-in-out;
-  -moz-transition: .25s ease-in-out;
-  -o-transition: .25s ease-in-out;
-  transition: .25s ease-in-out;
+  transition: 0.25s ease-in-out;
 }
-
-#nav-icon1 span:nth-child(1) {
-  top: 0px;
-}
-
 
 #nav-icon3 span:nth-child(1) {
-  top: 0px;
+  top: 0;
 }
 
 #nav-icon3 span:nth-child(2),
@@ -319,30 +228,19 @@ export default {
   top: 16px;
 }
 
-#nav-icon3.open span:nth-child(1) {
+#nav-icon3.open span:nth-child(1),
+#nav-icon3.open span:nth-child(4) {
   top: 8px;
   width: 0%;
   left: 50%;
 }
 
 #nav-icon3.open span:nth-child(2) {
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
   transform: rotate(45deg);
 }
 
 #nav-icon3.open span:nth-child(3) {
-  -webkit-transform: rotate(-45deg);
-  -moz-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
   transform: rotate(-45deg);
-}
-
-#nav-icon3.open span:nth-child(4) {
-  top: 10px;
-  width: 0%;
-  left: 50%;
 }
 
 .hideDesktop {
@@ -361,7 +259,6 @@ export default {
   .textfield {
     font-size: 14px;
   }
-
 }
 
 @media screen and (max-width: 550px) {

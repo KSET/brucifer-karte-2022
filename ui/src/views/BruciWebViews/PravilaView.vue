@@ -78,13 +78,6 @@ p {
   background: #00000026;
 }
 
-.contents {
-  padding-top: 3.5em;
-  padding-left: 2.73%;
-  padding-right: 4.5%;
-  padding-bottom: 4.5%;
-}
-
 @media screen and (max-width: 1280px) {
   #page-container {
     background-image: url("../../assets/bg/default/bg-tablet.png");

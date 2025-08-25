@@ -225,6 +225,14 @@ export default {
   height: 3.75rem;
 }
 
+.navbar.admin,
+.navbar.bw {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 3%;
+  align-items: center;
+}
+
 .navbar.admin {
   background: #ffffff;
   border-bottom: 1px solid #000000;
@@ -246,7 +254,6 @@ export default {
   font-style: normal;
   /* background: #DC5E88; */
   overflow: initial;
-  position: absolute;
 }
 
 .navbar.bw::after {
@@ -260,11 +267,6 @@ export default {
 }
 
 .navbar-title {
-  position: absolute;
-  left: 2.73%;
-  top: 20%;
-  bottom: 20%;
-
   font-weight: 700;
   font-size: 32px;
   line-height: 36px;
@@ -276,12 +278,8 @@ export default {
 }
 
 .routes {
-  margin-right: 2%;
-  position: absolute;
   overflow: hidden;
   vertical-align: top;
-  right: 0%;
-  top: 0%;
 }
 
 .navbar-element {
