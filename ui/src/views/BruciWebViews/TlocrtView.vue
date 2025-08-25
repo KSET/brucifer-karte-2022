@@ -69,11 +69,11 @@ export default {
 }
 
 .navbar.bw {
-  background: #00142B;
+  background: var(--bw-navbar-color);
 }
 
 .navbar.bw::after {
-  background: #00142B;
+  background: var(--bw-navbar-color);
 }
 
 .tlocrt-grid {

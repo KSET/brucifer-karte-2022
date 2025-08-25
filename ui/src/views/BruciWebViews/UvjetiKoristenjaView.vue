@@ -90,7 +90,7 @@
   
   @media screen and (max-width: 1280px) {
     #page-container {
-      background-image: url("../../assets/bg/default/bg-tablet.svg");
+      background-image: url("../../assets/bg/default/bg-tablet.png");
       background-repeat: no-repeat;
       background-size: cover;
     }

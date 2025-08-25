@@ -37,14 +37,14 @@ export default {
 
 <style>
 .footery {
-    background-color: #0E315B;
+    background-color: var(--bw-footer-color);
     position: absolute;
     padding: 0px;
     bottom: 0;
     width: 100%;
     height: 60px;
     position: absolute;
-    /* background: #0E315B;
+    /* background: var(--bw-footer-color);
 ; */
 }
 
@@ -56,7 +56,7 @@ export default {
     z-index: 2;
     height: 8px;
     content: "";
-    /* background: linear-gradient(to top, #0E315B;
+    /* background: linear-gradient(to top, var(--bw-footer-color);
 , transparent); */
 }
 

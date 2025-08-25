@@ -54,11 +54,11 @@ export default {
 }
 
 .navbar.bw {
-  background: #00142B;
+  background: var(--bw-navbar-color);
 }
 
 .navbar.bw::after {
-  background: linear-gradient(#00142B, transparent);
+  background: linear-gradient(var(--bw-navbar-color), transparent);
 }
 
 @media screen and (max-width: 980px) {

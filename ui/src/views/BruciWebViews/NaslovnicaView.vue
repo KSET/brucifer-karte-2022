@@ -80,7 +80,7 @@ export default {
   */
 
   --background-image: url("../../assets/bg/home/bg-desktop.png");
-  --background-default: url("../../assets/bg/default/bg-desktop.svg");
+  --background-default: url("../../assets/bg/default/bg-desktop.png");
   --background-image-aspect-ratio: calc(1080 / 1920);
 
   /* COLORS */
@@ -106,7 +106,7 @@ export default {
 
 .page-container {
   position: relative;
-  background-color: #001723;
+  background-color: var(--bw-page-color);
   min-height: 93vh;
   flex: 1;
 }
@@ -154,7 +154,7 @@ export default {
   }
 
   .page-container {
-    background-color: #001723;
+    background-color: var(--bw-page-color);
   }
 
   .countdown-timer {
@@ -181,7 +181,7 @@ export default {
   }
 
   .page-container {
-    background-color: #001723;
+    background-color: var(--bw-page-color);
   }
 
   .countdown-timer {
@@ -204,7 +204,7 @@ export default {
   background-image: var(--background-default);
   background-repeat: repeat;
   background-size: cover;
-  background-color: #0E315B;
+  background-color: var(--bw-footer-color);
   ;
   min-height: 93vh;
   padding-bottom: 60px;

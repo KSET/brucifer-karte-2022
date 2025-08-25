@@ -358,20 +358,20 @@ h1 {
 }
 
 .footery {
-    background: #0E315B;
+    background: var(--bw-footer-color);
 ;
 }
 
 .footery::after {
-    background: linear-gradient(to top, #0E315B, transparent);
+    background: linear-gradient(to top, var(--bw-footer-color), transparent);
 }
 
 .navbar.bw {
-    background: #0E315B;
+    background: var(--bw-footer-color);
 }
 
 .navbar.bw::after {
-    background: linear-gradient(#0E315B, transparent);
+    background: linear-gradient(var(--bw-footer-color), transparent);
 }
 
 @media screen and (max-width: 980px) {

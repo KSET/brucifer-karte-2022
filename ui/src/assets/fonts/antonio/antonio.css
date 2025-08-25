@@ -37,7 +37,6 @@
 @font-face {
     font-family: 'Cooperbits';
     src: url('CooperBits.ttf') format('truetype');
-    /* Adjust the path as necessary */
     font-weight: normal;
     font-style: normal;
 }
@@ -69,4 +68,17 @@
     src: url('./Ubuntu-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
+}
+
+@font-face {
+    font-family: 'Cobya';
+    src: url('../Cobya/Cobya-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Cobya-Semi';
+    src: url('../Cobya/Cobya-Semibold.ttf') format('truetype');
+    font-weight: 600;
 }

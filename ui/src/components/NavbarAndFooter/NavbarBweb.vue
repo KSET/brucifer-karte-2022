@@ -1,7 +1,7 @@
 <template>
   <div class="navbar bw" :class="$style.page">
     <router-link class="navbar-title" to="/">
-      {{ translations?.navbar.title ? translations.navbar.title : "navbar.title" }} </router-link>
+      {{ translations?.navbar?.title ? translations.navbar.title : "navbar.title" }} </router-link>
     <div class="routes">
 
       <RouterElement :class="{ [$style.selected]: isCurrentPage('bwlineup') }" v-if="this.LINEUP_VISIBILITY == '1'"
@@ -185,13 +185,13 @@ export default {
   z-index: -1;
   top: 0;
   left: 0;
-  background-color: #00142B;
+  background-color: var(--bw-navbar-color);
   overflow-x: hidden;
   transition: 0.5s;
 }
 
 .overlay.bw {
-  background-color: #00142B;
+  background-color: var(--bw-navbar-color);
 
 }
 

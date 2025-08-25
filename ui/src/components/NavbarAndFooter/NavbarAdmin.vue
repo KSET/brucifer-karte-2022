@@ -38,10 +38,10 @@
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Tagovi'"
             :link="'/admin/tags'">
           </RouterElement>
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Dnevni izvještaj'" @click="toggleNav()"
-            :link="'/admin/daily-report'"></RouterElement>
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Privilegije'"
-            :link="'/admin/privileges'"></RouterElement>
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Dnevni izvještaj'"
+            @click="toggleNav()" :link="'/admin/daily-report'"></RouterElement>
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()"
+            :name="'Privilegije'" :link="'/admin/privileges'"></RouterElement>
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Korisnici'"
             :link="'/admin/users'">
           </RouterElement>
@@ -74,7 +74,8 @@
             </RouterElement>
             <img v-if="this.showDropdownSponsors == false" class="dropdown-icon" style="display: inline-block"
               src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownSponsors" />
-            <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg" @click="toggleDropdownSponsors" />
+            <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg"
+              @click="toggleDropdownSponsors" />
           </div>
           <RouterElement id="dpS11" class="overlay-element admin" @click="toggleNav()" :name="'Pregled Sponzora'"
             style="margin-left: 30px" :link="'/admin/sponsors-list'">
@@ -83,8 +84,8 @@
             style="margin-left: 30px" :link="'/admin/sponsors-add/0'">
           </RouterElement>
 
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Dodaj Gosta'" @click="toggleNav()"
-            :link="'/admin/guests-add'"></RouterElement>
+          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Dodaj Gosta'"
+            @click="toggleNav()" :link="'/admin/guests-add'"></RouterElement>
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Kontakt'" @click="toggleNav()"
             :link="'/admin/band-kontakt'"></RouterElement>
           <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Firme'" @click="toggleNav()"
@@ -184,28 +185,27 @@ export default {
     display: none;
   }
 }
-</style >
+</style>
 
 <style scoped>
-  .navbar-title{
-    color: black;
-    font-family: 'Ubuntu'
-  }
+.navbar-title {
+  color: black;
+  font-family: 'Ubuntu'
+}
 
-  .navbar-element{
-    color: black;
-  }
+.navbar-element {
+  color: black;
+}
 
-  #nav-icon1 span,
+#nav-icon1 span,
 #nav-icon3 span,
 #nav-icon4 span {
   background: black;
 
-  .overlay-element.admin{
+  .overlay-element.admin {
     color: black;
   }
 }
-
 </style>
 <style lang="scss">
 .overlay-element.admin {
@@ -234,7 +234,7 @@ export default {
 }
 
 .navbar.bw {
-  background-color: #00142B;
+  background-color: var(--bw-navbar-color);
   font-family: "Antonio";
   font-style: normal;
   font-weight: 400;
