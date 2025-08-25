@@ -92,8 +92,8 @@ export default {
 
   /* COUNTDOWN */
 
-  --countdown-right-offset: 4vw;
-  --countdown-font-size: 70px;
+  --countdown-right-offset: 10.5%;
+  --countdown-font-size: 5vw;
   --countdown-top-offset: 32%;
 
 }
@@ -113,15 +113,15 @@ export default {
 
 .countdown-timer {
   position: absolute;
-  font-family: 'CooperBits';
+  font-family: 'Cobya';
   top: 0;
   width: 100%;
   right: 0;
-  padding-right: var(--countdown-right-offset);
-  text-align: right;
+  padding-left: var(--countdown-right-offset);
+  text-align: left;
   font-size: var(--countdown-font-size);
-  color: #E0C5FF;
-  text-shadow: .062em 0 black;
+  color: #c5ecff;
+  /* text-shadow: .062em 0 black; */
   pointer-events: none;
   user-select: none;
   padding-bottom: min(calc(var(--background-image-aspect-ratio) * 100%),
@@ -135,7 +135,7 @@ export default {
   padding-top: var(--countdown-top-offset);
 }
 
-.countdown-textfield{
+.countdown-textfield {
   display: inline;
   margin: 0px -15px;
 }
@@ -143,9 +143,9 @@ export default {
 @media screen and (max-width: 980PX) {
   :root {
     --background-image-aspect-ratio: calc(962 / 601);
-    --countdown-right-offset: 9vw;
+    --countdown-right-offset: 17vw;
     --countdown-font-size: 8vw;
-    --countdown-top-offset: 86.5%;
+    --countdown-top-offset: 25.5%;
     --background-image: url("../../assets/bg/home/bg-tablet.png");
   }
 
@@ -161,7 +161,7 @@ export default {
     padding-top: 35%;
   }
 
-  .countdown-textfield{
+  .countdown-textfield {
     display: inline;
     margin: 0px -10px;
   }
@@ -170,9 +170,9 @@ export default {
 @media screen and (max-width: 550PX) {
   :root {
     --background-image-aspect-ratio: calc(962 / 601);
-    --countdown-right-offset: 9vw;
+    --countdown-right-offset: 13vw;
     --countdown-font-size: 8vw;
-    --countdown-top-offset: 86.5%;
+    --countdown-top-offset: 17.5%;
     --background-image: url("../../assets/bg/home/bg-mobile.png");
   }
 
@@ -188,7 +188,7 @@ export default {
     padding-top: 48%;
   }
 
-  .countdown-textfield{
+  .countdown-textfield {
     display: inline;
     margin: 0px -5px;
   }

@@ -44,8 +44,6 @@ export default {
     width: 100%;
     height: 60px;
     position: absolute;
-    /* background: var(--bw-footer-color);
-; */
 }
 
 .footery::after {
