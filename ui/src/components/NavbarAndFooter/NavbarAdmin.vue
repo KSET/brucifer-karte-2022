@@ -216,7 +216,6 @@ export default {
 .navbar {
   color: black;
   overflow: hidden;
-  position: absolute;
   /* Set the navbar to fixed position */
   top: 0px;
   /* Position the navbar at the top of the page */
