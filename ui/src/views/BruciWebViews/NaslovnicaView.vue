@@ -81,7 +81,7 @@ export default {
 
   --background-image: url("../../assets/bg/home/bg-desktop.png");
   --background-default: url("../../assets/bg/default/bg-desktop.png");
-  --background-image-aspect-ratio: calc(1080 / 1920);
+  --background-image-aspect-ratio: calc(1081 / 1930);
 
   /* COLORS */
 
@@ -142,7 +142,7 @@ export default {
 
 @media screen and (max-width: 980PX) {
   :root {
-    --background-image-aspect-ratio: calc(962 / 601);
+    --background-image-aspect-ratio: calc(1677 / 1048);
     --countdown-right-offset: 17vw;
     --countdown-font-size: 8vw;
     --countdown-top-offset: 25.5%;
@@ -169,7 +169,7 @@ export default {
 
 @media screen and (max-width: 550PX) {
   :root {
-    --background-image-aspect-ratio: calc(962 / 601);
+    --background-image-aspect-ratio: calc(1563 / 880);
     --countdown-right-offset: 13vw;
     --countdown-font-size: 8vw;
     --countdown-top-offset: 17.5%;
