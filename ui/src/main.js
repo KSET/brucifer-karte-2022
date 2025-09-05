@@ -17,10 +17,31 @@ import VueNavigationBar from 'vue-navigation-bar';
 import 'vue-navigation-bar/dist/vue-navigation-bar.css';
 import "./../node_modules/bulma/css/bulma.css";
 import VueCountdown from '@chenfengyuan/vue-countdown';
-import UUID from 'vue-uuid'  
+import UUID from 'vue-uuid'
+import PrimeVue from 'primevue/config'
+import 'primeicons/primeicons.css'
+import Aura from '@primeuix/themes/aura';
+import { definePreset } from '@primeuix/themes';
 
+const MyPreset = definePreset(Aura, {
+    semantic: {
+        primary: {
+            50: 'black',
+            100: 'black',
+            200: 'black',
+            300: 'black',
+            400: 'black',
+            500: 'black',
+            600: 'black',
+            700: 'black',
+            800: 'black',
+            900: 'black',
+            950: 'black'
+        }
+    }
+});
 
-const app= createApp(App).use(store).use(router)
+const app = createApp(App).use(store).use(router)
 
 
 app.component('downloadCsv', JsonCSV).component('VueJwtDecode', VueJwtDecode);
@@ -28,6 +49,14 @@ app.component(VueCountdown.name, VueCountdown);
 
 app.use(Vuex)
 app.use(UUID)
+app.use(PrimeVue, {
+  theme: {
+    preset: MyPreset,
+    options: {
+      darkModeSelector: false
+    }
+  }
+});
 
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'

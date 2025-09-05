@@ -21,7 +21,7 @@
         </div>
         <RouterElement style="padding-left:3rem !important;" id="dpL1" class="sidebar-element" :name="'Pregled Izvođača'"
             :link="'/admin/lineup-list'">
-        </RouterElement>
+        </RouterElement>    
 
         <a style="padding-left:3rem !important; color: black;" id="dpL2" class="sidebar-element"
             href="/admin/lineup-add/0">Dodavanje Izvođača</a>
@@ -199,7 +199,6 @@ export default {
 
 .admin-page-container {
     position: relative;
-    margin-top: 3.75rem;
 
     margin-left: 26%;
     /* Same as the width of the sidenav */
