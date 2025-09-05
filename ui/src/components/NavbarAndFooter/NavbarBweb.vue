@@ -8,8 +8,9 @@
       <RouterElement v-if="LINEUP_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwlineup') }"
         class="navbar-element hideTablet" name="Izvođači" link="/lineup" />
 
-      <RouterElement v-if="ULAZNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('ulaznice') }"
-        class="navbar-element hideTablet" name="Ulaznice" link="/ulaznice" />
+      <RouterElement v-if="ULAZNICA_VISIBILITY == '1'"
+        :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }"
+        class="navbar-element hideTablet ulaznice-button" name="Kupi karte" link="/ulaznice" icon="pi-arrow-right" />
 
       <RouterElement v-if="SATNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('satnica') }"
         class="navbar-element hideTablet" name="Satnica" link="/satnica" />
@@ -23,8 +24,8 @@
       <RouterElement v-if="IGRICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('igrica') }"
         class="navbar-element hideTablet" name="Igrica" link="/igrica" />
 
-      <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="navbar-element hideTablet"
-        name="Kontakt" link="/kontakt" />
+      <!-- <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="navbar-element hideTablet"
+        name="Kontakt" link="/kontakt" /> -->
 
       <RouterElement v-if="CJENIK_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('cjenik') }"
         class="navbar-element hideTablet" name="Cjenik" link="/cjenik" />
@@ -41,8 +42,10 @@
           <RouterElement v-if="LINEUP_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwlineup') }"
             class="overlay-element" name="Izvođači" link="/lineup" @click="toggleNav" />
 
-          <RouterElement v-if="ULAZNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('ulaznice') }"
-            class="overlay-element" name="Ulaznice" link="/ulaznice" @click="toggleNav" />
+          <RouterElement v-if="ULAZNICA_VISIBILITY == '1'"
+            :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }"
+            class="overlay-element ulaznice-button" name="Kupi karte" link="/ulaznice"
+            icon="pi-arrow-right" @click="toggleNav"/>
 
           <RouterElement v-if="SATNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('satnica') }"
             class="overlay-element" name="Satnica" link="/satnica" @click="toggleNav" />
@@ -56,8 +59,8 @@
           <RouterElement v-if="IGRICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('igrica') }"
             class="overlay-element" name="Igrica" link="/igrica" @click="toggleNav" />
 
-          <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="overlay-element" name="Kontakt"
-            link="/kontakt" @click="toggleNav" />
+          <!-- <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="overlay-element" name="Kontakt"
+            link="/kontakt" @click="toggleNav" /> -->
 
           <RouterElement v-if="CJENIK_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('cjenik') }"
             class="overlay-element" name="Cjenik" link="/cjenik" @click="toggleNav" />
@@ -142,7 +145,7 @@ export default {
 <style scoped>
 .navbar-title {
   font-family: 'Ubuntu';
-  font-size: 20px;
+  font-size: 2rem;
 }
 
 .navbar-title:hover {
@@ -155,6 +158,29 @@ export default {
 
 .overlay-element {
   font-family: 'Ubuntu';
+}
+
+.arrow-icon {
+  font-size: 1rem;
+  margin-left: 6px;
+  color: white;
+  vertical-align: middle;
+}
+
+.ulaznice-button {
+  border: 1px solid white;
+  border-radius: 8px;
+  padding: 8px 10px;
+  height: fit-content;
+  transition: background-color 0.5s ease, color 0.5s ease;
+  transition: color 0.5s ease, color 0.5s ease;
+
+}
+
+.ulaznice-button:hover,
+.ulaznice-button-selected {
+  background-color: white !important;
+  color: var(--bw-navbar-color) !important;
 }
 </style>
 
@@ -177,6 +203,7 @@ export default {
   text-align: left;
   margin-top: 4rem;
   top: 17%;
+  padding-left: 3%;
 }
 
 .overlay-element {
@@ -276,6 +303,10 @@ export default {
 
   .textfield {
     font-size: 12px;
+  }
+
+  .navbar-title {
+    font-size: 1.5rem !important;
   }
 }
 </style>

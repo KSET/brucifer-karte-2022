@@ -9,7 +9,7 @@
         <h5 class="countdown-textfield">{{ seconds }}</h5>
       </vue-countdown>
 
-      <SponsorsIcons />
+      <!-- <SponsorsIcons /> -->
       <div class="homepage">
         <div class="image-container">
           <div class="image-sizer"></div>
