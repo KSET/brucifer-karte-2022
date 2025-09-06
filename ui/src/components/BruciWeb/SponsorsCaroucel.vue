@@ -21,7 +21,7 @@ export default {
     data() {
         return {
             sponsors: [],
-            duration: '50s',
+            duration: '80s',
         }
     },
     mounted() {
