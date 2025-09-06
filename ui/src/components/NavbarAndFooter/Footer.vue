@@ -97,11 +97,11 @@ export default {
 
 <style>
 .footer-sponsors-list {
-    height: 60px;
+    height: 6rem;
 }
 
 .footer {
-    height: 120px;
+    height: 10rem;
     background: var(--bw-footer-color);
 }
 
@@ -109,7 +109,7 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 60px;
+    height: 4rem;
 
     display: flex;
     align-items: center;
@@ -207,6 +207,10 @@ export default {
     .footer-icon {
         width: 1.5rem;
         height: 1.5rem;
+    }
+
+    .footery {
+        justify-content: flex-start;
     }
 }
 </style>

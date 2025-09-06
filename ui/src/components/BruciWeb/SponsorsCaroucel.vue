@@ -1,7 +1,7 @@
 <template>
     <div v-if="SPONSORS_VISIBILITY == 1" class="sponsorsMarquee">
         <div class="marquee-track" :style="{ '--duration': duration }">
-            <div class="marquee-group" v-for="n in 20" :key="n">
+            <div class="marquee-group" v-for="n in 10" :key="n">
                 <a v-for="sponsor in sponsors" :key="`${n}-${sponsor.id}`" class="sponsorsIcon" :href="sponsor.url"
                     rel="noreferrer noopener" target="_blank">
                     <img class="sponsorsIconImage" :src="sponsor.image" />
@@ -79,8 +79,8 @@ export default {
 }
 
 .sponsorsIconImage {
-    height: 55px;
-    width: 55px;
+    height: 5.5rem;
+    width: 5.5rem;
     object-fit: contain;
 }
 

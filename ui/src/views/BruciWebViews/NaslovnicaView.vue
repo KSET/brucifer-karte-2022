@@ -99,9 +99,9 @@ export default {
 }
 
 .homepage-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .comingSoon {
@@ -133,6 +133,12 @@ export default {
   padding-bottom: min(calc(var(--background-image-aspect-ratio) * 100%),
       calc(100vh - var(--topbar-height) - var(--footer-height) - var(--countdown-font-size) - var(--countdown-top-offset)));
   overflow: hidden;
+  font-size: var(--countdown-font-size);
+}
+
+.countdown-timer h5 {
+  font-size: var(--countdown-font-size);
+  font-family: 'Cobya';
 }
 
 .countdown-timer::before {
