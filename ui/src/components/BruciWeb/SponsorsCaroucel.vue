@@ -17,7 +17,7 @@ import axios from 'axios'
 import store from '@/store/visibilityStore'
 
 export default {
-    name: 'SpoonsorsIcons',
+    name: 'SponsorsCaroucel',
     data() {
         return {
             sponsors: [],
