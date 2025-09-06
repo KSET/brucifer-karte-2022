@@ -8,6 +8,7 @@ import EntryView from "../views/BruckarteViews/EntryView.vue";
 import Login from "../views/BruckarteViews/LoginView.vue";
 import Logout from "../views/BruckarteViews/LogoutView.vue";
 import PageNotFound from "../views/BruckarteViews/PageNotFound.vue";
+import Callback from "../views/BruckarteViews/Callback.vue";
 
 /* Admin Views */
 import Tags from "../views/AdminViews/TagsView.vue";
@@ -95,6 +96,11 @@ const routes = [
     path: "/admin/logout",
     name: "logout",
     component: Logout,
+  },
+  {
+    path: "/admin/callback",
+    name: "callback",
+    component: Callback,
   },
   {
     path: "/admin/lineup-list",
@@ -266,6 +272,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  if (to.path === '/admin/callback') {
+    return next();
+  }
+  
   //provjera auth i privilegija
   var allowedRoutesForprivilege2 = [
     "home",
