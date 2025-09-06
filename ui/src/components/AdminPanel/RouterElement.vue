@@ -34,6 +34,7 @@ export default {
   color: white;
 }
 .router-element__icon {
+  margin-left: 0.5rem;
   font-size: 1rem;
   line-height: 1;
 }

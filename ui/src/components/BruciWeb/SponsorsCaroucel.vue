@@ -37,6 +37,8 @@ export default {
             axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order&search=1&search_fields=visible',)
                 .then(response => {
                     this.sponsors = response.data;
+                    const speed = Math.max(100, this.sponsors.length * 10);
+                    this.duration = `${speed}s`;
                 })
         }
     }
