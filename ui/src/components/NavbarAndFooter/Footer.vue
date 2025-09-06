@@ -1,9 +1,50 @@
 <template>
-    <div class="footery">
-        <div class="footer-container">
-            <p id="text1" class="footer-text"> © KSET {{ year }}</p>
+    <div class="footer">
+        <div class="footer-sponsors-list">
+            <sponsors-caroucel />
+        </div>
 
-            <div class="footer-socials-container-desktop">
+        <div class="footery">
+            <div class="footer-container">
+                <p id="text1" class="footer-text"> © KSET {{ year }}</p>
+
+                <div class="footer-socials-container-desktop">
+                    <div class="footer-socials">
+                        <a :href="facebookUrl" aria-label="Facebook" target="_blank" rel="noopener">
+                            <img class="footer-icon" src="../../assets/icons/facebook.svg" />
+                        </a>
+                        <a :href="instagramUrl" aria-label="Instagram" target="_blank" rel="noopener">
+                            <img class="footer-icon" src="../../assets/icons/instagram.svg" />
+                        </a>
+                        <a :href="websiteUrl" aria-label="Website" target="_blank" rel="noopener">
+                            <img class="footer-icon" src="../../assets/icons/web.svg" />
+                        </a>
+                    </div>
+
+                    <span class="footer-separator">•</span>
+
+                    <div>
+                        <a href="mailto:press@kset.org" class="footer-mail">press@kset.org</a>
+                        <span class="footer-separator">•</span>
+
+                        <a href="mailto:info@kset.org" class="footer-mail">info@kset.org</a>
+                    </div>
+
+                </div>
+
+                <div class="footer-left-container">
+                    <div v-if="IGRICA_VISIBILITY != 0">
+                        <router-link class="footer-text" to="/uvjeti-koristenja">
+                            <p class="footer-text">Uvjeti korištenja</p>
+                        </router-link>
+                    </div>
+                    <router-link class="footer-text" style="margin-left:30px" to="/pravila-ponasanja">
+                        <p class="footer-text">Pravila ponašanja</p>
+                    </router-link>
+                </div>
+            </div>
+
+            <div class="footer-socials-container-mobile">
                 <div class="footer-socials">
                     <a :href="facebookUrl" aria-label="Facebook" target="_blank" rel="noopener">
                         <img class="footer-icon" src="../../assets/icons/facebook.svg" />
@@ -16,8 +57,6 @@
                     </a>
                 </div>
 
-                <span class="footer-separator">•</span>
-
                 <div>
                     <a href="mailto:press@kset.org" class="footer-mail">press@kset.org</a>
                     <span class="footer-separator">•</span>
@@ -26,49 +65,19 @@
                 </div>
 
             </div>
-
-            <div class="footer-left-container">
-                <div v-if="IGRICA_VISIBILITY != 0">
-                    <router-link class="footer-text" to="/uvjeti-koristenja">
-                        <p class="footer-text">Uvjeti korištenja</p>
-                    </router-link>
-                </div>
-                <router-link class="footer-text" style="margin-left:30px" to="/pravila-ponasanja">
-                    <p class="footer-text">Pravila ponašanja</p>
-                </router-link>
-            </div>
-        </div>
-
-        <div class="footer-socials-container-mobile">
-            <div class="footer-socials">
-                <a :href="facebookUrl" aria-label="Facebook" target="_blank" rel="noopener">
-                    <img class="footer-icon" src="../../assets/icons/facebook.svg" />
-                </a>
-                <a :href="instagramUrl" aria-label="Instagram" target="_blank" rel="noopener">
-                    <img class="footer-icon" src="../../assets/icons/instagram.svg" />
-                </a>
-                <a :href="websiteUrl" aria-label="Website" target="_blank" rel="noopener">
-                    <img class="footer-icon" src="../../assets/icons/web.svg" />
-                </a>
-            </div>
-
-            <div>
-                <a href="mailto:press@kset.org" class="footer-mail">press@kset.org</a>
-                <span class="footer-separator">•</span>
-
-                <a href="mailto:info@kset.org" class="footer-mail">info@kset.org</a>
-            </div>
-
         </div>
     </div>
+
 </template>
 
 
 <script>
+import SponsorsCaroucel from '../BruciWeb/SponsorsCaroucel.vue';
 import visibilityStore from '@/store/visibilityStore';
 
 export default {
     name: "Footer",
+    components: { SponsorsCaroucel },
     data() {
         return {
             year: new Date().getFullYear(),
@@ -87,8 +96,16 @@ export default {
 </script>
 
 <style>
+.footer-sponsors-list {
+    height: 60px;
+}
+
+.footer {
+    height: 120px;
+    background: var(--bw-footer-color);
+}
+
 .footery {
-    position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;

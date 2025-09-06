@@ -15,7 +15,6 @@ import VueJwtDecode from 'vue-jwt-decode'
 import Vuex from 'vuex';
 import VueNavigationBar from 'vue-navigation-bar';
 import 'vue-navigation-bar/dist/vue-navigation-bar.css';
-import "./../node_modules/bulma/css/bulma.css";
 import VueCountdown from '@chenfengyuan/vue-countdown';
 import UUID from 'vue-uuid'
 import PrimeVue from 'primevue/config'

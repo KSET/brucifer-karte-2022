@@ -55,7 +55,10 @@ export default {
     background-size: cover;
     background-color: linear-gradient(red, var(--bw-footer-color));
     min-height: 100vh;
-    padding-bottom: 60px;
+    padding-bottom: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .lineup {
