@@ -37,9 +37,10 @@ class Tags(models.Model):
 class Lineup(models.Model):
     id = models.AutoField(primary_key=True)
     slug = models.CharField(max_length=200, default='', blank=True)
-    order = models.IntegerField(default='', blank=True)
-    visible = models.CharField(max_length=200, default='', blank=True)
+    order = models.PositiveIntegerField(default=0)
+    visible = models.BooleanField(default=False)
     name = models.CharField(max_length=49, default='', blank=True)
+    biography = models.TextField(default='', blank=True)
     image = models.ImageField(
         upload_to='uploads/lineup', blank=True, null=True)
 

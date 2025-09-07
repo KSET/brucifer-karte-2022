@@ -81,7 +81,7 @@ export default {
 }
 
 .sponsorsIconImage {
-    height: 5.5rem;
+    height: 2rem;
     width: 5.5rem;
     object-fit: contain;
 }

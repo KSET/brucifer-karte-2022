@@ -97,11 +97,13 @@ export default {
 
 <style>
 .footer-sponsors-list {
-    height: 6rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
 }
 
 .footer {
-    height: 10rem;
+    height: 7rem;
     background: var(--bw-footer-color);
 }
 

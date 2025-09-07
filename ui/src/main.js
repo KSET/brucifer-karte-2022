@@ -14,6 +14,7 @@ import PrimeVue from 'primevue/config'
 import 'primeicons/primeicons.css'
 import Aura from '@primeuix/themes/aura';
 import { definePreset } from '@primeuix/themes';
+import ApiPlugin from '@/plugins/api'
 
 const MyPreset = definePreset(Aura, {
     semantic: {
@@ -49,6 +50,7 @@ app.use(PrimeVue, {
     }
   }
 });
+app.use(ApiPlugin)
 
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'

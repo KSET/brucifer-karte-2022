@@ -1,3 +1,4 @@
+from uuid import uuid4
 from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import filters
@@ -121,6 +122,47 @@ class LineupViewSet(viewsets.ModelViewSet):
     serializer_class = LineupSerializer
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     ordering_fields = ['order']
+
+    @transaction.atomic
+    def perform_create(self, serializer):
+        last = Lineup.objects.select_for_update().order_by('-order').first()
+        next_order = (last.order if last else 0) + 1
+        serializer.save(order=next_order, slug=str(uuid4()))
+
+    @action(detail=False, methods=['post'])
+    @transaction.atomic
+    def reorder(self, request):
+        payload = request.data
+        if not isinstance(payload, list):
+            return Response({"error": "Expected a list of {id, order}."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            pairs = [(int(item["id"]), int(item["order"])) for item in payload]
+        except (KeyError, TypeError, ValueError):
+            return Response({"error": "Each item must have integer 'id' and 'order'."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        ids    = [i for i, _ in pairs]
+        orders = [o for _, o in pairs]
+
+        if len(set(ids)) != len(ids):
+            return Response({"error": "Duplicate ids in payload."}, status=status.HTTP_400_BAD_REQUEST)
+        if len(set(orders)) != len(orders):
+            return Response({"error": "Duplicate orders in payload."}, status=status.HTTP_400_BAD_REQUEST)
+        if any(o < 0 for o in orders):
+            return Response({"error": "Order must be non-negative integers."}, status=status.HTTP_400_BAD_REQUEST)
+
+        objs = {obj.id: obj for obj in Lineup.objects.select_for_update().filter(id__in=ids)}
+        missing = sorted(set(ids) - set(objs.keys()))
+        if missing:
+            return Response({"error": f"Lineup(s) not found: {missing}"}, status=status.HTTP_404_NOT_FOUND)
+
+        for _id, _ord in pairs:
+            objs[_id].order = _ord
+        Lineup.objects.bulk_update(objs.values(), ['order'])
+
+        return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
 
 class SponsorsViewSet(viewsets.ModelViewSet):
