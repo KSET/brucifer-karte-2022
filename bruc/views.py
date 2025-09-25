@@ -60,7 +60,7 @@ class MailerViewSet(viewsets.ModelViewSet):
 
             if subject and msg and to and html_message:
                 text_content = strip_tags(html_message)
-                msg = EmailMultiAlternatives(subject, text_content, "41. Brucošijada FER-a<"+settings.EMAIL_HOST_USER+">", [to])
+                msg = EmailMultiAlternatives(subject, text_content, "42. Brucošijada FER-a<"+settings.EMAIL_HOST_USER+">", [to])
                 msg.attach_alternative(html_message, "text/html")
                 messages.append(msg)
 

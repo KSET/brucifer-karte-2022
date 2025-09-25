@@ -264,7 +264,7 @@ export default {
         {
           emails: [
             {
-              subject: "[#BRUCIFER24] Potvrda za kupljenu kartu",
+              subject: "[#BRUCIFER25] Potvrda za kupljenu kartu",
               template: "guest_email",
               message: msg,
               name: this.name,
@@ -276,7 +276,7 @@ export default {
       )
       await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
         {
-          subject: "[#BRUCIFER24] Potvrda za kupljenu kartu",
+          subject: "[#BRUCIFER25] Potvrda za kupljenu kartu",
           template: "guest_email",
           message: msg,
           name: this.name,
