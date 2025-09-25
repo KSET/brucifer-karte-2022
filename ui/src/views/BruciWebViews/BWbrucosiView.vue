@@ -50,7 +50,7 @@
                             <Checkbox name="gdpr_accepted" binary inputId="gdpr_accepted" />
                             <label for="gdpr_accepted">
                                 I agree to the processing of my personal data (
-                                <a href="/Privola za prikupljanje osobnih podataka - Brucošijada 2025.pdf   "
+                                <a href="/Privola_za_prikupljanje_osobnih_podataka-Brucosijada_2025.pdf"
                                     target="_blank" rel="noopener noreferrer"
                                     style="color: #4da3ff; text-decoration: underline;">
                                     PRIVOLA ZA PRIKUPLJANJE OSOBNIH PODATAKA
