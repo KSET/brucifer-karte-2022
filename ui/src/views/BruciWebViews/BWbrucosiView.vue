@@ -107,8 +107,6 @@ function expectedFerEmail(values) {
     const e_name = normalize(values.name[0].toLowerCase())
     const e_surname = normalize(values.surname[0].toLowerCase())
 
-    console.log(`${e_name}${e_surname}${jmbagslice}@fer.hr`)
-
     return `${e_name}${e_surname}${jmbagslice}@fer.hr`
 }
 
@@ -176,7 +174,6 @@ export default {
 
             try {
                 const res = await brucosiFormStore.dispatch('submit', values)
-                console.log('Brucosi form response:', res)
 
                 this.toast.add({
                     severity: 'success',
@@ -187,7 +184,6 @@ export default {
 
                 reset()
             } catch (e) {
-                console.error('Submission failed:', e)
                 this.toast.add({
                     severity: 'info',
                     summary: 'Submission received',
