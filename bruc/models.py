@@ -123,3 +123,23 @@ class GameLeaderboard(models.Model):
     name = models.CharField(max_length=50, default='', blank=True)
     email = models.CharField(max_length=50, default='', blank=True)
     score = models.IntegerField(default='', blank=True)
+
+class BrucosiFormResponse(models.Model):
+    name = models.CharField(max_length=100)
+    surname = models.CharField(max_length=100)
+    email = models.EmailField()
+    jmbag = models.CharField(max_length=20)
+    gdpr_accepted = models.BooleanField(default=False)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    STATUS_CHOICES = [
+        ('valid', 'Valid'),
+        ('invalid', 'Invalid'),
+        ('redeemed', 'Redeemed'),
+    ]
+
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='invalid'
+    )

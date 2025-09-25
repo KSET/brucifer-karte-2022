@@ -15,6 +15,7 @@ import 'primeicons/primeicons.css'
 import Aura from '@primeuix/themes/aura';
 import { definePreset } from '@primeuix/themes';
 import ApiPlugin from '@/plugins/api'
+import ToastService from 'primevue/toastservice';
 
 const MyPreset = definePreset(Aura, {
     semantic: {
@@ -40,6 +41,7 @@ const app = createApp(App).use(store).use(router)
 app.component('downloadCsv', JsonCSV).component('VueJwtDecode', VueJwtDecode);
 app.component(VueCountdown.name, VueCountdown);
 
+app.use(ToastService);
 app.use(Vuex)
 app.use(UUID)
 app.use(PrimeVue, {

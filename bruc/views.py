@@ -3,9 +3,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import filters
 from rest_framework import routers, serializers, viewsets
-from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard
+from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from .serializer import TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer
+from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.mail import BadHeaderError, send_mail
@@ -209,3 +209,15 @@ class GameLeaderboardViewSet(viewsets.ModelViewSet):
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     search_fields = ['email']
     ordering_fields = ['score']
+
+class BrucosiFormResponseViewSet(viewsets.ModelViewSet):
+    queryset = BrucosiFormResponse.objects.all()
+    serializer_class = BrucosiFormResponseSerializer
+
+    @action(detail=False, methods=['post'], url_path='brucosi-form-submit')
+    def brucosi_form_submit(self, request):
+        serializer = BrucosiFormResponseSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Submission received."}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

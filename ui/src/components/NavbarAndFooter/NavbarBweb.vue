@@ -12,6 +12,10 @@
         :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }"
         class="navbar-element hideTablet ulaznice-button" name="Kupi karte" link="/ulaznice" icon="pi-arrow-right" />
 
+      <RouterElement v-if="ULAZNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwbrucosi') }"
+              class="navbar-element hideTablet" name="Brucoši" link="/brucosi" />
+
+
       <RouterElement v-if="SATNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('satnica') }"
         class="navbar-element hideTablet" name="Satnica" link="/satnica" />
 
@@ -45,6 +49,9 @@
           <RouterElement v-if="ULAZNICA_VISIBILITY == '1'"
             :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }" class="overlay-element ulaznice-button"
             name="Kupi karte" link="/ulaznice" icon="pi-arrow-right" @click="toggleNav" />
+
+          <RouterElement v-if="ULAZNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwbrucosi') }"
+            class="overlay-element" name="Brucoši" link="/brucosi" @click="toggleNav" />
 
           <RouterElement v-if="SATNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('satnica') }"
             class="overlay-element" name="Satnica" link="/satnica" @click="toggleNav" />
