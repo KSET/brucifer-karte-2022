@@ -122,7 +122,7 @@ export default {
   methods: {
     changeValue() {
       if (this.guest != '') {
-        api.put(process.env.VUE_APP_BASE_URL + '/guests/' + this.guest.id + '/',
+        api.put('/guests/' + this.guest.id + '/',
           { name: this.name, surname: this.surname },
           { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
         )
@@ -147,7 +147,7 @@ export default {
           var confCode = "";
           var boughtTicketTime = null;
         }
-        api.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
+        api.put('/guests/' + guest.id + '/',
           { bought: changenum, confCode: confCode, boughtTicketTime: boughtTicketTime },
         )
           .then(() => {
@@ -170,7 +170,7 @@ export default {
       this.searchGuest()
     },
     searchGuest() {
-      api.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=jmbag",)
+      api.get('/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=jmbag",)
         .then(response => {
           this.loading = false;
 
@@ -259,7 +259,7 @@ export default {
 
       var msg = this.name + " " + this.surname + " " + guest.confCode
 
-      await api.post(process.env.VUE_APP_BASE_URL + '/mailer/send_mail/',
+      await api.post('/mailer/send_mail/',
         {
           emails: [
             {
@@ -272,7 +272,7 @@ export default {
             }]
         },
       )
-      await api.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+      await api.post('/mailer/',
         {
           subject: "[#BRUCIFER25] Potvrda za kupljenu kartu",
           template: "guest_email",

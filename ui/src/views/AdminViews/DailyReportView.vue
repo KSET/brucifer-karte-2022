@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     async fetchGuests() {
-      const response = await api.get(process.env.VUE_APP_BASE_URL + '/guests/?search=1&search_fields=bought');
+      const response = await api.get('/guests/?search=1&search_fields=bought');
       this.guests = response.data;
       this.processDailyReport();
     },

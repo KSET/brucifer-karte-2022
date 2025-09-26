@@ -38,7 +38,7 @@ export default {
   methods: {
     postTag() {
       if (this.name != "") {
-        api.post(process.env.VUE_APP_BASE_URL + '/tags/',
+        api.post('/tags/',
           { name: this.name },
         )
           .then(() => {

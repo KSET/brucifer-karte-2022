@@ -91,13 +91,13 @@ export default {
 
   methods: {
     created() {
-      api.get(process.env.VUE_APP_BASE_URL + '/users/',)
+      api.get('/users/',)
         .then(response => {
           this.users = response.data;
         })
     },
     changeprivilege(user, changenum) {
-      api.put(process.env.VUE_APP_BASE_URL + '/users/' + user.id + '/',
+      api.put('/users/' + user.id + '/',
         { privilege: changenum },
       )
         .then(() => {
@@ -106,7 +106,7 @@ export default {
         })
     },
     deleteUser(user) {
-      api.delete(process.env.VUE_APP_BASE_URL + '/users/' + user.id + '/',
+      api.delete('/users/' + user.id + '/',
       )
         .then(() => {
           this.sendMail(user, 0);
@@ -114,7 +114,7 @@ export default {
         })
     },
     searchUser() {
-      api.get(process.env.VUE_APP_BASE_URL + '/users/?search=' + this.search,)
+      api.get('/users/?search=' + this.search,)
         .then(response => {
           this.users = response.data;
         })
@@ -140,7 +140,7 @@ export default {
 
       var email = user.email
 
-      // await api.post(process.env.VUE_APP_BASE_URL + '/mailer/send_mail/',
+      // await api.post('/mailer/send_mail/',
       //   {
       //     emails:
       //       [{
@@ -155,7 +155,7 @@ export default {
       //   { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       // )
 
-      // await api.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+      // await api.post('/mailer/',
       //   {
       //     subject: "[#BRUCIFER25] Promjena privilegije",
       //     template: "user_email",

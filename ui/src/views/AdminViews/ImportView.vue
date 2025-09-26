@@ -71,14 +71,14 @@ export default {
     };
   },
   mounted() {
-    api.get(process.env.VUE_APP_BASE_URL + '/guests/',)
+    api.get('/guests/',)
       .then(response => {
         this.guests = response.data;
         this.len = this.guests.length;
         this.guests.forEach(element => {
           this.idsguests.push(element.id);
         });
-        api.get(process.env.VUE_APP_BASE_URL + '/users/',)
+        api.get('/users/',)
           .then(response => {
             this.users = response.data;
             this.len = this.guests.length;
@@ -204,7 +204,7 @@ export default {
 
         console.log(guestsData);
 
-        const response = await api.post(`${process.env.VUE_APP_BASE_URL}/guests/bulk-import/`,
+        const response = await api.post(`/guests/bulk-import/`,
           guestsData,
         );
 
@@ -231,7 +231,7 @@ export default {
 
         console.log(usersData);
 
-        const response = await api.post(`${process.env.VUE_APP_BASE_URL}/users/bulk-import/`,
+        const response = await api.post(`/users/bulk-import/`,
           usersData,
         );
 
