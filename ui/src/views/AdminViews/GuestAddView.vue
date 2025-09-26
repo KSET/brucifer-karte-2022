@@ -125,13 +125,13 @@ export default {
     },
     methods: {
         created() {
-            api.get(process.env.VUE_APP_BASE_URL + '/guests/',)
+            api.get('/guests/',)
                 .then(response => {
                     document.getElementById("jmbagselect").style.display = "none";
                     document.getElementById("jmbagselectt").style.display = "none";
                     this.guests = response.data;
                     this.len = this.guests.length;
-                    api.get(process.env.VUE_APP_BASE_URL + '/tags/',)
+                    api.get('/tags/',)
                         .then(response => {
                             var itemss = response.data;
                             this.items = [];
@@ -191,7 +191,7 @@ export default {
 
                 if (post == 1) {
 
-                    api.post(process.env.VUE_APP_BASE_URL + '/guests/',
+                    api.post('/guests/',
                         { name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
                     )
                         .then(() => {
