@@ -27,6 +27,7 @@ jobs:
           echo "VUE_APP_DJANGO_USER=${{ secrets.VUE_APP_DJANGO_USER }}" >> ./ui/.env
           echo "VUE_APP_DJANGO_PASS=${{ secrets.VUE_APP_DJANGO_PASS }}" >> ./ui/.env
           echo "VUE_APP_BASE_URL=${{ secrets.VUE_APP_BASE_URL }}" >> ./ui/.env
+          echo "VUE_APP_GOOGLE_CLIENT_ID=${{ secrets.VUE_APP_GOOGLE_CLIENT_ID }}" >> ./ui/.env
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
