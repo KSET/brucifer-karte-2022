@@ -2,7 +2,7 @@
 from django.urls import path, include
 
 from rest_framework import routers, views
-from .views import GameLeaderboardViewSet, TranslationsViewSet, VisibilityViewSet, CjenikViewSet, ContactViewSet, GuestsViewSet, MailerViewSet, TagsViewSet, UsersViewSet, LineupViewSet, SponsorsViewSet, send_mail, BrucosiFormResponseViewSet
+from .views import GameLeaderboardViewSet, TranslationsViewSet, VisibilityViewSet, CjenikViewSet, ContactViewSet, GuestsViewSet, MailerViewSet, TagsViewSet, UsersViewSet, LineupViewSet, SponsorsViewSet, send_mail, BrucosiFormResponseViewSet, GoogleAuthView
 
 router = routers.DefaultRouter()
 router.register('guests', GuestsViewSet)
@@ -21,5 +21,6 @@ router.register('forms', BrucosiFormResponseViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('auth/google/', GoogleAuthView.as_view(), name="google-auth"),
 
 ]

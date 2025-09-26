@@ -77,8 +77,8 @@ import { uuid } from 'vue-uuid';
 import GuestsAdd from '@/components/Bruckarte/GuestsAdd.vue'
 import GuestsTable from '@/components/Bruckarte/GuestsTable.vue'
 import CircularLoading from '@/components/Default/CircularLoading.vue';
-import axios from 'axios'
 import debounce from 'lodash/debounce';
+import { api } from "@/plugins/api";
 
 export default {
   name: 'GuestsView',
@@ -122,7 +122,7 @@ export default {
   methods: {
     changeValue() {
       if (this.guest != '') {
-        axios.put(process.env.VUE_APP_BASE_URL + '/guests/' + this.guest.id + '/',
+        api.put(process.env.VUE_APP_BASE_URL + '/guests/' + this.guest.id + '/',
           { name: this.name, surname: this.surname },
           { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
         )
@@ -147,9 +147,8 @@ export default {
           var confCode = "";
           var boughtTicketTime = null;
         }
-        axios.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
+        api.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
           { bought: changenum, confCode: confCode, boughtTicketTime: boughtTicketTime },
-          { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
         )
           .then(() => {
             guest.bought = changenum;
@@ -171,7 +170,7 @@ export default {
       this.searchGuest()
     },
     searchGuest() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=jmbag",)
+      api.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=jmbag",)
         .then(response => {
           this.loading = false;
 
@@ -260,7 +259,7 @@ export default {
 
       var msg = this.name + " " + this.surname + " " + guest.confCode
 
-      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/send_mail/',
+      await api.post(process.env.VUE_APP_BASE_URL + '/mailer/send_mail/',
         {
           emails: [
             {
@@ -272,9 +271,8 @@ export default {
               to_mail: email
             }]
         },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
-      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+      await api.post(process.env.VUE_APP_BASE_URL + '/mailer/',
         {
           subject: "[#BRUCIFER25] Potvrda za kupljenu kartu",
           template: "guest_email",
@@ -283,13 +281,12 @@ export default {
           confCode: guest.confCode,
           to_mail: email
         },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
       this.dialogProgress = false;
       this.dialog = true;
     },
     formatDate(date) {
-      if(date=='' || date==null){
+      if (date == '' || date == null) {
         return ''
       }
       const d = new Date(date);

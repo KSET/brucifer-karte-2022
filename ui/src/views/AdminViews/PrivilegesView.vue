@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { api } from "@/plugins/api";
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
 export default {
@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/users/',)
+      api.get(process.env.VUE_APP_BASE_URL + '/users/',)
         .then(response => {
           this.users = response.data;
           this.users.forEach(element => {

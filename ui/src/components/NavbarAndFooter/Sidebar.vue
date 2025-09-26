@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { api } from "@/plugins/api";
 import RouterElement from '@/components/AdminPanel/RouterElement.vue'
 import * as XLSX from 'xlsx'
 export default {

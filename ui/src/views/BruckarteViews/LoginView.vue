@@ -1,6 +1,6 @@
 <template>
     <div id="login" style="margin-top: 3.75rem; overflow: hidden;">
-        <br>
+        <br />
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card" style="height: 100% !important">
@@ -15,130 +15,63 @@
 </template>
 
 <script>
-import axios from 'axios'
-import VueJwtDecode from 'vue-jwt-decode'
-import store from '@/store/index.js';
+import store from "@/store/index.js";
+import { api } from "@/plugins/api";
+
 export default {
-    components: {
-    },
-    el: '#app',
-    computed: {
-        privilege() {
-            return store.state.privilege;
-        },
-        name() {
-            return store.state.name;
-        },
-        id() {
-            return store.state.id;
-        },
-        email() {
-            return store.state.email;
-        },
-        tokenExp() {
-            return store.state.tokenExp;
-        }
-    },
-    data() {
-        return {
-            resp: '',
-        }
-
-    },
+    name: "Login",
     methods: {
-        base64UrlDecode(str) {
-            return decodeURIComponent(atob(str.replace(/-/g, '+').replace(/_/g, '/')));
-        },
-        handleCredentialResponse(res) {
-            const tokenParts = res.credential.split('.'); // JWT format: header.payload.signature
-            if (tokenParts.length === 3) {
-                const payload = this.base64UrlDecode(tokenParts[1]);
-                const responsePayload = JSON.parse(payload);
+        async handleCredentialResponse(res) {
+            try {
+                const response = await api.post(
+                    `${process.env.VUE_APP_BASE_URL}/auth/google/`,
+                    { token: res.credential }
+                );
 
-                // Proceed with your existing logic
-                store.commit('setId', responsePayload.sub);
-                store.commit('setName', decodeURIComponent(escape(responsePayload.name)));
-                store.commit('setEmail', responsePayload.email);
-                store.commit('setTokenExp', responsePayload.exp);
-                // Fetch users from the server
-                axios.get(`${process.env.VUE_APP_BASE_URL}/users/`).then(response => {
-                    this.users = response.data;
+                const { access, refresh, user } = response.data;
 
-                    let registeredEmail = this.users.some(user => {
-                        if (user.email === responsePayload.email) {
-                            // Update privilege and check for empty name to update
-                            store.commit('setPrivilege', user.privilege);
-                            if (!user.name) {
-                                axios.put(`${process.env.VUE_APP_BASE_URL}/users/${user.id}/`, {
-                                    name: decodeURIComponent(escape(responsePayload.name)),
-                                }, {
-                                    auth: {
-                                        username: process.env.VUE_APP_DJANGO_USER,
-                                        password: process.env.VUE_APP_DJANGO_PASS,
-                                    }
-                                });
-                            }
-                            return true; // Email is registered
-                        }
-                        return false; // Continue checking
-                    });
+                store.commit("setAccessToken", access);
+                store.commit("setRefreshToken", refresh);
+                store.commit("setId", user.id);
+                store.commit("setName", user.name);
+                store.commit("setEmail", user.email);
+                store.commit("setPrivilege", user.privilege);
 
-                    // Register new user if email not found
-                    if (!registeredEmail) {
-                        axios.post(`${process.env.VUE_APP_BASE_URL}/users/`, {
-                            name: decodeURIComponent(escape(responsePayload.name)),
-                            email: responsePayload.email,
-                            privilege: '0',
-                        }, {
-                            auth: {
-                                username: process.env.VUE_APP_DJANGO_USER,
-                                password: process.env.VUE_APP_DJANGO_PASS,
-                            }
-                        });
-                        store.commit('setPrivilege', '0');
-                    }
-
-                    // Redirect based on privilege level
-                    switch (this.privilege) {
-                        case 2:
-                            this.$router.push({ name: 'entry' });
-                            break;
-                        case 3:
-                            this.$router.push({ name: 'guests' });
-                            break;
-                        default:
-                            this.$router.push({ name: 'home' });
-                    }
-                });
-            } else {
-                console.error("Invalid JWT format");
+                switch (user.privilege) {
+                    case 2:
+                        this.$router.push({ name: "entry" });
+                        break;
+                    case 3:
+                        this.$router.push({ name: "guests" });
+                        break;
+                    default:
+                        this.$router.push({ name: "home" });
+                }
+            } catch (err) {
+                console.error("Login failed:", err);
             }
-        }
-
-
-
+        },
     },
-    mounted: function () {
-        let googleScript = document.createElement('script');
-        googleScript.src = 'https://accounts.google.com/gsi/client';
+    mounted() {
+        const googleScript = document.createElement("script");
+        googleScript.src = "https://accounts.google.com/gsi/client";
         document.head.appendChild(googleScript);
 
-        window.addEventListener('load', () => {
+        window.addEventListener("load", () => {
             window.google.accounts.id.initialize({
-                client_id: "729300808359-9qt44p6ksjivnbfd981pgjbmkh4ifgcj.apps.googleusercontent.com",
+                client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID,
                 hosted_domain: "kset.org",
                 callback: this.handleCredentialResponse,
-
             });
             window.google.accounts.id.renderButton(
                 document.getElementById("signin_button"),
-                { theme: "outline", size: "large" }  // customization attributes
+                { theme: "outline", size: "large" }
             );
-        })
-    }
-
-}
+        });
+    },
+};
 </script>
+
 
 <style>
 #signin_button {

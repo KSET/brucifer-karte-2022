@@ -147,7 +147,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { api } from "@/plugins/api";
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import store from "@/store/visibilityStore.js";
 import { result } from 'lodash';
@@ -212,16 +212,14 @@ export default {
         async changeVisibility(changeField, val) {
             if (changeField == "TIMER_TIME" || changeField == "SPONSORS_INPUT_TIME") {
                 if (window.confirm("Pokušavate promijeniti jedno od VREMENA, jeste li sigurni?")) {
-                    await axios.put(process.env.VUE_APP_BASE_URL + '/visibility/' + changeField + '/',
+                    await api.put(process.env.VUE_APP_BASE_URL + '/visibility/' + changeField + '/',
                         { visible: val },
-                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                     )
                     await store.dispatch("fetchVisibilityData")
                 }
             } else {
-                await axios.put(process.env.VUE_APP_BASE_URL + '/visibility/' + changeField + '/',
+                await api.put(process.env.VUE_APP_BASE_URL + '/visibility/' + changeField + '/',
                     { visible: val },
-                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                 )
                 await store.dispatch("fetchVisibilityData")
             }
@@ -230,7 +228,7 @@ export default {
         async sendEmailsInRange(start, end) {
             try {
                 // Fetch all guests who bought a ticket
-                let res = await axios.get(`${process.env.VUE_APP_BASE_URL}/guests/?search=1&search_fields=bought`);
+                let res = await api.get(`${process.env.VUE_APP_BASE_URL}/guests/?search=1&search_fields=bought`);
                 this.guests = res.data;
 
                 // Initialize counter
@@ -307,7 +305,7 @@ export default {
 
             try {
                 // Send email
-                await axios.post(
+                await api.post(
                     `${process.env.VUE_APP_BASE_URL}/mailer/send_mail/`,
                     {
                         emails: [

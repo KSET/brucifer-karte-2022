@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { api } from "@/plugins/api";
 
 export default {
   name: 'TagsTable',
@@ -54,7 +54,7 @@ export default {
   methods: {
     async fetchTags() {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_BASE_URL}/tags/`);
+        const response = await api.get(`${process.env.VUE_APP_BASE_URL}/tags/`);
         this.processTags(response.data);
       } catch (error) {
         console.error('Failed to fetch tags:', error);
@@ -64,7 +64,7 @@ export default {
       console.log(tags)
       try {
         for (const tag of tags) {
-          const response = await axios.get(`${process.env.VUE_APP_BASE_URL}/guests/?search=${tag.name}&search_fields=tag`);
+          const response = await api.get(`${process.env.VUE_APP_BASE_URL}/guests/?search=${tag.name}&search_fields=tag`);
           let { numc, numb, nume } = { numc: 0, numb: 0, nume: 0 };
 
           response.data.forEach(guest => {
@@ -74,9 +74,8 @@ export default {
           });
 
           if (`${numc}` != `${tag.count}` || numb != tag.bought || nume != tag.entered) {
-            await axios.put(`${process.env.VUE_APP_BASE_URL}/tags/${tag.id}/`, 
+            await api.put(`${process.env.VUE_APP_BASE_URL}/tags/${tag.id}/`, 
               { count: numc, bought: numb, entered: nume },
-              { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
             );
 
             Object.assign(tag, { count: numc, bought: numb, entered: nume });
@@ -89,8 +88,7 @@ export default {
     },
     async deleteTag(tag) {
       try {
-        await axios.delete(`${process.env.VUE_APP_BASE_URL}/tags/${tag.id}/`, 
-          { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+        await api.delete(`${process.env.VUE_APP_BASE_URL}/tags/${tag.id}/`, 
         );
         this.fetchTags();
       } catch (error) {

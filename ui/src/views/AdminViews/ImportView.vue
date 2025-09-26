@@ -50,7 +50,7 @@ import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import * as XLSX from 'xlsx'
 import { XlsxRead, XlsxJson } from "../../../node_modules/vue3-xlsx/dist/vue3-xlsx.cjs.prod.js";
 import readXlsxFile from 'read-excel-file';
-import axios from 'axios';
+import { api } from "@/plugins/api";;
 
 export default {
   components: {
@@ -71,14 +71,14 @@ export default {
     };
   },
   mounted() {
-    axios.get(process.env.VUE_APP_BASE_URL + '/guests/',)
+    api.get(process.env.VUE_APP_BASE_URL + '/guests/',)
       .then(response => {
         this.guests = response.data;
         this.len = this.guests.length;
         this.guests.forEach(element => {
           this.idsguests.push(element.id);
         });
-        axios.get(process.env.VUE_APP_BASE_URL + '/users/',)
+        api.get(process.env.VUE_APP_BASE_URL + '/users/',)
           .then(response => {
             this.users = response.data;
             this.len = this.guests.length;
@@ -204,14 +204,8 @@ export default {
 
         console.log(guestsData);
 
-        const response = await axios.post(`${process.env.VUE_APP_BASE_URL}/guests/bulk-import/`,
+        const response = await api.post(`${process.env.VUE_APP_BASE_URL}/guests/bulk-import/`,
           guestsData,
-          {
-            auth: {
-              username: process.env.VUE_APP_DJANGO_USER,
-              password: process.env.VUE_APP_DJANGO_PASS
-            }
-          }
         );
 
         this.importstatusGuests = `Import successful! Imported ${guestsData.length} guests.`;
@@ -237,14 +231,8 @@ export default {
 
         console.log(usersData);
 
-        const response = await axios.post(`${process.env.VUE_APP_BASE_URL}/users/bulk-import/`,
+        const response = await api.post(`${process.env.VUE_APP_BASE_URL}/users/bulk-import/`,
           usersData,
-          {
-            auth: {
-              username: process.env.VUE_APP_DJANGO_USER,
-              password: process.env.VUE_APP_DJANGO_PASS
-            }
-          }
         );
 
         this.importstatusUsers = `Import successful! Imported ${usersData.length} users.`;

@@ -31,7 +31,7 @@
 
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
-import axios from 'axios';
+import { api } from "@/plugins/api";
 
 export default {
   name: 'DailyReportView',
@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     async fetchGuests() {
-      const response = await axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=1&search_fields=bought');
+      const response = await api.get(process.env.VUE_APP_BASE_URL + '/guests/?search=1&search_fields=bought');
       this.guests = response.data;
       this.processDailyReport();
     },

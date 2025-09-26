@@ -27,13 +27,19 @@ from django.conf import settings
 from rest_framework.decorators import action
 from rest_framework import viewsets
 
-# Create your views here.
-
-
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import User
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission
 
 class MailerViewSet(viewsets.ModelViewSet):
     queryset = Mailer.objects.all()
     serializer_class = MailerSerializer
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['post'])
     def send_mail(self, request):
@@ -79,6 +85,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
     queryset = Guests.objects.all()
     serializer_class = GuestsSerializer
     filter_backends = [DynamicSearchFilter]
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['post'], url_path='bulk-import')
     def bulk_import(self, request):
@@ -95,6 +102,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
 class TagsViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class UsersViewSet(viewsets.ModelViewSet):
@@ -102,6 +110,7 @@ class UsersViewSet(viewsets.ModelViewSet):
     serializer_class = UsersSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'email']
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['post'], url_path='bulk-import')
     def bulk_import(self, request):
@@ -175,6 +184,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
 class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class CjenikViewSet(viewsets.ModelViewSet):
@@ -210,9 +220,20 @@ class GameLeaderboardViewSet(viewsets.ModelViewSet):
     search_fields = ['email']
     ordering_fields = ['score']
 
+class AllowPostAnyOtherwiseAuthenticated(BasePermission):
+    """
+    Allow anyone to POST.
+    Require authentication for all other methods.
+    """
+    def has_permission(self, request, view):
+        if request.method == "POST":
+            return True
+        return request.user and request.user.is_authenticated
+
 class BrucosiFormResponseViewSet(viewsets.ModelViewSet):
     queryset = BrucosiFormResponse.objects.all()
     serializer_class = BrucosiFormResponseSerializer
+    permission_classes = [AllowPostAnyOtherwiseAuthenticated]
 
     @action(detail=False, methods=['post'], url_path='brucosi-form-submit')
     def brucosi_form_submit(self, request):
@@ -221,3 +242,49 @@ class BrucosiFormResponseViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response({"message": "Submission received."}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class GoogleAuthView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        token = request.data.get("token")
+        if not token:
+            return Response({"error": "Token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            idinfo = id_token.verify_oauth2_token(
+                token,
+                requests.Request(),
+                settings.GOOGLE_CLIENT_ID
+            )
+
+            email = idinfo["email"]
+            name = idinfo.get("name", "")
+
+            user, created = Users.objects.get_or_create(
+                email=email,
+                defaults={
+                    "name": name,
+                    "privilege": 0 
+                }
+            )
+
+            if not created and not user.name:
+                user.name = name
+                user.save()
+
+            refresh = RefreshToken.for_user(user)
+
+            return Response({
+                "access": str(refresh.access_token),
+                "refresh": str(refresh),
+                "user": {
+                    "id": user.id,
+                    "name": user.name,
+                    "email": user.email,
+                    "privilege": user.privilege,
+                }
+            })
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

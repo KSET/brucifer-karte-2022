@@ -18,7 +18,8 @@
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import TagsTable from '@/components/AdminPanel/TagsTable.vue'
-import axios from 'axios';
+import { api } from "@/plugins/api";
+
 export default {
   name: 'TagsView',
   props: {
@@ -37,9 +38,8 @@ export default {
   methods: {
     postTag() {
       if (this.name != "") {
-        axios.post(process.env.VUE_APP_BASE_URL + '/tags/',
+        api.post(process.env.VUE_APP_BASE_URL + '/tags/',
           { name: this.name },
-          { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
         )
           .then(() => {
             this.name = "";

@@ -1,7 +1,6 @@
 import { createStore } from "vuex";
 import createPersistedState from "vuex-persistedstate";
 import visibilityStore from "./visibilityStore";
-// this.$store.state.privilege
 
 export default createStore({
   state: {
@@ -10,6 +9,8 @@ export default createStore({
     email: "",
     privilege: "",
     tokenExp: 10000000000000000,
+    accessToken: "",
+    refreshToken: "",
   },
   plugins: [createPersistedState()],
   mutations: {
@@ -27,6 +28,21 @@ export default createStore({
     },
     setTokenExp(state, value) {
       state.tokenExp = value;
+    },
+    setAccessToken(state, value) {
+      state.accessToken = value;
+    },
+    setRefreshToken(state, value) {
+      state.refreshToken = value;
+    },
+    clearAuth(state) {
+      state.id = "";
+      state.name = "";
+      state.email = "";
+      state.privilege = "";
+      state.tokenExp = 10000000000000000;
+      state.accessToken = "";
+      state.refreshToken = "";
     },
   },
   modules: {

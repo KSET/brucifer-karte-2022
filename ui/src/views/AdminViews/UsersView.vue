@@ -68,7 +68,7 @@
 
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
-import axios from 'axios'
+import { api } from "@/plugins/api";
 export default {
   name: 'UsersView',
   components: {
@@ -91,15 +91,14 @@ export default {
 
   methods: {
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/users/',)
+      api.get(process.env.VUE_APP_BASE_URL + '/users/',)
         .then(response => {
           this.users = response.data;
         })
     },
     changeprivilege(user, changenum) {
-      axios.put(process.env.VUE_APP_BASE_URL + '/users/' + user.id + '/',
+      api.put(process.env.VUE_APP_BASE_URL + '/users/' + user.id + '/',
         { privilege: changenum },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
           this.sendMail(user, changenum);
@@ -107,8 +106,7 @@ export default {
         })
     },
     deleteUser(user) {
-      axios.delete(process.env.VUE_APP_BASE_URL + '/users/' + user.id + '/',
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      api.delete(process.env.VUE_APP_BASE_URL + '/users/' + user.id + '/',
       )
         .then(() => {
           this.sendMail(user, 0);
@@ -116,7 +114,7 @@ export default {
         })
     },
     searchUser() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/users/?search=' + this.search,)
+      api.get(process.env.VUE_APP_BASE_URL + '/users/?search=' + this.search,)
         .then(response => {
           this.users = response.data;
         })
@@ -142,32 +140,32 @@ export default {
 
       var email = user.email
 
-      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/send_mail/',
-        {
-          emails:
-            [{
-              subject: "[#BRUCIFER25] Promjena privilegije",
-              template: "user_email",
-              message: user.name + " " + privilege_name,
-              name: to_user_name,
-              privilege_name: privilege_name,
-              to_mail: email
-            }]
-        },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
+      // await api.post(process.env.VUE_APP_BASE_URL + '/mailer/send_mail/',
+      //   {
+      //     emails:
+      //       [{
+      //         subject: "[#BRUCIFER25] Promjena privilegije",
+      //         template: "user_email",
+      //         message: user.name + " " + privilege_name,
+      //         name: to_user_name,
+      //         privilege_name: privilege_name,
+      //         to_mail: email
+      //       }]
+      //   },
+      //   { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      // )
 
-      await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
-        {
-          subject: "[#BRUCIFER25] Promjena privilegije",
-          template: "user_email",
-          message: user.name + " " + privilege_name,
-          name: to_user_name,
-          privilege_name: privilege_name,
-          to_mail: email
-        },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
+      // await api.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+      //   {
+      //     subject: "[#BRUCIFER25] Promjena privilegije",
+      //     template: "user_email",
+      //     message: user.name + " " + privilege_name,
+      //     name: to_user_name,
+      //     privilege_name: privilege_name,
+      //     to_mail: email
+      //   },
+      //   { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      // )
 
       this.created();
     }

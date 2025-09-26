@@ -1,21 +1,12 @@
 <script>
-import store from '@/store/index.js';
+import store from "@/store/index.js";
+
 export default {
-    name: 'Logout',
-    components: {
-    },
-    el: '#app',
+    name: "Logout",
     mounted() {
-        store.commit('setId', '')
-        store.commit('setName', '')
-        store.commit('setEmail', '')
-        store.commit('setPrivilege', '')
-        store.commit('setTokenExp', 10000000000000000)
-        this.$router.push({ name: "login" })
-    }
-}
+        store.commit("clearAuth");
+
+        this.$router.push({ name: "login" });
+    },
+};
 </script>
-
-
-
-

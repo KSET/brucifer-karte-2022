@@ -85,7 +85,7 @@
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
-import axios from 'axios'
+import { api } from "@/plugins/api";
 
 export default {
     name: 'GuestsAdd',
@@ -125,13 +125,13 @@ export default {
     },
     methods: {
         created() {
-            axios.get(process.env.VUE_APP_BASE_URL + '/guests/',)
+            api.get(process.env.VUE_APP_BASE_URL + '/guests/',)
                 .then(response => {
                     document.getElementById("jmbagselect").style.display = "none";
                     document.getElementById("jmbagselectt").style.display = "none";
                     this.guests = response.data;
                     this.len = this.guests.length;
-                    axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
+                    api.get(process.env.VUE_APP_BASE_URL + '/tags/',)
                         .then(response => {
                             var itemss = response.data;
                             this.items = [];
@@ -191,9 +191,8 @@ export default {
 
                 if (post == 1) {
 
-                    axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
+                    api.post(process.env.VUE_APP_BASE_URL + '/guests/',
                         { name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: this.karta, entered: this.ulaz },
-                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                     )
                         .then(() => {
                             this.dialogProgress = false;
