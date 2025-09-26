@@ -2,15 +2,8 @@ import { createApp, Vue } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css'
 import 'jquery/src/jquery.js'
-import 'bootstrap/dist/js/bootstrap.min.js';
 import JsonCSV from 'vue-json-csv';
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueJwtDecode from 'vue-jwt-decode'
 import Vuex from 'vuex';
 import VueNavigationBar from 'vue-navigation-bar';
@@ -21,6 +14,8 @@ import PrimeVue from 'primevue/config'
 import 'primeicons/primeicons.css'
 import Aura from '@primeuix/themes/aura';
 import { definePreset } from '@primeuix/themes';
+import ApiPlugin from '@/plugins/api'
+import ToastService from 'primevue/toastservice';
 
 const MyPreset = definePreset(Aura, {
     semantic: {
@@ -46,6 +41,7 @@ const app = createApp(App).use(store).use(router)
 app.component('downloadCsv', JsonCSV).component('VueJwtDecode', VueJwtDecode);
 app.component(VueCountdown.name, VueCountdown);
 
+app.use(ToastService);
 app.use(Vuex)
 app.use(UUID)
 app.use(PrimeVue, {
@@ -56,6 +52,7 @@ app.use(PrimeVue, {
     }
   }
 });
+app.use(ApiPlugin)
 
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'

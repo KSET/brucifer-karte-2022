@@ -2,7 +2,7 @@
 from django.urls import path, include
 
 from rest_framework import routers, views
-from .views import GameLeaderboardViewSet, TranslationsViewSet, VisibilityViewSet, CjenikViewSet, ContactViewSet, GuestsViewSet, MailerViewSet, TagsViewSet, UsersViewSet, LineupViewSet, SponsorsViewSet, send_mail
+from .views import GameLeaderboardViewSet, TranslationsViewSet, VisibilityViewSet, CjenikViewSet, ContactViewSet, GuestsViewSet, MailerViewSet, TagsViewSet, UsersViewSet, LineupViewSet, SponsorsViewSet, send_mail, BrucosiFormResponseViewSet
 
 from rest_framework_simplejwt.views import TokenRefreshView
 from .authviews import AuthExchange, me_view, logout_view
@@ -19,7 +19,7 @@ router.register('cjenik', CjenikViewSet)
 router.register('visibility', VisibilityViewSet)
 router.register('translations', TranslationsViewSet)
 router.register('gameLeaderboard', GameLeaderboardViewSet)
-
+router.register('forms', BrucosiFormResponseViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -12,6 +12,10 @@
         :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }"
         class="navbar-element hideTablet ulaznice-button" name="Kupi karte" link="/ulaznice" icon="pi-arrow-right" />
 
+      <RouterElement v-if="ULAZNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwbrucosi') }"
+              class="navbar-element hideTablet" name="Brucoši" link="/brucosi" />
+
+
       <RouterElement v-if="SATNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('satnica') }"
         class="navbar-element hideTablet" name="Satnica" link="/satnica" />
 
@@ -43,9 +47,11 @@
             class="overlay-element" name="Izvođači" link="/lineup" @click="toggleNav" />
 
           <RouterElement v-if="ULAZNICA_VISIBILITY == '1'"
-            :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }"
-            class="overlay-element ulaznice-button" name="Kupi karte" link="/ulaznice"
-            icon="pi-arrow-right" @click="toggleNav"/>
+            :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }" class="overlay-element ulaznice-button"
+            name="Kupi karte" link="/ulaznice" icon="pi-arrow-right" @click="toggleNav" />
+
+          <RouterElement v-if="ULAZNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwbrucosi') }"
+            class="overlay-element" name="Brucoši" link="/brucosi" @click="toggleNav" />
 
           <RouterElement v-if="SATNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('satnica') }"
             class="overlay-element" name="Satnica" link="/satnica" @click="toggleNav" />
@@ -146,6 +152,8 @@ export default {
 .navbar-title {
   font-family: 'Ubuntu';
   font-size: 2rem;
+  z-index: 101;
+  text-decoration: none;
 }
 
 .navbar-title:hover {
@@ -189,7 +197,7 @@ export default {
   height: 0%;
   width: 100%;
   position: fixed;
-  z-index: -1;
+  z-index: 100;
   top: 0;
   left: 0;
   background-color: var(--bw-navbar-color);
@@ -229,6 +237,7 @@ export default {
   margin: 20px 0px;
   transition: 0.5s ease-in-out;
   cursor: pointer;
+  z-index: 101;
 }
 
 #nav-icon3 span {

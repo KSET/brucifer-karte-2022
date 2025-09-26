@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    <div v-if="comingSoonVisible" class="page-container" style="min-height: 100vh;">
+    <div v-if="comingSoonVisible" class="page-container homepage-container" style="min-height: 100vh;">
       <vue-countdown v-if="timerVisible" class="countdown-timer" :time="countdownTime" :transform="transformSlotProps"
         v-slot="{ days, hours, minutes, seconds }">
         <h5 class="countdown-textfield">{{ days }}</h5> :
@@ -98,6 +98,12 @@ export default {
 
 }
 
+.homepage-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .comingSoon {
   background-image: url("../../assets/bg/comingSoon/comingSoon-desktop.png");
   background-repeat: no-repeat;
@@ -127,6 +133,12 @@ export default {
   padding-bottom: min(calc(var(--background-image-aspect-ratio) * 100%),
       calc(100vh - var(--topbar-height) - var(--footer-height) - var(--countdown-font-size) - var(--countdown-top-offset)));
   overflow: hidden;
+  font-size: var(--countdown-font-size);
+}
+
+.countdown-timer h5 {
+  font-size: var(--countdown-font-size);
+  font-family: 'Cobya';
 }
 
 .countdown-timer::before {
@@ -207,7 +219,6 @@ export default {
   background-color: var(--bw-footer-color);
   ;
   min-height: 93vh;
-  padding-bottom: 60px;
 }
 
 .homepage {

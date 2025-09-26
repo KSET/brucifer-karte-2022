@@ -1,7 +1,7 @@
 import imp
 from django.contrib import admin
 
-from .models import GameLeaderboard, Translations, Visibility, Cjenik, Contact, Guests, Tags, Users, Lineup, Sponsors
+from .models import GameLeaderboard, Translations, Visibility, Cjenik, Contact, Guests, Tags, Users, Lineup, Sponsors, BrucosiFormResponse
 
 admin.site.register(Guests)
 admin.site.register(Tags)
@@ -13,3 +13,4 @@ admin.site.register(Cjenik)
 admin.site.register(Visibility)
 admin.site.register(Translations)
 admin.site.register(GameLeaderboard)
+admin.site.register(BrucosiFormResponse)

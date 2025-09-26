@@ -9,7 +9,7 @@
             Izvoz
         </button>
 
-        <div class="sidbar-element" style="border-bottom: 1px solid black;" @click="toggleDropdownLineup"
+        <div class="sidbar-element" @click="toggleDropdownLineup"
             v-bind:style="[(showDropdownLineup) ? { backgroundColor: '#D9D9D9' } : { backgroundColor: 'white' }]">
             <RouterElement class="sidebar-element" style="display: inline-block; width: 90%; border-bottom: none;"
                 :name="'Izvođači'">
@@ -19,15 +19,15 @@
             <img style="z-index:-1" v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg">
 
         </div>
-        <RouterElement style="padding-left:3rem !important;" id="dpL1" class="sidebar-element" :name="'Pregled Izvođača'"
-            :link="'/admin/lineup-list'">
-        </RouterElement>    
+        <RouterElement style="padding-left:3rem !important;" id="dpL1" class="sidebar-element"
+            :name="'Pregled Izvođača'" :link="'/admin/lineup-list'">
+        </RouterElement>
 
         <a style="padding-left:3rem !important; color: black;" id="dpL2" class="sidebar-element"
             href="/admin/lineup-add/0">Dodavanje Izvođača</a>
 
 
-        <div class="sidbar-element" style="border-bottom: 1px solid black;" @click="toggleDropdownSponsors"
+        <div class="sidbar-element" @click="toggleDropdownSponsors"
             v-bind:style="[(showDropdownSponsors) ? { backgroundColor: '#D9D9D9' } : { backgroundColor: 'white' }]">
             <RouterElement class="sidebar-element" style="display: inline-block; width: 90%; border-bottom: none;"
                 :name="'Sponzori'">
@@ -37,8 +37,8 @@
             <img v-else class="dropdown-icon" src="@/assets/icons/dopdwn-open-icon.svg">
 
         </div>
-        <RouterElement style="padding-left:3rem !important;" id="dpS1" class="sidebar-element" :name="'Pregled Sponzora'"
-            :link="'/admin/sponsors-list'">
+        <RouterElement style="padding-left:3rem !important;" id="dpS1" class="sidebar-element"
+            :name="'Pregled Sponzora'" :link="'/admin/sponsors-list'">
         </RouterElement>
 
         <a style="padding-left:3rem !important; color: black;" id="dpS2" class="sidebar-element"
@@ -115,7 +115,7 @@ export default {
 }
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 .sidenav {
     border-right: 1px solid #000000;
     margin-top: 3.75rem;
@@ -131,6 +131,7 @@ export default {
 
 /* Style the sidenav links and the dropdown button */
 .sidebar-element {
+    color: black !important;
     padding-left: 1.7rem !important;
     padding: 2.73% 8px 6px 16px;
     text-decoration: none;
@@ -151,7 +152,7 @@ export default {
     font-size: 16px;
     line-height: 36px;
     border-bottom: black;
-    border-bottom: 1px solid #000000;
+    border-bottom: 1px solid #000000 !important;
 }
 
 .dropdown-btn {
@@ -178,8 +179,7 @@ export default {
 
 /* On mouse-over */
 .sidenav a:hover,
-.dropdown-btn:hover {
-}
+.dropdown-btn:hover {}
 
 /* Main content */
 

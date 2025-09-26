@@ -1,6 +1,6 @@
 from socket import if_indextoname
 from rest_framework import serializers, filters
-from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard
+from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
 
 
 class GuestsSerializer(serializers.HyperlinkedModelSerializer):
@@ -25,7 +25,7 @@ class UsersSerializer(serializers.HyperlinkedModelSerializer):
 class LineupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Lineup
-        fields = ["id", "slug", "order", "visible", "name", "image"]
+        fields = ["id", "slug", "order", "visible", "name", "image", "biography"]
 
 
 class SponsorsSerializer(serializers.HyperlinkedModelSerializer):
@@ -73,3 +73,9 @@ class GameLeaderboardSerializer(serializers.HyperlinkedModelSerializer):
 class DynamicSearchFilter(filters.SearchFilter):
     def get_search_fields(self, view, request):
         return request.GET.getlist('search_fields', [])
+    
+class BrucosiFormResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BrucosiFormResponse
+        fields = ['id', 'name', 'surname', 'email', 'jmbag', 'submitted_at', 'status', 'gdpr_accepted']
+        read_only_fields = ['id', 'submitted_at']

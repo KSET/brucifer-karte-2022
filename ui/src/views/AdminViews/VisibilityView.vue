@@ -312,7 +312,7 @@ export default {
                     {
                         emails: [
                             {
-                                subject: "[#BRUCIFER24] Potvrda za kupljenu kartu",
+                                subject: "[#BRUCIFER25] Potvrda za kupljenu kartu",
                                 template: "guest_email",
                                 message: msg,
                                 name: guest.name,

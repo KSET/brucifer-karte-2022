@@ -88,7 +88,7 @@ export default {
 
               email.forEach((e) => {
                 emails.push({
-                  subject: "[KSET] Link za uređivanje popisa za 41. Brucošijadu FER-a",
+                  subject: "[KSET] Link za uređivanje popisa za 42. Brucošijadu FER-a",
                   template: "sponsors_email",
                   message: msg,
                   name: element.name,
@@ -98,7 +98,7 @@ export default {
               })
               await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
                 {
-                  subject: "[KSET] Link za uređivanje popisa za 41. Brucošijadu FER-a",
+                  subject: "[KSET] Link za uređivanje popisa za 42. Brucošijadu FER-a",
                   template: "sponsors_email",
                   message: msg,
                   name: element.name,

@@ -37,9 +37,10 @@ class Tags(models.Model):
 class Lineup(models.Model):
     id = models.AutoField(primary_key=True)
     slug = models.CharField(max_length=200, default='', blank=True)
-    order = models.IntegerField(default='', blank=True)
-    visible = models.CharField(max_length=200, default='', blank=True)
+    order = models.PositiveIntegerField(default=0)
+    visible = models.BooleanField(default=False)
     name = models.CharField(max_length=49, default='', blank=True)
+    biography = models.TextField(default='', blank=True)
     image = models.ImageField(
         upload_to='uploads/lineup', blank=True, null=True)
 
@@ -122,3 +123,23 @@ class GameLeaderboard(models.Model):
     name = models.CharField(max_length=50, default='', blank=True)
     email = models.CharField(max_length=50, default='', blank=True)
     score = models.IntegerField(default='', blank=True)
+
+class BrucosiFormResponse(models.Model):
+    name = models.CharField(max_length=100)
+    surname = models.CharField(max_length=100)
+    email = models.EmailField()
+    jmbag = models.CharField(max_length=20)
+    gdpr_accepted = models.BooleanField(default=False)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    STATUS_CHOICES = [
+        ('valid', 'Valid'),
+        ('invalid', 'Invalid'),
+        ('redeemed', 'Redeemed'),
+    ]
+
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='invalid'
+    )

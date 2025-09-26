@@ -8,7 +8,7 @@
           <h3 class="name"> {{ lineup.name }}</h3>
 
           <div class="ccard-buttons">
-            <button v-if="buttonEnabeled" @click="changelineuporder(lineup, 'b')" id="b4" class="ccard-button">
+            <button v-if="buttonEnabled" @click="changelineuporder(lineup, 'b')" id="b4" class="ccard-button">
               <img src="../../assets/icons/arrow-left-icon.svg">
             </button>
             <button v-else disabeled id="b4" class="ccard-button">
@@ -19,7 +19,7 @@
               <img src="../../assets/icons/edit-icon.svg">
             </button>
 
-            <button v-if="buttonEnabeled" @click="changelineuporder(lineup, 'f')" id="next" class="ccard-button">
+            <button v-if="buttonEnabled" @click="changelineuporder(lineup, 'f')" id="next" class="ccard-button">
               <img src="../../assets/icons/arrow-right-icon.svg">
             </button>
             <button v-else disabeled id="next" class="ccard-button">
@@ -34,65 +34,87 @@
 </template>
 
 <script>
-import axios from 'axios'
+import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+import lineupStore from '@/store/lineupStore'
+
 export default {
   name: 'LineupTable',
-  props: {
-    msg: String
-  },
+  components: { Sidebar },
+
   data() {
     return {
-      lineups: [],
-      lineup: '',
-      lineup: '',
-      buttonEnabeled: true,
-
+      buttonEnabled: true,
     }
+  },
 
+  computed: {
+    lineups() {
+      return lineupStore.state.list
+    },
+    loading() {
+      return lineupStore.state.loading
+    },
+    error() {
+      return lineupStore.state.error
+    },
+    isBusy() {
+      return this.loading || !this.buttonEnabled
+    }
   },
-  mounted() {
-    this.created();
+
+  async mounted() {
+    await lineupStore.dispatch('fetchAll')
   },
+
   methods: {
-    created() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/lineup/?ordering=order',)
-        .then(response => {
-          this.lineups = response.data;
-        });
-    },
     editlineup(lineup) {
-      this.$router.push({ path: '/admin/lineup-add/' + lineup.slug });
+      this.$router.push({ path: `/admin/lineup-add/${lineup.slug}` })
     },
+
+    canMoveBack(lineup) {
+      const idx = this.lineups.indexOf(lineup)
+      return idx > 0
+    },
+    canMoveForward(lineup) {
+      const idx = this.lineups.indexOf(lineup)
+      return idx > -1 && idx < this.lineups.length - 1
+    },
+
     async changelineuporder(lineup, direction) {
-      this.buttonEnabeled = false;
+      if (this.isBusy) return
+      this.buttonEnabled = false
 
-      var nextlineupobj = (this.lineups.indexOf(lineup));
-      if (direction == "f") {
-        if (lineup.id != this.lineups[this.lineups.length - 1].id) {
-          var nextlineup = this.lineups[nextlineupobj + 1];
+      try {
+        const idx = this.lineups.indexOf(lineup)
+        if (idx === -1) return
+
+        let neighbor = null
+        if (direction === 'f' && this.canMoveForward(lineup)) {
+          neighbor = this.lineups[idx + 1]
+        } else if (direction !== 'f' && this.canMoveBack(lineup)) {
+          neighbor = this.lineups[idx - 1]
         }
-      } else {
-        if (lineup.order != "00") {
-          var nextlineup = this.lineups[nextlineupobj - 1];
-        }
+        if (!neighbor) return
+
+        const payload = [
+          { id: lineup.id, order: neighbor.order },
+          { id: neighbor.id, order: lineup.order },
+        ]
+
+        await lineupStore.dispatch('reorder', payload)
+        await lineupStore.dispatch('fetchAll')
+      } catch (e) {
+        console.error(e)
+        alert('Promjena poretka nije uspjela.')
+      } finally {
+        this.buttonEnabled = true
       }
-
-      await axios.put(process.env.VUE_APP_BASE_URL + '/lineup/' + lineup.id + '/',
-        { order: nextlineup.order },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
-
-      await axios.put(process.env.VUE_APP_BASE_URL + '/lineup/' + nextlineup.id + '/',
-        { order: lineup.order },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } })
-
-      this.buttonEnabeled = true;
-      this.created();
-    }
-  }
-
+    },
+  },
 }
 </script>
+
+
 
 <style>
 .grid {

@@ -1,10 +1,11 @@
+from uuid import uuid4
 from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import filters
 from rest_framework import routers, serializers, viewsets
-from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard
+from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from .serializer import TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer
+from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.mail import BadHeaderError, send_mail
@@ -59,7 +60,7 @@ class MailerViewSet(viewsets.ModelViewSet):
 
             if subject and msg and to and html_message:
                 text_content = strip_tags(html_message)
-                msg = EmailMultiAlternatives(subject, text_content, "41. Brucošijada FER-a<"+settings.EMAIL_HOST_USER+">", [to])
+                msg = EmailMultiAlternatives(subject, text_content, "42. Brucošijada FER-a<"+settings.EMAIL_HOST_USER+">", [to])
                 msg.attach_alternative(html_message, "text/html")
                 messages.append(msg)
 
@@ -122,6 +123,47 @@ class LineupViewSet(viewsets.ModelViewSet):
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     ordering_fields = ['order']
 
+    @transaction.atomic
+    def perform_create(self, serializer):
+        last = Lineup.objects.select_for_update().order_by('-order').first()
+        next_order = (last.order if last else 0) + 1
+        serializer.save(order=next_order, slug=str(uuid4()))
+
+    @action(detail=False, methods=['post'])
+    @transaction.atomic
+    def reorder(self, request):
+        payload = request.data
+        if not isinstance(payload, list):
+            return Response({"error": "Expected a list of {id, order}."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            pairs = [(int(item["id"]), int(item["order"])) for item in payload]
+        except (KeyError, TypeError, ValueError):
+            return Response({"error": "Each item must have integer 'id' and 'order'."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        ids    = [i for i, _ in pairs]
+        orders = [o for _, o in pairs]
+
+        if len(set(ids)) != len(ids):
+            return Response({"error": "Duplicate ids in payload."}, status=status.HTTP_400_BAD_REQUEST)
+        if len(set(orders)) != len(orders):
+            return Response({"error": "Duplicate orders in payload."}, status=status.HTTP_400_BAD_REQUEST)
+        if any(o < 0 for o in orders):
+            return Response({"error": "Order must be non-negative integers."}, status=status.HTTP_400_BAD_REQUEST)
+
+        objs = {obj.id: obj for obj in Lineup.objects.select_for_update().filter(id__in=ids)}
+        missing = sorted(set(ids) - set(objs.keys()))
+        if missing:
+            return Response({"error": f"Lineup(s) not found: {missing}"}, status=status.HTTP_404_NOT_FOUND)
+
+        for _id, _ord in pairs:
+            objs[_id].order = _ord
+        Lineup.objects.bulk_update(objs.values(), ['order'])
+
+        return Response({"status": "ok"}, status=status.HTTP_200_OK)
+
 
 class SponsorsViewSet(viewsets.ModelViewSet):
     queryset = Sponsors.objects.all()
@@ -167,3 +209,15 @@ class GameLeaderboardViewSet(viewsets.ModelViewSet):
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     search_fields = ['email']
     ordering_fields = ['score']
+
+class BrucosiFormResponseViewSet(viewsets.ModelViewSet):
+    queryset = BrucosiFormResponse.objects.all()
+    serializer_class = BrucosiFormResponseSerializer
+
+    @action(detail=False, methods=['post'], url_path='brucosi-form-submit')
+    def brucosi_form_submit(self, request):
+        serializer = BrucosiFormResponseSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Submission received."}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

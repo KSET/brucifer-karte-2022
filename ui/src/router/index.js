@@ -42,6 +42,8 @@ import Tlocrt from "../views/BruciWebViews/TlocrtView.vue";
 import Satnica from "../views/BruciWebViews/SatnicaView.vue";
 import Igrica from "../views/BruciWebViews/IgricaView.vue";
 import UvjetiKoristenja from "../views/BruciWebViews/UvjetiKoristenjaView.vue";
+import BWbrucosi from "../views/BruciWebViews/BWbrucosiView.vue";
+
 
 import SponsorsPage from "../views/BruciWebViews/SponsorsPageView.vue";
 
@@ -247,6 +249,11 @@ const routes = [
     meta: {
       visibilityCheck: "IGRICA_VISIBILITY",
     },
+  },
+  {
+    path: "/brucosi",
+    name: "brucosi",
+    component: BWbrucosi,
   },
   {
     path: "/",
