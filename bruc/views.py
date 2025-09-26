@@ -34,12 +34,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny, AllowAny, BasePermission
+from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 
 class MailerViewSet(viewsets.ModelViewSet):
     queryset = Mailer.objects.all()
     serializer_class = MailerSerializer
-    # permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['post'])
     def send_mail(self, request):
@@ -85,7 +85,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
     queryset = Guests.objects.all()
     serializer_class = GuestsSerializer
     filter_backends = [DynamicSearchFilter]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['post'], url_path='bulk-import')
     def bulk_import(self, request):
@@ -102,7 +102,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
 class TagsViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 class UsersViewSet(viewsets.ModelViewSet):
@@ -184,7 +184,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
 class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 class CjenikViewSet(viewsets.ModelViewSet):
