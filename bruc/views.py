@@ -39,7 +39,7 @@ from rest_framework.permissions import AllowAny, AllowAny, BasePermission
 class MailerViewSet(viewsets.ModelViewSet):
     queryset = Mailer.objects.all()
     serializer_class = MailerSerializer
-    # # permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
 
     @action(detail=False, methods=['post'])
     def send_mail(self, request):
@@ -85,7 +85,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
     queryset = Guests.objects.all()
     serializer_class = GuestsSerializer
     filter_backends = [DynamicSearchFilter]
-    # permission_classes = [AllowAny]
+    permission_classes = [AllowAny]
 
     @action(detail=False, methods=['post'], url_path='bulk-import')
     def bulk_import(self, request):
@@ -102,7 +102,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
 class TagsViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
-    # permission_classes = [AllowAny]
+    permission_classes = [AllowAny]
 
 
 class UsersViewSet(viewsets.ModelViewSet):
@@ -110,7 +110,7 @@ class UsersViewSet(viewsets.ModelViewSet):
     serializer_class = UsersSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'email']
-    # permission_classes = [AllowAny]
+    permission_classes = [AllowAny]
 
     @action(detail=False, methods=['post'], url_path='bulk-import')
     def bulk_import(self, request):
@@ -184,7 +184,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
 class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
-    # permission_classes = [AllowAny]
+    permission_classes = [AllowAny]
 
 
 class CjenikViewSet(viewsets.ModelViewSet):
@@ -233,7 +233,7 @@ class AllowPostAnyOtherwiseAuthenticated(BasePermission):
 class BrucosiFormResponseViewSet(viewsets.ModelViewSet):
     queryset = BrucosiFormResponse.objects.all()
     serializer_class = BrucosiFormResponseSerializer
-    permission_classes = [AllowPostAnyOtherwiseAuthenticated]
+    permission_classes = [AllowAny]
 
     @action(detail=False, methods=['post'], url_path='brucosi-form-submit')
     def brucosi_form_submit(self, request):
