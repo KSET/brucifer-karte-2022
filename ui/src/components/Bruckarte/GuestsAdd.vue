@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { api } from "@/plugins/api";
 
 export default {
   name: 'GuestsAdd',
@@ -44,7 +44,7 @@ export default {
   },
 
   created() {
-    axios.get(process.env.VUE_APP_BASE_URL + '/guests/',)
+    api.get('/guests/',)
       .then(response => {
         this.guests = response.data;
         this.len = this.guests.length;
@@ -52,9 +52,8 @@ export default {
   },
   methods: {
     postGuest() {
-      axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
+      api.post('/guests/',
         { name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: '0', entered: '0' },
-        { auth: { username: process.env.AUTH_USER, password: process.env.VUE_APP_DJANGO_PASS } }
       )
         .then(() => {
           location.reload();
