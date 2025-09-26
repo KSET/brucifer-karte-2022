@@ -233,7 +233,7 @@ class AllowPostAnyOtherwiseAuthenticated(BasePermission):
 class BrucosiFormResponseViewSet(viewsets.ModelViewSet):
     queryset = BrucosiFormResponse.objects.all()
     serializer_class = BrucosiFormResponseSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [AllowPostAnyOtherwiseAuthenticated]
 
     @action(detail=False, methods=['post'], url_path='brucosi-form-submit')
     def brucosi_form_submit(self, request):
