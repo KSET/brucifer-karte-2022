@@ -273,7 +273,8 @@ class GoogleAuthView(APIView):
                 user.name = name
                 user.save()
 
-            refresh = RefreshToken.for_user(user)
+            auth_user, _ = User.objects.get_or_create(username="google_dummy")
+            refresh = RefreshToken.for_user(auth_user)
 
             return Response({
                 "access": str(refresh.access_token),
