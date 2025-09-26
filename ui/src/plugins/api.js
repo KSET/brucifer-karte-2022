@@ -31,8 +31,8 @@ api.interceptors.response.use(
                 originalRequest.headers.Authorization = `Bearer ${newAccess}`;
                 return api(originalRequest);
             } catch (refreshError) {
-                store.commit("clearAuth");
-                window.location.href = "/admin/login";
+                // store.commit("clearAuth");
+                // window.location.href = "/admin/login";
                 return Promise.reject(refreshError);
             }
         }
