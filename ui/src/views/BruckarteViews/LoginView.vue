@@ -23,10 +23,9 @@ export default {
     methods: {
         async handleCredentialResponse(res) {
             try {
-                const response = await api.post(
-                    `${process.env.VUE_APP_BASE_URL}/auth/google/`,
-                    { token: res.credential }
-                );
+                const response = await api.post("/auth/google/", {
+                    token: res.credential,
+                });
 
                 const { access, refresh, user } = response.data;
 

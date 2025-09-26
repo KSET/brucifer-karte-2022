@@ -18,17 +18,12 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        if (
-            error.response &&
-            error.response.status === 401 &&
-            !originalRequest._retry
-        ) {
+        if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
-                const refreshResponse = await axios.post(
-                    `${process.env.VUE_APP_BASE_URL}/auth/token/refresh/`,
-                    { refresh: store.state.refreshToken }
-                );
+                const refreshResponse = await api.post("/auth/token/refresh/", {
+                    refresh: store.state.refreshToken,
+                });
 
                 const newAccess = refreshResponse.data.access;
                 store.commit("setAccessToken", newAccess);
@@ -37,7 +32,7 @@ api.interceptors.response.use(
                 return api(originalRequest);
             } catch (refreshError) {
                 store.commit("clearAuth");
-                window.location = "/admin/login";
+                window.location.href = "/admin/login";
                 return Promise.reject(refreshError);
             }
         }
