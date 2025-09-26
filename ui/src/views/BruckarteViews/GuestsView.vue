@@ -124,7 +124,6 @@ export default {
       if (this.guest != '') {
         api.put('/guests/' + this.guest.id + '/',
           { name: this.name, surname: this.surname },
-          { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
         )
       }
     },
