@@ -14,7 +14,7 @@
                     class="flex flex-col gap-4 w-full sm:w-96">
                     <!-- Name -->
                     <div class="field">
-                        <InputText name="name" placeholder="Name" />
+                        <InputText name="name" placeholder="Ime" />
                         <Message v-if="$form.name?.invalid" severity="error" size="small" variant="simple">
                             {{ $form.name.error.message }}
                         </Message>
@@ -22,7 +22,7 @@
 
                     <!-- Surname -->
                     <div class="field">
-                        <InputText name="surname" placeholder="Surname" />
+                        <InputText name="surname" placeholder="Prezime" />
                         <Message v-if="$form.surname?.invalid" severity="error" size="small" variant="simple">
                             {{ $form.surname.error.message }}
                         </Message>
@@ -49,13 +49,11 @@
                         <div style="display: flex; flex-direction: row; gap: 0.5rem; color: white;">
                             <Checkbox name="gdpr_accepted" binary inputId="gdpr_accepted" />
                             <label for="gdpr_accepted">
-                                I agree to the processing of my personal data (
-                                <a href="/Privola_za_prikupljanje_osobnih_podataka-Brucosijada_2025.pdf"
-                                    target="_blank" rel="noopener noreferrer"
-                                    style="color: #4da3ff; text-decoration: underline;">
-                                    PRIVOLA ZA PRIKUPLJANJE OSOBNIH PODATAKA
-                                </a>
-                                )
+                                Slažem se s
+                                <a href="/Privola_za_prikupljanje_osobnih_podataka-Brucosijada_2025.pdf" target="_blank"
+                                    rel="noopener noreferrer" style="color: #4da3ff; text-decoration: underline;">
+                                    Privolom za prikupljanje osobnih osobnih podataka </a>
+
                             </label>
                         </div>
                         <Message v-if="$form.gdpr_accepted?.invalid" severity="error" size="small" variant="simple">
@@ -134,20 +132,18 @@ export default {
             },
             resolver: zodResolver(
                 z.object({
-                    name: z.string().min(1, { message: 'Name is required' }),
-                    surname: z.string().min(1, { message: 'Surname is required' }),
-                    jmbag: z.string().length(10, { message: 'JMBAG must be 10 digits' }),
-                    email: z.string().email({ message: 'Valid email is required' }),
-                    gdpr_accepted: z.literal(true, {
-                        errorMap: () => ({ message: 'You must accept GDPR to continue' }),
-                    }),
+                    name: z.string().min(1, { message: 'Ime je obavezno polje' }),
+                    surname: z.string().min(1, { message: 'Ime je obavezno polje' }),
+                    jmbag: z.string().length(10, { message: 'JMBAG mora biti 10 znamenki' }),
+                    email: z.string().email({ message: 'Email je obavezno polje' }),
+                    gdpr_accepted: z.boolean().refine(val => val === true, { message: 'Prihvaćanje privole je obavezno', }),
                 }).superRefine((values, ctx) => {
                     const expected = expectedFerEmail(values)
                     if (values.email.toLowerCase() !== expected) {
                         ctx.addIssue({
                             code: 'custom',
                             path: ['email'],
-                            message: 'Email must match your FER format (ip1234@fer.hr)',
+                            message: 'Email mora biti u FER formatu (ip1234@fer.hr)',
                         })
                     }
                 })
@@ -165,8 +161,8 @@ export default {
             if (!valid) {
                 this.toast.add({
                     severity: 'error',
-                    summary: 'Invalid form',
-                    detail: 'Please fill out all required fields correctly.',
+                    summary: 'Neispravan unos',
+                    detail: 'Molimo pregledajte podatke u formi te pokušajte ponovno.',
                     life: 3000,
                 })
                 return
@@ -177,8 +173,8 @@ export default {
 
                 this.toast.add({
                     severity: 'success',
-                    summary: 'Submission received',
-                    detail: 'Your data has been submitted successfully.',
+                    summary: 'Podaci spremljeni',
+                    detail: 'Vaši podaci su uspješno spremljeni.',
                     life: 3000,
                 })
 
