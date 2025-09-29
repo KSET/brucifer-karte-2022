@@ -1,22 +1,22 @@
 <template>
-  <div class="guestss" style="margin-top: 3.75rem;">
+  <div class="guestss">
     <CircularLoading :dialog="dialogProgress"></CircularLoading>
 
     <div class="header guests">
       <input class="nosubmit search" @input="prepSearchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
 
       <v-progress-circular v-if="loading == true" size="90px" indeterminate color="black"></v-progress-circular>
-      <h1 class="textfield"> {{ this.nomatch }}</h1>
+      <h1 class="textfield" :class="{ 'error-text': isFormMissing }"> {{ this.nomatch }}</h1>
     </div>
     <p style="color: black; text-align: center;">Napomenite brucošima da karta dolazi na mail i da dolazi u SPAM/JUNK!
     </p>
 
     <div class="grid-container guests">
       <h1 class="textfield">Ime </h1>
-      <input class="inputfield" :disabled="this.id == ''" type="text" @input="changeValue" v-model="name">
+      <input class="inputfield" :disabled="this.name == ''" type="text" @input="changeValue" v-model="name">
 
       <h1 class="textfield">Prezime </h1>
-      <input class="inputfield" :disabled="this.id == ''" type="text" @input="changeValue" v-model="surname">
+      <input class="inputfield" :disabled="this.surname == ''" type="text" @input="changeValue" v-model="surname">
 
       <h1 class="textfield">JMBAG </h1>
       <input class="inputfield" readonly type="text" v-model="jmbag">
@@ -66,6 +66,31 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="submissionPickerOpen" max-width="500px">
+      <v-card>
+        <v-card-title>
+          Odaberi prijavu
+        </v-card-title>
+
+        <v-card-text>
+          <v-list>
+            <v-list-item v-for="submission in submissionCandidates" :key="submission.id"
+              @click="selectSubmission(submission)" class="submission-item">
+              <v-list-item-content>
+                <v-list-item-title>{{ submission.name }} {{ submission.surname }}</v-list-item-title>
+                <v-list-item-subtitle>{{ submission.email }}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ formatDate(submission.submitted_at) }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn text @click="submissionPickerOpen = false">Zatvori</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -104,10 +129,14 @@ export default {
       nomatch: '',
       confCode: '',
       boughtTicketTime: '',
+      isFormMissing: false,
       dialog: false,
       dialogProgress: false,
 
       loading: false,
+
+      submissionPickerOpen: false,
+      submissionCandidates: [],
 
       uuid: uuid.v1(),
 
@@ -135,31 +164,40 @@ export default {
       this.changeBought(guest, changenum)
     },
     changeBought(guest, changenum) {
-      if (this.name == "" || this.surname == "") {
-        window.alert("Ispunite polja ime i prezime!")
+      if (this.name === "" || this.surname === "") {
+        window.alert("Ispunite polja ime i prezime!");
       } else {
-        if (changenum == 1) {
-          var confCode = this.$uuid.v1();
-          var boughtTicketTime = new Date().toISOString()
+        let confCode, boughtTicketTime;
 
+        if (changenum == 1) {
+          confCode = this.$uuid.v1();
+          boughtTicketTime = new Date().toISOString();
         } else {
-          var confCode = "";
-          var boughtTicketTime = null;
+          confCode = "";
+          boughtTicketTime = null;
         }
-        api.put('/guests/' + guest.id + '/',
-          { bought: changenum, confCode: confCode, boughtTicketTime: boughtTicketTime },
-        )
+
+        api.put(`/guests/${guest.id}/`, {
+          name: this.name,
+          surname: this.surname,
+          bought: changenum,
+          confCode: confCode,
+          boughtTicketTime: boughtTicketTime
+        })
           .then(() => {
             guest.bought = changenum;
             guest.confCode = confCode;
             guest.boughtTicketTime = boughtTicketTime;
+            guest.name = this.name;
+            guest.surname = this.surname;
+
             this.boughtTicketTime = boughtTicketTime;
             this.confCode = confCode;
 
             if (changenum == 1) {
               this.sendMail(guest);
             }
-          })
+          });
       }
     },
     prepSearchGuest() {
@@ -169,46 +207,92 @@ export default {
       this.searchGuest()
     },
     searchGuest() {
-      api.get('/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=jmbag",)
+      api.get(`/guests/search-brucosi/?jmbag=${encodeURIComponent(this.search)}`)
         .then(response => {
           this.loading = false;
+          this.isFormMissing = false;
 
-          this.guests = response.data;
-          if (this.guests.length == 1) {
+          const { guests = [], submissions = [] } = response.data;
+          this.guests = guests;
+
+          console.log(submissions)
+
+          if (this.guests.length === 1) {
             this.nomatch = "";
             this.guest = this.guests[0];
             this.id = this.guest.id;
-            this.name = this.guest.name;
-            this.surname = this.guest.surname;
-            this.jmbag = this.guest.jmbag;
-            this.confCode = this.guest.confCode;
-            this.boughtTicketTime = this.guest.boughtTicketTime;
+            this.name = this.guest.name || "";
+            this.surname = this.guest.surname || "";
+            this.jmbag = this.guest.jmbag || "";
+            this.confCode = this.guest.confCode || "";
+            this.boughtTicketTime = this.guest.boughtTicketTime || "";
 
-          } else if (this.guests.length == 0) {
+            const needsName = !this.name;
+            const needsSurname = !this.surname;
+
+            if (submissions.length == 0) {
+              this.nomatch = `JMBAG pronađen, ali korisnik nije ispunio formu.`;
+              this.isFormMissing = true;
+              return
+            }
+
+            if (needsName || needsSurname) {
+              const fillCandidates = submissions.filter(s =>
+                s &&
+                s.jmbag === this.jmbag && (
+                  (needsName && s.name) ||
+                  (needsSurname && s.surname)
+                )
+              );
+
+              if (fillCandidates.length === 1) {
+                const s = fillCandidates[0];
+                if (needsName && s.name) this.name = s.name;
+                if (needsSurname && s.surname) this.surname = s.surname;
+              } else if (fillCandidates.length > 1) {
+                this.openSubmissionPicker?.(fillCandidates);
+                this.nomatch = `Pronađeno ${fillCandidates.length} podudaranja iz prijava – odaberite ispravno ime/prezime.`;
+              }
+            }
+
+          } else if (this.guests.length === 0) {
             this.nomatch = "JMBAG nije pronađen!";
             this.id = "";
             this.name = "";
-            this.surname = '';
-            this.jmbag = '';
-            this.confCode = '';
-            this.boughtTicketTime = '';
+            this.surname = "";
+            this.jmbag = "";
+            this.confCode = "";
+            this.boughtTicketTime = "";
 
-          }
-          else if (this.guests.length > 1 && this.guests.length < 20) {
+          } else if (this.guests.length > 1 && this.guests.length < 20) {
             this.nomatch = `Pronađeno ${this.guests.length} podudaranja, nastavite upisivati`;
-          }
-          else {
-            this.nomatch = "";
-            this.id = '';
-            this.name = '';
-            this.surname = '';
-            this.jmbag = '';
-            this.confCode = '';
-            this.boughtTicketTime = '';
 
-            this.bought = '0';
+          } else {
+            this.nomatch = "";
+            this.id = "";
+            this.name = "";
+            this.surname = "";
+            this.jmbag = "";
+            this.confCode = "";
+            this.boughtTicketTime = "";
+            this.bought = "0";
           }
         })
+        .catch(err => {
+          this.loading = false;
+          console.error("Search error:", err?.response?.data || err.message);
+          this.nomatch = "Greška prilikom pretraživanja.";
+        });
+    },
+    openSubmissionPicker(candidates) {
+      this.submissionCandidates = candidates;
+      this.submissionPickerOpen = true;
+    },
+    selectSubmission(submission) {
+      if (!this.name && submission.name) this.name = submission.name;
+      if (!this.surname && submission.surname) this.surname = submission.surname;
+
+      this.submissionPickerOpen = false;
     },
     async sendMail(guest) {
 
@@ -313,7 +397,17 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 1rem;
 
+}
+
+.submission-item {
+  cursor: pointer;
+  border-bottom: 1px solid black;
+}
+
+.submission-item:hover {
+  background-color: lightgray;
 }
 
 .nosubmit.search {
@@ -351,7 +445,9 @@ export default {
   .nosubmit.search {
     width: 55% !important;
   }
+}
 
-
+.error-text {
+  color: red;
 }
 </style>
