@@ -35,6 +35,7 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
+from django.contrib.auth.models import User as DjangoUser
 
 class MailerViewSet(viewsets.ModelViewSet):
     queryset = Mailer.objects.all()
@@ -285,29 +286,29 @@ class GoogleAuthView(APIView):
             email = idinfo["email"]
             name = idinfo.get("name", "")
 
-            user, created = Users.objects.get_or_create(
+            custom_user, created = Users.objects.get_or_create(
                 email=email,
-                defaults={
-                    "name": name,
-                    "privilege": 0 
-                }
+                defaults={"name": name, "privilege": "0"}
             )
+            if not created and not custom_user.name:
+                custom_user.name = name
+                custom_user.save()
 
-            if not created and not user.name:
-                user.name = name
-                user.save()
+            auth_user, _ = DjangoUser.objects.get_or_create(username=email, defaults={"email": email})
+            if not auth_user.first_name:
+                auth_user.first_name = name
+                auth_user.save()
 
-            auth_user, _ = User.objects.get_or_create(username="google_dummy")
             refresh = RefreshToken.for_user(auth_user)
 
             return Response({
                 "access": str(refresh.access_token),
                 "refresh": str(refresh),
                 "user": {
-                    "id": user.id,
-                    "name": user.name,
-                    "email": user.email,
-                    "privilege": user.privilege,
+                    "id": custom_user.id,
+                    "name": custom_user.name,
+                    "email": custom_user.email,
+                    "privilege": custom_user.privilege,
                 }
             })
 
