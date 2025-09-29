@@ -97,7 +97,31 @@ class GuestsViewSet(viewsets.ModelViewSet):
             with transaction.atomic():
                 Guests.objects.bulk_create([Guests(**data) for data in guests_serializer.validated_data])
                 return Response({'message': 'Bulk guests import successful'}, status=status.HTTP_201_CREATED)
+            
+    @action(detail=False, methods=['get'], url_path='search-brucosi')
+    def search_brucosi(self, request):
+        jmbag = request.query_params.get('jmbag')
+        if not jmbag:
+            return Response({"error": "Missing jmbag parameter"}, status=status.HTTP_400_BAD_REQUEST)
 
+        guests = Guests.objects.filter(jmbag__icontains=jmbag, tag="Brucoši")
+        submissions = BrucosiFormResponse.objects.filter(jmbag__icontains=jmbag)
+
+        seen = set()
+        unique_submissions = []
+        for s in submissions:
+            key = (s.name.strip().lower(), s.surname.strip().lower())
+            if key not in seen:
+                seen.add(key)
+                unique_submissions.append(s)
+
+        guest_data = GuestsSerializer(guests, many=True).data
+        submission_data = BrucosiFormResponseSerializer(unique_submissions, many=True).data
+
+        return Response({
+            "guests": guest_data,
+            "submissions": submission_data
+        })
 
 class TagsViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
@@ -226,9 +250,9 @@ class AllowPostAnyOtherwiseAuthenticated(BasePermission):
     Require authentication for all other methods.
     """
     def has_permission(self, request, view):
-        if request.method == "POST":
+        if request.method in ("POST", "GET"):
             return True
-        return request.user and request.user.is_authenticated
+        return bool(request.user and request.user.is_authenticated)
 
 class BrucosiFormResponseViewSet(viewsets.ModelViewSet):
     queryset = BrucosiFormResponse.objects.all()
