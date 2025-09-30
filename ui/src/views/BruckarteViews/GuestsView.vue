@@ -7,8 +7,10 @@
 
       <v-progress-circular v-if="loading == true" size="90px" indeterminate color="black"></v-progress-circular>
       <h1 class="textfield" :class="{ 'error-text': isFormMissing }"> {{ this.nomatch }}</h1>
+      <button class="button change" @click="getTodayStats">Dohvati broj prodanih karata</button>
     </div>
-    <p style="color: black; text-align: center;">Napomenite brucošima da karta dolazi na mail i da dolazi u SPAM/JUNK!
+    <p style="color: black; text-align: center;">
+      Napomenite brucošima da karta dolazi na mail!
     </p>
 
     <div class="grid-container guests">
@@ -91,6 +93,25 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="todayStatsDialog" max-width="500px">
+      <v-card>
+        <v-card-title>
+          Statistika za danas
+        </v-card-title>
+
+        <v-card-text v-if="todayStats">
+          <p><strong>Datum:</strong> {{ formatStatDate(todayStats.date) }}</p>
+          <p><strong>Ukupno prodano:</strong> {{ todayStats.totalEntries }}</p>
+          <p><strong>Prije 12h:</strong> {{ todayStats.ticketsBefore12 }}</p>
+          <p><strong>Poslije 12h:</strong> {{ todayStats.ticketsAfter12 }}</p>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn color="primary" block @click="todayStatsDialog = false">Zatvori</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -134,6 +155,10 @@ export default {
       dialogProgress: false,
 
       loading: false,
+      loadingStats: false,
+
+      todayStatsDialog: false,
+      todayStats: null,
 
       submissionPickerOpen: false,
       submissionCandidates: [],
@@ -149,6 +174,25 @@ export default {
 
   },
   methods: {
+    async getTodayStats() {
+      try {
+        this.loading = true;
+        const response = await api.get("/guests/today-stats/");
+        this.todayStats = response.data;
+        this.todayStatsDialog = true;
+      } catch (error) {
+        console.error("Error fetching today stats:", error);
+        this.todayStats = {
+          date: new Date().toISOString().slice(0, 10),
+          totalEntries: "-",
+          ticketsBefore12: "-",
+          ticketsAfter12: "-",
+        };
+        this.todayStatsDialog = true;
+      } finally {
+        this.loading = false;
+      }
+    },
     changeValue() {
       if (this.guest != '') {
         api.put('/guests/' + this.guest.id + '/',
@@ -374,13 +418,20 @@ export default {
       }
       const d = new Date(date);
       const day = d.getDate().toString().padStart(2, '0');
-      const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-based, thus add 1
+      const month = (d.getMonth() + 1).toString().padStart(2, '0');
       const year = d.getFullYear();
       const hours = d.getHours().toString().padStart(2, '0');
       const minutes = d.getMinutes().toString().padStart(2, '0');
       const seconds = d.getSeconds().toString().padStart(2, '0');
       return `${day}.${month}.${year}. ${hours}:${minutes}:${seconds}`;
     },
+    formatStatDate(date) {
+      const d = new Date(date);
+      const day = d.getDate().toString().padStart(2, '0');
+      const month = (d.getMonth() + 1).toString().padStart(2, '0');
+      const year = d.getFullYear();
+      return `${day}.${month}.${year}.`;
+    }
   }
 
 }
@@ -398,6 +449,8 @@ export default {
   flex-direction: row;
   align-items: center;
   gap: 1rem;
+  justify-content: space-between;
+  padding-right: 3%;
 
 }
 
@@ -426,6 +479,10 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
+}
+
+p {
+  color: black;
 }
 
 

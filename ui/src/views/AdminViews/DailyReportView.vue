@@ -11,15 +11,15 @@
             <thead>
               <th>Datum</th>
               <th>Prodane ukupno u danu</th>
-              <th>Prodane smjena prije 13.00</th>
-              <th>Prodane smjena poslije 13.00</th>
+              <th>Prodane smjena prije 12.00</th>
+              <th>Prodane smjena poslije 12.00</th>
             </thead>
             <tbody>
               <tr v-for="date in dateSummary" :key="date.date">
                 <td>{{ formatDate(date.date) }}</td>
                 <td>{{ date.totalEntries }}</td>
-                <td>{{ date.ticketsBefore13 }}</td>
-                <td>{{ date.ticketsAfter13 }}</td>
+                <td>{{ date.ticketsBefore12 }}</td>
+                <td>{{ date.ticketsAfter12 }}</td>
               </tr>
             </tbody>
           </table>
@@ -62,13 +62,13 @@ export default {
           const date = localDateTime.toLocaleDateString('en-CA');
           const hours = localDateTime.getHours();
           if (!dateSummary[date]) {
-            dateSummary[date] = { totalEntries: 0, ticketsBefore13: 0, ticketsAfter13: 0 };
+            dateSummary[date] = { totalEntries: 0, ticketsBefore12: 0, ticketsAfter12: 0 };
           }
           dateSummary[date].totalEntries++;
-          if (hours < 13) {
-            dateSummary[date].ticketsBefore13++;
+          if (hours < 12) {
+            dateSummary[date].ticketsBefore12++;
           } else {
-            dateSummary[date].ticketsAfter13++;
+            dateSummary[date].ticketsAfter12++;
           }
         }
       });

@@ -37,6 +37,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 from django.contrib.auth.models import User as DjangoUser
 
+from datetime import datetime, time
+from django.utils.timezone import make_aware
+
 class MailerViewSet(viewsets.ModelViewSet):
     queryset = Mailer.objects.all()
     serializer_class = MailerSerializer
@@ -122,6 +125,27 @@ class GuestsViewSet(viewsets.ModelViewSet):
         return Response({
             "guests": guest_data,
             "submissions": submission_data
+        })
+    
+    @action(detail=False, methods=["get"], url_path="today-stats")
+    def today_stats(self, request):
+        now = datetime.now()
+        today_start = make_aware(datetime.combine(now.date(), time.min))
+        today_end = make_aware(datetime.combine(now.date(), time.max))
+
+        guests = Guests.objects.filter(
+            boughtTicketTime__range=(today_start, today_end)
+        )
+
+        total_entries = guests.count()
+        tickets_before_12 = guests.filter(boughtTicketTime__hour__lt=12).count()
+        tickets_after_12 = guests.filter(boughtTicketTime__hour__gte=12).count()
+
+        return Response({
+            "date": now.date().isoformat(),
+            "totalEntries": total_entries,
+            "ticketsBefore12": tickets_before_12,
+            "ticketsAfter12": tickets_after_12,
         })
 
 class TagsViewSet(viewsets.ModelViewSet):
