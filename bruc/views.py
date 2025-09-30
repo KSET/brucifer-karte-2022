@@ -131,6 +131,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
     def today_stats(self, request):
         now = datetime.now()
         today_start = make_aware(datetime.combine(now.date(), time.min))
+        noon_time = make_aware(datetime.combine(now.date(), time(12, 0)))
         today_end = make_aware(datetime.combine(now.date(), time.max))
 
         guests = Guests.objects.filter(
@@ -138,8 +139,8 @@ class GuestsViewSet(viewsets.ModelViewSet):
         )
 
         total_entries = guests.count()
-        tickets_before_12 = guests.filter(boughtTicketTime__hour__lt=12).count()
-        tickets_after_12 = guests.filter(boughtTicketTime__hour__gte=12).count()
+        tickets_before_12 = guests.filter(boughtTicketTime__lt=noon_time).count()
+        tickets_after_12 = guests.filter(boughtTicketTime__gte=noon_time).count()
 
         return Response({
             "date": now.date().isoformat(),
