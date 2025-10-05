@@ -55,21 +55,6 @@ export default createStore({
       }
     },
 
-    async fetchVisible({ commit }) {
-      commit('SET_LOADING', true); commit('SET_ERROR', null)
-      try {
-        const { data } = await api.get('/lineup/', {
-          params: { ordering: 'order', search: 1, search_fields: 'visible' },
-        })
-        commit('SET_LIST', data)
-        return data
-      } catch (e) {
-        commit('SET_ERROR', e); throw e
-      } finally {
-        commit('SET_LOADING', false)
-      }
-    },
-
     async fetchBySlug({ commit }, slug) {
       commit('SET_LOADING', true); commit('SET_ERROR', null)
       try {
@@ -135,6 +120,21 @@ export default createStore({
       commit('SET_LOADING', true); commit('SET_ERROR', null)
       try {
         await api.post('/lineup/reorder/', items)
+      } catch (e) {
+        commit('SET_ERROR', e); throw e
+      } finally {
+        commit('SET_LOADING', false)
+      }
+    },
+
+    async fetchVisible({ commit }) {
+      commit('SET_LOADING', true); commit('SET_ERROR', null)
+      try {
+        const { data } = await api.get('/public/lineup/', {
+          params: { ordering: 'order' },
+        })
+        commit('SET_LIST', data)
+        return data
       } catch (e) {
         commit('SET_ERROR', e); throw e
       } finally {

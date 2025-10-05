@@ -5,7 +5,7 @@ from rest_framework import filters
 from rest_framework import routers, serializers, viewsets
 from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer
+from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer, PublicLineupSerializer
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.mail import BadHeaderError, send_mail
@@ -160,7 +160,7 @@ class UsersViewSet(viewsets.ModelViewSet):
     serializer_class = UsersSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'email']
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['post'], url_path='bulk-import')
     def bulk_import(self, request):
@@ -181,6 +181,7 @@ class LineupViewSet(viewsets.ModelViewSet):
     serializer_class = LineupSerializer
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     ordering_fields = ['order']
+    permission_classes = [IsAuthenticated]
 
     @transaction.atomic
     def perform_create(self, serializer):
@@ -223,6 +224,14 @@ class LineupViewSet(viewsets.ModelViewSet):
 
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
+class PublicLineupViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = PublicLineupSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['order']
+    ordering = ['order']
+
+    def get_queryset(self):
+        return Lineup.objects.filter(visible=True).order_by('order')
 
 class SponsorsViewSet(viewsets.ModelViewSet):
     queryset = Sponsors.objects.all()
@@ -276,7 +285,7 @@ class AllowPostAnyOtherwiseAuthenticated(BasePermission):
     Require authentication for all other methods.
     """
     def has_permission(self, request, view):
-        if request.method in ("POST", "GET"):
+        if request.method in ("POST"):
             return True
         return bool(request.user and request.user.is_authenticated)
 

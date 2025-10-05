@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="lineup-table">
     <div class="grid">
       <div class="card" style="height: 40%; border: none;" v-for="lineup in lineups" :key="lineup.id">
         <img class="ccard-img" v-bind:src="lineup.image"
@@ -68,6 +68,7 @@ export default {
 
   methods: {
     editlineup(lineup) {
+      console.log(`Editing lineup with slug ${lineup.slug}`)
       this.$router.push({ path: `/admin/lineup-add/${lineup.slug}` })
     },
 
@@ -114,7 +115,11 @@ export default {
 }
 </script>
 
-
+<style scoped>
+.lineup-table .ccard-img {
+  max-width: 100%;
+}
+</style>
 
 <style>
 .grid {

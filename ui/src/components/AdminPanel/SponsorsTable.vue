@@ -1,5 +1,5 @@
 <template>
-  <div class="grid">
+  <div class="grid sponsors-table">
     <div class="card" style="height: 36%;" ref="" v-for="sponsor in sponsors" :key="sponsor.id">
       <div>
         <img class="ccard-img" v-bind:src="sponsor.image"
@@ -100,6 +100,12 @@ export default {
 
 }
 </script>
+
+<style scoped>
+.sponsors-table .ccard-img {
+  max-width: 100%;
+}
+</style>
 
 <style>
 .grid {
