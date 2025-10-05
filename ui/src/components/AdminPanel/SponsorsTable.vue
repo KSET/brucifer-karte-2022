@@ -10,7 +10,7 @@
         <h3 class="name"> {{ sponsor.name }} </h3>
 
         <div class="ccard-buttons">
-          <button v-if="buttonEnabeled" @click="changesponsororder(sponsor, 'b')" class="ccard-button">
+          <button v-if="canMoveBack && buttonEnabled" @click="changesponsororder(sponsor, 'b')" class="ccard-button">
             <img src="../../assets/icons/arrow-left-icon.svg">
           </button>
 
@@ -22,7 +22,7 @@
             <img src="../../assets/icons/edit-icon.svg">
           </button>
 
-          <button v-if="buttonEnabeled" @click="changesponsororder(sponsor, 'f')" class="ccard-button">
+          <button v-if="canMoveForward && buttonEnabled" @click="changesponsororder(sponsor, 'f')" class="ccard-button">
             <img src="../../assets/icons/arrow-right-icon.svg">
           </button>
           <button v-else disabeled class="ccard-button">
@@ -99,14 +99,13 @@ export default {
         }
         if (!neighbor) return
 
-        // swap orders via backend bulk reorder
         const payload = [
           { id: sponsor.id, order: neighbor.order },
           { id: neighbor.id, order: sponsor.order },
         ]
 
         await sponsorsStore.dispatch('reorder', payload)
-        await sponsorsStore.dispatch('fetchAll') // refresh
+        await sponsorsStore.dispatch('fetchAll')
       } catch (e) {
         console.error(e)
         alert('Promjena poretka sponzora nije uspjela.')

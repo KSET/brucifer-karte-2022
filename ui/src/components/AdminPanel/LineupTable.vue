@@ -8,7 +8,7 @@
           <h3 class="name"> {{ lineup.name }}</h3>
 
           <div class="ccard-buttons">
-            <button v-if="buttonEnabled" @click="changelineuporder(lineup, 'b')" id="b4" class="ccard-button">
+            <button v-if="canMoveBack && buttonEnabled" @click="changelineuporder(lineup, 'b')" id="b4" class="ccard-button">
               <img src="../../assets/icons/arrow-left-icon.svg">
             </button>
             <button v-else disabeled id="b4" class="ccard-button">
@@ -19,7 +19,7 @@
               <img src="../../assets/icons/edit-icon.svg">
             </button>
 
-            <button v-if="buttonEnabled" @click="changelineuporder(lineup, 'f')" id="next" class="ccard-button">
+            <button v-if="canMoveForward && buttonEnabled" @click="changelineuporder(lineup, 'f')" id="next" class="ccard-button">
               <img src="../../assets/icons/arrow-right-icon.svg">
             </button>
             <button v-else disabeled id="next" class="ccard-button">
