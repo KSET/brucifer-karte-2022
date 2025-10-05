@@ -16,6 +16,7 @@ from .views import (
     SponsorsViewSet,
     BrucosiFormResponseViewSet,
     GoogleAuthView,
+    PublicSponsorsViewSet
 )
 
 router = routers.DefaultRouter()
@@ -24,6 +25,7 @@ router.register('tags', TagsViewSet)
 router.register('users', UsersViewSet)
 router.register('lineup', LineupViewSet)                      
 router.register('public/lineup', PublicLineupViewSet, basename='public-lineup')
+router.register('public/sponsors', PublicSponsorsViewSet, basename='public-sponsors')
 router.register('sponsors', SponsorsViewSet)
 router.register('contact', ContactViewSet)
 router.register('mailer', MailerViewSet)

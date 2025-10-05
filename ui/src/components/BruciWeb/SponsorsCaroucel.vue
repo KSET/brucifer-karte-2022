@@ -13,8 +13,8 @@
 
 
 <script>
-import axios from 'axios'
 import store from '@/store/visibilityStore'
+import sponsorsStore from '@/store/sponsorsStore'
 
 export default {
     name: 'SponsorsCaroucel',
@@ -24,22 +24,29 @@ export default {
             duration: '100s',
         }
     },
-    mounted() {
-        this.created();
+
+    async mounted() {
+        await this.loadSponsors()
     },
+
     computed: {
         SPONSORS_VISIBILITY() {
-            return store.state.SPONSORS_VISIBILITY;
+            return store.state.SPONSORS_VISIBILITY
         },
+        loading() {
+            return sponsorsStore.state.loading
+        },
+        error() {
+            return sponsorsStore.state.error
+        }
     },
+
     methods: {
-        created() {
-            axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order&search=1&search_fields=visible',)
-                .then(response => {
-                    this.sponsors = response.data;
-                    const speed = Math.max(100, this.sponsors.length * 10);
-                    this.duration = `${speed}s`;
-                })
+        async loadSponsors() {
+            const data = await sponsorsStore.dispatch('fetchVisible')
+            this.sponsors = data
+            const speed = Math.max(100, this.sponsors.length * 10)
+            this.duration = `${speed}s`
         }
     }
 }

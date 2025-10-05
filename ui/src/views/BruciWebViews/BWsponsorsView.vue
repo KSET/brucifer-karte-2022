@@ -16,32 +16,34 @@
 
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
-import axios from 'axios'
+import sponsorsStore from '@/store/sponsorsStore'
 
 export default {
   name: 'UsersTable',
   components: { Footer },
-  props: {
-    msg: String
-  },
+
   data() {
     return {
       sponsors: [],
     }
   },
-  mounted() {
-    this.created();
+
+  async mounted() {
+    const data = await sponsorsStore.dispatch('fetchVisible')
+    this.sponsors = data
   },
-  methods: {
-    created() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order&search=1&search_fields=visible',)
-        .then(response => {
-          this.sponsors = response.data;
-        })
+
+  computed: {
+    loading() {
+      return sponsorsStore.state.loading
+    },
+    error() {
+      return sponsorsStore.state.error
     }
-  }
+  },
 }
 </script>
+
 
 
 <style>

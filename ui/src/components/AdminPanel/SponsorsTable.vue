@@ -36,70 +36,88 @@
 </template>
 
 <script>
-import axios from 'axios'
+import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+import sponsorsStore from '@/store/sponsorsStore'
+
 export default {
-  name: 'LineupTable',
-  components: {
-  },
-  props: {
-    msg: String
-  },
+  name: 'SponsorsTable',
+  components: { Sidebar },
+
   data() {
     return {
-      sponsors: [],
-      sponsor: '',
-      sponsor: '',
-      buttonEnabeled: true,
+      buttonEnabled: true,
     }
+  },
 
+  computed: {
+    sponsors() {
+      return sponsorsStore.state.list
+    },
+    loading() {
+      return sponsorsStore.state.loading
+    },
+    error() {
+      return sponsorsStore.state.error
+    },
+    isBusy() {
+      return this.loading || !this.buttonEnabled
+    },
   },
-  mounted() {
-    this.created();
+
+  async mounted() {
+    await sponsorsStore.dispatch('fetchAll')
   },
+
   methods: {
-    created() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
-        .then(response => {
-          this.sponsors = response.data;
-        });
-    },
     editsponsor(sponsor) {
-      this.$router.push({ path: '/admin/sponsors-add/' + sponsor.slug });
+      this.$router.push({ path: `/admin/sponsors-add/${sponsor.slug}` })
     },
+
+    canMoveBack(sponsor) {
+      const idx = this.sponsors.indexOf(sponsor)
+      return idx > 0
+    },
+
+    canMoveForward(sponsor) {
+      const idx = this.sponsors.indexOf(sponsor)
+      return idx > -1 && idx < this.sponsors.length - 1
+    },
+
     async changesponsororder(sponsor, direction) {
+      if (this.isBusy) return
+      this.buttonEnabled = false
 
-      this.buttonEnabeled = false;
-      var nextsponsorobj = (this.sponsors.indexOf(sponsor));
+      try {
+        const idx = this.sponsors.indexOf(sponsor)
+        if (idx === -1) return
 
-      if (direction == "f") {
-        if (sponsor.id != this.sponsors[this.sponsors.length - 1].id) {
-          var nextsponsor = this.sponsors[nextsponsorobj + 1];
+        let neighbor = null
+        if (direction === 'f' && this.canMoveForward(sponsor)) {
+          neighbor = this.sponsors[idx + 1]
+        } else if (direction !== 'f' && this.canMoveBack(sponsor)) {
+          neighbor = this.sponsors[idx - 1]
         }
-      } else {
-        if (sponsor.order != "00") {
-          var nextsponsor = this.sponsors[nextsponsorobj - 1];
-        }
+        if (!neighbor) return
+
+        // swap orders via backend bulk reorder
+        const payload = [
+          { id: sponsor.id, order: neighbor.order },
+          { id: neighbor.id, order: sponsor.order },
+        ]
+
+        await sponsorsStore.dispatch('reorder', payload)
+        await sponsorsStore.dispatch('fetchAll') // refresh
+      } catch (e) {
+        console.error(e)
+        alert('Promjena poretka sponzora nije uspjela.')
+      } finally {
+        this.buttonEnabled = true
       }
-
-
-      await axios.put(process.env.VUE_APP_BASE_URL + '/sponsors/' + sponsor.id + '/',
-        { order: nextsponsor.order },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
-      await axios.put(process.env.VUE_APP_BASE_URL + '/sponsors/' + nextsponsor.id + '/',
-        { order: sponsor.order },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
-
-      this.buttonEnabeled = true;
-      this.created();
-
-
-    }
-  }
-
+    },
+  },
 }
 </script>
+
 
 <style scoped>
 .sponsors-table .ccard-img {

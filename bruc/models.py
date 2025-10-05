@@ -62,7 +62,7 @@ class Sponsors(models.Model):
     id = models.AutoField(primary_key=True)
     slug = models.CharField(max_length=200, default='', blank=True)
     order = models.IntegerField(default='', blank=True)
-    visible = models.CharField(max_length=200, default='', blank=True)
+    visible = models.BooleanField(default=False)
     guestsEnabled = models.CharField(max_length=200, default='1', blank=True)
     name = models.CharField(max_length=49, default='', blank=True)
     url = models.CharField(max_length=400, default='0', blank=True)
