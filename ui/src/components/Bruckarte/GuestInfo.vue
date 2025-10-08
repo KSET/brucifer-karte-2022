@@ -43,7 +43,7 @@
 
 
 <script>
-import axios from 'axios';
+import { api } from "@/plugins/api";
 export default {
     name: 'GuestInfo',
     components: {
@@ -61,9 +61,8 @@ export default {
     },
     methods: {
         changeEntered(guest, changenum) {
-            axios.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
+            api.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
                 { entered: changenum },
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
             )
                 .then(() => {
                     this.guest.entered = changenum;

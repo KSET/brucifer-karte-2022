@@ -21,6 +21,9 @@
                 v-bind:style="[(user.privilege == '0') ? { color: 'red' } : { color: 'black' }]">{{ user.name }} <br>
                 {{ user.email }}</div>
               <div class="users-element"> <button class="button-priv"
+                  v-bind:style="[(user.privilege == '0') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                  @click="changeprivilege(user, '0')">X</button></div>
+              <div class="users-element"> <button class="button-priv"
                   v-bind:style="[(user.privilege == '3') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
                   @click="changeprivilege(user, '3')">Karte</button></div>
               <div class="users-element"><button class="button-priv"
@@ -177,7 +180,7 @@ export default {
 </script>
 
 
-<style >
+<style>
 .page-header.user-page {
   border-bottom: 0.5px solid black;
 }

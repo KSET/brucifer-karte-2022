@@ -1,5 +1,5 @@
 <template>
-    <div class="grid1-container" id="flex" style="margin-top: 3.75rem">
+    <div class="grid1-container" id="flex">
         <div class="grid-item grid1-item1" id="a">
             <div class="grid2-container" style="width: 100%">
                 <div class="grid-item grid1-item" style="position: relative">
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { api } from "@/plugins/api";
 import GuestInfo from '../../components/Bruckarte/GuestInfo.vue';
 import MobileEntry from '@/components/Bruckarte/MobileEntry.vue'
 import debounce from 'lodash/debounce';
@@ -79,7 +79,7 @@ export default {
     mounted() {
         this.searchGuest = debounce(this.searchGuest, 1000);
 
-        axios.get(process.env.VUE_APP_BASE_URL + '/tags/',)
+        api.get(process.env.VUE_APP_BASE_URL + '/tags/',)
             .then(response => {
                 var itemss = response.data;
                 this.items.push("...");
@@ -110,7 +110,7 @@ export default {
             if (this.search != '' && this.search.length > 2) {
                 console.log("SEARCHING", this.search)
 
-                axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + this.search + ' ' + this.selectedTag + "&search_fields=tag&search_fields=name&search_fields=surname",)
+                api.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + this.search + ' ' + this.selectedTag + "&search_fields=tag&search_fields=name&search_fields=surname",)
                     .then(response => {
                         this.guests = response.data;
 

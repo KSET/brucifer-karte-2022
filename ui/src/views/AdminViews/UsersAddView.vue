@@ -17,6 +17,9 @@
                 <div class="users-elements">
 
                     <div class="users-element add"> <button class="button-priv"
+                            v-bind:style="[(this.privilege == '0') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                            @click="changeprivilege('0')">X</button></div>
+                    <div class="users-element add"> <button class="button-priv"
                             v-bind:style="[(this.privilege == '3') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
                             @click="changeprivilege('3')">Karte</button></div>
                     <div class="users-element add"><button class="button-priv"
@@ -45,10 +48,10 @@
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
-import axios from 'axios'
+import { api } from "@/plugins/api";
 
 export default {
-    name: 'GuestsAdd',
+    name: 'UsersAdd',
     components: {
         Sidebar
     },
@@ -67,7 +70,7 @@ export default {
     },
     methods: {
         created() {
-            axios.get(process.env.VUE_APP_BASE_URL + '/users/',)
+            api.get(process.env.VUE_APP_BASE_URL + '/users/',)
                 .then(response => {
                     this.users = response.data;
                 })
@@ -80,9 +83,8 @@ export default {
                 window.alert("Unesite sve podatke");
             } else {
 
-                await axios.post(process.env.VUE_APP_BASE_URL + '/users/',
+                await api.post(process.env.VUE_APP_BASE_URL + '/users/',
                     { name: this.name, email: this.email, privilege: this.privilege },
-                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
                 )
                     .then(() => {
                         this.created()
