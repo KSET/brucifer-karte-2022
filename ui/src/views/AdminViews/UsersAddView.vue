@@ -70,7 +70,7 @@ export default {
     },
     methods: {
         created() {
-            api.get(process.env.VUE_APP_BASE_URL + '/users/',)
+            api.get('/users/',)
                 .then(response => {
                     this.users = response.data;
                 })
@@ -83,7 +83,7 @@ export default {
                 window.alert("Unesite sve podatke");
             } else {
 
-                await api.post(process.env.VUE_APP_BASE_URL + '/users/',
+                await api.post('/users/',
                     { name: this.name, email: this.email, privilege: this.privilege },
                 )
                     .then(() => {

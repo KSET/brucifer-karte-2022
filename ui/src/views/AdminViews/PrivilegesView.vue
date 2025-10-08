@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     created() {
-      api.get(process.env.VUE_APP_BASE_URL + '/users/',)
+      api.get('/users/',)
         .then(response => {
           this.users = response.data;
           this.users.forEach(element => {

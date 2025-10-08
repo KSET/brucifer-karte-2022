@@ -79,7 +79,7 @@ export default {
     mounted() {
         this.searchGuest = debounce(this.searchGuest, 1000);
 
-        api.get(process.env.VUE_APP_BASE_URL + '/tags/',)
+        api.get('/tags/',)
             .then(response => {
                 var itemss = response.data;
                 this.items.push("...");
@@ -110,7 +110,7 @@ export default {
             if (this.search != '' && this.search.length > 2) {
                 console.log("SEARCHING", this.search)
 
-                api.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + this.search + ' ' + this.selectedTag + "&search_fields=tag&search_fields=name&search_fields=surname",)
+                api.get('/guests/?search=' + this.search + ' ' + this.selectedTag + "&search_fields=tag&search_fields=name&search_fields=surname",)
                     .then(response => {
                         this.guests = response.data;
 

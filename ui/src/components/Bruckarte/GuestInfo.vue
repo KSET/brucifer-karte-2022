@@ -61,7 +61,7 @@ export default {
     },
     methods: {
         changeEntered(guest, changenum) {
-            api.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
+            api.put('/guests/' + guest.id + '/',
                 { entered: changenum },
             )
                 .then(() => {

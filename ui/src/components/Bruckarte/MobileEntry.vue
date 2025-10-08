@@ -75,7 +75,7 @@ export default {
     methods: {
         onDecode(uuid) {
             if (this.checkUUID(uuid)) {
-                api.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + uuid + "&search_fields=tag&search_fields=confCode",)
+                api.get('/guests/?search=Brucoši ' + uuid + "&search_fields=tag&search_fields=confCode",)
                     .then(response => {
                         if (response.data.length == 0) {
                             this.success = 'not-in-db'
