@@ -46,6 +46,7 @@
 
 
                     <button type="submit" class="button submit" style="margin-top: 0px"
+                       
                         v-if="slug === '0'">Dodaj</button>
                     <button type="submit" class="button submit" style="margin-top: 0px" v-else>Spremi
                         promjene</button>

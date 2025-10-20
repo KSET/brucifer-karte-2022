@@ -6,14 +6,22 @@
       <div class="header">
         <h1 class="page-title">Sponzori</h1>
         <router-link class="icon7" to="/admin/sponsors-add/0">
-          <img src="../../assets/icons/add-icon.svg">
+          <img src="../../assets/icons/add-icon.svg" />
         </router-link>
 
-        <button class="button submit" style=" margin-top: 0px;  vertical-align: middle; " @click="sendMail">Pozovi
-          sponzore</button>
+        <button class="button submit" style="margin-top: 0px; vertical-align: middle;" @click="sendMail">
+          Pozovi sponzore
+        </button>
+
+        <ToggleSwitch v-model="isGrid" class="view-toggle" style="margin-left: 1rem;">
+          <template #handle="{ checked }">
+            <i :class="['pi', checked ? 'pi-th-large' : 'pi-list']" />
+          </template>
+        </ToggleSwitch>
+
       </div>
 
-      <sponsors-table></sponsors-table>
+      <sponsors-table :view-mode="isGrid ? 'grid' : 'list'" />
     </div>
   </div>
 </template>
@@ -21,13 +29,20 @@
 <script>
 import SponsorsTable from '@/components/AdminPanel/SponsorsTable.vue'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+import ToggleSwitch from 'primevue/toggleswitch'
 
 import axios from 'axios'
 export default {
   name: 'SponsorsView',
   components: {
     SponsorsTable,
-    Sidebar
+    Sidebar,
+    ToggleSwitch
+  },
+  data() {
+    return {
+      isGrid: false
+    }
   },
   methods: {
     async test() {
@@ -126,7 +141,16 @@ export default {
 
 </script>
 
-<style >
+<style>
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+</style>
+
+<style>
 .switchdiv {
   display: inline;
   margin-right: 2%;
@@ -161,7 +185,6 @@ export default {
   right: 0;
   bottom: 0;
   background-color: #D9D9D9;
-  ;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -192,12 +215,54 @@ input:checked+.slider:before {
   transform: translateX(26px);
 }
 
-/* Rounded sliders */
 .slider.round {
   border-radius: 34px;
 }
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+.view-toggle {
+  --p-toggleswitch-width: 5rem;
+  --p-toggleswitch-height: 2.5rem;
+  --p-toggleswitch-handle-size: 2rem;
+
+  --p-toggleswitch-background: #fff;
+  --p-toggleswitch-checked-background: #000;
+
+  --p-toggleswitch-handle-color: #fff;
+  --p-toggleswitch-handle-background: #000;
+  --p-toggleswitch-checked-handle-background: #fff;
+  --p-toggleswitch-handle-checked-color: #000;
+  --p-toggleswitch-handle-checked-background: #fff;
+
+  --p-toggleswitch-border-color: #000;
+  --p-toggleswitch-checked-border-color: #000;
+
+  --p-toggleswitch-hover-background: var(--p-toggleswitch-background);
+  --p-toggleswitch-checked-hover-background: var(--p-toggleswitch-checked-background);
+  --p-toggleswitch-hover-border-color: var(--p-toggleswitch-border-color);
+  --p-toggleswitch-checked-hover-border-color: var(--p-toggleswitch-checked-border-color);
+
+  --p-toggleswitch-handle-checked-hover-color: var(--p-toggleswitch-handle-checked-color);
+  --p-toggleswitch-handle-checked-hover-background: var(--p-toggleswitch-handle-checked-background);
+
+  --p-toggleswitch-handle-hover-color: var(--p-toggleswitch-handle-color);
+  --p-toggleswitch-handle-hover-background: var(--p-toggleswitch-handle-background);
+
+}
+
+.view-toggle .p-toggleswitch-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none !important;
+}
+
+.view-toggle .p-toggleswitch-handle i {
+  font-size: 1.2rem;
+  line-height: 1;
+  color: inherit;
 }
 </style>

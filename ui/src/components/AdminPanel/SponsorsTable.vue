@@ -1,48 +1,76 @@
 <template>
-  <div class="grid sponsors-table">
-    <div class="card" style="height: 36%;" ref="" v-for="sponsor in sponsors" :key="sponsor.id">
-      <div>
-        <img class="ccard-img" v-bind:src="sponsor.image"
-          v-bind:style="[(sponsor.visible == '0') ? { opacity: '0.25' } : { opacity: '1' }]"
-          style="background-color: #D9D9D9; height: 10rem;">
-      </div>
-      <div class="ccard-body">
-        <h3 class="name"> {{ sponsor.name }} </h3>
+  <DataTable class="sponsors-table" scrollable :value="sponsors" dataKey="id" editMode="cell" reorderableRows
+    @rowReorder="onRowReorder" @cell-edit-complete="onCellEditComplete" stripedRows :pt="{
+      table: { style: 'min-width: 64rem' },
+      column: { bodycell: ({ state }) => ({ class: [{ '!py-0': state['d_editing'] }] }) }
+    }">
+    <!-- Drag handle -->
+    <Column rowReorder :reorderableColumn="false" style="width: 3rem !important" />
 
-        <div class="ccard-buttons">
-          <button v-if="canMoveBack && buttonEnabled" @click="changesponsororder(sponsor, 'b')" class="ccard-button">
-            <img src="../../assets/icons/arrow-left-icon.svg">
-          </button>
+    <!-- Logo (read-only) -->
+    <Column header="Logo" style="width:8rem !important">
+      <template #body="{ data }">
+        <img :src="data.image"
+          :style="{ opacity: data.visible === '0' ? 0.25 : 1, height: '5rem', width: '5rem', background: '#D9D9D9', objectFit: 'contain' }"
+          alt="logo" />
+      </template>
+    </Column>
 
-          <button v-else disabeled class="ccard-button">
-            <img src="../../assets/icons/arrow-left-gray-icon.svg">
-          </button>
+    <!-- Name -->
+    <Column field="name" header="Name" frozen alignFrozen="left">
+      <template #editor="{ data, field }">
+        <InputText v-model="data[field]" autofocus fluid />
+      </template>
+    </Column>
 
-          <button @click="editsponsor(sponsor)" class="ccard-button" style="padding-bottom: 5px;">
-            <img src="../../assets/icons/edit-icon.svg">
-          </button>
+    <!-- Email -->
+    <Column field="email" header="Email" style="min-width:16rem">
+      <template #editor="{ data, field }">
+        <InputText v-model="data[field]" autofocus fluid />
+      </template>
+    </Column>
 
-          <button v-if="canMoveForward && buttonEnabled" @click="changesponsororder(sponsor, 'f')" class="ccard-button">
-            <img src="../../assets/icons/arrow-right-icon.svg">
-          </button>
-          <button v-else disabeled class="ccard-button">
-            <img src="../../assets/icons/arrow-right-gray-icon.svg">
-          </button>
+    <!-- URL -->
+    <Column field="url" header="URL" style="min-width:18rem">
+      <template #body="{ data }">
+        <a :href="data.url" target="_blank" rel="noopener">{{ data.url }}</a>
+      </template>
+      <template #editor="{ data, field }">
+        <InputText v-model="data[field]" autofocus fluid />
+      </template>
+    </Column>
+
+    <!-- guestCap -->
+    <Column field="guestCap" header="Guest Cap" style="width:10rem">
+      <template #editor="{ data, field }">
+        <InputNumber v-model="data[field]" :min="0" :max="9999" :useGrouping="false" autofocus fluid />
+      </template>
+    </Column>
+
+    <!-- Visible: ALWAYS a checkbox -->
+    <Column field="visible" header="Visible" style="width:9rem" :editable="false">
+      <template #body="{ data }">
+        <div class="flex items-center justify-center">
+          <Checkbox v-model="data.visibleBool" :binary="true" @change="onVisibleToggle(data)" />
         </div>
-      </div>
-    </div>
-
-  </div>
+      </template>
+    </Column>
+  </DataTable>
 </template>
 
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import sponsorsStore from '@/store/sponsorsStore'
 
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import InputText from 'primevue/inputtext'
+import InputNumber from 'primevue/inputnumber'
+import Checkbox from 'primevue/checkbox'
+
 export default {
   name: 'SponsorsTable',
-  components: { Sidebar },
-
+  components: { DataTable, Column, InputText, InputNumber, Checkbox },
   data() {
     return {
       buttonEnabled: true,
@@ -125,52 +153,38 @@ export default {
 </style>
 
 <style>
-.grid {
-  height: 85%;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-gap: 20px;
-  overflow: auto;
+.sponsors-table {
+  --p-inputtext-focus-border-color: black;
+  font-size: 0.85rem !important;
 }
 
-.name {
-  position: relative;
-  width: 100%;
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  /* identical to box height, or 257% */
-
-  text-align: center;
-  align-items: center;
-  letter-spacing: -0.015em;
-  vertical-align: bottom;
+.p-datatable .p-cell-editing {
+  padding: 0 !important;
 }
 
-.ccard-body {
-  background-color: #D9D9D9;
+.sponsors-table .p-datatable-thead>tr>th,
+.sponsors-table .p-datatable-tbody>tr>td {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  vertical-align: middle;
 }
 
-.ccard-img {
-  position: relative;
-  width: 150%;
-  object-fit: contain;
+.sponsors-table .p-datatable-tbody>tr>td {
+  white-space: normal;
+  word-break: break-word;
+  max-width: 200px;
 }
 
-.ccard-buttons {
-  display: grid;
-  margin: 1%;
-  column-gap: 20%;
-  grid-template-columns: 19% 20% 19%;
+.p-inputtext {
+  font-size: 0.85rem !important;
 }
 
-.ccard-button {
-  border: 0px;
-  background-color: #D9D9D9;
+thead,
+tr {
+  width: 100% !important;
 }
 
-.card {
-  height: 40%;
+td {
+  width: fit-content !important;
 }
 </style>
