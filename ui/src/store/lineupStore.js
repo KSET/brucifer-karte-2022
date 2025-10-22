@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import { api } from '@/plugins/api'
+import { publicApi } from '@/plugins/publicApi'
 
 export default createStore({
   state: {
@@ -130,7 +131,7 @@ export default createStore({
     async fetchVisible({ commit }) {
       commit('SET_LOADING', true); commit('SET_ERROR', null)
       try {
-        const { data } = await api.get('/public/lineup/', {
+        const { data } = await publicApi.get('/public/lineup/', {
           params: { ordering: 'order' },
         })
         commit('SET_LIST', data)
