@@ -86,7 +86,6 @@ import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import NavbarBweb from '@/components/NavbarAndFooter/NavbarBweb.vue'
 import store from '@/store/visibilityStore'
 import { publicApi } from "@/plugins/publicApi";
-import { api } from '@/plugins/api';
 
 export default {
     components: { Footer, NavbarBweb },
@@ -167,8 +166,8 @@ export default {
     methods: {
         created() {
             if (this.slug !== '0') {
-                api
-                    .get(`${process.env.VUE_APP_BASE_URL}/sponsors/public/guests/`, {
+                publicApi
+                    .get(`/sponsors/public/guests/`, {
                         params: { slug: this.slug }
                     })
                     .then(response => {
@@ -182,8 +181,8 @@ export default {
             }
         },
         sponsorDelete(guest) {
-            api.delete(
-                `${process.env.VUE_APP_BASE_URL}/sponsors/public/guests/`,
+            publicApi.delete(
+                `/sponsors/public/guests/`,
                 { params: { slug: this.slug, id: guest.id } }
             ).then(() => {
                 this.created();
@@ -209,7 +208,7 @@ export default {
                 name: guestName,
             };
 
-            api.post(`${process.env.VUE_APP_BASE_URL}/sponsors/public/guests/`, payload)
+            publicApi.post(`/sponsors/public/guests/`, payload)
                 .then(() => {
                     this.sponsorName = "";
                     this.created();
