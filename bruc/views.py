@@ -240,6 +240,103 @@ class SponsorsViewSet(viewsets.ModelViewSet):
     ordering_fields = ['order']
     permission_classes = [IsAuthenticated]
 
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny], url_path='public')
+    def public(self, request):
+        """
+        GET /api/sponsors/public/?slug=<slug>
+        Returns a trimmed, safe payload for the sponsor portal.
+        """
+        slug = request.query_params.get('slug')
+        if not slug:
+            return Response({"detail": "slug is required"}, status=400)
+
+        sponsor = Sponsors.objects.filter(slug=slug, visible=True).first()
+        if not sponsor:
+            return Response({"detail": "Not found"}, status=404)
+
+        serializer = self.get_serializer(sponsor)
+        return Response(serializer.data)
+
+    @action(
+        detail=False,
+        methods=['get', 'post', 'delete'],
+        permission_classes=[AllowAny],
+        url_path='public/guests'
+    )
+    def public_guests(self, request):
+        """
+        GET    /api/sponsors/public/guests/?slug=<slug>
+        POST   /api/sponsors/public/guests/
+        DELETE /api/sponsors/public/guests/?slug=<slug>&id=<guest_id>
+        """
+
+        # ------------------ GET ------------------
+        if request.method == 'GET':
+            slug = (request.query_params.get("slug") or "").strip()
+            if not slug:
+                return Response({"detail": "slug is required"}, status=400)
+
+            sponsor = Sponsors.objects.filter(slug=slug, visible=True).first()
+            if not sponsor:
+                return Response({"detail": "Sponsor not found"}, status=404)
+
+            tag_prefix = f"{sponsor.slug} "
+            qs = Guests.objects.filter(tag__istartswith=tag_prefix).order_by("id")
+
+            return Response(
+                GuestsSerializer(qs, many=True).data,
+                status=200,
+            )
+
+        # ------------------ DELETE ------------------
+        if request.method == 'DELETE':
+            slug = (request.query_params.get("slug") or "").strip()
+            guest_id = (request.query_params.get("id") or "").strip()
+
+            if not slug or not guest_id:
+                return Response({"detail": "slug and id are required"}, status=400)
+
+            sponsor = Sponsors.objects.filter(slug=slug).first()
+            if not sponsor:
+                return Response({"detail": "Sponsor not found"}, status=404)
+
+            guest = Guests.objects.filter(id=guest_id, tag__icontains=sponsor.slug).first()
+            if not guest:
+                return Response({"detail": "Guest not found"}, status=404)
+
+            guest.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        # ------------------ POST ------------------
+        slug = (request.data.get("slug") or "").strip()
+        name = (request.data.get("name") or "").strip()
+
+        if not slug or not name:
+            return Response({"detail": "slug and name are required"}, status=400)
+
+        sponsor = Sponsors.objects.filter(slug=slug).first()
+        if not sponsor:
+            return Response({"detail": "Sponsor not found"}, status=404)
+
+        if getattr(sponsor, "guestCap", None) is not None:
+            count = Guests.objects.filter(tag__icontains=sponsor.slug).count()
+            if count >= int(sponsor.guestCap):
+                return Response({"detail": "Guest limit reached"}, status=409)
+
+        tag = f"{sponsor.slug} VIP - Sponzor - {sponsor.name}"
+
+        guest = Guests.objects.create(
+            name=name,
+            tag=tag,
+            bought=True,
+            entered=False,
+        )
+
+        return Response(
+            {"id": guest.id, "name": guest.name, "tag": guest.tag},
+            status=status.HTTP_201_CREATED,
+        )
+
     @transaction.atomic
     def perform_create(self, serializer):
         """

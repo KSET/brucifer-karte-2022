@@ -1,6 +1,5 @@
 <template>
     <div class="bw-page-container sponsors-page">
-        <NavbarBweb></NavbarBweb>
         <div class="popis">
 
             <div v-if="this.guestsEnabled != 0" class="popis-element1">
@@ -16,7 +15,8 @@
             </div>
 
             <div>
-                <h1 v-if="this.guestsEnabled == 0" class="page-title-dis" style="margin-left: 50px; margin-top: 70px;">Popis
+                <h1 v-if="this.guestsEnabled == 0" class="page-title-dis" style="margin-left: 50px; margin-top: 70px;">
+                    Popis
                     uzvanika</h1>
 
                 <div v-if="this.guestsEnabled != 0" class="infofield">
@@ -61,9 +61,9 @@
         <div class="sponsorsPage-table">
             <div class=row>
                 <table id="guests">
-                    <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" style="overflow:auto;height: 35rem !important;"
-                        class="tbody">
-                        <tr v-for="guest in sponsorGuests" :key="guest.id">
+                    <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }"
+                        style="overflow:auto;height: 35rem !important;" class="tbody">
+                        <tr v-for="guest in sponsorGuests" style=" width: 100%;" :key="guest.id">
                             <td style="padding-left: 20% !important;">{{ guest.name }}</td>
                             <td v-if="this.guestsEnabled != 0" style="padding-left: 10% !important;"><button
                                     class="button-icon" @click=sponsorDelete(guest)
@@ -77,15 +77,16 @@
             </div>
         </div>
 
-        <Footer></Footer>
     </div>
+    <Footer></Footer>
 </template>
 
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import NavbarBweb from '@/components/NavbarAndFooter/NavbarBweb.vue'
 import store from '@/store/visibilityStore'
-import axios from 'axios'
+import { publicApi } from "@/plugins/publicApi";
+import { api } from '@/plugins/api';
 
 export default {
     components: { Footer, NavbarBweb },
@@ -97,7 +98,6 @@ export default {
             progress: 0,
             message: "",
 
-            sponsorss: [],
             name: '',
             id: '',
             len: '',
@@ -112,14 +112,14 @@ export default {
     mounted() {
         this.slug = this.$route.params.slug;
         if (this.slug != '0') {
-            axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.slug + "&search_fields=slug")
+            publicApi.get("/sponsors/public/", { params: { slug: this.slug } })
                 .then(async response => {
                     this.sponsors = response.data;
                     if (this.sponsors.length == 0) {
                         this.$router.push({ path: '/admin/sponsors-add/0' });
                     }
 
-                    this.sponsorsInstance = this.sponsors[0];
+                    this.sponsorsInstance = this.sponsors;
                     this.name = this.sponsorsInstance.name;
                     this.previewImage = this.sponsorsInstance.image;
                     this.id = this.sponsorsInstance.id;
@@ -130,11 +130,9 @@ export default {
 
                     this.guestsEnabled = this.sponsorsInstance.guestsEnabled;
 
-
-
-                    console.log(this.guestsEnabled)
                     if (this.guestsEnabled != 2) {
                         let closeTime = Date.parse(store.state.SPONSORS_INPUT_TIME); // pravi closetime 12.11.2022 u 19.00
+                        console.log(closeTime)
                         if (Date.now() > closeTime) {
                             console.log("zatvaraaaaj")
                             console.log(this.sponsorsInstance)
@@ -168,50 +166,60 @@ export default {
 
     methods: {
         created() {
-
-            if (this.slug != '0') {
-                axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + this.slug + "&search_fields=tag")
+            if (this.slug !== '0') {
+                api
+                    .get(`${process.env.VUE_APP_BASE_URL}/sponsors/public/guests/`, {
+                        params: { slug: this.slug }
+                    })
                     .then(response => {
                         this.sponsorGuests = response.data;
                         this.guestsAdded = this.sponsorGuests.length;
-                        axios.get(process.env.VUE_APP_BASE_URL + '/guests/')
-                            .then(response => {
-                                this.guests = response.data;
-                            })
                     })
-
-            } else {
-                axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?ordering=order',)
-                    .then(response => {
-                        this.sponsorss = response.data;
-                    })
+                    .catch(err => {
+                        const msg = err?.response?.data?.detail || "Greška pri dohvaćanju gostiju";
+                        window.alert(msg);
+                    });
             }
         },
         sponsorDelete(guest) {
-            axios.delete(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-            )
-                .then(() => {
-                    this.created();
-                })
+            api.delete(
+                `${process.env.VUE_APP_BASE_URL}/sponsors/public/guests/`,
+                { params: { slug: this.slug, id: guest.id } }
+            ).then(() => {
+                this.created();
+            }).catch(err => {
+                const msg = err?.response?.data?.detail || "Greška pri brisanju gosta";
+                window.alert(msg);
+            });
         },
         sponsorPost() {
-            if (this.guestCap == this.guestsAdded) {
-                window.alert("Već ste unjeli maximum dozvoljenih gostiju")
-            } else {
-
-                let sponsorTag = this.slug + "VIP - Sponzor - " + this.name;
-
-                axios.post(process.env.VUE_APP_BASE_URL + '/guests/',
-                    { name: this.sponsorName, tag: sponsorTag, bought: '1', entered: '0' },
-                    { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-                )
-                    .then(() => {
-                        this.sponsorName = "";
-                        this.created()
-                    })
+            // Check if sponsor reached guest limit
+            if (this.guestCap === this.guestsAdded) {
+                window.alert("Već ste unijeli maksimalan broj dozvoljenih gostiju");
+                return;
             }
+
+            const guestName = (this.sponsorName || "").trim();
+            if (!guestName) {
+                return;
+            }
+
+            const payload = {
+                slug: this.slug,
+                name: guestName,
+            };
+
+            api.post(`${process.env.VUE_APP_BASE_URL}/sponsors/public/guests/`, payload)
+                .then(() => {
+                    this.sponsorName = "";
+                    this.created();
+                })
+                .catch(err => {
+                    const msg = err?.response?.data?.detail || "Greška pri unosu gosta";
+                    window.alert(msg);
+                });
         }
+
     }
 }
 </script>
@@ -286,7 +294,6 @@ export default {
 
 .popis {
     position: relative;
-    margin-top: 2%;
     display: grid;
     grid-template-rows: 55% 45%;
     width: 100%;
@@ -359,7 +366,7 @@ h1 {
 
 .footery {
     background: var(--bw-footer-color);
-;
+    ;
 }
 
 .footery::after {

@@ -75,6 +75,7 @@ import { uuid } from 'vue-uuid'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import sponsorsStore from '@/store/sponsorsStore'
 import ToggleSwitch from 'primevue/toggleswitch'
+import visibilityStore from '@/store/visibilityStore'
 
 export default {
     name: "SponsorsAdd",
@@ -119,7 +120,7 @@ export default {
             this.url = sponsor.url
             this.email = sponsor.email
             this.guestCap = sponsor.guestCap
-            this.guestsEnabled = sponsor.guestsEnabled
+            this.guestsEnabled = sponsor.guestsEnabled == "1" ? true : false;
             this.visible = sponsor.visible
             this.currentImage = sponsor.image
         } else {
@@ -172,8 +173,8 @@ export default {
             formData.append("visible", this.visible ? "1" : "0")
 
             // guestsEnabled logic
-            if (this.guestsEnabled === '1') {
-                const closeTime = 1668276000000
+            if (this.guestsEnabled === true) {
+                const closeTime = Date.parse(visibilityStore.state.SPONSORS_INPUT_TIME);
                 formData.append("guestsEnabled", Date.now() > closeTime ? "2" : "1")
             } else {
                 formData.append("guestsEnabled", "0")
