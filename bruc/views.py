@@ -238,7 +238,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
     serializer_class = SponsorsSerializer
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     ordering_fields = ['order']
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     @action(detail=False, methods=['get'], permission_classes=[AllowAny], url_path='public')
     def public(self, request):
