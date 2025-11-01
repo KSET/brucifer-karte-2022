@@ -85,7 +85,6 @@
 </style>
 
 <script>
-import axios from 'axios';
 import RouterElement from '@/components/AdminPanel/RouterElement.vue'
 import store from '@/store/visibilityStore';
 import translationsStore from "@/store/translationsStore.js";
@@ -283,7 +282,7 @@ export default {
   display: none !important;
 }
 
-@media screen and (max-width: 980px) {
+@media screen and (max-width: 1260px) {
   .hideDesktop {
     display: inline-block !important;
   }

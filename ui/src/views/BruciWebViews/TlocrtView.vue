@@ -1,6 +1,5 @@
 <template>
-  <div class="page-container">
-    <NavbarBweb></NavbarBweb>
+  <div class="bw-page-container">
     <div class="tlocrt">
       <div class="image">
         <img class="tlocrt-desktop" src="../../assets/tlocrt/tlocrt-desktop.svg" alt="Brucifer Tlocrt" />

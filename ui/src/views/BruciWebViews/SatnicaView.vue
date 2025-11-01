@@ -1,6 +1,5 @@
 <template>
   <div class="page-container">
-    <NavbarBweb></NavbarBweb>
     <div class="satnica">
       <div class="image">
         <img class="satnica-desktop" src="../../assets/satnica/satnica-desktop.svg" alt="Brucifer Satnica" />

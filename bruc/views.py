@@ -34,7 +34,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
+from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission, IsAuthenticatedOrReadOnly
 from django.contrib.auth.models import User as DjangoUser
 
 from datetime import datetime, time
@@ -426,6 +426,8 @@ class VisibilityViewSet(viewsets.ModelViewSet):
     filter_backends = [DynamicSearchFilter]
     search_fields = ['name']
 
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
 
 class TranslationsViewSet(viewsets.ModelViewSet):
     queryset = Translations.objects.all()
@@ -434,6 +436,8 @@ class TranslationsViewSet(viewsets.ModelViewSet):
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     search_fields = ['key']
     ordering_fields = ['key']
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 class GameLeaderboardViewSet(viewsets.ModelViewSet):
     queryset = GameLeaderboard.objects.all()
