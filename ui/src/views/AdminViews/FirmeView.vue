@@ -1,7 +1,7 @@
 <template>
     <div id="firme">
         <Sidebar />
-        <div class="admin-page-container">            
+        <div class="admin-page-container">
             <h1 class="page-title">Firme</h1>
 
             <h1 class="textfield">Ime Firme</h1>
@@ -27,10 +27,10 @@
     </div>
 
 </template>
-  
+
 <script>
-import axios from 'axios'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+import { api } from '@/plugins/api';
 
 export default {
     name: 'GuestsTable',
@@ -54,13 +54,13 @@ export default {
     },
     methods: {
         created() {
-            axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/',)
+            api.get('/sponsors/',)
                 .then(response => {
                     this.firms = response.data;
                     this.firms.splice(0, 1);
 
                     this.firms.forEach(element => {
-                        axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + element.slug + "&search_fields=tag")
+                        api.get('/guests/?search=' + element.slug + "&search_fields=tag")
                             .then(response => {
                                 var sponsorGuests = response.data;
                                 element.guestsAdded = sponsorGuests.length;
@@ -78,7 +78,7 @@ export default {
                 })
         },
         searchFirm() {
-            axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/?search=' + this.search + "&search_fields=name",)
+            api.get('/sponsors/?search=' + this.search + "&search_fields=name",)
                 .then(response => {
                     this.firms = response.data;
                     var ids = [];
@@ -90,7 +90,7 @@ export default {
                     }
 
                     this.firms.forEach(element => {
-                        axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=' + element.slug + "&search_fields=tag")
+                        api.get('/guests/?search=' + element.slug + "&search_fields=tag")
                             .then(response => {
                                 var sponsorGuests = response.data;
                                 element.guestsAdded = sponsorGuests.length;
@@ -110,7 +110,3 @@ export default {
 
 }
 </script>
-
-  
-  
-  
