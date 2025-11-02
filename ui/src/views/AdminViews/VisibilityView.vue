@@ -212,13 +212,13 @@ export default {
         async changeVisibility(changeField, val) {
             if (changeField == "TIMER_TIME" || changeField == "SPONSORS_INPUT_TIME") {
                 if (window.confirm("Pokušavate promijeniti jedno od VREMENA, jeste li sigurni?")) {
-                    await api.put(process.env.VUE_APP_BASE_URL + '/visibility/' + changeField + '/',
+                    await api.put('/visibility/' + changeField + '/',
                         { visible: val },
                     )
                     await store.dispatch("fetchVisibilityData")
                 }
             } else {
-                await api.put(process.env.VUE_APP_BASE_URL + '/visibility/' + changeField + '/',
+                await api.put('/visibility/' + changeField + '/',
                     { visible: val },
                 )
                 await store.dispatch("fetchVisibilityData")
