@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import { api } from "@/plugins/api";
+import { publicApi } from "@/plugins/publicApi";
 
 export default createStore({
   state: {
@@ -55,7 +55,7 @@ export default createStore({
   actions: {
     async fetchVisibilityData({ commit }) {
       try {
-        const response = await api.get(
+        const response = await publicApi.get(
           `/visibility/`
         );
         const visibilityResp = response.data.reduce((result, obj) => {
