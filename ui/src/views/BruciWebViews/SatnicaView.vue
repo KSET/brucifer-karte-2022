@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container">
+  <div class="bw-page-container">
     <div class="satnica">
       <div class="image">
         <img class="satnica-desktop" src="../../assets/satnica/satnica-desktop.svg" alt="Brucifer Satnica" />
@@ -30,7 +30,6 @@ export default {
 .satnica {
   width: 100%;
   min-height: 93vh;
-  padding-top: 3rem;
 }
 
 .satnica-desktop {
