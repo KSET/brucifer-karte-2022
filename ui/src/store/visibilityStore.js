@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import axios from "axios";
+import { api } from "@/plugins/api";
 
 export default createStore({
   state: {
@@ -55,8 +55,8 @@ export default createStore({
   actions: {
     async fetchVisibilityData({ commit }) {
       try {
-        const response = await axios.get(
-          `${process.env.VUE_APP_BASE_URL}/visibility/`
+        const response = await api.get(
+          `/visibility/`
         );
         const visibilityResp = response.data.reduce((result, obj) => {
           result[obj.name] = obj.visible;
