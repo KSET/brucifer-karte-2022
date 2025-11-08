@@ -7,7 +7,7 @@ from django.db.models.signals import post_delete
 
 class Guests(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50, default='', blank=True)
+    name = models.CharField(max_length=100, default='', blank=True)
     surname = models.CharField(max_length=50, default='', blank=True)
     jmbag = models.CharField(max_length=50, default='', blank=True)
     email = models.CharField(max_length=50, default='', blank=True)
