@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { api } from '@/plugins/api'
 export default {
   name: 'GuestsTable',
   props: {
@@ -70,24 +70,21 @@ export default {
     loggg() {
     },
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši&search_fields=tag',)
+      api.get('/guests/?search=Brucoši&search_fields=tag')
         .then(response => {
           this.guests = response.data;
 
         })
     },
     changeBought(guest, changenum) {
-      axios.put(process.env.VUE_APP_BASE_URL + '/guests/' + guest.id + '/',
-        { bought: changenum },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
+      api.put('/guests/' + guest.id + '/', { bought: changenum })
         .then(() => {
           this.created();
         })
 
     },
     searchGuest() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/guests/?search=Brucoši ' + this.search + "&search_fields=tag&search_fields=name&search_fields=surname",)
+      api.get('/guests/?search=Brucoši ' + this.search + '&search_fields=tag&search_fields=name&search_fields=surname')
         .then(response => {
           this.guests = response.data;
         })

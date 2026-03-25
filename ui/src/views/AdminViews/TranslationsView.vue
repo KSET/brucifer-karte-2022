@@ -32,7 +32,7 @@
 </template>
   
 <script>
-import axios from 'axios'
+import { api } from '@/plugins/api'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import translationsStore from "@/store/translationsStore.js";
 
@@ -54,9 +54,8 @@ export default {
     },
     methods: {
         async postTranslation() {
-            await axios.post(process.env.VUE_APP_BASE_URL + '/translations/',
-                { key: this.key, value: this.value },
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+            await api.post('/translations/',
+                { key: this.key, value: this.value }
             )
 
             this.key = "";
@@ -66,23 +65,19 @@ export default {
         },
         async deleteTranslation(translation) {
             console.log(translation)
-            await axios.delete(process.env.VUE_APP_BASE_URL + '/translations/' + translation.id + '/',
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-            )
+            await api.delete('/translations/' + translation.id + '/')
             await translationsStore.dispatch("fetchTranslations")
         },
         async changeTranslationValue(translation) {
             let changeVal = event.target.innerHTML.replace(/<(?!br\s*\/?)[^>]+>/gi, '').replace('<br>', '\n\n')
-            await axios.put(process.env.VUE_APP_BASE_URL + '/translations/' + translation.id + '/',
-                { value: changeVal },
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+            await api.put('/translations/' + translation.id + '/',
+                { value: changeVal }
             )
         },
         async changeTranslationKey(translation) {
             let changeKey = event.target.innerHTML.replace(/<(?!br\s*\/?)[^>]+>/gi, '').replace('<br>', '\n\n')
-            await axios.put(process.env.VUE_APP_BASE_URL + '/translations/' + translation.id + '/',
-                { key: changeKey },
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+            await api.put('/translations/' + translation.id + '/',
+                { key: changeKey }
             )
         },
         changeValue() {

@@ -306,7 +306,7 @@ export default {
             try {
                 // Send email
                 await api.post(
-                    `${process.env.VUE_APP_BASE_URL}/mailer/send_mail/`,
+                    '/mailer/send_mail/',
                     {
                         emails: [
                             {
@@ -318,12 +318,6 @@ export default {
                                 to_mail: email,
                             },
                         ],
-                    },
-                    {
-                        auth: {
-                            username: process.env.VUE_APP_DJANGO_USER,
-                            password: process.env.VUE_APP_DJANGO_PASS,
-                        },
                     }
                 );
 

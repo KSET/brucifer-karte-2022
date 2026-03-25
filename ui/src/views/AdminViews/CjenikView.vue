@@ -91,7 +91,7 @@
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
-import axios from 'axios'
+import { api } from '@/plugins/api'
 
 export default {
   name: 'GuestsAdd',
@@ -126,7 +126,7 @@ export default {
     async created() {
       this.artikli = [];
       this.tags.forEach(async element => {
-        const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?ordering=order&search=' + element + '&search_fields=tag',)
+        const resp = await api.get('/cjenik/?ordering=order&search=' + element + '&search_fields=tag')
         if (resp.data.length != 0) {
           resp.data.forEach(element => {
             this.artikli.push(element)
@@ -142,13 +142,8 @@ export default {
 
       if (curIndex != "0") {
         if (artikl.tag == nextArtikl.tag) {
-          await axios.put(process.env.VUE_APP_BASE_URL + '/cjenik/' + artikl.id + '/',
-            { order: nextArtikl.order },
-            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } })
-
-          await axios.put(process.env.VUE_APP_BASE_URL + '/cjenik/' + nextArtikl.id + '/',
-            { order: artikl.order },
-            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } })
+          await api.put('/cjenik/' + artikl.id + '/', { order: nextArtikl.order })
+          await api.put('/cjenik/' + nextArtikl.id + '/', { order: artikl.order })
         }
         window.location.reload();
       }
@@ -160,13 +155,8 @@ export default {
 
       if (nextIndex != this.artikli.length) {
         if (artikl.tag == nextArtikl.tag) {
-          await axios.put(process.env.VUE_APP_BASE_URL + '/cjenik/' + artikl.id + '/',
-            { order: nextArtikl.order },
-            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } })
-
-          await axios.put(process.env.VUE_APP_BASE_URL + '/cjenik/' + nextArtikl.id + '/',
-            { order: artikl.order },
-            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } })
+          await api.put('/cjenik/' + artikl.id + '/', { order: nextArtikl.order })
+          await api.put('/cjenik/' + nextArtikl.id + '/', { order: artikl.order })
         }
         this.created()
       }
@@ -187,7 +177,7 @@ export default {
     },
 
     async postArtikl() {
-      const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/cjenik/?ordering=order&search=' + this.selectedTag + '&search_fields=tag',)
+      const resp = await api.get('/cjenik/?ordering=order&search=' + this.selectedTag + '&search_fields=tag')
       let nextOrder = "00";
 
       let cjenik = resp.data;
@@ -207,18 +197,15 @@ export default {
         }
       }
 
-      axios.post(process.env.VUE_APP_BASE_URL + '/cjenik/',
-        { name: this.name, tag: this.selectedTag, order: nextOrder, priceEUR: this.priceEUR, volume: this.volume },
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+      api.post('/cjenik/',
+        { name: this.name, tag: this.selectedTag, order: nextOrder, priceEUR: this.priceEUR, volume: this.volume }
       ).then(() => {
         this.created()
       })
 
     },
     deleteArtikl(artikl) {
-      axios.delete(process.env.VUE_APP_BASE_URL + '/cjenik/' + artikl.id + '/',
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
+      api.delete('/cjenik/' + artikl.id + '/')
         .then(() => {
           this.created()
         })

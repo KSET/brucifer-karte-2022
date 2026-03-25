@@ -86,6 +86,7 @@ import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import NavbarBweb from '@/components/NavbarAndFooter/NavbarBweb.vue'
 import store from '@/store/visibilityStore'
 import { publicApi } from "@/plugins/publicApi";
+import { api } from "@/plugins/api";
 
 export default {
     components: { Footer, NavbarBweb },
@@ -142,13 +143,8 @@ export default {
                             this.guestsEnabled = 0;
 
 
-                            const resp = await axios.put(process.env.VUE_APP_BASE_URL + "/sponsors/" + this.sponsorsInstance.id + "/", formData,
-                                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } },
-                                {
-                                    headers: {
-                                        "Content-Type": "multipart/form-data"
-
-                                    }
+                            const resp = await api.put("/sponsors/" + this.sponsorsInstance.id + "/", formData, {
+                                    headers: { "Content-Type": "multipart/form-data" }
                                 })
 
                             console.log("posted")

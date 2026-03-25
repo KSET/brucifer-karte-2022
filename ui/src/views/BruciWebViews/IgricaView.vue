@@ -39,7 +39,7 @@
 
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
-import axios from 'axios';
+import { api } from '@/plugins/api';
 import translationsStore from '@/store/translationsStore';
 import visibilityStore from '@/store/visibilityStore';
 import debounce from 'lodash/debounce';
@@ -73,7 +73,7 @@ export default {
     methods: {
         async fetchLeaderboardData() {
             try {
-                const response = await axios.get(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/?ordering=-score');
+                const response = await api.get('/gameLeaderboard/?ordering=-score');
                 this.leaderboardData = response.data.slice(0, 20);;
             } catch (error) {
                 console.error('Error fetching leaderboard data:', error);
@@ -85,35 +85,28 @@ export default {
         },
         async sendScoreToBackend(scoreData) {
 
-            const response = await axios.get(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/?search=' +
+            const response = await api.get('/gameLeaderboard/?search=' +
                 scoreData.mail + '&search_fields=email');
 
             if (response.data.length > 0) {
                 let user = response.data[0];
                 if (user.score < scoreData.score) {
-                    await axios.delete(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/' + user.id + '/',
-                        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } });
-                    await axios.post(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/', {
+                    await api.delete('/gameLeaderboard/' + user.id + '/');
+                    await api.post('/gameLeaderboard/', {
                         name: scoreData.nickname,
                         email: scoreData.mail,
                         score: scoreData.score
-                    }, {
-                        auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS }
                     });
                 } else {
-                    await axios.put(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/' + user.id + '/', {
+                    await api.put('/gameLeaderboard/' + user.id + '/', {
                         name: scoreData.nickname
-                    }, {
-                        auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS }
                     });
                 }
             } else {
-                await axios.post(process.env.VUE_APP_BASE_URL + '/gameLeaderboard/', {
+                await api.post('/gameLeaderboard/', {
                     name: scoreData.nickname,
                     email: scoreData.mail,
                     score: scoreData.score
-                }, {
-                    auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS }
                 });
             }
 

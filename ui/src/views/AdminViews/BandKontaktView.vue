@@ -60,7 +60,7 @@
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
-import axios from 'axios'
+import { api } from '@/plugins/api'
 
 export default {
   name: 'GuestsAdd',
@@ -93,7 +93,7 @@ export default {
       window.open(tel);
     },
     created() {
-      axios.get(process.env.VUE_APP_BASE_URL + '/contact/',)
+      api.get('/contact/')
         .then(response => {
           this.bandcontacts = response.data;
           this.len = this.bandcontacts.length;
@@ -112,9 +112,8 @@ export default {
 
     postBandContact() {
       if (this.bandName && this.bookerName && this.bookerPhone) {
-        axios.post(process.env.VUE_APP_BASE_URL + '/contact/',
-          { bandName: this.bandName, bookerName: this.bookerName, bookerPhone: this.bookerPhone },
-          { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+        api.post('/contact/',
+          { bandName: this.bandName, bookerName: this.bookerName, bookerPhone: this.bookerPhone }
         )
           .then(() => {
             this.bookerName = "";
@@ -125,9 +124,7 @@ export default {
       }
     },
     deleteBandContact(bandcontact) {
-      axios.delete(process.env.VUE_APP_BASE_URL + '/contact/' + bandcontact.id + '/',
-        { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-      )
+      api.delete('/contact/' + bandcontact.id + '/')
         .then(() => {
           this.created();
         })

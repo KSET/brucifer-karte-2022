@@ -22,7 +22,7 @@
 import SponsorsTable from '@/components/AdminPanel/SponsorsTable.vue'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
-import axios from 'axios'
+import { api } from '@/plugins/api'
 export default {
   name: 'SponsorsView',
   components: {
@@ -49,8 +49,8 @@ export default {
 
     async sendMail() {
       if (window.confirm("Klikom na OK šaljete mail SVIM sponzorima!!!")) {
-        const resp = await axios.get(process.env.VUE_APP_BASE_URL + '/sponsors/')
-        const res = await axios.get(process.env.VUE_APP_BASE_URL + '/mailer/')
+        const resp = await api.get('/sponsors/')
+        const res = await api.get('/mailer/')
 
         let emails = []
         resp.data.forEach(elementy => {
@@ -96,7 +96,7 @@ export default {
                   to_mail: e
                 })
               })
-              await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/',
+              await api.post('/mailer/',
                 {
                   subject: "[KSET] Link za uređivanje popisa za 42. Brucošijadu FER-a",
                   template: "sponsors_email",
@@ -104,18 +104,12 @@ export default {
                   name: element.name,
                   link: "https://brucosijada.kset.org/sponzori/" + element.slug,
                   to_mail: email.join(", ")
-                },
-                { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
+                }
               )
             }
           });
 
-          await axios.post(process.env.VUE_APP_BASE_URL + '/mailer/send_mail/',
-            {
-              emails: emails
-            },
-            { auth: { username: process.env.VUE_APP_DJANGO_USER, password: process.env.VUE_APP_DJANGO_PASS } }
-          )
+          await api.post('/mailer/send_mail/', { emails: emails })
 
         }
       }
