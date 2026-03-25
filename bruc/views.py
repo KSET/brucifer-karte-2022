@@ -35,10 +35,14 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission, IsAuthenticatedOrReadOnly
+from rest_framework.throttling import AnonRateThrottle
 from django.contrib.auth.models import User as DjangoUser
 
 from datetime import datetime, time
 from django.utils.timezone import make_aware
+
+class SponsorGuestThrottle(AnonRateThrottle):
+    rate = '30/hour'
 
 class MailerViewSet(viewsets.ModelViewSet):
     queryset = Mailer.objects.all()
@@ -238,7 +242,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
     serializer_class = SponsorsSerializer
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     ordering_fields = ['order']
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['get'], permission_classes=[AllowAny], url_path='public')
     def public(self, request):
@@ -261,6 +265,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
         detail=False,
         methods=['get', 'post', 'delete'],
         permission_classes=[AllowAny],
+        throttle_classes=[SponsorGuestThrottle],
         url_path='public/guests'
     )
     def public_guests(self, request):
@@ -300,7 +305,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
             if not sponsor:
                 return Response({"detail": "Sponsor not found"}, status=404)
 
-            guest = Guests.objects.filter(id=guest_id, tag__icontains=sponsor.slug).first()
+            guest = Guests.objects.filter(id=guest_id, tag__istartswith=sponsor.slug).first()
             if not guest:
                 return Response({"detail": "Guest not found"}, status=404)
 
@@ -460,7 +465,7 @@ class AllowPostAnyOtherwiseAuthenticated(BasePermission):
 class BrucosiFormResponseViewSet(viewsets.ModelViewSet):
     queryset = BrucosiFormResponse.objects.all()
     serializer_class = BrucosiFormResponseSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [AllowPostAnyOtherwiseAuthenticated]
 
     @action(detail=False, methods=['post'], url_path='brucosi-form-submit')
     def brucosi_form_submit(self, request):
