@@ -322,11 +322,12 @@ class SponsorsViewSet(viewsets.ModelViewSet):
         if request.method == 'DELETE':
             slug = (request.query_params.get("slug") or "").strip()
             guest_id = (request.query_params.get("id") or "").strip()
+            access_token = (request.query_params.get("access_token") or "").strip()
 
-            if not slug or not guest_id:
-                return Response({"detail": "slug and id are required"}, status=400)
+            if not slug or not guest_id or not access_token:
+                return Response({"detail": "slug, id and access_token are required"}, status=400)
 
-            sponsor = Sponsors.objects.filter(slug=slug).first()
+            sponsor = Sponsors.objects.filter(slug=slug, access_token=access_token).first()
             if not sponsor:
                 return Response({"detail": "Sponsor not found"}, status=404)
 
@@ -340,11 +341,12 @@ class SponsorsViewSet(viewsets.ModelViewSet):
         # ------------------ POST ------------------
         slug = (request.data.get("slug") or "").strip()
         name = (request.data.get("name") or "").strip()
+        access_token = (request.data.get("access_token") or "").strip()
 
-        if not slug or not name:
-            return Response({"detail": "slug and name are required"}, status=400)
+        if not slug or not name or not access_token:
+            return Response({"detail": "slug, name and access_token are required"}, status=400)
 
-        sponsor = Sponsors.objects.filter(slug=slug).first()
+        sponsor = Sponsors.objects.filter(slug=slug, access_token=access_token).first()
         if not sponsor:
             return Response({"detail": "Sponsor not found"}, status=404)
 
@@ -376,7 +378,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
         """
         last = Sponsors.objects.select_for_update().order_by('-order').first()
         next_order = (last.order if last else 0) + 1
-        serializer.save(order=next_order, slug=str(uuid4()))
+        serializer.save(order=next_order, slug=str(uuid4()), access_token=str(uuid4()))
 
     @action(detail=False, methods=['post'])
     @transaction.atomic

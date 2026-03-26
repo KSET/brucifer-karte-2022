@@ -270,7 +270,7 @@ const routes = [
   },
 
   {
-    path: "/sponzori/:slug",
+    path: "/sponzori/:slug/:token",
     name: "sponzori-page",
     component: SponsorsPage,
   },

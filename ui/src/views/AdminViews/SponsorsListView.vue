@@ -92,7 +92,7 @@ export default {
                   template: "sponsors_email",
                   message: msg,
                   name: element.name,
-                  link: "https://brucosijada.kset.org/sponzori/" + element.slug,
+                  link: "https://brucosijada.kset.org/sponzori/" + element.slug + "/" + element.access_token,
                   to_mail: e
                 })
               })
@@ -102,7 +102,7 @@ export default {
                   template: "sponsors_email",
                   message: msg,
                   name: element.name,
-                  link: "https://brucosijada.kset.org/sponzori/" + element.slug,
+                  link: "https://brucosijada.kset.org/sponzori/" + element.slug + "/" + element.access_token,
                   to_mail: email.join(", ")
                 }
               )

@@ -95,6 +95,7 @@ export default {
             currentImage: undefined,
             previewImage: undefined,
             slug: '0',
+            accessToken: '',
             progress: 0,
             message: "",
 
@@ -111,6 +112,7 @@ export default {
     },
     mounted() {
         this.slug = this.$route.params.slug;
+        this.accessToken = this.$route.params.token || '';
         if (this.slug != '0') {
             publicApi.get("/sponsors/public/", { params: { slug: this.slug } })
                 .then(async response => {
@@ -179,7 +181,7 @@ export default {
         sponsorDelete(guest) {
             publicApi.delete(
                 `/sponsors/public/guests/`,
-                { params: { slug: this.slug, id: guest.id } }
+                { params: { slug: this.slug, id: guest.id, access_token: this.accessToken } }
             ).then(() => {
                 this.created();
             }).catch(err => {
@@ -202,6 +204,7 @@ export default {
             const payload = {
                 slug: this.slug,
                 name: guestName,
+                access_token: this.accessToken,
             };
 
             publicApi.post(`/sponsors/public/guests/`, payload)

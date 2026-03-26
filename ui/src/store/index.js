@@ -12,7 +12,7 @@ export default createStore({
     accessToken: "",
     refreshToken: "",
   },
-  plugins: [createPersistedState()],
+  plugins: [createPersistedState({ storage: window.sessionStorage })],
   mutations: {
     setId(state, value) {
       state.id = value;

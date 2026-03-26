@@ -39,7 +39,7 @@ class PublicLineupSerializer(serializers.HyperlinkedModelSerializer):
 class SponsorsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sponsors
-        fields = ["id", "slug", "order", "visible", "guestsEnabled",
+        fields = ["id", "slug", "access_token", "order", "visible", "guestsEnabled",
                   "name", "url", "image", "email", "guestCap"]
         
 class PublicSponsorsSerializer(serializers.HyperlinkedModelSerializer):
