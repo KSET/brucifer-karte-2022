@@ -196,8 +196,8 @@ export default {
 
           // Set default values for tag, bought, and entered fields if they are empty or 0
           guest.tag = guest.tag || "Brucoši";
-          guest.bought = guest.bought || "0";
-          guest.entered = guest.entered || "0";
+          guest.bought = guest.bought || false;
+          guest.entered = guest.entered || false;
 
           return guest;
         });

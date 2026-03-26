@@ -53,7 +53,7 @@ export default {
   methods: {
     postGuest() {
       api.post('/guests/',
-        { name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: '0', entered: '0' },
+        { name: this.name, surname: this.surname, jmbag: this.jmbag, tag: this.selectedTag, bought: false, entered: false },
       )
         .then(() => {
           location.reload();

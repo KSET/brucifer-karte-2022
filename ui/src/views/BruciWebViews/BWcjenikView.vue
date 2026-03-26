@@ -51,7 +51,7 @@ export default {
   name: 'KontaktView',
   components: { Footer },
   mounted() {
-    if (visibilityStore.state.CJENIK_VISIBILITY == 0) {
+    if (visibilityStore.state.CJENIK_VISIBILITY === false) {
       this.$router.push({ name: 'BWPageNotFound' });
     }
     this.created();

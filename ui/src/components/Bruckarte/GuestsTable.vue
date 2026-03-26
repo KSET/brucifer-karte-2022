@@ -21,11 +21,11 @@
           <td>{{ guest.surname }}</td>
           <td>{{ guest.jmbag }}</td>
           <td>
-            <button @click="changeBought(guest, '1')" v-if="guest.bought == '0'" class="btn btn-xs btn-danger"
+            <button @click="changeBought(guest, true)" v-if="guest.bought === false" class="btn btn-xs btn-danger"
               id="gumbarn">
               <font-awesome-icon icon="fa-solid fa-xmark" />
             </button>
-            <button v-else class="btn btn-xs btn-success" id="gumbary" @click="changeBought(guest, '0')">
+            <button v-else class="btn btn-xs btn-success" id="gumbary" @click="changeBought(guest, false)">
               <font-awesome-icon icon="fa-solid fa-check" />
             </button>
           </td>

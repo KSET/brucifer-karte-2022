@@ -8,11 +8,11 @@
                 <h1 class="textfield">
                     Prikaz stranice Coming soon
                 </h1>
-                <button v-if="COMINGSOON_VISIBILITY == 1" class="button change"
-                    @click="changeVisibility('COMINGSOON_VISIBILITY', '0')">
+                <button v-if="COMINGSOON_VISIBILITY === true" class="button change"
+                    @click="changeVisibility('COMINGSOON_VISIBILITY', false)">
                     <img src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button v-else class="button change" @click="changeVisibility('COMINGSOON_VISIBILITY', '1')"
+                <button v-else class="button change" @click="changeVisibility('COMINGSOON_VISIBILITY', true)"
                     style="background-color: white;">
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
@@ -20,11 +20,11 @@
                 <h1 class="textfield">
                     Prikaz stranice Izvođača
                 </h1>
-                <button v-if="LINEUP_VISIBILITY == 1" class="button change"
-                    @click="changeVisibility('LINEUP_VISIBILITY', '0')">
+                <button v-if="LINEUP_VISIBILITY === true" class="button change"
+                    @click="changeVisibility('LINEUP_VISIBILITY', false)">
                     <img src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button v-else class="button change" @click="changeVisibility('LINEUP_VISIBILITY', '1')"
+                <button v-else class="button change" @click="changeVisibility('LINEUP_VISIBILITY', true)"
                     style="background-color: white;">
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
@@ -32,11 +32,11 @@
                 <h1 class="textfield">
                     Prikaz stranice Sponzora
                 </h1>
-                <button v-if="SPONSORS_VISIBILITY == 1" class="button change"
-                    @click="changeVisibility('SPONSORS_VISIBILITY', '0')">
+                <button v-if="SPONSORS_VISIBILITY === true" class="button change"
+                    @click="changeVisibility('SPONSORS_VISIBILITY', false)">
                     <img src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button v-else class="button change" @click="changeVisibility('SPONSORS_VISIBILITY', '1')"
+                <button v-else class="button change" @click="changeVisibility('SPONSORS_VISIBILITY', true)"
                     style="background-color: white;">
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
@@ -44,11 +44,11 @@
                 <h1 class="textfield">
                     Prikaz stranice Cjenik
                 </h1>
-                <button v-if="CJENIK_VISIBILITY == 1" class="button change"
-                    @click="changeVisibility('CJENIK_VISIBILITY', '0')">
+                <button v-if="CJENIK_VISIBILITY === true" class="button change"
+                    @click="changeVisibility('CJENIK_VISIBILITY', false)">
                     <img src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button v-else class="button change" @click="changeVisibility('CJENIK_VISIBILITY', '1')"
+                <button v-else class="button change" @click="changeVisibility('CJENIK_VISIBILITY', true)"
                     style="background-color: white;">
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
@@ -56,11 +56,11 @@
                 <h1 class="textfield">
                     Prikaz stranice Tlocrt
                 </h1>
-                <button v-if="TLOCRT_VISIBILITY == 1" class="button change"
-                    @click="changeVisibility('TLOCRT_VISIBILITY', '0')">
+                <button v-if="TLOCRT_VISIBILITY === true" class="button change"
+                    @click="changeVisibility('TLOCRT_VISIBILITY', false)">
                     <img src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button v-else class="button change" @click="changeVisibility('TLOCRT_VISIBILITY', '1')"
+                <button v-else class="button change" @click="changeVisibility('TLOCRT_VISIBILITY', true)"
                     style="background-color: white;">
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
@@ -68,11 +68,11 @@
                 <h1 class="textfield">
                     Prikaz stranice Satnica
                 </h1>
-                <button v-if="SATNICA_VISIBILITY == 1" class="button change"
-                    @click="changeVisibility('SATNICA_VISIBILITY', '0')">
+                <button v-if="SATNICA_VISIBILITY === true" class="button change"
+                    @click="changeVisibility('SATNICA_VISIBILITY', false)">
                     <img src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button v-else class="button change" @click="changeVisibility('SATNICA_VISIBILITY', '1')"
+                <button v-else class="button change" @click="changeVisibility('SATNICA_VISIBILITY', true)"
                     style="background-color: white;">
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
@@ -80,11 +80,11 @@
                 <h1 class="textfield">
                     Prikaz stranice Ulaznica
                 </h1>
-                <button v-if="ULAZNICA_VISIBILITY == 1" class="button change"
-                    @click="changeVisibility('ULAZNICA_VISIBILITY', '0')">
+                <button v-if="ULAZNICA_VISIBILITY === true" class="button change"
+                    @click="changeVisibility('ULAZNICA_VISIBILITY', false)">
                     <img src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button v-else class="button change" @click="changeVisibility('ULAZNICA_VISIBILITY', '1')"
+                <button v-else class="button change" @click="changeVisibility('ULAZNICA_VISIBILITY', true)"
                     style="background-color: white;">
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
@@ -92,11 +92,11 @@
                 <h1 class="textfield">
                     Prikaz stranice Igrice
                 </h1>
-                <button v-if="IGRICA_VISIBILITY == 1" class="button change"
-                    @click="changeVisibility('IGRICA_VISIBILITY', '0')">
+                <button v-if="IGRICA_VISIBILITY === true" class="button change"
+                    @click="changeVisibility('IGRICA_VISIBILITY', false)">
                     <img src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button v-else class="button change" @click="changeVisibility('IGRICA_VISIBILITY', '1')"
+                <button v-else class="button change" @click="changeVisibility('IGRICA_VISIBILITY', true)"
                     style="background-color: white;">
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
@@ -104,11 +104,11 @@
                 <h1 class="textfield">
                     Prikaz stranice Timera
                 </h1>
-                <button v-if="TIMER_VISIBILITY == 1" class="button change"
-                    @click="changeVisibility('TIMER_VISIBILITY', '0')">
+                <button v-if="TIMER_VISIBILITY === true" class="button change"
+                    @click="changeVisibility('TIMER_VISIBILITY', false)">
                     <img src="../../assets/icons/yes-icon.svg">
                 </button>
-                <button v-else class="button change" @click="changeVisibility('TIMER_VISIBILITY', '1')"
+                <button v-else class="button change" @click="changeVisibility('TIMER_VISIBILITY', true)"
                     style="background-color: white;">
                     <img class="image1" src="../../assets/icons/no-icon.svg">
                 </button>
@@ -228,7 +228,7 @@ export default {
         async sendEmailsInRange(start, end) {
             try {
                 // Fetch all guests who bought a ticket
-                let res = await api.get(`${process.env.VUE_APP_BASE_URL}/guests/?search=1&search_fields=bought`);
+                let res = await api.get('/guests/?bought=true');
                 this.guests = res.data;
 
                 // Initialize counter

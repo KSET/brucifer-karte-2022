@@ -110,8 +110,9 @@ class MailerViewSet(viewsets.ModelViewSet):
 class GuestsViewSet(viewsets.ModelViewSet):
     queryset = Guests.objects.all()
     serializer_class = GuestsSerializer
-    filter_backends = [DynamicSearchFilter]
+    filter_backends = [DynamicSearchFilter, DjangoFilterBackend]
     search_fields = ['name', 'surname', 'tag', 'confCode', 'jmbag', 'email']
+    filterset_fields = ['bought', 'entered']
     permission_classes = [IsPrivileged]
 
     @action(detail=False, methods=['post'], url_path='bulk-import')
@@ -127,7 +128,9 @@ class GuestsViewSet(viewsets.ModelViewSet):
             with transaction.atomic():
                 Guests.objects.bulk_create([Guests(**data) for data in guests_serializer.validated_data])
                 return Response({'message': 'Bulk guests import successful'}, status=status.HTTP_201_CREATED)
-            
+        else:
+            return Response(guests_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     @action(detail=False, methods=['get'], url_path='search-brucosi')
     def search_brucosi(self, request):
         jmbag = request.query_params.get('jmbag')
@@ -350,9 +353,9 @@ class SponsorsViewSet(viewsets.ModelViewSet):
         if not sponsor:
             return Response({"detail": "Sponsor not found"}, status=404)
 
-        if getattr(sponsor, "guestCap", None) is not None:
+        if sponsor.guestCap is not None and sponsor.guestCap > 0:
             count = Guests.objects.filter(tag__icontains=sponsor.slug).count()
-            if count >= int(sponsor.guestCap):
+            if count >= sponsor.guestCap:
                 return Response({"detail": "Guest limit reached"}, status=409)
 
         tag = f"{sponsor.slug} VIP - Sponzor - {sponsor.name}"

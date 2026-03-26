@@ -94,9 +94,9 @@ export default {
             order: '',
             url: '',
             email: '',
-            guestCap: '',
+            guestCap: null,
             visible: false,
-            guestsEnabled: '0',
+            guestsEnabled: 0,
 
             uuid: uuid.v4(),
             buttonEnabled: true,
@@ -120,7 +120,7 @@ export default {
             this.url = sponsor.url
             this.email = sponsor.email
             this.guestCap = sponsor.guestCap
-            this.guestsEnabled = sponsor.guestsEnabled == "1" ? true : false;
+            this.guestsEnabled = sponsor.guestsEnabled !== 0;
             this.visible = sponsor.visible
             this.currentImage = sponsor.image
         } else {
@@ -170,14 +170,14 @@ export default {
             formData.append("url", this.url)
             formData.append("email", this.email)
             formData.append("guestCap", this.guestCap)
-            formData.append("visible", this.visible ? "1" : "0")
+            formData.append("visible", this.visible)
 
             // guestsEnabled logic
-            if (this.guestsEnabled === true) {
+            if (this.guestsEnabled) {
                 const closeTime = Date.parse(visibilityStore.state.SPONSORS_INPUT_TIME);
-                formData.append("guestsEnabled", Date.now() > closeTime ? "2" : "1")
+                formData.append("guestsEnabled", Date.now() > closeTime ? 2 : 1)
             } else {
-                formData.append("guestsEnabled", "0")
+                formData.append("guestsEnabled", 0)
             }
 
             if (this.slug !== "0") {

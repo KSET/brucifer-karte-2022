@@ -3,7 +3,7 @@
     <div class="card" style="height: 36%;" ref="" v-for="sponsor in sponsors" :key="sponsor.id">
       <div>
         <img class="ccard-img" v-bind:src="sponsor.image"
-          v-bind:style="[(sponsor.visible == '0') ? { opacity: '0.25' } : { opacity: '1' }]"
+          v-bind:style="[!sponsor.visible ? { opacity: '0.25' } : { opacity: '1' }]"
           style="background-color: #D9D9D9; height: 10rem;">
       </div>
       <div class="ccard-body">

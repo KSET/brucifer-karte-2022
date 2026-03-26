@@ -38,7 +38,7 @@
 
             <div class="form-group">
               <h1 class="textfield">Količina u L</h1>
-              <input required class="inputfield kontakt" type="text" v-model="volume">
+              <input required class="inputfield kontakt" type="number" v-model.number="volume">
             </div>
 
             <button type="submit" class="button submit">Dodaj</button>
@@ -140,7 +140,7 @@ export default {
       let nextIndex = curIndex - 1;
       let nextArtikl = this.artikli[nextIndex]
 
-      if (curIndex != "0") {
+      if (curIndex !== 0) {
         if (artikl.tag == nextArtikl.tag) {
           await api.put('/cjenik/' + artikl.id + '/', { order: nextArtikl.order })
           await api.put('/cjenik/' + nextArtikl.id + '/', { order: artikl.order })
@@ -178,23 +178,13 @@ export default {
 
     async postArtikl() {
       const resp = await api.get('/cjenik/?ordering=order&search=' + this.selectedTag + '&search_fields=tag')
-      let nextOrder = "00";
+      let nextOrder = 0;
 
       let cjenik = resp.data;
 
-      if ((cjenik.length) != 0) {
+      if (cjenik.length != 0) {
         let lastOrder = cjenik[cjenik.length - 1].order;
-
-        if (lastOrder[0] == "0") {
-          if (lastOrder == "09") {
-            nextOrder = "10"
-          }
-          else {
-            nextOrder = "0" + (parseInt(lastOrder[1]) + 1).toString();
-          }
-        } else {
-          nextOrder = (parseInt(lastOrder) + 1).toString();
-        }
+        nextOrder = lastOrder + 1;
       }
 
       api.post('/cjenik/',

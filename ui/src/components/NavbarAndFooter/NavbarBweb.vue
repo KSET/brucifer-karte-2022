@@ -5,33 +5,33 @@
     </router-link>
 
     <div class="routes">
-      <RouterElement v-if="LINEUP_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwlineup') }"
+      <RouterElement v-if="LINEUP_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('bwlineup') }"
         class="navbar-element hideTablet" name="Izvođači" link="/lineup" />
 
-      <RouterElement v-if="ULAZNICA_VISIBILITY == '1'"
+      <RouterElement v-if="ULAZNICA_VISIBILITY === true"
         :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }"
         class="navbar-element hideTablet ulaznice-button" name="Kupi karte" link="/ulaznice" icon="pi-arrow-right" />
 
-      <RouterElement v-if="ULAZNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwbrucosi') }"
+      <RouterElement v-if="ULAZNICA_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('bwbrucosi') }"
               class="navbar-element hideTablet" name="Brucoši" link="/brucosi" />
 
 
-      <RouterElement v-if="SATNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('satnica') }"
+      <RouterElement v-if="SATNICA_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('satnica') }"
         class="navbar-element hideTablet" name="Satnica" link="/satnica" />
 
-      <RouterElement v-if="TLOCRT_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('tlocrt') }"
+      <RouterElement v-if="TLOCRT_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('tlocrt') }"
         class="navbar-element hideTablet" name="Tlocrt" link="/tlocrt" />
 
-      <RouterElement v-if="SPONSORS_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwsponsors') }"
+      <RouterElement v-if="SPONSORS_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('bwsponsors') }"
         class="navbar-element hideTablet" name="Sponzori" link="/sponsors" />
 
-      <RouterElement v-if="IGRICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('igrica') }"
+      <RouterElement v-if="IGRICA_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('igrica') }"
         class="navbar-element hideTablet" name="Igrica" link="/igrica" />
 
       <!-- <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="navbar-element hideTablet"
         name="Kontakt" link="/kontakt" /> -->
 
-      <RouterElement v-if="CJENIK_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('cjenik') }"
+      <RouterElement v-if="CJENIK_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('cjenik') }"
         class="navbar-element hideTablet" name="Cjenik" link="/cjenik" />
 
       <div id="nav-icon3" class="hideDesktop" @click="toggleNav">
@@ -43,32 +43,32 @@
 
       <div id="myNav" class="overlay bw">
         <div class="overlay-content bw">
-          <RouterElement v-if="LINEUP_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwlineup') }"
+          <RouterElement v-if="LINEUP_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('bwlineup') }"
             class="overlay-element" name="Izvođači" link="/lineup" @click="toggleNav" />
 
-          <RouterElement v-if="ULAZNICA_VISIBILITY == '1'"
+          <RouterElement v-if="ULAZNICA_VISIBILITY === true"
             :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }" class="overlay-element ulaznice-button"
             name="Kupi karte" link="/ulaznice" icon="pi-arrow-right" @click="toggleNav" />
 
-          <RouterElement v-if="ULAZNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwbrucosi') }"
+          <RouterElement v-if="ULAZNICA_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('bwbrucosi') }"
             class="overlay-element" name="Brucoši" link="/brucosi" @click="toggleNav" />
 
-          <RouterElement v-if="SATNICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('satnica') }"
+          <RouterElement v-if="SATNICA_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('satnica') }"
             class="overlay-element" name="Satnica" link="/satnica" @click="toggleNav" />
 
-          <RouterElement v-if="TLOCRT_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('tlocrt') }"
+          <RouterElement v-if="TLOCRT_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('tlocrt') }"
             class="overlay-element" name="Tlocrt" link="/tlocrt" @click="toggleNav" />
 
-          <RouterElement v-if="SPONSORS_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('bwsponsors') }"
+          <RouterElement v-if="SPONSORS_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('bwsponsors') }"
             class="overlay-element" name="Sponzori" link="/sponsors" @click="toggleNav" />
 
-          <RouterElement v-if="IGRICA_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('igrica') }"
+          <RouterElement v-if="IGRICA_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('igrica') }"
             class="overlay-element" name="Igrica" link="/igrica" @click="toggleNav" />
 
           <!-- <RouterElement :class="{ [$style.selected]: isCurrentPage('kontakt') }" class="overlay-element" name="Kontakt"
             link="/kontakt" @click="toggleNav" /> -->
 
-          <RouterElement v-if="CJENIK_VISIBILITY == '1'" :class="{ [$style.selected]: isCurrentPage('cjenik') }"
+          <RouterElement v-if="CJENIK_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('cjenik') }"
             class="overlay-element" name="Cjenik" link="/cjenik" @click="toggleNav" />
         </div>
       </div>

@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     async fetchGuests() {
-      const response = await api.get('/guests/?search=1&search_fields=bought');
+      const response = await api.get('/guests/?bought=true');
       this.guests = response.data;
       this.processDailyReport();
     },

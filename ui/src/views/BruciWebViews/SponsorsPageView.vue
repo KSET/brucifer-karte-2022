@@ -2,7 +2,7 @@
     <div class="bw-page-container sponsors-page">
         <div class="popis">
 
-            <div v-if="this.guestsEnabled != 0" class="popis-element1">
+            <div v-if="this.guestsEnabled !== 0" class="popis-element1">
                 <h1 class="page-title">Popis uzvanika</h1>
 
                 <h1 class="textfield">Ime i prezime </h1>
@@ -15,11 +15,11 @@
             </div>
 
             <div>
-                <h1 v-if="this.guestsEnabled == 0" class="page-title-dis" style="margin-left: 50px; margin-top: 70px;">
+                <h1 v-if="this.guestsEnabled === 0" class="page-title-dis" style="margin-left: 50px; margin-top: 70px;">
                     Popis
                     uzvanika</h1>
 
-                <div v-if="this.guestsEnabled != 0" class="infofield">
+                <div v-if="this.guestsEnabled !== 0" class="infofield">
                     <div class="artist">
                         <div class="image-container">
                             <img class="image-frame2" style="border: none;" :src="previewImage">
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                 </div>
-                <h1 v-if="this.guestsEnabled == 0" class="textfield dis" style="text-align: center;">Vrijeme za promjenu
+                <h1 v-if="this.guestsEnabled === 0" class="textfield dis" style="text-align: center;">Vrijeme za promjenu
                     popisa je isteklo! <br>
                     Ovo je vaš konačni popis!</h1>
 
@@ -65,7 +65,7 @@
                         style="overflow:auto;height: 35rem !important;" class="tbody">
                         <tr v-for="guest in sponsorGuests" style=" width: 100%;" :key="guest.id">
                             <td style="padding-left: 20% !important;">{{ guest.name }}</td>
-                            <td v-if="this.guestsEnabled != 0" style="padding-left: 10% !important;"><button
+                            <td v-if="this.guestsEnabled !== 0" style="padding-left: 10% !important;"><button
                                     class="button-icon" @click=sponsorDelete(guest)
                                     style="margin-left: 0.9rem;     background: transparent;"> <img
                                         src="@/assets/icons/trash-icon-white.svg"></button>
@@ -102,12 +102,12 @@ export default {
             name: '',
             id: '',
             len: '',
-            guestCap: '',
+            guestCap: null,
             guestsAdded: '',
             guestIDs: '',
             sponsorGuests: [],
             guests: [],
-            guestsEnabled: '',
+            guestsEnabled: 0,
         };
     },
     mounted() {
@@ -117,7 +117,7 @@ export default {
             publicApi.get("/sponsors/public/", { params: { slug: this.slug } })
                 .then(async response => {
                     this.sponsors = response.data;
-                    if (this.sponsors.length == 0) {
+                    if (this.sponsors.length === 0) {
                         this.$router.push({ path: '/admin/sponsors-add/0' });
                     }
 
@@ -132,7 +132,7 @@ export default {
 
                     this.guestsEnabled = this.sponsorsInstance.guestsEnabled;
 
-                    if (this.guestsEnabled != 2) {
+                    if (this.guestsEnabled !== 2) {
                         let closeTime = Date.parse(store.state.SPONSORS_INPUT_TIME); // pravi closetime 12.11.2022 u 19.00
                         console.log(closeTime)
                         if (Date.now() > closeTime) {

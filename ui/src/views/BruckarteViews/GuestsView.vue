@@ -25,11 +25,11 @@
 
       <h1 class="textfield">Karta </h1>
 
-      <button class="button change" :disabled="this.id == ''" v-if="guest.bought == '1'"
-        @click="prepChangebought(guest, '0')">
+      <button class="button change" :disabled="this.id == ''" v-if="guest.bought == true"
+        @click="prepChangebought(guest, false)">
         <img src="../../assets/icons/yes-icon.svg">
       </button>
-      <button class="button change" :disabled="this.id == ''" v-else @click="prepChangebought(guest, '1')"
+      <button class="button change" :disabled="this.id == ''" v-else @click="prepChangebought(guest, true)"
         style="background-color: white;">
         <img class="image1" src="../../assets/icons/no-icon.svg">
       </button>
@@ -145,7 +145,7 @@ export default {
       phone: '',
       tag: '',
       bought: '',
-      entered: '',
+      entered: false,
       deleted: '',
       nomatch: '',
       confCode: '',
@@ -201,7 +201,7 @@ export default {
       }
     },
     prepChangebought(guest, changenum) {
-      if (changenum == 1) {
+      if (changenum === true) {
         this.dialogProgress = true;
       }
 
@@ -213,7 +213,7 @@ export default {
       } else {
         let confCode, boughtTicketTime;
 
-        if (changenum == 1) {
+        if (changenum === true) {
           confCode = uuid.v4();
           boughtTicketTime = new Date().toISOString();
         } else {
@@ -238,7 +238,7 @@ export default {
             this.boughtTicketTime = boughtTicketTime;
             this.confCode = confCode;
 
-            if (changenum == 1) {
+            if (changenum === true) {
               this.sendMail(guest);
             }
           });
@@ -319,7 +319,7 @@ export default {
             this.jmbag = "";
             this.confCode = "";
             this.boughtTicketTime = "";
-            this.bought = "0";
+            this.bought = false;
           }
         })
         .catch(err => {

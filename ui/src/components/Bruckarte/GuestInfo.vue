@@ -15,21 +15,21 @@
 
             <h1 v-if="guest?.tag?.includes('Brucoši')" class="textfield">Karta </h1>
 
-            <button disabled v-if="guest?.tag?.includes('Brucoši') && guest?.bought == '1'" class="bttn button2-yes"
-                @click="changeBought(guest, '0')">
+            <button disabled v-if="guest?.tag?.includes('Brucoši') && guest?.bought === true" class="bttn button2-yes"
+                @click="changeBought(guest, false)">
                 <img class="va" src="../../assets/icons/yes-icon.svg">
             </button>
-            <button disabled class="bttn button2-no" v-if="guest?.tag?.includes('Brucoši') && guest?.bought == '0'"
-                @click="changeBought(guest, '1')">
+            <button disabled class="bttn button2-no" v-if="guest?.tag?.includes('Brucoši') && guest?.bought === false"
+                @click="changeBought(guest, true)">
                 <img class="va" src="../../assets/icons/no-icon.svg">
             </button>
             <h1 class="textfield">Ulaz </h1>
 
-            <button v-if="guest?.entered == '1'" type="button" :disabled="guest?.id == ''" class="bttn button2-yes"
-                @click="changeEntered(guest, '0')">
+            <button v-if="guest?.entered === true" type="button" :disabled="guest?.id == ''" class="bttn button2-yes"
+                @click="changeEntered(guest, false)">
                 <img class="va" src="../../assets/icons/yes-icon.svg">
             </button>
-            <button v-else @click="changeEntered(guest, '1')" :disabled="guest?.id == ''" type="button"
+            <button v-else @click="changeEntered(guest, true)" :disabled="guest?.id == ''" type="button"
                 class="bttn button2-no">
                 <img class="va" src="../../assets/icons/no-icon.svg">
             </button>

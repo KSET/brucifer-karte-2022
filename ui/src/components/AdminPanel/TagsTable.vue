@@ -69,11 +69,11 @@ export default {
 
           response.data.forEach(guest => {
             numc++;
-            if (guest.bought == 1) numb++;
-            if (guest.entered == 1) nume++;
+            if (guest.bought === true) numb++;
+            if (guest.entered === true) nume++;
           });
 
-          if (`${numc}` != `${tag.count}` || numb != tag.bought || nume != tag.entered) {
+          if (numc != tag.count || numb !== tag.bought || nume !== tag.entered) {
             await api.put(`/tags/${tag.id}/`, 
               { count: numc, bought: numb, entered: nume },
             );

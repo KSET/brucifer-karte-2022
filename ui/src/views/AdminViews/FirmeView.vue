@@ -66,7 +66,7 @@ export default {
                                 element.guestsAdded = sponsorGuests.length;
                                 var enter = 0;
                                 sponsorGuests.forEach(elementy => {
-                                    if (elementy.entered == 1)
+                                    if (elementy.entered === true)
                                         enter = enter + 1;
                                 });
 
@@ -96,7 +96,7 @@ export default {
                                 element.guestsAdded = sponsorGuests.length;
                                 var enter = 0;
                                 sponsorGuests.forEach(elementy => {
-                                    if (elementy.entered == 1)
+                                    if (elementy.entered === true)
                                         enter = enter + 1;
                                 });
 

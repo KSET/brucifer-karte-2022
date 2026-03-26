@@ -12,8 +12,8 @@ class Guests(models.Model):
     jmbag = models.CharField(max_length=50, default='', blank=True)
     email = models.CharField(max_length=50, default='', blank=True)
     tag = models.CharField(max_length=200, default='', blank=True)
-    bought = models.CharField(max_length=50, default='0', blank=True)
-    entered = models.CharField(max_length=50, default='', blank=True)
+    bought = models.BooleanField(default=False)
+    entered = models.BooleanField(default=False)
     confCode = models.CharField(max_length=50, default='', blank=True)
     boughtTicketTime = models.DateTimeField(null=True, blank=True)
 
@@ -29,9 +29,9 @@ class Tags(models.Model):
     id = models.AutoField(primary_key=True)
     slug = models.CharField(max_length=200, default='', blank=True)
     name = models.CharField(max_length=49, default='', blank=True)
-    count = models.CharField(max_length=50, default='0', blank=True)
-    bought = models.CharField(max_length=50, default='0', blank=True)
-    entered = models.CharField(max_length=50, default='0', blank=True)
+    count = models.IntegerField(default=0)
+    bought = models.IntegerField(default=0)
+    entered = models.IntegerField(default=0)
 
 
 class Lineup(models.Model):
@@ -62,15 +62,15 @@ class Sponsors(models.Model):
     id = models.AutoField(primary_key=True)
     slug = models.CharField(max_length=200, default='', blank=True)
     access_token = models.CharField(max_length=200, default='', blank=True)
-    order = models.IntegerField(default='', blank=True)
+    order = models.IntegerField(default=0)
     visible = models.BooleanField(default=False)
-    guestsEnabled = models.CharField(max_length=200, default='1', blank=True)
+    guestsEnabled = models.IntegerField(default=1)
     name = models.CharField(max_length=49, default='', blank=True)
     url = models.CharField(max_length=400, default='0', blank=True)
     image = models.ImageField(
         upload_to='uploads/sponsors', blank=True, null=True)
     email = models.CharField(max_length=20000, default='', blank=True)
-    guestCap = models.CharField(max_length=49, default='', blank=True)
+    guestCap = models.IntegerField(null=True, blank=True, default=None)
 
     '''def get_image(self):
         if self.image:
@@ -103,15 +103,15 @@ class Cjenik(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, default='', blank=True)
     tag = models.CharField(max_length=50, default='0', blank=True)
-    order = models.IntegerField(default='', blank=True)
-    priceEUR = models.CharField(max_length=50, default='0', blank=True)
-    volume = models.CharField(max_length=50, default='0', blank=True)
+    order = models.IntegerField(default=0)
+    priceEUR = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    volume = models.IntegerField(default=0)
 
 
 class Visibility(models.Model):
     name = models.CharField(max_length=100, default='',
                             blank=True, primary_key=True)
-    visible = models.CharField(max_length=50, default='0', blank=True)
+    visible = models.BooleanField(default=False)
 
 
 class Translations(models.Model):
@@ -123,7 +123,7 @@ class GameLeaderboard(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50, default='', blank=True)
     email = models.CharField(max_length=50, default='', blank=True)
-    score = models.IntegerField(default='', blank=True)
+    score = models.IntegerField(default=0)
 
 class BrucosiFormResponse(models.Model):
     name = models.CharField(max_length=100)

@@ -25,7 +25,7 @@
 
                     <h1 class="textfield">Karta: </h1>
 
-                    <button class="button change" v-if="karta == '1'" type="button" @click="changeKarta()">
+                    <button class="button change" v-if="karta" type="button" @click="changeKarta()">
                         <img src="../../assets/icons/yes-icon.svg">
                     </button>
                     <button class="button change" v-else @click="changeKarta()" style="background-color: white;"
@@ -35,7 +35,7 @@
 
                     <h1 class="textfield">Ulaz: </h1>
 
-                    <button v-if="ulaz == '1'" type="button" class="button change" @click="changeUlaz()">
+                    <button v-if="ulaz" type="button" class="button change" @click="changeUlaz()">
                         <img src="../../assets/icons/yes-icon.svg">
                     </button>
                     <button v-else @click="changeUlaz()" type="button" style="background-color: white;"
@@ -99,8 +99,8 @@ export default {
         return {
             items: [],
             guests: [],
-            karta: '1',
-            ulaz: '1',
+            karta: true,
+            ulaz: true,
             guest: '',
             id: '',
             name: '',
@@ -155,18 +155,10 @@ export default {
             }
         },
         changeKarta() {
-            if (this.karta == '1') {
-                this.karta = '0';
-            } else {
-                this.karta = '1';
-            }
+            this.karta = !this.karta;
         },
         changeUlaz() {
-            if (this.ulaz == '1') {
-                this.ulaz = '0';
-            } else {
-                this.ulaz = '1';
-            }
+            this.ulaz = !this.ulaz;
         },
         postGuest() {
             if (this.name == '' || this.surname == '' || this.selectedTag == '') {
@@ -215,8 +207,8 @@ export default {
             this.surname = ''
             this.selectedTag = ''
             this.jmbag = ''
-            this.karta = '1';
-            this.ulaz = '1';
+            this.karta = true;
+            this.ulaz = true;
             document.getElementById("jmbagselect").style.display = "none";
             document.getElementById("jmbagselectt").style.display = "none";
             this.created()

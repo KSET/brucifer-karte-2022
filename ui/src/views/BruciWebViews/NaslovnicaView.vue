@@ -46,10 +46,10 @@ export default {
   },
   computed: {
     comingSoonVisible() {
-      return store.state.COMINGSOON_VISIBILITY == 0;
+      return store.state.COMINGSOON_VISIBILITY === false;
     },
     timerVisible() {
-      return store.state.TIMER_VISIBILITY == 1;
+      return store.state.TIMER_VISIBILITY === true;
     },
     countdownTime() {
       const timeMS = Date.parse(store.state.TIMER_TIME);
