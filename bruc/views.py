@@ -34,22 +34,40 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticatedOrReadOnly
 from rest_framework.throttling import AnonRateThrottle
 from django.contrib.auth.models import User as DjangoUser
 
 from datetime import datetime, time
+from urllib.parse import quote
 from django.utils.timezone import make_aware
 
 class SponsorGuestThrottle(AnonRateThrottle):
     rate = '30/hour'
 
+class MailerThrottle(AnonRateThrottle):
+    rate = '200/hour'
+
+class IsPrivileged(BasePermission):
+    """
+    Allows access only to users whose corresponding Users record has privilege >= 1.
+    Privilege 0 users (auto-created on Google login) are denied.
+    """
+    def has_permission(self, request, view):
+        if not request.user or not request.user.is_authenticated:
+            return False
+        try:
+            user = Users.objects.get(email=request.user.username)
+            return int(user.privilege) >= 1
+        except (Users.DoesNotExist, ValueError):
+            return False
+
 class MailerViewSet(viewsets.ModelViewSet):
     queryset = Mailer.objects.all()
     serializer_class = MailerSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsPrivileged]
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'], throttle_classes=[MailerThrottle])
     def send_mail(self, request):
         emails = request.data.get('emails', [])  # Expecting a list of email details
 
@@ -67,7 +85,7 @@ class MailerViewSet(viewsets.ModelViewSet):
             elif template_name == "guest_email":
                 html_message = render_to_string('emails/guest_email.html', {
                     'name': email.get('name', ''), 'confCode': email.get('confCode', ''),
-                    'qrSrc': "https://api.qrserver.com/v1/create-qr-code/?data="+email.get('confCode', '')+"&amp;size=300x300"})
+                    'qrSrc': "https://api.qrserver.com/v1/create-qr-code/?data="+quote(email.get('confCode', ''))+"&amp;size=300x300"})
             elif template_name == "sponsors_email":
                 html_message = render_to_string('emails/sponsors_email.html', {
                     'name': email.get('name', ''), 'link': email.get('link', '')})
@@ -83,8 +101,8 @@ class MailerViewSet(viewsets.ModelViewSet):
                 for msg in messages:
                     msg.send()
                 return HttpResponse('Emails sent successfully.')
-            except Exception as e:
-                return HttpResponse(f'An error occurred: {str(e)}')
+            except Exception:
+                return HttpResponse('Failed to send emails.', status=500)
         else:
             return HttpResponse('Make sure all fields are entered and valid for each email.')
 
@@ -93,11 +111,15 @@ class GuestsViewSet(viewsets.ModelViewSet):
     queryset = Guests.objects.all()
     serializer_class = GuestsSerializer
     filter_backends = [DynamicSearchFilter]
-    permission_classes = [IsAuthenticated]
+    search_fields = ['name', 'surname', 'tag', 'confCode', 'jmbag', 'email']
+    permission_classes = [IsPrivileged]
 
     @action(detail=False, methods=['post'], url_path='bulk-import')
     def bulk_import(self, request):
-        guests_data = json.loads(request.body)
+        try:
+            guests_data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return Response({'error': 'Invalid JSON'}, status=status.HTTP_400_BAD_REQUEST)
         guests_serializer = GuestsSerializer(data=guests_data, many=True)  # 'many=True' is important for bulk operations
         
         if guests_serializer.is_valid():
@@ -156,7 +178,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
 class TagsViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsPrivileged]
 
 
 class UsersViewSet(viewsets.ModelViewSet):
@@ -164,11 +186,14 @@ class UsersViewSet(viewsets.ModelViewSet):
     serializer_class = UsersSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'email']
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsPrivileged]
 
     @action(detail=False, methods=['post'], url_path='bulk-import')
     def bulk_import(self, request):
-        user_data = json.loads(request.body)
+        try:
+            user_data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return Response({'error': 'Invalid JSON'}, status=status.HTTP_400_BAD_REQUEST)
         user_serializer = UsersSerializer(data=user_data, many=True)  # 'many=True' is important for bulk operations
         
         if user_serializer.is_valid():
@@ -185,7 +210,7 @@ class LineupViewSet(viewsets.ModelViewSet):
     serializer_class = LineupSerializer
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     ordering_fields = ['order']
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsPrivileged]
 
     @transaction.atomic
     def perform_create(self, serializer):
@@ -242,7 +267,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
     serializer_class = SponsorsSerializer
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     ordering_fields = ['order']
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsPrivileged]
 
     @action(detail=False, methods=['get'], permission_classes=[AllowAny], url_path='public')
     def public(self, request):
@@ -412,12 +437,13 @@ class PublicSponsorsViewSet(viewsets.ReadOnlyModelViewSet):
 class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsPrivileged]
 
 
 class CjenikViewSet(viewsets.ModelViewSet):
     queryset = Cjenik.objects.all()
     serializer_class = CjenikSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     search_fields = ['tag']
@@ -444,13 +470,31 @@ class TranslationsViewSet(viewsets.ModelViewSet):
 
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+class LeaderboardPermission(BasePermission):
+    """
+    Allow anyone to GET or POST (read scores, submit scores).
+    Require privilege for PUT, PATCH, DELETE.
+    """
+    def has_permission(self, request, view):
+        if request.method in ('GET', 'POST', 'HEAD', 'OPTIONS'):
+            return True
+        if not request.user or not request.user.is_authenticated:
+            return False
+        try:
+            user = Users.objects.get(email=request.user.username)
+            return int(user.privilege) >= 1
+        except (Users.DoesNotExist, ValueError):
+            return False
+
 class GameLeaderboardViewSet(viewsets.ModelViewSet):
     queryset = GameLeaderboard.objects.all()
     serializer_class = GameLeaderboardSerializer
+    permission_classes = [LeaderboardPermission]
 
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     search_fields = ['email']
     ordering_fields = ['score']
+
 
 class AllowPostAnyOtherwiseAuthenticated(BasePermission):
     """
@@ -519,5 +563,5 @@ class GoogleAuthView(APIView):
                 }
             })
 
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            return Response({"error": "Authentication failed."}, status=status.HTTP_400_BAD_REQUEST)

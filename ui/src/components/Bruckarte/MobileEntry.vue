@@ -91,7 +91,7 @@ export default {
             this.dialogGuest = true;
         },
         checkUUID(uuid) {
-            const regexExp = /^[0-9A-F]{8}-[0-9A-F]{4}-[1][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+            const regexExp = /^[0-9A-F]{8}-[0-9A-F]{4}-[14][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
             return regexExp.test(uuid);
         }
     }

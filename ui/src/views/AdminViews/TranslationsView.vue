@@ -20,9 +20,9 @@
             <div class="translations-grid">
                 <div class="translations-item" v-for="( translation ) in  translationsTable " :key="translation.key">
                     <div class="textfield" @input="changeTranslationKey(translation)"
-                    contenteditable="true" v-html="translation.key"></div>
+                    contenteditable="true" v-text="translation.key"></div>
                     <div style="padding: 7px" class="textfield" @input="changeTranslationValue(translation)"
-                        contenteditable="true" v-html="translation.value"></div>
+                        contenteditable="true" v-text="translation.value"></div>
                     <button class="button-icon" @click="deleteTranslation(translation)"> <img
                             src="@/assets/icons/trash-icon.svg"></button>
                 </div>

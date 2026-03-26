@@ -163,7 +163,7 @@ export default {
       submissionPickerOpen: false,
       submissionCandidates: [],
 
-      uuid: uuid.v1(),
+      uuid: uuid.v4(),
 
     }
   },
@@ -214,7 +214,7 @@ export default {
         let confCode, boughtTicketTime;
 
         if (changenum == 1) {
-          confCode = this.$uuid.v1();
+          confCode = uuid.v4();
           boughtTicketTime = new Date().toISOString();
         } else {
           confCode = "";

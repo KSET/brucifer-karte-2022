@@ -98,7 +98,7 @@ export default {
             visible: false,
             guestsEnabled: '0',
 
-            uuid: uuid.v1(),
+            uuid: uuid.v4(),
             buttonEnabled: true,
         }
     },
@@ -196,7 +196,7 @@ export default {
                 const last = this.sponsors[this.sponsors.length - 1]
                 const nextOrder = last ? last.order + 1 : 0
                 formData.append("order", nextOrder.toString())
-                formData.append("slug", uuid.v1())
+                formData.append("slug", uuid.v4())
                 formData.append("image", this.currentImage)
 
                 await sponsorsStore.dispatch('create', formData)

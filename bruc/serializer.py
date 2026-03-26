@@ -84,7 +84,11 @@ class GameLeaderboardSerializer(serializers.HyperlinkedModelSerializer):
 
 class DynamicSearchFilter(filters.SearchFilter):
     def get_search_fields(self, view, request):
-        return request.GET.getlist('search_fields', [])
+        allowed = set(getattr(view, 'search_fields', []))
+        requested = request.GET.getlist('search_fields', [])
+        if not requested:
+            return list(allowed)
+        return [f for f in requested if f in allowed]
     
 class BrucosiFormResponseSerializer(serializers.ModelSerializer):
     class Meta:
