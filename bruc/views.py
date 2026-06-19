@@ -5,7 +5,7 @@ from rest_framework import filters
 from rest_framework import routers, serializers, viewsets
 from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer, PublicLineupSerializer, PublicSponsorsSerializer
+from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer, PublicLineupSerializer, PublicSponsorsSerializer, PublicGuestSerializer
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.mail import BadHeaderError, send_mail
@@ -53,6 +53,9 @@ class FormThrottle(AnonRateThrottle):
     rate = '20/hour'
 
 
+MAX_BULK_RECORDS = 5000
+
+
 def _caller_role(request):
     """Role-key of the JWT caller (Users.privilege), or None if unauthenticated."""
     if not request.user or not request.user.is_authenticated:
@@ -93,9 +96,7 @@ def ReadOnlyOrRole(*write_roles, read_roles=None):
 class MailerViewSet(viewsets.ModelViewSet):
     queryset = Mailer.objects.all()
     serializer_class = MailerSerializer
-    # Guest-confirmation emails are sent from the ticket-staff Guests screen,
-    # so any staff role may use the mailer (still authenticated only).
-    permission_classes = [HasRole(*GUEST_ROLES)]
+    permission_classes = [HasRole(Role.ADMIN)]
 
     @action(detail=False, methods=['post'], throttle_classes=[MailerThrottle])
     def send_mail(self, request):
@@ -117,8 +118,12 @@ class MailerViewSet(viewsets.ModelViewSet):
                     'name': email.get('name', ''), 'confCode': email.get('confCode', ''),
                     'qrSrc': "https://api.qrserver.com/v1/create-qr-code/?data="+quote(email.get('confCode', ''))+"&amp;size=300x300"})
             elif template_name == "sponsors_email":
+                sponsor = Sponsors.objects.filter(slug=(email.get('slug') or '')).first()
+                if not sponsor:
+                    continue
+                link = f"https://brucosijada.kset.org/sponzori/{sponsor.slug}/{sponsor.access_token}"
                 html_message = render_to_string('emails/sponsors_email.html', {
-                    'name': email.get('name', ''), 'link': email.get('link', '')})
+                    'name': email.get('name', ''), 'link': link})
 
             if subject and msg and to and html_message:
                 text_content = strip_tags(html_message)
@@ -151,6 +156,11 @@ class GuestsViewSet(viewsets.ModelViewSet):
             guests_data = json.loads(request.body)
         except json.JSONDecodeError:
             return Response({'error': 'Invalid JSON'}, status=status.HTTP_400_BAD_REQUEST)
+        if not isinstance(guests_data, list):
+            return Response({'error': 'Expected a JSON list'}, status=status.HTTP_400_BAD_REQUEST)
+        if len(guests_data) > MAX_BULK_RECORDS:
+            return Response({'error': f'Too many records (max {MAX_BULK_RECORDS})'},
+                            status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
         guests_serializer = GuestsSerializer(data=guests_data, many=True)  # 'many=True' is important for bulk operations
         
         if guests_serializer.is_valid():
@@ -227,6 +237,11 @@ class UsersViewSet(viewsets.ModelViewSet):
             user_data = json.loads(request.body)
         except json.JSONDecodeError:
             return Response({'error': 'Invalid JSON'}, status=status.HTTP_400_BAD_REQUEST)
+        if not isinstance(user_data, list):
+            return Response({'error': 'Expected a JSON list'}, status=status.HTTP_400_BAD_REQUEST)
+        if len(user_data) > MAX_BULK_RECORDS:
+            return Response({'error': f'Too many records (max {MAX_BULK_RECORDS})'},
+                            status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
         user_serializer = UsersSerializer(data=user_data, many=True)  # 'many=True' is important for bulk operations
         
         if user_serializer.is_valid():
@@ -337,10 +352,11 @@ class SponsorsViewSet(viewsets.ModelViewSet):
         # ------------------ GET ------------------
         if request.method == 'GET':
             slug = (request.query_params.get("slug") or "").strip()
-            if not slug:
-                return Response({"detail": "slug is required"}, status=400)
+            access_token = (request.query_params.get("access_token") or "").strip()
+            if not slug or not access_token:
+                return Response({"detail": "slug and access_token are required"}, status=400)
 
-            sponsor = Sponsors.objects.filter(slug=slug, visible=True).first()
+            sponsor = Sponsors.objects.filter(slug=slug, access_token=access_token).first()
             if not sponsor:
                 return Response({"detail": "Sponsor not found"}, status=404)
 
@@ -348,7 +364,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
             qs = Guests.objects.filter(tag__istartswith=tag_prefix).order_by("id")
 
             return Response(
-                GuestsSerializer(qs, many=True).data,
+                PublicGuestSerializer(qs, many=True).data,
                 status=200,
             )
 
@@ -573,6 +589,11 @@ class GoogleAuthView(APIView):
             )
 
             email = idinfo["email"]
+            if not idinfo.get("email_verified"):
+                return Response({"error": "Email not verified."}, status=status.HTTP_403_FORBIDDEN)
+            if idinfo.get("hd") != "kset.org" or not email.endswith("@kset.org"):
+                return Response({"error": "Unauthorized domain."}, status=status.HTTP_403_FORBIDDEN)
+
             name = idinfo.get("name", "")
 
             custom_user, created = Users.objects.get_or_create(

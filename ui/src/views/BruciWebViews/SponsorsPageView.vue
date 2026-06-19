@@ -166,7 +166,7 @@ export default {
             if (this.slug !== '0') {
                 publicApi
                     .get(`/sponsors/public/guests/`, {
-                        params: { slug: this.slug }
+                        params: { slug: this.slug, access_token: this.accessToken }
                     })
                     .then(response => {
                         this.sponsorGuests = response.data;

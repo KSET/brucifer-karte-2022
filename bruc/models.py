@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
 
@@ -23,10 +24,19 @@ class Guests(models.Model):
 class Users(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50, default='', blank=True)
-    email = models.CharField(max_length=50, default='', blank=True)
+    email = models.EmailField(max_length=254, default='', blank=True)
     privilege = models.CharField(
         max_length=50, choices=Role.choices, default=Role.NONE
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['email'],
+                condition=~Q(email=''),
+                name='uniq_users_email_nonblank',
+            )
+        ]
 
 
 class Tags(models.Model):

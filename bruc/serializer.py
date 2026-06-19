@@ -51,6 +51,11 @@ class PublicSponsorsSerializer(serializers.HyperlinkedModelSerializer):
         model = Sponsors
         fields = ["name", "url", "image"]
 
+class PublicGuestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Guests
+        fields = ["id", "name", "tag"]
+
 class ContactSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Contact
