@@ -28,6 +28,11 @@ api.interceptors.response.use(
                 const newAccess = refreshResponse.data.access;
                 store.commit("setAccessToken", newAccess);
 
+                // refresh tokens rotate — persist the new one each time
+                if (refreshResponse.data.refresh) {
+                    store.commit("setRefreshToken", refreshResponse.data.refresh);
+                }
+
                 originalRequest.headers.Authorization = `Bearer ${newAccess}`;
                 return api(originalRequest);
             } catch (refreshError) {

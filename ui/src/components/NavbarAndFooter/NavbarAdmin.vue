@@ -5,55 +5,55 @@
     </router-link>
 
     <div class="routes">
-      <RouterElement v-if="privilege == '1' || privilege == '3' || privilege == '4'" class="navbar-element hideMobile"
+      <RouterElement v-if="canSeeGuests" class="navbar-element hideMobile"
         :name="'Brucoši'" :link="'/admin/guests'"></RouterElement>
 
-      <RouterElement v-if="privilege == '1' || privilege == '2' || privilege == '4'" class="navbar-element hideMobile"
+      <RouterElement v-if="canSeeEntry" class="navbar-element hideMobile"
         :name="'Ulaz'" :link="'/admin/entry'"></RouterElement>
 
-      <router-link v-if="privilege == '1'" class="navbar-element hideTablet" to="/admin/admin-panel">
+      <router-link v-if="isAdmin" class="navbar-element hideTablet" to="/admin/admin-panel">
         <img src="../../assets/icons/nav-burger.svg" />
       </router-link>
-      <div id="nav-icon3" style="margin-left: 70px" v-if="privilege != ''" class="navbar-element hideDesktop"
+      <div id="nav-icon3" style="margin-left: 70px" v-if="hasActiveRole" class="navbar-element hideDesktop"
         @click="toggleNav">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
       </div>
-      <router-link v-if="privilege != '' && privilege != '0'" class="navbar-element lg" to="/admin/logout">
+      <router-link v-if="hasActiveRole" class="navbar-element lg" to="/admin/logout">
         <img src="../../assets/icons/logout-icon.svg" />
       </router-link>
 
       <div id="myNav" class="overlay admin">
         <div class="overlay-content admin">
           <RouterElement class="overlay-element admin hideTablet showMobile"
-            v-if="privilege == '1' || privilege == '3' || privilege == '4'" @click="toggleNav()" :name="'Brucoši'"
+            v-if="canSeeGuests" @click="toggleNav()" :name="'Brucoši'"
             :link="'/admin/guests'">
           </RouterElement>
           <RouterElement class="overlay-element admin hideTablet showMobile"
-            v-if="privilege == '1' || privilege == '2' || privilege == '4'" @click="toggleNav()" :name="'Ulaz'"
+            v-if="canSeeEntry" @click="toggleNav()" :name="'Ulaz'"
             :link="'/admin/entry'">
           </RouterElement>
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Tagovi'"
+          <RouterElement class="overlay-element admin" v-if="isAdmin" @click="toggleNav()" :name="'Tagovi'"
             :link="'/admin/tags'">
           </RouterElement>
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Dnevni izvještaj'"
+          <RouterElement class="overlay-element admin" v-if="isAdmin" :name="'Dnevni izvještaj'"
             @click="toggleNav()" :link="'/admin/daily-report'"></RouterElement>
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()"
+          <RouterElement class="overlay-element admin" v-if="isAdmin" @click="toggleNav()"
             :name="'Privilegije'" :link="'/admin/privileges'"></RouterElement>
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Korisnici'"
+          <RouterElement class="overlay-element admin" v-if="isAdmin" @click="toggleNav()" :name="'Korisnici'"
             :link="'/admin/users'">
           </RouterElement>
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" @click="toggleNav()" :name="'Uvoz'"
+          <RouterElement class="overlay-element admin" v-if="isAdmin" @click="toggleNav()" :name="'Uvoz'"
             :link="'/admin/import'">
           </RouterElement>
 
-          <button class="overlay-element admin" v-if="privilege == '1'" @click="ExportData()">
+          <button class="overlay-element admin" v-if="isAdmin" @click="ExportData()">
             Izvoz
           </button>
 
-          <div class="sidbar-element" v-if="privilege == '1'" @click="toggleDropdownLineup">
+          <div class="sidbar-element" v-if="isAdmin" @click="toggleDropdownLineup">
             <RouterElement class="overlay-element admin" style="left: 0%; position: abosolute; display: inline-block"
               :name="'Izvođači'">
             </RouterElement>
@@ -68,7 +68,7 @@
             style="margin-left: 30px" :link="'/admin/lineup-add/0'">
           </RouterElement>
 
-          <div class="sidbar-element" v-if="privilege == '1'" @click="toggleDropdownSponsors">
+          <div class="sidbar-element" v-if="isAdmin" @click="toggleDropdownSponsors">
             <RouterElement class="overlay-element admin" style="left: 0%; position: abosolute; display: inline-block"
               :name="'Sponzori'">
             </RouterElement>
@@ -84,17 +84,17 @@
             style="margin-left: 30px" :link="'/admin/sponsors-add/0'">
           </RouterElement>
 
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Dodaj Gosta'"
+          <RouterElement class="overlay-element admin" v-if="canSeeGuests" :name="'Dodaj Gosta'"
             @click="toggleNav()" :link="'/admin/guests-add'"></RouterElement>
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Kontakt'" @click="toggleNav()"
+          <RouterElement class="overlay-element admin" v-if="isAdmin" :name="'Kontakt'" @click="toggleNav()"
             :link="'/admin/band-kontakt'"></RouterElement>
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Firme'" @click="toggleNav()"
+          <RouterElement class="overlay-element admin" v-if="isAdmin" :name="'Firme'" @click="toggleNav()"
             :link="'/admin/firme'"></RouterElement>
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Cjenik'" @click="toggleNav()"
+          <RouterElement class="overlay-element admin" v-if="isAdmin" :name="'Cjenik'" @click="toggleNav()"
             :link="'/admin/cjenik'"></RouterElement>
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Prikaz'" @click="toggleNav()"
+          <RouterElement class="overlay-element admin" v-if="isAdmin" :name="'Prikaz'" @click="toggleNav()"
             :link="'/admin/visibility'"></RouterElement>
-          <RouterElement class="overlay-element admin" v-if="privilege == '1'" :name="'Prijevodi'" @click="toggleNav()"
+          <RouterElement class="overlay-element admin" v-if="isAdmin" :name="'Prijevodi'" @click="toggleNav()"
             :link="'/admin/translations'"></RouterElement>
         </div>
       </div>
@@ -107,6 +107,7 @@ import store from "@/store/index.js";
 import RouterElement from "@/components/AdminPanel/RouterElement.vue";
 import * as XLSX from "xlsx";
 import axios from "axios";
+import { ADMIN, NONE, GUEST_LINK_ROLES, ENTRY_LINK_ROLES } from "@/plugins/roles";
 
 export default {
   name: "Navbar",
@@ -122,11 +123,23 @@ export default {
     };
   },
   computed: {
-    privilege() {
-      return store.state.privilege;
-    },
     name() {
       return store.state.name;
+    },
+    isLoggedIn() {
+      return store.state.id !== "";
+    },
+    isAdmin() {
+      return store.getters.hasRole(ADMIN);
+    },
+    canSeeGuests() {
+      return store.getters.hasAnyRole(...GUEST_LINK_ROLES);
+    },
+    canSeeEntry() {
+      return store.getters.hasAnyRole(...ENTRY_LINK_ROLES);
+    },
+    hasActiveRole() {
+      return this.isLoggedIn && !store.getters.hasRole(NONE);
     },
   },
   mounted() {

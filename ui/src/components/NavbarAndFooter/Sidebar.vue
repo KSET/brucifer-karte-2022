@@ -1,5 +1,5 @@
 <template>
-    <div class="sidenav">
+    <div class="sidenav" v-if="isAdmin">
         <RouterElement class="sidebar-element" :name="'Tagovi'" :link="'/admin/tags'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Dnevni izvještaj'" :link="'/admin/daily-report'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Privilegije'" :link="'/admin/privileges'"></RouterElement>
@@ -56,8 +56,10 @@
 
 <script>
 import { api } from "@/plugins/api";
+import store from "@/store/index.js";
 import RouterElement from '@/components/AdminPanel/RouterElement.vue'
 import * as XLSX from 'xlsx'
+import { ADMIN } from "@/plugins/roles";
 export default {
     name: "GridRouterLink",
     components: { RouterElement },
@@ -71,7 +73,13 @@ export default {
             users: [],
         }
     },
+    computed: {
+        isAdmin() {
+            return store.getters.hasRole(ADMIN);
+        },
+    },
     mounted() {
+        if (!this.isAdmin) return;
         document.getElementById("dpL1").style.display = "none";
         document.getElementById("dpL2").style.display = "none";
         document.getElementById("dpS1").style.display = "none";

@@ -17,20 +17,20 @@
                 <div class="users-elements">
 
                     <div class="users-element add"> <button class="button-priv"
-                            v-bind:style="[(this.privilege == '0') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
-                            @click="changeprivilege('0')">X</button></div>
+                            v-bind:style="[(this.privilege == NONE) ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                            @click="changeprivilege(NONE)">X</button></div>
                     <div class="users-element add"> <button class="button-priv"
-                            v-bind:style="[(this.privilege == '3') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
-                            @click="changeprivilege('3')">Karte</button></div>
+                            v-bind:style="[(this.privilege == TICKETS) ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                            @click="changeprivilege(TICKETS)">Karte</button></div>
                     <div class="users-element add"><button class="button-priv"
-                            v-bind:style="[(this.privilege == '2') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
-                            @click="changeprivilege('2')">Ulaz</button></div>
+                            v-bind:style="[(this.privilege == ENTRY) ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                            @click="changeprivilege(ENTRY)">Ulaz</button></div>
                     <div class="users-element add"><button class="button-priv"
-                            v-bind:style="[(this.privilege == '4') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
-                            @click="changeprivilege('4')">Ulaz <br>+Karte</button></div>
+                            v-bind:style="[(this.privilege == ENTRY_TICKETS) ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                            @click="changeprivilege(ENTRY_TICKETS)">Ulaz <br>+Karte</button></div>
                     <div class="users-element add"><button class="button-priv"
-                            v-bind:style="[(this.privilege == '1') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
-                            @click="changeprivilege('1')">Admin</button></div>
+                            v-bind:style="[(this.privilege == ADMIN) ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                            @click="changeprivilege(ADMIN)">Admin</button></div>
 
                 </div>
 
@@ -49,6 +49,7 @@
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
 import { api } from "@/plugins/api";
+import { NONE, ADMIN, ENTRY, TICKETS, ENTRY_TICKETS } from "@/plugins/roles";
 
 export default {
     name: 'UsersAdd',
@@ -62,6 +63,11 @@ export default {
         return {
             users: [],
             privilege: '',
+            NONE,
+            ADMIN,
+            ENTRY,
+            TICKETS,
+            ENTRY_TICKETS,
         }
     },
 

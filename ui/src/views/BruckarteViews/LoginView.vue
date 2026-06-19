@@ -17,6 +17,7 @@
 <script>
 import store from "@/store/index.js";
 import { api } from "@/plugins/api";
+import { NONE, ADMIN, ENTRY, TICKETS, ENTRY_TICKETS } from "@/plugins/roles";
 
 export default {
     name: "Login",
@@ -35,16 +36,25 @@ export default {
                 store.commit("setName", user.name);
                 store.commit("setEmail", user.email);
                 store.commit("setPrivilege", user.privilege);
+                store.commit("setRole", user.privilege);
 
                 switch (user.privilege) {
-                    case 2:
-                        this.$router.push({ name: "entry" });
-                        break;
-                    case 3:
+                    case TICKETS:
+                    case ENTRY_TICKETS:
                         this.$router.push({ name: "guests" });
                         break;
-                    default:
+                    case ENTRY:
+                        this.$router.push({ name: "entry" });
+                        break;
+                    case ADMIN:
                         this.$router.push({ name: "home" });
+                        break;
+                    case NONE:
+                    default:
+                        window.alert(
+                            "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
+                        );
+                        break;
                 }
             } catch (err) {
                 console.error("Login failed:", err);

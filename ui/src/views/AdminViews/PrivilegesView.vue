@@ -52,6 +52,7 @@
 <script>
 import { api } from "@/plugins/api";
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+import { NONE, ADMIN, ENTRY, TICKETS, ENTRY_TICKETS } from "@/plugins/roles";
 
 export default {
   name: 'GuestsTable',
@@ -79,15 +80,15 @@ export default {
         .then(response => {
           this.users = response.data;
           this.users.forEach(element => {
-            if (element.privilege == 0) {
+            if (element.privilege == NONE) {
               this.countNista++
-            } else if (element.privilege == 1) {
+            } else if (element.privilege == ADMIN) {
               this.countAdmin++
-            } else if (element.privilege == 2) {
+            } else if (element.privilege == ENTRY) {
               this.countUlaz++
-            } else if (element.privilege == 3) {
+            } else if (element.privilege == TICKETS) {
               this.countKarte++
-            } else if (element.privilege == 4) {
+            } else if (element.privilege == ENTRY_TICKETS) {
               this.countUlplK++
             }
           });

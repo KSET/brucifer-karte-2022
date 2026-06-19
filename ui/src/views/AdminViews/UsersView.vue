@@ -18,23 +18,23 @@
                   style="border: none; opacity: 0.25;" @click="deleteUser(user)">
                   <img src="@/assets/icons/trash-icon.svg"></button></div>
               <div class="users-element userinfo" style="flex: 2;"
-                v-bind:style="[(user.privilege == '0') ? { color: 'red' } : { color: 'black' }]">{{ user.name }} <br>
+                v-bind:style="[(user.privilege == NONE) ? { color: 'red' } : { color: 'black' }]">{{ user.name }} <br>
                 {{ user.email }}</div>
               <div class="users-element"> <button class="button-priv"
-                  v-bind:style="[(user.privilege == '0') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
-                  @click="changeprivilege(user, '0')">X</button></div>
+                  v-bind:style="[(user.privilege == NONE) ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                  @click="changeprivilege(user, NONE)">X</button></div>
               <div class="users-element"> <button class="button-priv"
-                  v-bind:style="[(user.privilege == '3') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
-                  @click="changeprivilege(user, '3')">Karte</button></div>
+                  v-bind:style="[(user.privilege == TICKETS) ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                  @click="changeprivilege(user, TICKETS)">Karte</button></div>
               <div class="users-element"><button class="button-priv"
-                  v-bind:style="[(user.privilege == '2') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
-                  @click="changeprivilege(user, '2')">Ulaz</button></div>
+                  v-bind:style="[(user.privilege == ENTRY) ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                  @click="changeprivilege(user, ENTRY)">Ulaz</button></div>
               <div class="users-element"><button class="button-priv"
-                  v-bind:style="[(user.privilege == '4') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
-                  @click="changeprivilege(user, '4')">Ulaz <br>+Karte</button></div>
+                  v-bind:style="[(user.privilege == ENTRY_TICKETS) ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                  @click="changeprivilege(user, ENTRY_TICKETS)">Ulaz <br>+Karte</button></div>
               <div class="users-element"><button class="button-priv"
-                  v-bind:style="[(user.privilege == '1') ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
-                  @click="changeprivilege(user, '1')">Admin</button></div>
+                  v-bind:style="[(user.privilege == ADMIN) ? { backgroundColor: 'black', color: 'white' } : { backgroundColor: 'white', color: 'black' }]"
+                  @click="changeprivilege(user, ADMIN)">Admin</button></div>
 
 
 
@@ -72,6 +72,7 @@
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import { api } from "@/plugins/api";
+import { NONE, ADMIN, ENTRY, TICKETS, ENTRY_TICKETS } from "@/plugins/roles";
 export default {
   name: 'UsersView',
   components: {
@@ -85,6 +86,11 @@ export default {
       name: '',
       email: '',
       privilege: '',
+      NONE,
+      ADMIN,
+      ENTRY,
+      TICKETS,
+      ENTRY_TICKETS,
     }
 
   },
@@ -112,7 +118,7 @@ export default {
       api.delete('/users/' + user.id + '/',
       )
         .then(() => {
-          this.sendMail(user, 0);
+          this.sendMail(user, NONE);
           this.created();
         })
     },
@@ -126,16 +132,16 @@ export default {
       console.log("send mail attempt")
 
       var privilege_name = 0;
-      if (changenum == 1) {
+      if (changenum == ADMIN) {
         privilege_name = "Admin";
-      } else if (changenum == 3) {
+      } else if (changenum == TICKETS) {
         privilege_name = "Karte";
-      } else if (changenum == 2) {
+      } else if (changenum == ENTRY) {
         privilege_name = "Ulaz";
-      } else if (changenum == 4) {
+      } else if (changenum == ENTRY_TICKETS) {
         privilege_name = "Ulaz+Karte";
       }
-      else if (changenum == 0) {
+      else if (changenum == NONE) {
         privilege_name = "Ništa- nažalost, tvoj pristup stranici je obustavljen";
       }
 

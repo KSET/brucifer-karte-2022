@@ -1,6 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import visibilityStore from "@/store/visibilityStore.js";
 import store from "@/store/index.js";
+import {
+  NONE,
+  ADMIN,
+  GUEST_LINK_ROLES,
+  ENTRY_LINK_ROLES,
+} from "@/plugins/roles.js";
 
 /* Buckarte page Views */
 import Guests from "../views/BruckarteViews/GuestsView.vue";
@@ -58,36 +64,43 @@ const routes = [
     path: "/admin/tags",
     name: "tags",
     component: Tags,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/guests",
     name: "guests",
     component: Guests,
+    meta: { roles: GUEST_LINK_ROLES },
   },
   {
     path: "/admin/entry",
     name: "entry",
     component: EntryView,
+    meta: { roles: ENTRY_LINK_ROLES },
   },
   {
     path: "/admin/users",
     name: "users",
     component: Users,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/users-add",
     name: "usersAdd",
     component: UsersAdd,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/privileges",
     name: "privileges",
     component: Privileges,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/import",
     name: "import",
     component: Import,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/login",
@@ -103,66 +116,79 @@ const routes = [
     path: "/admin/lineup-list",
     name: "lineup",
     component: LineupList,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/sponsors/:slug",
     name: "sponsors",
     component: SponsorsList,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/sponsors-list",
     name: "sponsors",
     component: SponsorsList,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/guests-add",
     name: "guest-add",
     component: GuestAdd,
+    meta: { roles: GUEST_LINK_ROLES },
   },
   {
     path: "/admin/admin-panel",
     name: "admin-panel",
     component: AdminPanel,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/lineup-add/:slug",
     name: "lineup-add",
     component: LineupAdd,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/sponsors-add/:slug",
     name: "sponsors-add",
     component: SponsorsAdd,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/band-kontakt",
     name: "band-kontakt",
     component: BandKontakt,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/firme",
     name: "firme",
     component: Firme,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/cjenik",
     name: "cjenik",
     component: Cjenik,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/visibility",
     name: "visibility",
     component: Visibility,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/translations",
     name: "translations",
     component: Translations,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/daily-report",
     name: "dailyReport",
     component: DailyReport,
+    meta: { roles: [ADMIN] },
   },
   {
     path: "/admin/:pathMatch(.*)*",
@@ -283,63 +309,19 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   //provjera auth i privilegija
-  var allowedRoutesForprivilege2 = [
-    "home",
-    "login",
-    "logout",
-    "entry",
-    "",
-    undefined,
-    "admin",
-  ];
-  var allowedRoutesForprivilege3 = [
-    "home",
-    "login",
-    "logout",
-    "guests",
-    "",
-    undefined,
-  ];
-  var allowedRoutesForprivilege4 = [
-    "home",
-    "login",
-    "logout",
-    "guest_tag",
-    "guests",
-    "entry",
-    "",
-    undefined,
-  ];
-
   if (to.path.startsWith("/admin")) {
     if (Date.now() / 1000 > store.state.tokenExp && to.name !== "logout") {
       next({ path: "/admin/logout" });
     } else if (store.state.id === "" && to.name !== "login") {
       next({ path: "/admin/login" });
-    } else if (store.state.privilege == 0 && to.name !== "login") {
+    } else if (store.getters.hasRole(NONE) && to.name !== "login") {
       window.alert(
         "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
       );
       next({ path: "/admin/login" });
     } else if (
-      store.state.privilege == 2 &&
-      !allowedRoutesForprivilege2.includes(to.name)
-    ) {
-      window.alert(
-        "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-      );
-      next({ path: "/admin" });
-    } else if (
-      store.state.privilege == 3 &&
-      !allowedRoutesForprivilege3.includes(to.name)
-    ) {
-      window.alert(
-        "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-      );
-      next({ path: "/admin" });
-    } else if (
-      store.state.privilege == 4 &&
-      !allowedRoutesForprivilege4.includes(to.name)
+      to.meta.roles !== undefined &&
+      !store.getters.hasAnyRole(...to.meta.roles)
     ) {
       window.alert(
         "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"

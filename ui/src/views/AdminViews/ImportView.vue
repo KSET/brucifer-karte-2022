@@ -37,7 +37,7 @@
           <li>Prvi redak mora sadržavati imena polja koja moraju biti lowercase te u istom formatu kao u sljedećem redu.
           </li>
           <li>Imena polja mogu biti: name, email, privilege.</li>
-          <li>Mogće vrijednosti privilege su cijeli brojevi izmešu 0 i 4 s uključivim granicama.</li>
+          <li>Mogće vrijednosti privilege su: none, admin, entry, tickets, entry_tickets.</li>
           <li>Polje name može se ostaviti prazno, taj podatadak će se sam updeatati kada se korisnik prijavi</li>
         </ul>
       </div>
@@ -148,32 +148,32 @@ export default {
           {
             "name": "",
             "email": "toni.batos@kset.org",
-            "privilege": 3
+            "privilege": "tickets"
           },
           {
             "name": "Zrika Petrović",
             "email": "zrinka.petrovic@kset.org",
-            "privilege": 1
+            "privilege": "admin"
           },
           {
             "name": "",
             "email": "alen.ivic@kset.org",
-            "privilege": 2
+            "privilege": "entry"
           },
           {
             "name": "Korina Ban",
             "email": "korina.ban@kset.org",
-            "privilege": 2
+            "privilege": "entry"
           },
           {
             "name": "",
             "email": "tin.tinović@gmail.com",
-            "privilege": 2
+            "privilege": "entry"
           },
           {
             "name": "Marija Erić",
             "email": "marija.eric@kset.org",
-            "privilege": 1
+            "privilege": "admin"
           }
         ]
       }

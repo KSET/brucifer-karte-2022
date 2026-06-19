@@ -34,9 +34,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny, BasePermission, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny, BasePermission, SAFE_METHODS, IsAuthenticated
 from rest_framework.throttling import AnonRateThrottle
 from django.contrib.auth.models import User as DjangoUser
+from .roles import Role, GUEST_ROLES
 
 from datetime import datetime, time
 from urllib.parse import quote
@@ -48,24 +49,53 @@ class SponsorGuestThrottle(AnonRateThrottle):
 class MailerThrottle(AnonRateThrottle):
     rate = '200/hour'
 
-class IsPrivileged(BasePermission):
-    """
-    Allows access only to users whose corresponding Users record has privilege >= 1.
-    Privilege 0 users (auto-created on Google login) are denied.
-    """
-    def has_permission(self, request, view):
-        if not request.user or not request.user.is_authenticated:
-            return False
-        try:
-            user = Users.objects.get(email=request.user.username)
-            return int(user.privilege) >= 1
-        except (Users.DoesNotExist, ValueError):
-            return False
+class FormThrottle(AnonRateThrottle):
+    rate = '20/hour'
+
+
+def _caller_role(request):
+    """Role-key of the JWT caller (Users.privilege), or None if unauthenticated."""
+    if not request.user or not request.user.is_authenticated:
+        return None
+    try:
+        user = Users.objects.get(email=request.user.username)
+        return user.privilege
+    except Users.DoesNotExist:
+        return None
+
+
+def HasRole(*roles):
+    """Allow callers whose role is one of `roles` (no implicit hierarchy)."""
+    allowed = set(roles)
+
+    class _HasRole(BasePermission):
+        def has_permission(self, request, view):
+            return _caller_role(request) in allowed
+
+    return _HasRole
+
+
+def ReadOnlyOrRole(*write_roles, read_roles=None):
+    """Reads: open when `read_roles` is None, else restricted to it. Writes: `write_roles`."""
+    write_allowed = set(write_roles)
+    read_allowed = None if read_roles is None else set(read_roles)
+
+    class _ReadOnlyOrRole(BasePermission):
+        def has_permission(self, request, view):
+            if request.method in SAFE_METHODS:
+                if read_allowed is None:
+                    return True
+                return _caller_role(request) in read_allowed
+            return _caller_role(request) in write_allowed
+
+    return _ReadOnlyOrRole
 
 class MailerViewSet(viewsets.ModelViewSet):
     queryset = Mailer.objects.all()
     serializer_class = MailerSerializer
-    permission_classes = [IsPrivileged]
+    # Guest-confirmation emails are sent from the ticket-staff Guests screen,
+    # so any staff role may use the mailer (still authenticated only).
+    permission_classes = [HasRole(*GUEST_ROLES)]
 
     @action(detail=False, methods=['post'], throttle_classes=[MailerThrottle])
     def send_mail(self, request):
@@ -113,7 +143,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
     filter_backends = [DynamicSearchFilter, DjangoFilterBackend]
     search_fields = ['name', 'surname', 'tag', 'confCode', 'jmbag', 'email']
     filterset_fields = ['bought', 'entered']
-    permission_classes = [IsPrivileged]
+    permission_classes = [HasRole(*GUEST_ROLES)]
 
     @action(detail=False, methods=['post'], url_path='bulk-import')
     def bulk_import(self, request):
@@ -181,7 +211,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
 class TagsViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
-    permission_classes = [IsPrivileged]
+    permission_classes = [ReadOnlyOrRole(Role.ADMIN, read_roles=GUEST_ROLES)]
 
 
 class UsersViewSet(viewsets.ModelViewSet):
@@ -189,7 +219,7 @@ class UsersViewSet(viewsets.ModelViewSet):
     serializer_class = UsersSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'email']
-    permission_classes = [IsPrivileged]
+    permission_classes = [HasRole(Role.ADMIN)]
 
     @action(detail=False, methods=['post'], url_path='bulk-import')
     def bulk_import(self, request):
@@ -213,7 +243,7 @@ class LineupViewSet(viewsets.ModelViewSet):
     serializer_class = LineupSerializer
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     ordering_fields = ['order']
-    permission_classes = [IsPrivileged]
+    permission_classes = [HasRole(Role.ADMIN)]
 
     @transaction.atomic
     def perform_create(self, serializer):
@@ -258,6 +288,7 @@ class LineupViewSet(viewsets.ModelViewSet):
 
 class PublicLineupViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PublicLineupSerializer
+    permission_classes = [AllowAny]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['order']
     ordering = ['order']
@@ -270,7 +301,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
     serializer_class = SponsorsSerializer
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     ordering_fields = ['order']
-    permission_classes = [IsPrivileged]
+    permission_classes = [HasRole(Role.ADMIN)]
 
     @action(detail=False, methods=['get'], permission_classes=[AllowAny], url_path='public')
     def public(self, request):
@@ -334,7 +365,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
             if not sponsor:
                 return Response({"detail": "Sponsor not found"}, status=404)
 
-            guest = Guests.objects.filter(id=guest_id, tag__istartswith=sponsor.slug).first()
+            guest = Guests.objects.filter(id=guest_id, tag__istartswith=f"{sponsor.slug} ").first()
             if not guest:
                 return Response({"detail": "Guest not found"}, status=404)
 
@@ -349,23 +380,29 @@ class SponsorsViewSet(viewsets.ModelViewSet):
         if not slug or not name or not access_token:
             return Response({"detail": "slug, name and access_token are required"}, status=400)
 
-        sponsor = Sponsors.objects.filter(slug=slug, access_token=access_token).first()
-        if not sponsor:
-            return Response({"detail": "Sponsor not found"}, status=404)
+        with transaction.atomic():
+            sponsor = (
+                Sponsors.objects.select_for_update()
+                .filter(slug=slug, access_token=access_token)
+                .first()
+            )
+            if not sponsor:
+                return Response({"detail": "Sponsor not found"}, status=404)
 
-        if sponsor.guestCap is not None and sponsor.guestCap > 0:
-            count = Guests.objects.filter(tag__icontains=sponsor.slug).count()
-            if count >= sponsor.guestCap:
-                return Response({"detail": "Guest limit reached"}, status=409)
+            tag_prefix = f"{sponsor.slug} "
+            if sponsor.guestCap is not None and sponsor.guestCap > 0:
+                count = Guests.objects.filter(tag__istartswith=tag_prefix).count()
+                if count >= sponsor.guestCap:
+                    return Response({"detail": "Guest limit reached"}, status=409)
 
-        tag = f"{sponsor.slug} VIP - Sponzor - {sponsor.name}"
+            tag = f"{sponsor.slug} VIP - Sponzor - {sponsor.name}"
 
-        guest = Guests.objects.create(
-            name=name,
-            tag=tag,
-            bought=True,
-            entered=False,
-        )
+            guest = Guests.objects.create(
+                name=name,
+                tag=tag,
+                bought=True,
+                entered=False,
+            )
 
         return Response(
             {"id": guest.id, "name": guest.name, "tag": guest.tag},
@@ -432,6 +469,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
 
 class PublicSponsorsViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PublicSponsorsSerializer
+    permission_classes = [AllowAny]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['order']
     ordering = ['order']
@@ -442,13 +480,13 @@ class PublicSponsorsViewSet(viewsets.ReadOnlyModelViewSet):
 class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
-    permission_classes = [IsPrivileged]
+    permission_classes = [HasRole(Role.ADMIN)]
 
 
 class CjenikViewSet(viewsets.ModelViewSet):
     queryset = Cjenik.objects.all()
     serializer_class = CjenikSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [ReadOnlyOrRole(Role.ADMIN)]
 
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
     search_fields = ['tag']
@@ -462,7 +500,7 @@ class VisibilityViewSet(viewsets.ModelViewSet):
     filter_backends = [DynamicSearchFilter]
     search_fields = ['name']
 
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [ReadOnlyOrRole(Role.ADMIN)]
 
 
 class TranslationsViewSet(viewsets.ModelViewSet):
@@ -473,7 +511,7 @@ class TranslationsViewSet(viewsets.ModelViewSet):
     search_fields = ['key']
     ordering_fields = ['key']
 
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [ReadOnlyOrRole(Role.ADMIN)]
 
 class LeaderboardPermission(BasePermission):
     """
@@ -483,13 +521,7 @@ class LeaderboardPermission(BasePermission):
     def has_permission(self, request, view):
         if request.method in ('GET', 'POST', 'HEAD', 'OPTIONS'):
             return True
-        if not request.user or not request.user.is_authenticated:
-            return False
-        try:
-            user = Users.objects.get(email=request.user.username)
-            return int(user.privilege) >= 1
-        except (Users.DoesNotExist, ValueError):
-            return False
+        return _caller_role(request) == Role.ADMIN
 
 class GameLeaderboardViewSet(viewsets.ModelViewSet):
     queryset = GameLeaderboard.objects.all()
@@ -507,7 +539,7 @@ class AllowPostAnyOtherwiseAuthenticated(BasePermission):
     Require authentication for all other methods.
     """
     def has_permission(self, request, view):
-        if request.method in ("POST"):
+        if request.method == "POST":
             return True
         return bool(request.user and request.user.is_authenticated)
 
@@ -515,8 +547,9 @@ class BrucosiFormResponseViewSet(viewsets.ModelViewSet):
     queryset = BrucosiFormResponse.objects.all()
     serializer_class = BrucosiFormResponseSerializer
     permission_classes = [AllowPostAnyOtherwiseAuthenticated]
+    throttle_classes = [FormThrottle]
 
-    @action(detail=False, methods=['post'], url_path='brucosi-form-submit')
+    @action(detail=False, methods=['post'], url_path='brucosi-form-submit', throttle_classes=[FormThrottle])
     def brucosi_form_submit(self, request):
         serializer = BrucosiFormResponseSerializer(data=request.data)
         if serializer.is_valid():
@@ -544,7 +577,7 @@ class GoogleAuthView(APIView):
 
             custom_user, created = Users.objects.get_or_create(
                 email=email,
-                defaults={"name": name, "privilege": "0"}
+                defaults={"name": name, "privilege": Role.NONE}
             )
             if not created and not custom_user.name:
                 custom_user.name = name
@@ -570,3 +603,23 @@ class GoogleAuthView(APIView):
 
         except Exception:
             return Response({"error": "Authentication failed."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MeView(APIView):
+    """GET /api/me/ — the caller's email, name and role ('none' if no Users row)."""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            user = Users.objects.get(email=request.user.username)
+            return Response({
+                "email": user.email,
+                "name": user.name,
+                "role": user.privilege,
+            })
+        except Users.DoesNotExist:
+            return Response({
+                "email": request.user.username,
+                "name": "",
+                "role": "none",
+            })

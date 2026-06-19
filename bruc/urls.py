@@ -1,5 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from .views import (
     GameLeaderboardViewSet,
@@ -16,7 +17,8 @@ from .views import (
     SponsorsViewSet,
     BrucosiFormResponseViewSet,
     GoogleAuthView,
-    PublicSponsorsViewSet
+    PublicSponsorsViewSet,
+    MeView
 )
 
 router = routers.DefaultRouter()
@@ -39,4 +41,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('auth/google/', GoogleAuthView.as_view(), name="google-auth"),
+    path('auth/token/refresh/', TokenRefreshView.as_view(), name="token-refresh"),
+    path('me/', MeView.as_view(), name="me"),
 ]

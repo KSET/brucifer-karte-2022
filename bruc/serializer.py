@@ -41,6 +41,10 @@ class SponsorsSerializer(serializers.HyperlinkedModelSerializer):
         model = Sponsors
         fields = ["id", "slug", "access_token", "order", "visible", "guestsEnabled",
                   "name", "url", "image", "email", "guestCap"]
+        # access_token is a secret used to authenticate the public sponsor
+        # portal; never expose it in read responses (it is generated
+        # server-side in SponsorsViewSet.perform_create).
+        extra_kwargs = {"access_token": {"write_only": True}}
         
 class PublicSponsorsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_filters',
     'bruc.apps.BrucConfig',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'django_seed',
 ]
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
+    'http://localhost:8081',
     'https://brucosijada.kset.org',
     'https://bruc-test.josip.igr.ec',
 ]
@@ -69,7 +71,7 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.IsAuthenticated'
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -107,7 +109,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'brucifer.wsgi.application'
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),   
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,

@@ -8,6 +8,7 @@ export default createStore({
     name: "",
     email: "",
     privilege: "",
+    role: "",
     tokenExp: 10000000000000000,
     accessToken: "",
     refreshToken: "",
@@ -26,6 +27,9 @@ export default createStore({
     setPrivilege(state, value) {
       state.privilege = value;
     },
+    setRole(state, value) {
+      state.role = value;
+    },
     setTokenExp(state, value) {
       state.tokenExp = value;
     },
@@ -40,10 +44,18 @@ export default createStore({
       state.name = "";
       state.email = "";
       state.privilege = "";
+      state.role = "";
       state.tokenExp = 10000000000000000;
       state.accessToken = "";
       state.refreshToken = "";
     },
+  },
+  getters: {
+    hasRole: (state) => (role) => state.role === role,
+    hasAnyRole:
+      (state) =>
+      (...roles) =>
+        roles.includes(state.role),
   },
   modules: {
     visibilityStore,
