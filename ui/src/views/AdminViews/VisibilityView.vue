@@ -197,12 +197,14 @@ export default {
         },
         formattedTimerTime() {
             const timerTime = store.state.TIMER_TIME;
+            if (typeof timerTime !== 'string' || !timerTime) return '';
             const formattedDate = timerTime.substring(8, 10) + '.' + timerTime.substring(5, 7) + '.' + timerTime.substring(0, 4);
             const formattedTime = timerTime.substring(11, 16);
             return formattedDate + '. ' + formattedTime;
         },
         formattedSponsorsInputTime() {
             const timerTime = store.state.SPONSORS_INPUT_TIME;
+            if (typeof timerTime !== 'string' || !timerTime) return '';
             const formattedDate = timerTime.substring(8, 10) + '.' + timerTime.substring(5, 7) + '.' + timerTime.substring(0, 4);
             const formattedTime = timerTime.substring(11, 16);
             return formattedDate + '. ' + formattedTime;
