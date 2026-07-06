@@ -194,8 +194,6 @@ export default {
 
 
 <style scoped>
-.bw-page-container {}
-
 .text-block {
     text-align: center;
     margin: 2rem auto 0 auto;
@@ -208,7 +206,7 @@ export default {
     margin: 2rem auto 3rem auto;
     width: 100%;
 
-    background-color: rgba(7, 72, 120, 0.7) !important;
+    background-color: var(--bw-dialog-bg) !important;
     border: 1px solid white;
     border-radius: 12px;
 }

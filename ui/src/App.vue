@@ -43,15 +43,9 @@ export default {
 </script>
 
 <style>
-
-
-:root{
-  --bw-navbar-color: #004069;
-  --bw-footer-color: #004069;
-  --bw-page-color: #004069;
-}
-
 @import '~bootstrap/dist/css/bootstrap.css';
 @import './assets/fonts/antonio/antonio.css';
 @import './assets/scss/Admin-scss/global.scss';
+@import './bruciweb.css';
+@import './assets/primevue-overrides.css';
 </style>

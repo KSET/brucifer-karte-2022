@@ -2,7 +2,6 @@ import { createApp, Vue } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import 'jquery/src/jquery.js'
 import JsonCSV from 'vue-json-csv';
 import VueJwtDecode from 'vue-jwt-decode'
 import Vuex from 'vuex';

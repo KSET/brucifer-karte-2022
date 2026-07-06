@@ -75,29 +75,42 @@ export default {
 <style>
 :root {
   /* BACKGROUND IMAGES
-  --background-image -> homepage images
-  var(--background-default); -> default images on other pages
+  --background-image -> homepage images (view-local)
+  --background-default (default images on other pages) lives in bruciweb.css TOKENS
   */
 
   --background-image: url("../../assets/bg/home/bg-desktop.png");
-  --background-default: url("../../assets/bg/default/bg-desktop.png");
   --background-image-aspect-ratio: calc(1081 / 1930);
-
-  /* COLORS */
-
-  --header-color: white;
-  --footer-color: white;
-  --background--color: white;
-  --artist-name-color: #FAFAFB;
 
   /* COUNTDOWN */
 
   --countdown-right-offset: 10.5%;
   --countdown-font-size: 5vw;
   --countdown-top-offset: 32%;
-
 }
 
+@media screen and (max-width: 980px) {
+  :root {
+    --background-image-aspect-ratio: calc(1677 / 1048);
+    --countdown-right-offset: 17vw;
+    --countdown-font-size: 8vw;
+    --countdown-top-offset: 25.5%;
+    --background-image: url("../../assets/bg/home/bg-tablet.png");
+  }
+}
+
+@media screen and (max-width: 550px) {
+  :root {
+    --background-image-aspect-ratio: calc(1563 / 880);
+    --countdown-right-offset: 13vw;
+    --countdown-font-size: 8vw;
+    --countdown-top-offset: 17.5%;
+    --background-image: url("../../assets/bg/home/bg-mobile.png");
+  }
+}
+</style>
+
+<style scoped>
 .homepage-container {
   display: flex;
   flex-direction: column;
@@ -125,13 +138,9 @@ export default {
   right: 0;
   padding-left: var(--countdown-right-offset);
   text-align: left;
-  font-size: var(--countdown-font-size);
   color: #c5ecff;
-  /* text-shadow: .062em 0 black; */
   pointer-events: none;
   user-select: none;
-  padding-bottom: min(calc(var(--background-image-aspect-ratio) * 100%),
-      calc(100vh - var(--topbar-height) - var(--footer-height) - var(--countdown-font-size) - var(--countdown-top-offset)));
   overflow: hidden;
   font-size: var(--countdown-font-size);
 }
@@ -152,21 +161,15 @@ export default {
   margin: 0px -15px;
 }
 
-@media screen and (max-width: 980PX) {
-  :root {
-    --background-image-aspect-ratio: calc(1677 / 1048);
-    --countdown-right-offset: 17vw;
-    --countdown-font-size: 8vw;
-    --countdown-top-offset: 25.5%;
-    --background-image: url("../../assets/bg/home/bg-tablet.png");
-  }
+.homepage {
+  background-image: var(--background-image);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 
+@media screen and (max-width: 980px) {
   .comingSoon {
     background-image: url("../../assets/bg/comingSoon/comingSoon-tablet.png");
-  }
-
-  .page-container {
-    background-color: var(--bw-page-color);
   }
 
   .countdown-timer {
@@ -174,26 +177,13 @@ export default {
   }
 
   .countdown-textfield {
-    display: inline;
     margin: 0px -10px;
   }
 }
 
-@media screen and (max-width: 550PX) {
-  :root {
-    --background-image-aspect-ratio: calc(1563 / 880);
-    --countdown-right-offset: 13vw;
-    --countdown-font-size: 8vw;
-    --countdown-top-offset: 17.5%;
-    --background-image: url("../../assets/bg/home/bg-mobile.png");
-  }
-
+@media screen and (max-width: 550px) {
   .comingSoon {
     background-image: url("../../assets/bg/comingSoon/comingSoon-mobitel.png");
-  }
-
-  .page-container {
-    background-color: var(--bw-page-color);
   }
 
   .countdown-timer {
@@ -201,34 +191,7 @@ export default {
   }
 
   .countdown-textfield {
-    display: inline;
     margin: 0px -5px;
   }
 }
-
-
-
-.bw-page-container {
-  margin-top: 0;
-  flex: 1;
-
-  position: relative;
-  background-image: var(--background-default);
-  background-repeat: repeat;
-  background-size: cover;
-  background-color: var(--bw-footer-color);
-  ;
-  min-height: 93vh;
-}
-
-.homepage {
-  /* Footer height */
-  background-image: var(--background-image);
-  background-repeat: no-repeat;
-  background-size: cover;
-
-}
-
-
-@import url(../../bruciweb.css);
 </style>

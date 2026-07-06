@@ -1,0 +1,69 @@
+/*
+  Global PrimeVue overlay overrides.
+  PrimeVue dialogs teleport to <body>, so scoped view styles cannot reach
+  them — these rules must stay in this global file. They are scoped under
+  .artist-dialog (the pass-through class the lineup dialog carries) so they
+  only affect that dialog and don't leak to any future PrimeVue dialog.
+*/
+
+.artist-dialog .p-dialog-close-button:not(:disabled):hover {
+    color: black !important;
+}
+
+.artist-dialog .p-dialog-close-button {
+    color: #fff !important;
+}
+
+.artist-dialog .p-dialog-header {
+    padding-top: 25.5rem !important;
+    padding-bottom: 0rem;
+}
+
+.artist-dialog .p-dialog-title {
+    color: white !important;
+    text-transform: uppercase;
+}
+
+.artist-dialog {
+    width: 95%;
+    max-width: 25rem;
+    height: fit-content;
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0rem;
+
+    background-color: var(--bw-dialog-bg) !important;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6px) !important;
+}
+
+.artist-dialog-image {
+    aspect-ratio: 1;
+    width: 100%;
+    object-fit: cover;
+    max-width: 100%;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    border-radius: 12px;
+}
+
+/* 450px is a deliberate exception to the breakpoint scale: the dialog
+   header padding flips to viewport units only once 25.5rem no longer fits. */
+@media screen and (max-width: 450px) {
+    .artist-dialog .p-dialog-header {
+        padding-top: 97vw !important;
+    }
+
+    .artist-dialog {
+        max-width: 97vw;
+        max-height: 97vw;
+    }
+}
