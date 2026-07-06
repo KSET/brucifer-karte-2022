@@ -151,6 +151,7 @@ import { api } from "@/plugins/api";
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import store from "@/store/visibilityStore.js";
 import { result } from 'lodash';
+import { deriveFerEmail } from '@/utils/ferEmail';
 
 export default {
     name: 'VisibilityView',
@@ -262,46 +263,11 @@ export default {
             console.log("Sending email...");
 
 
-            var jmbagslice = guest.jmbag;
-            if (jmbagslice.slice(0, 3) == "003") {
-                jmbagslice = jmbagslice.slice(4, 9);
-            } else if (jmbagslice.slice(0, 1) == "0") {
-                jmbagslice = jmbagslice.slice(0, 9);
-            } else {
-                jmbagslice = jmbagslice.slice(2, 7);
+            var email = deriveFerEmail(guest.name, guest.surname, guest.jmbag);
+            if (!email) {
+                console.error("Nedostaje ime, prezime ili JMBAG - email nije poslan.", guest);
+                return;
             }
-
-            var e_name = guest.name[0].toLowerCase()
-            if (e_name == "č") {
-                e_name = "c";
-            } else if (e_name == "š") {
-                e_name = "s";
-            } else if (e_name == "ž") {
-                e_name = "z";
-            } else if (e_name == "đ") {
-                e_name = "d";
-            } else if (e_name == "ć") {
-                e_name = "c";
-            }
-
-            var e_surname = guest.surname[0].toLowerCase()
-            if (e_surname == "č") {
-                e_surname = "c";
-            } else if (e_surname == "š") {
-                e_surname = "s";
-            } else if (e_surname == "ž") {
-                e_surname = "z";
-            } else if (e_surname == "đ") {
-                e_surname = "d";
-            } else if (e_surname == "ć") {
-                e_surname = "c";
-            }
-
-
-            var email = e_name + e_surname + jmbagslice + "@fer.hr";
-
-            // za testiranje, maknuti u produkciji
-            // email = "pavleergovic@gmail.com"
 
             var msg = guest.name + " " + guest.surname + " " + guest.confCode
 
