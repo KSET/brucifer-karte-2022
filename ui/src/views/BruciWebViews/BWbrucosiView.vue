@@ -82,31 +82,7 @@ import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import brucosiFormStore from '@/store/brucosiFormStore'
-
-const normalize = (char) => {
-    const map = { 'č': 'c', 'š': 's', 'ž': 'z', 'đ': 'd', 'ć': 'c' }
-    return map[char] || char
-}
-
-function expectedFerEmail(values) {
-    if (!values.name || !values.surname || !values.jmbag) {
-        return null
-    }
-    let jmbagslice = values.jmbag
-
-    if (jmbagslice.slice(0, 3) === '003') {
-        jmbagslice = jmbagslice.slice(4, 9)
-    } else if (jmbagslice.startsWith('0')) {
-        jmbagslice = jmbagslice.slice(0, 9)
-    } else {
-        jmbagslice = jmbagslice.slice(2, 7)
-    }
-
-    const e_name = normalize(values.name[0].toLowerCase())
-    const e_surname = normalize(values.surname[0].toLowerCase())
-
-    return `${e_name}${e_surname}${jmbagslice}@fer.hr`
-}
+import { deriveFerEmail } from '@/utils/ferEmail'
 
 export default {
     name: 'JmbagForm',
@@ -133,17 +109,17 @@ export default {
             resolver: zodResolver(
                 z.object({
                     name: z.string().min(1, { message: 'Ime je obavezno polje' }),
-                    surname: z.string().min(1, { message: 'Ime je obavezno polje' }),
-                    jmbag: z.string().length(10, { message: 'JMBAG mora biti 10 znamenki' }),
+                    surname: z.string().min(1, { message: 'Prezime je obavezno polje' }),
+                    jmbag: z.string().regex(/^\d{10}$/, { message: 'JMBAG mora biti 10 znamenki' }),
                     email: z.string().email({ message: 'Email je obavezno polje' }),
                     gdpr_accepted: z.boolean().refine(val => val === true, { message: 'Prihvaćanje privole je obavezno', }),
                 }).superRefine((values, ctx) => {
-                    const expected = expectedFerEmail(values)
-                    if (values.email.toLowerCase() !== expected) {
+                    const expected = deriveFerEmail(values.name, values.surname, values.jmbag)
+                    if (expected !== null && values.email.trim().toLowerCase() !== expected) {
                         ctx.addIssue({
                             code: 'custom',
                             path: ['email'],
-                            message: 'Email mora biti u FER formatu (ip1234@fer.hr)',
+                            message: 'Email mora biti u FER formatu (ip34567@fer.hr)',
                         })
                     }
                 })
@@ -194,8 +170,6 @@ export default {
 
 
 <style scoped>
-.bw-page-container {}
-
 .text-block {
     text-align: center;
     margin: 2rem auto 0 auto;
@@ -208,7 +182,7 @@ export default {
     margin: 2rem auto 3rem auto;
     width: 100%;
 
-    background-color: rgba(7, 72, 120, 0.7) !important;
+    background-color: var(--bw-dialog-bg) !important;
     border: 1px solid white;
     border-radius: 12px;
 }

@@ -2,12 +2,12 @@
   <div class="bw-page-container">
     <div class="contents">
       <section>
-        <h1 class="bwh1" style="display:inline-block; vertical-align: middle; margin-top: 2rem;">{{
-          translations?.cjenik.pagetitle ? translations.cjenik.pagetitle : "cjenik.pagetitle" }}
+        <h1 class="bwh1">{{
+          translations?.cjenik?.pagetitle ? translations.cjenik.pagetitle : "cjenik.pagetitle" }}
         </h1>
-        <div lass="aircash-block">
+        <div class="aircash-block">
           <div class="aircash">
-            <h1 class="bwh1 cj" style="color: white;display:inline-block; vertical-align: middle;">Plaćaj 20% jeftinije uz
+            <h1 class="bwh1 cj">Plaćaj 20% jeftinije uz
               Aircash!
             </h1>
 
@@ -33,7 +33,7 @@
           </div>
 
         </div>
-        <p class="disclamer-text">{{ translations?.cjenik.text ? translations.cjenik.text : "cjenik.text" }}</p>
+        <p class="disclamer-text">{{ translations?.cjenik?.text ? translations.cjenik.text : "cjenik.text" }}</p>
 
       </section>
     </div>
@@ -84,7 +84,11 @@ export default {
 }
 </script>
   
-<style>
+<style scoped>
+.bwh1.cj {
+  margin-top: 0;
+}
+
 .aircash {
   position: absolute;
   display: grid;
@@ -94,18 +98,18 @@ export default {
   left: 15%;
   top: 3.8%;
   vertical-align: middle;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--bw-card-bg);
   align-items: center;
   justify-items: center;
 }
 
 .aircash-block {
-  display: inline-block !important;
+  display: inline-block;
 }
 
 .cjenik-table {
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--bw-card-bg);
   height: 100%;
   overflow: auto;
   padding: 10px;
@@ -168,21 +172,17 @@ export default {
 
 }
 
-.disclamer-text {
-  font-size: 20px;
-  font-weight: 400;
-}
-
 @media screen and (max-width: 980px) {
   .cjenik-title h1 {
-    font-size: 24px;
+    font-size: 14px;
+  }
+
+  .disclamer-text {
+    font-size: 14px;
   }
 
   .aircash {
     grid-template-columns: 60% 20% 20%;
-  }
-
-  .aircash {
     left: 3%;
     top: 6%;
   }
@@ -193,16 +193,6 @@ export default {
 
   .cjenik-table {
     margin-top: 100px;
-  }
-}
-
-@media screen and (max-width: 980px) {
-  .cjenik-title h1 {
-    font-size: 14px;
-  }
-
-  .disclamer-text {
-    font-size: 14px;
   }
 }
 
@@ -223,6 +213,4 @@ export default {
     width: 95%;
   }
 }
-
-@import url(../../bruciweb.css);
 </style>

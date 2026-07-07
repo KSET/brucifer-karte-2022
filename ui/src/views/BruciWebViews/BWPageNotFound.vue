@@ -32,22 +32,20 @@ export default {
 }
 </script>
   
-<style>
-@import url(../../bruciweb.css);
-
+<style scoped>
 .opa {
-  font-size: 128px !important;
-  font-weight: 700 !important;
+  display: block;
+  font-size: 128px;
+  font-weight: 700;
   text-align: center;
-  margin-bottom: 5rem !important;
-  margin-top: 5rem !important;
-
+  margin-bottom: 5rem;
+  margin-top: 5rem;
 }
 
 .p404 {
-  font-size: 24px !important;
+  font-size: 24px;
   font-weight: 400;
   text-align: center;
-  margin-top: 5rem !important;
+  margin-top: 5rem;
 }
 </style>

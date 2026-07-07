@@ -2,9 +2,8 @@
   <div class="bw-page-container">
     <div class="satnica">
       <div class="image">
-        <img class="satnica-desktop" src="../../assets/satnica/satnica-desktop.svg" alt="Brucifer Satnica" />
-        <img class="satnica-tablet" src="../../assets/satnica/satnica-tablet.svg" alt="Brucifer Satnica" />
-        <img class="satnica-mobile" src="../../assets/satnica/satnica-mobile.svg" alt="Brucifer Satnica" />
+        <BwResponsiveImage :desktop-src="satnicaDesktop" :tablet-src="satnicaTablet" :mobile-src="satnicaMobile"
+          alt="Brucifer Satnica" />
       </div>
 
     </div>
@@ -12,38 +11,30 @@
 
   </div>
 </template>
-  
+
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
-import NavbarBweb from '@/components/NavbarAndFooter/NavbarBweb.vue'
+import BwResponsiveImage from '@/components/BruciWeb/BwResponsiveImage.vue'
+import satnicaDesktop from '@/assets/satnica/satnica-desktop.svg'
+import satnicaTablet from '@/assets/satnica/satnica-tablet.svg'
+import satnicaMobile from '@/assets/satnica/satnica-mobile.svg'
 
 export default {
-  name: 'Naslovnica',
-  components: { Footer, NavbarBweb },
+  name: 'SatnicaView',
+  components: { Footer, BwResponsiveImage },
   props: {
     msg: String
   },
+  data() {
+    return { satnicaDesktop, satnicaTablet, satnicaMobile }
+  },
 }
 </script>
-  
+
 <style scoped>
 .satnica {
   width: 100%;
   min-height: 93vh;
-}
-
-.satnica-desktop {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.satnica-tablet {
-  display: none !important;
-}
-
-.satnica-mobile {
-  display: none !important;
 }
 
 .image {
@@ -51,46 +42,10 @@ export default {
   height: 100%;
 }
 
-.navbar.bw {
-  background: var(--bw-navbar-color);
-}
-
-.navbar.bw::after {
-  background: linear-gradient(var(--bw-navbar-color), transparent);
-}
-
-@media screen and (max-width: 980px) {
-  .satnica-desktop {
-    display: none !important;
-  }
-
-  .satnica-tablet {
-    height: 100%;
-    display: block !important;
-  }
-
-  .satnica-mobile {
-    display: none !important;
-  }
-}
-
 @media screen and (max-width: 550px) {
-  .satnica-desktop {
-    display: none !important;
-  }
-
-  .satnica-tablet {
-    display: none !important;
-  }
-
-  .satnica-mobile {
-    height: 100%;
+  .image :deep(.bw-responsive-image) {
     margin-top: 10px;
-    display: block !important;
   }
-
 }
-
-@import url(../../bruciweb.css);
 </style>
   

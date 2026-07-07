@@ -1,12 +1,39 @@
+/*
+  Global stylesheet for the public Brucifer pages (views/BruciWebViews).
+  Imported once from App.vue — do NOT @import this from individual views.
+
+  Breakpoint scale — use exactly these values in media queries
+  (CSS custom properties cannot be used inside @media conditions):
+    550px  — mobile
+    980px  — tablet
+    1280px — small desktop
+    1550px — wide desktop
+*/
+
+/* ------------------ TOKENS ------------------ */
+
+:root {
+  --bw-navbar-color: #004069;
+  --bw-footer-color: #004069;
+  --bw-page-color: #004069;
+
+  --bw-card-bg: rgba(0, 0, 0, 0.3);
+  --bw-dialog-bg: rgba(7, 72, 120, 0.7);
+  --bw-text-block-bg: #00000026;
+
+  /* default page background image (consumed by .bw-page-container) */
+  --background-default: url("./assets/bg/default/bg-desktop.png");
+}
+
 /* ------------------ TYPOGRAPHY ------------------ */
 
-p {
-  font-family: 'Myriad Pro';
-  font-weight: 300;
+.bw-page-container p {
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 400;
   font-size: 20px;
   line-height: 18px;
-  color: black;
-  padding-bottom: 20px;
+  color: white;
+  padding: 10px 0;
   transition: margin-top 0.3s ease;
   will-change: margin-top;
 }
@@ -15,13 +42,13 @@ p {
   padding: 10px 0;
 }
 
-h1 {
-  font-family: 'Antonio';
+.bw-page-container h1 {
+  font-family: 'Ubuntu', sans-serif;
   font-weight: 700;
   font-size: 36px;
   line-height: 47px;
-  color: black;
-}       
+  color: white;
+}
 
 .contents h1,
 .contents h2,
@@ -30,6 +57,18 @@ h1 {
 .contents h5,
 .contents h6 {
   font-size: 1.5em;
+}
+
+/* Inline page title (sits next to other inline-block content, e.g. cjenik) */
+.bwh1 {
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: 2rem;
+}
+
+/* Translucent text block on legal/static pages (kontakt, pravila, ulaznice, uvjeti) */
+.text {
+  background: var(--bw-text-block-bg);
 }
 
 /* ------------------ LAYOUT ------------------ */
@@ -52,16 +91,28 @@ main::after {
   display: none;
 }
 
+.bw-page-container {
+  margin-top: 0;
+  flex: 1;
+
+  position: relative;
+  background-image: var(--background-default);
+  background-repeat: repeat;
+  background-size: cover;
+  background-color: var(--bw-footer-color);
+  min-height: 93vh;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .contents {
   font-size: 1.5rem;
   padding: 0 3%;
   padding-top: 3%;
   transition: padding 0.3s ease, font-size 0.3s ease;
   will-change: padding, font-size;
-}
-
-.contents section {
-  color: var(--bruc-black);
 }
 
 .contents section + section {
@@ -98,7 +149,28 @@ main::after {
   margin: 1.5rem 0;
 }
 
-/* ------------------ IMAGE CONTAINER ------------------ */
+/* ------------------ CARD IMAGE (inside BwCardGrid slots: lineup, sponsors) ------------------ */
+
+.card-image-container {
+  position: relative;
+}
+
+.card-image-sizer {
+  padding-bottom: calc(0.86 * 100%);
+  transition: padding-bottom 0.3s ease;
+  will-change: padding-bottom;
+}
+
+.card-image-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ------------------ IMAGE CONTAINER (homepage background) ------------------ */
 
 .image-container {
   position: relative;
@@ -110,8 +182,7 @@ main::after {
   will-change: padding-bottom;
 }
 
-.image-container .image-frame,
-.image-container .image-content {
+.image-container .image-frame {
   position: absolute;
   top: 0;
   left: 0;
@@ -120,18 +191,8 @@ main::after {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
-}
-
-.image-container .image-frame {
   z-index: -1;
   background-image: var(--background-image);
-}
-
-.image-container .image-content {
-  z-index: 9;
-  max-width: calc(100vw - var(--content-padding) * 2vw - 20px);
-  padding: 0 calc(var(--content-padding) * 1vw);
-  padding-top: calc(var(--content-padding) * 0.85 * 1vw);
 }
 
 /* ------------------ RESPONSIVE ------------------ */
@@ -147,12 +208,5 @@ main::after {
 
   .contents p + h1 {
     margin-top: 4rem;
-  }
-}
-
-@media screen and (max-width: 1280px) {
-  #page-container {
-    background: url("../src/assets/bg/default/bg-tablet.png") no-repeat;
-    background-size: cover;
   }
 }

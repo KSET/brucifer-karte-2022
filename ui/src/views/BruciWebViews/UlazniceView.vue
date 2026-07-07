@@ -68,24 +68,7 @@ export default {
 
 
 <style>
-h1 {
-  font-weight: 700;
-  font-size: 36px;
-  line-height: 47px;
-}
-
-p {
-  padding-bottom: 10px;
-  padding-top: 10px;
-}
-
-.text {
-  background: #00000026;
-}
-
 .pretix-widget {
   background-color: white;
 }
-
-@import url(../../bruciweb.css);
 </style>

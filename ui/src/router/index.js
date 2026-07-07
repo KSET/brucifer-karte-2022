@@ -51,7 +51,6 @@ import BWbrucosi from "../views/BruciWebViews/BWbrucosiView.vue";
 
 
 import SponsorsPage from "../views/BruciWebViews/SponsorsPageView.vue";
-import TlocrtView2 from "@/views/BruciWebViews/TlocrtView2.vue";
 
 const routes = [
   {
@@ -251,14 +250,6 @@ const routes = [
     path: "/tlocrt",
     name: "Tlocrt",
     component: Tlocrt,
-    // meta: {
-    //   visibilityCheck: "TLOCRT_VISIBILITY",
-    // },
-  },
-  {
-    path: "/t2",
-    name: "Tlocrt2",
-    component: TlocrtView2,
     // meta: {
     //   visibilityCheck: "TLOCRT_VISIBILITY",
     // },

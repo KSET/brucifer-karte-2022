@@ -8,50 +8,49 @@
                 <h1 class="textfield">Ime i prezime </h1>
                 <input class="inputfield " type="text" v-model="sponsorName">
 
-                <button class="button submit" style="background-color: white; margin-top: 0px; display: block; "
-                    @click="sponsorPost">
+                <button class="button submit" @click="sponsorPost">
                     Dodaj
                 </button>
             </div>
 
             <div>
-                <h1 v-if="this.guestsEnabled === 0" class="page-title-dis" style="margin-left: 50px; margin-top: 70px;">
+                <h1 v-if="this.guestsEnabled === 0" class="page-title-dis">
                     Popis
                     uzvanika</h1>
 
                 <div v-if="this.guestsEnabled !== 0" class="infofield">
                     <div class="artist">
                         <div class="image-container">
-                            <img class="image-frame2" style="border: none;" :src="previewImage">
+                            <img class="card-image-frame" :src="previewImage" alt="Pregled slike">
                         </div>
                     </div>
 
                     <div class="infofield-element">
                         <div class="grid-container">
-                            <h1 class="textfield" style="margin-bottom: 1em">Ograničenje</h1>
-                            <h1 class="textfield" style="font-weight: 400; margin-bottom: 1em">{{ this.guestCap }}</h1>
+                            <h1 class="textfield mb">Ograničenje</h1>
+                            <h1 class="textfield val mb">{{ this.guestCap }}</h1>
                             <h1 class="textfield">Broj unesenih</h1>
-                            <h1 class="textfield" style="font-weight: 400">{{ this.guestsAdded }}</h1>
+                            <h1 class="textfield val">{{ this.guestsAdded }}</h1>
                         </div>
                     </div>
                 </div>
                 <div v-else class="infofield-tablet">
                     <div class="artist tabb">
                         <div class="image-container">
-                            <img class="image-frame2" style="border: none;" :src="previewImage">
+                            <img class="card-image-frame" :src="previewImage" alt="Pregled slike">
                         </div>
                     </div>
 
                     <div class="infofield-element">
                         <div class="grid-container">
-                            <h1 class="textfield" style="margin-bottom: 1em">Ograničenje</h1>
-                            <h1 class="textfield" style="font-weight: 400; margin-bottom: 1em">{{ this.guestCap }}</h1>
+                            <h1 class="textfield mb">Ograničenje</h1>
+                            <h1 class="textfield val mb">{{ this.guestCap }}</h1>
                             <h1 class="textfield">Broj unesenih</h1>
-                            <h1 class="textfield" style="font-weight: 400">{{ this.guestsAdded }}</h1>
+                            <h1 class="textfield val">{{ this.guestsAdded }}</h1>
                         </div>
                     </div>
                 </div>
-                <h1 v-if="this.guestsEnabled === 0" class="textfield dis" style="text-align: center;">Vrijeme za promjenu
+                <h1 v-if="this.guestsEnabled === 0" class="textfield dis">Vrijeme za promjenu
                     popisa je isteklo! <br>
                     Ovo je vaš konačni popis!</h1>
 
@@ -61,13 +60,11 @@
         <div class="sponsorsPage-table">
             <div class=row>
                 <table id="guests">
-                    <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }"
-                        style="overflow:auto;height: 35rem !important;" class="tbody">
-                        <tr v-for="guest in sponsorGuests" style=" width: 100%;" :key="guest.id">
-                            <td style="padding-left: 20% !important;">{{ guest.name }}</td>
-                            <td v-if="this.guestsEnabled !== 0" style="padding-left: 10% !important;"><button
-                                    class="button-icon" @click=sponsorDelete(guest)
-                                    style="margin-left: 0.9rem;     background: transparent;"> <img
+                    <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" class="tbody">
+                        <tr v-for="guest in sponsorGuests" :key="guest.id">
+                            <td class="cell-name">{{ guest.name }}</td>
+                            <td v-if="this.guestsEnabled !== 0" class="cell-action"><button
+                                    class="button-icon" @click=sponsorDelete(guest)> <img
                                         src="@/assets/icons/trash-icon-white.svg"></button>
                             </td>
                         </tr>
@@ -83,13 +80,12 @@
 
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
-import NavbarBweb from '@/components/NavbarAndFooter/NavbarBweb.vue'
 import store from '@/store/visibilityStore'
 import { publicApi } from "@/plugins/publicApi";
 import { api } from "@/plugins/api";
 
 export default {
-    components: { Footer, NavbarBweb },
+    components: { Footer },
     data() {
         return {
             currentImage: undefined,
@@ -231,6 +227,8 @@ export default {
 .page-title-dis {
     vertical-align: middle;
     display: inline-block;
+    margin-left: 50px;
+    margin-top: 70px;
     padding-top: 3%;
     padding-bottom: 3%;
     padding-right: 5%;
@@ -248,6 +246,7 @@ export default {
 }
 
 .image-container {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -258,7 +257,7 @@ export default {
 .artist {
     width: 15rem;
     height: 15rem;
-    background: rgba(0, 0, 0, .3);
+    background: var(--bw-card-bg);
     border-radius: 18px;
     padding: 15px 30px;
 }
@@ -324,6 +323,43 @@ h1 {
     font-family: 'Montserrat';
     font-weight: 500;
     border: none;
+    background-color: white;
+    margin-top: 0;
+    display: block;
+}
+
+.textfield.mb {
+    margin-bottom: 1em;
+}
+
+.textfield.val {
+    font-weight: 400;
+}
+
+.button-icon {
+    margin-left: 0.9rem;
+    background: transparent;
+}
+
+.tbody {
+    overflow: auto;
+    height: 35rem;
+}
+
+.textfield.dis {
+    text-align: center;
+}
+
+#guests tr {
+    width: 100%;
+}
+
+#guests .cell-name {
+    padding-left: 20%;
+}
+
+#guests .cell-action {
+    padding-left: 10%;
 }
 
 .row {
@@ -358,25 +394,6 @@ h1 {
 
 #guests tr:hover {
     background-color: transparent;
-    ;
-
-}
-
-.footery {
-    background: var(--bw-footer-color);
-    ;
-}
-
-.footery::after {
-    background: linear-gradient(to top, var(--bw-footer-color), transparent);
-}
-
-.navbar.bw {
-    background: var(--bw-footer-color);
-}
-
-.navbar.bw::after {
-    background: linear-gradient(var(--bw-footer-color), transparent);
 }
 
 @media screen and (max-width: 980px) {

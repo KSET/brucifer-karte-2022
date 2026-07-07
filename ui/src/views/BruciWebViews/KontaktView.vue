@@ -44,23 +44,3 @@ export default {
 }
 </script>
 
-<style>
-@import url('https://fonts.cdnfonts.com/css/myriad-pro');
-
-h1 {
-  font-weight: 700;
-  font-size: 36px;
-  line-height: 47px;
-}
-
-p {
-  padding-bottom: 10px;
-  padding-top: 10px;
-}
-
-.text {
-  background: #00000026;
-}
-
-@import url(../../bruciweb.css);
-</style>
