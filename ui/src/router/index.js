@@ -326,6 +326,18 @@ router.beforeEach((to, from, next) => {
   }
 });
 
+let visibilityFetch = null;
+
+router.beforeEach(async (to, from, next) => {
+  if (!to.path.includes("admin") && !visibilityStore.state.VISIBILITY_LOADED) {
+    if (visibilityFetch === null) {
+      visibilityFetch = visibilityStore.dispatch("fetchVisibilityData");
+    }
+    await visibilityFetch;
+  }
+  next();
+});
+
 router.beforeEach((to, from, next) => {
   /* check when coming soon is visible */
   if (

@@ -1,8 +1,10 @@
 <template>
   <div id="app">
-    <NavbarAdmin v-if="navType === 'bruckarte'"></NavbarAdmin>
-    <NavbarBweb v-if="navType === 'brucweb' && comingSoonVisible"></NavbarBweb>
-    <router-view />
+    <template v-if="visibilityLoaded">
+      <NavbarAdmin v-if="navType === 'bruckarte'"></NavbarAdmin>
+      <NavbarBweb v-if="navType === 'brucweb' && comingSoonVisible"></NavbarBweb>
+      <router-view />
+    </template>
   </div>
 </template>
 
@@ -24,7 +26,9 @@ export default {
     return {};
   },
   async beforeCreate() {
-    await visibilityStore.dispatch('fetchVisibilityData');
+    if (!visibilityStore.state.VISIBILITY_LOADED) {
+      await visibilityStore.dispatch('fetchVisibilityData');
+    }
     await translationsStore.dispatch('fetchTranslations');
   },
   computed: {
@@ -37,6 +41,9 @@ export default {
     },
     comingSoonVisible() {
       return visibilityStore.state.COMINGSOON_VISIBILITY == 0;
+    },
+    visibilityLoaded() {
+      return visibilityStore.state.VISIBILITY_LOADED;
     },
   },
 };

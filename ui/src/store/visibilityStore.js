@@ -4,6 +4,7 @@ import { publicApi } from "@/plugins/publicApi";
 
 export default createStore({
   state: {
+    VISIBILITY_LOADED: false,
     COMINGSOON_VISIBILITY: false,
     LINEUP_VISIBILITY: false,
     SPONSORS_VISIBILITY: false,
@@ -16,8 +17,18 @@ export default createStore({
     TIMER_TIME: "",
     SPONSORS_INPUT_TIME: "",
   },
-  plugins: [createPersistedState()],
+  plugins: [
+    createPersistedState({
+      reducer: (state) => {
+        const { VISIBILITY_LOADED, ...persisted } = state;
+        return persisted;
+      },
+    }),
+  ],
   mutations: {
+    setVISIBILITY_LOADED(state, value) {
+      state.VISIBILITY_LOADED = value;
+    },
     setCOMINGSOON_VISIBILITY(state, value) {
       state.COMINGSOON_VISIBILITY = value;
     },
@@ -72,6 +83,8 @@ export default createStore({
         }
       } catch (error) {
         console.error("Failed to fetch visibility data:", error);
+      } finally {
+        commit("setVISIBILITY_LOADED", true);
       }
     },
   },
