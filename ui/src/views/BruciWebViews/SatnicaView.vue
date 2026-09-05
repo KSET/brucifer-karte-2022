@@ -22,9 +22,6 @@ import satnicaMobile from '@/assets/satnica/satnica-mobile.svg'
 export default {
   name: 'SatnicaView',
   components: { Footer, BwResponsiveImage },
-  props: {
-    msg: String
-  },
   data() {
     return { satnicaDesktop, satnicaTablet, satnicaMobile }
   },

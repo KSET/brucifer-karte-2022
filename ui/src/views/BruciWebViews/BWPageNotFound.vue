@@ -18,17 +18,11 @@
 </template>
   
 <script>
-import RouterElement from '@/components/AdminPanel/RouterElement.vue'
-
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
-import { onMounted } from 'vue';
 
 export default {
-  name: 'KontaktView',
-  components: { Footer, RouterElement },
-  mounted() {
-    
-  }
+  name: 'BWPageNotFound',
+  components: { Footer },
 }
 </script>
   

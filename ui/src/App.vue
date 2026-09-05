@@ -11,7 +11,6 @@
 <script>
 import NavbarAdmin from './components/NavbarAndFooter/NavbarAdmin.vue';
 import NavbarBweb from './components/NavbarAndFooter/NavbarBweb.vue';
-import Footer from './components/NavbarAndFooter/Footer.vue';
 import visibilityStore from '@/store/visibilityStore.js';
 import translationsStore from '@/store/translationsStore.js';
 
@@ -20,15 +19,8 @@ export default {
   components: {
     NavbarAdmin,
     NavbarBweb,
-    Footer,
-  },
-  data() {
-    return {};
   },
   async beforeCreate() {
-    if (!visibilityStore.state.VISIBILITY_LOADED) {
-      await visibilityStore.dispatch('fetchVisibilityData');
-    }
     await translationsStore.dispatch('fetchTranslations');
   },
   computed: {

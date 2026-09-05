@@ -1,6 +1,10 @@
 <template>
   <div class="bw-page-container">
-    <BwCardGrid :items="sponsors" variant="sponsors">
+    <p v-if="error" class="bw-fetch-error">
+      Trenutno nije moguće dohvatiti sponzore.
+      <button type="button" @click="loadSponsors">Pokušaj ponovno</button>
+    </p>
+    <BwCardGrid v-else :items="sponsors" variant="sponsors">
       <template #default="{ item }">
         <a :href="item.url" rel="noreferrer noopener" target="_blank">
           <div class="card-image-container">
@@ -24,24 +28,26 @@ export default {
   name: 'BWSponsors',
   components: { Footer, BwCardGrid },
 
-  data() {
-    return {
-      sponsors: [],
-    }
-  },
-
-  async mounted() {
-    const data = await sponsorsStore.dispatch('fetchVisible')
-    this.sponsors = data
+  mounted() {
+    this.loadSponsors()
   },
 
   computed: {
-    loading() {
-      return sponsorsStore.state.loading
+    sponsors() {
+      return sponsorsStore.state.list
     },
     error() {
       return sponsorsStore.state.error
-    }
+    },
+  },
+
+  methods: {
+    async loadSponsors() {
+      try {
+        await sponsorsStore.dispatch('fetchVisible', { force: !!this.error })
+      } catch (e) {
+      }
+    },
   },
 }
 </script>

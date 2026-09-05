@@ -2,6 +2,9 @@ import { createStore } from 'vuex'
 import { api } from '@/plugins/api'
 import { publicApi } from '@/plugins/publicApi'
 
+let visibleInFlight = null
+let visibleLoaded = false
+
 export default createStore({
     state: {
         list: [],
@@ -48,6 +51,7 @@ export default createStore({
                 const { data } = await api.get('/sponsors/', {
                     params: { ordering: 'order' },
                 })
+                visibleLoaded = false
                 commit('SET_LIST', data)
                 return data
             } catch (e) {
@@ -79,6 +83,7 @@ export default createStore({
                 const { data } = await api.post('/sponsors/', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 })
+                visibleLoaded = false
                 commit('SET_ITEM', data)
                 if (state.list.length) commit('UPSERT_LIST_ITEM', data)
                 return data
@@ -95,6 +100,7 @@ export default createStore({
                 const { data } = await api.put(`/sponsors/${id}/`, formData, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 })
+                visibleLoaded = false
                 commit('SET_ITEM', data)
                 if (state.list.length) commit('UPSERT_LIST_ITEM', data)
                 return data
@@ -109,6 +115,7 @@ export default createStore({
             commit('SET_LOADING', true); commit('SET_ERROR', null)
             try {
                 await api.delete(`/sponsors/${id}/`)
+                visibleLoaded = false
                 commit('REMOVE_LIST_ITEM', id)
             } catch (e) {
                 commit('SET_ERROR', e); throw e
@@ -122,6 +129,7 @@ export default createStore({
             commit('SET_LOADING', true); commit('SET_ERROR', null)
             try {
                 await api.post('/sponsors/reorder/', items)
+                visibleLoaded = false
             } catch (e) {
                 commit('SET_ERROR', e); throw e
             } finally {
@@ -130,19 +138,34 @@ export default createStore({
         },
 
         // --- PUBLIC (no auth, visible only) ---
-        async fetchVisible({ commit }) {
-            commit('SET_LOADING', true); commit('SET_ERROR', null)
-            try {
-                const { data } = await publicApi.get('/public/sponsors/', {
-                    params: { ordering: 'order' },
-                })
-                commit('SET_LIST', data)
-                return data
-            } catch (e) {
-                commit('SET_ERROR', e); throw e
-            } finally {
-                commit('SET_LOADING', false)
+        async fetchVisible({ commit, state }, { force = false } = {}) {
+            if (visibleInFlight) {
+                commit('SET_ERROR', null)
+                return visibleInFlight
             }
+            if (!force && visibleLoaded) {
+                commit('SET_ERROR', null)
+                return state.list
+            }
+
+            commit('SET_LOADING', true); commit('SET_ERROR', null)
+            visibleInFlight = (async () => {
+                try {
+                    const { data } = await publicApi.get('/public/sponsors/', {
+                        params: { ordering: 'order' },
+                    })
+                    commit('SET_LIST', data)
+                    visibleLoaded = true
+                    return data
+                } catch (e) {
+                    commit('SET_ERROR', e); throw e
+                } finally {
+                    commit('SET_LOADING', false)
+                    visibleInFlight = null
+                }
+            })()
+
+            return visibleInFlight
         },
     },
 })

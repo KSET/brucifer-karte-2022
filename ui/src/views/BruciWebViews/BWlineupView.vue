@@ -48,12 +48,6 @@ export default {
         lineups() {
             return lineupStore.state.list
         },
-        loading() {
-            return lineupStore.state.loading
-        },
-        error() {
-            return lineupStore.state.error
-        },
     },
 
     async mounted() {

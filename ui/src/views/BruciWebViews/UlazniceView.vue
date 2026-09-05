@@ -43,10 +43,6 @@ import translationsStore from '@/store/translationsStore'
 export default {
   name: 'UlazniceView',
   components: { Footer },
-  data() {
-    return {
-    }
-  },
   computed: {
     translations() {
       return translationsStore.state.translations;

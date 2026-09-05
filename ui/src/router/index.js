@@ -329,7 +329,7 @@ router.beforeEach((to, from, next) => {
 let visibilityFetch = null;
 
 router.beforeEach(async (to, from, next) => {
-  if (!to.path.includes("admin") && !visibilityStore.state.VISIBILITY_LOADED) {
+  if (!visibilityStore.state.VISIBILITY_LOADED) {
     if (visibilityFetch === null) {
       visibilityFetch = visibilityStore.dispatch("fetchVisibilityData");
     }
@@ -359,7 +359,7 @@ router.beforeEach((to, from, next) => {
   /* check if page is visible */
   if (!to.path.includes("admin")) {
     if (to.meta.visibilityCheck != undefined) {
-      if (store.state[to.meta.visibilityCheck] == 0) {
+      if (visibilityStore.state[to.meta.visibilityCheck] == 0) {
         next({ name: "BWPageNotFound" });
       } else {
         next();

@@ -29,10 +29,6 @@ import translationsStore from '@/store/translationsStore';
 export default {
   name: 'KontaktView',
   components: { Footer },
-  data() {
-    return {
-    }
-  },
   computed: {
     translations() {
       return translationsStore.state.translations;

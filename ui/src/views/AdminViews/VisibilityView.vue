@@ -218,13 +218,13 @@ export default {
                     await api.put('/visibility/' + changeField + '/',
                         { visible: val },
                     )
-                    await store.dispatch("fetchVisibilityData")
+                    await store.dispatch("fetchVisibilityData", { force: true })
                 }
             } else {
                 await api.put('/visibility/' + changeField + '/',
                     { visible: val },
                 )
-                await store.dispatch("fetchVisibilityData")
+                await store.dispatch("fetchVisibilityData", { force: true })
             }
 
         },

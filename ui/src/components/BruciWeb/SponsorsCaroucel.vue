@@ -18,37 +18,26 @@ import sponsorsStore from '@/store/sponsorsStore'
 
 export default {
     name: 'SponsorsCaroucel',
-    data() {
-        return {
-            sponsors: [],
-            duration: '100s',
-        }
-    },
 
     async mounted() {
-        await this.loadSponsors()
+        try {
+            await sponsorsStore.dispatch('fetchVisible')
+        } catch (e) {
+            console.error('Failed to fetch sponsors:', e)
+        }
     },
 
     computed: {
         SPONSORS_VISIBILITY() {
             return store.state.SPONSORS_VISIBILITY
         },
-        loading() {
-            return sponsorsStore.state.loading
+        sponsors() {
+            return sponsorsStore.state.list
         },
-        error() {
-            return sponsorsStore.state.error
-        }
+        duration() {
+            return `${Math.max(100, this.sponsors.length * 10)}s`
+        },
     },
-
-    methods: {
-        async loadSponsors() {
-            const data = await sponsorsStore.dispatch('fetchVisible')
-            this.sponsors = data
-            const speed = Math.max(100, this.sponsors.length * 10)
-            this.duration = `${speed}s`
-        }
-    }
 }
 </script>
 

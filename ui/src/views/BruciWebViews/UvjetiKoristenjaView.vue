@@ -26,17 +26,10 @@
   <script>
   import Footer from '@/components/NavbarAndFooter/Footer.vue'
   import translationsStore from '@/store/translationsStore';
-  import visibilityStore from '@/store/visibilityStore';
 
   export default {
     name: 'uvjetikoristenjaView',
     components: { Footer },
-    data() {
-      return {
-      }
-    },
-    mounted() {
-    },
     computed: {
       translations() {
         return translationsStore.state.translations;

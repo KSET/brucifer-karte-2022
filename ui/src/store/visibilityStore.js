@@ -2,6 +2,8 @@ import { createStore } from "vuex";
 import createPersistedState from "vuex-persistedstate";
 import { publicApi } from "@/plugins/publicApi";
 
+let inFlight = null;
+
 export default createStore({
   state: {
     VISIBILITY_LOADED: false,
@@ -64,28 +66,38 @@ export default createStore({
     },
   },
   actions: {
-    async fetchVisibilityData({ commit }) {
-      try {
-        const response = await publicApi.get(
-          `/visibility/`
-        );
-        const visibilityResp = response.data.reduce((result, obj) => {
-          result[obj.name] = obj.visible;
-          return result;
-        }, {});
-
-        for (const key in visibilityResp) {
-          if (Object.prototype.hasOwnProperty.call(visibilityResp, key)) {
-            const value = visibilityResp[key];
-            const mutationName = `set${key}`;
-            commit(mutationName, value);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to fetch visibility data:", error);
-      } finally {
-        commit("setVISIBILITY_LOADED", true);
+    async fetchVisibilityData({ commit, state }, { force = false } = {}) {
+      if (!force) {
+        if (inFlight) return inFlight;
+        if (state.VISIBILITY_LOADED) return Promise.resolve();
       }
+
+      inFlight = (async () => {
+        try {
+          const response = await publicApi.get(
+            `/visibility/`
+          );
+          const visibilityResp = response.data.reduce((result, obj) => {
+            result[obj.name] = obj.visible;
+            return result;
+          }, {});
+
+          for (const key in visibilityResp) {
+            if (Object.prototype.hasOwnProperty.call(visibilityResp, key)) {
+              const value = visibilityResp[key];
+              const mutationName = `set${key}`;
+              commit(mutationName, value);
+            }
+          }
+        } catch (error) {
+          console.error("Failed to fetch visibility data:", error);
+        } finally {
+          commit("setVISIBILITY_LOADED", true);
+          inFlight = null;
+        }
+      })();
+
+      return inFlight;
     },
   },
 });

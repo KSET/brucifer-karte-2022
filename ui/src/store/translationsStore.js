@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import axios from "axios";
+import { publicApi } from "@/plugins/publicApi";
 
 export default createStore({
   state: {
@@ -19,9 +19,7 @@ export default createStore({
   actions: {
     async fetchTranslations({ commit }) {
       try {
-        const response = await axios.get(
-          `${process.env.VUE_APP_BASE_URL}/translations/?ordering=key`
-        );
+        const response = await publicApi.get("/translations/?ordering=key");
         commit("settranslationsTable", response.data);
 
         const transformedJson = {};
@@ -37,7 +35,6 @@ export default createStore({
         });
 
         commit("settranslations", transformedJson);
-        console.log(transformedJson);
       } catch (error) {
         console.error("Failed to fetch translations data:", error);
       }

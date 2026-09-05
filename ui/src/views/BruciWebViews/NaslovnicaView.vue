@@ -9,7 +9,6 @@
         <h5 class="countdown-textfield">{{ seconds }}</h5>
       </vue-countdown>
 
-      <!-- <SponsorsIcons /> -->
       <div class="homepage">
         <div class="image-container">
           <div class="image-sizer"></div>
@@ -36,14 +35,10 @@
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue';
 import store from '@/store/visibilityStore';
-import SponsorsIcons from '@/components/BruciWeb/SponsorsIcons.vue';
 
 export default {
   name: 'Naslovnica',
-  components: { Footer, SponsorsIcons },
-  props: {
-    msg: String,
-  },
+  components: { Footer },
   computed: {
     comingSoonVisible() {
       return store.state.COMINGSOON_VISIBILITY === false;
