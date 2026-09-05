@@ -12,12 +12,15 @@ from django.core.mail import BadHeaderError, send_mail
 from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework.decorators import action
 from django.template.loader import render_to_string
+from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
+from django.views.decorators.cache import never_cache
 
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 from django.db import transaction
+from django.utils import timezone
 import json
 from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
@@ -337,6 +340,20 @@ class SponsorsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(sponsor)
         return Response(serializer.data)
 
+    @staticmethod
+    def _sponsor_input_open(sponsor):
+        if sponsor.guestsEnabled == 2:
+            return True
+        if sponsor.guestsEnabled != 1:
+            return False
+
+        deadline = (
+            Visibility.objects.filter(name="SPONSORS_INPUT_TIME")
+            .values_list("time", flat=True)
+            .first()
+        )
+        return deadline is None or timezone.now() <= deadline
+
     @action(
         detail=False,
         methods=['get', 'post', 'delete'],
@@ -383,6 +400,9 @@ class SponsorsViewSet(viewsets.ModelViewSet):
             if not sponsor:
                 return Response({"detail": "Sponsor not found"}, status=404)
 
+            if not self._sponsor_input_open(sponsor):
+                return Response({"detail": "Unos gostiju je zatvoren"}, status=403)
+
             guest = Guests.objects.filter(id=guest_id, tag__istartswith=f"{sponsor.slug} ").first()
             if not guest:
                 return Response({"detail": "Guest not found"}, status=404)
@@ -406,6 +426,9 @@ class SponsorsViewSet(viewsets.ModelViewSet):
             )
             if not sponsor:
                 return Response({"detail": "Sponsor not found"}, status=404)
+
+            if not self._sponsor_input_open(sponsor):
+                return Response({"detail": "Unos gostiju je zatvoren"}, status=403)
 
             tag_prefix = f"{sponsor.slug} "
             if sponsor.guestCap is not None and sponsor.guestCap > 0:
@@ -511,6 +534,7 @@ class CjenikViewSet(viewsets.ModelViewSet):
     ordering_fields = ['order']
 
 
+@method_decorator(never_cache, name="dispatch")
 class VisibilityViewSet(viewsets.ModelViewSet):
     queryset = Visibility.objects.all()
     serializer_class = VisibilitySerializer

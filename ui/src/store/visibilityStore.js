@@ -4,6 +4,47 @@ import { publicApi } from "@/plugins/publicApi";
 
 let inFlight = null;
 
+const TIME_KEYS = new Set(["TIMER_TIME", "SPONSORS_INPUT_TIME"]);
+
+const mutations = {
+  setVISIBILITY_LOADED(state, value) {
+    state.VISIBILITY_LOADED = value;
+  },
+  setCOMINGSOON_VISIBILITY(state, value) {
+    state.COMINGSOON_VISIBILITY = value;
+  },
+  setLINEUP_VISIBILITY(state, value) {
+    state.LINEUP_VISIBILITY = value;
+  },
+  setSPONSORS_VISIBILITY(state, value) {
+    state.SPONSORS_VISIBILITY = value;
+  },
+  setCJENIK_VISIBILITY(state, value) {
+    state.CJENIK_VISIBILITY = value;
+  },
+  setSATNICA_VISIBILITY(state, value) {
+    state.SATNICA_VISIBILITY = value;
+  },
+  setTLOCRT_VISIBILITY(state, value) {
+    state.TLOCRT_VISIBILITY = value;
+  },
+  setULAZNICA_VISIBILITY(state, value) {
+    state.ULAZNICA_VISIBILITY = value;
+  },
+  setTIMER_VISIBILITY(state, value) {
+    state.TIMER_VISIBILITY = value;
+  },
+  setIGRICA_VISIBILITY(state, value) {
+    state.IGRICA_VISIBILITY = value;
+  },
+  setTIMER_TIME(state, value) {
+    state.TIMER_TIME = value;
+  },
+  setSPONSORS_INPUT_TIME(state, value) {
+    state.SPONSORS_INPUT_TIME = value;
+  },
+};
+
 export default createStore({
   state: {
     VISIBILITY_LOADED: false,
@@ -16,53 +57,24 @@ export default createStore({
     ULAZNICA_VISIBILITY: false,
     TIMER_VISIBILITY: false,
     IGRICA_VISIBILITY: false,
-    TIMER_TIME: "",
-    SPONSORS_INPUT_TIME: "",
+    TIMER_TIME: null,
+    SPONSORS_INPUT_TIME: null,
   },
   plugins: [
     createPersistedState({
+      key: "brucifer.visibility",
       reducer: (state) => {
         const { VISIBILITY_LOADED, ...persisted } = state;
         return persisted;
       },
     }),
   ],
-  mutations: {
-    setVISIBILITY_LOADED(state, value) {
-      state.VISIBILITY_LOADED = value;
-    },
-    setCOMINGSOON_VISIBILITY(state, value) {
-      state.COMINGSOON_VISIBILITY = value;
-    },
-    setLINEUP_VISIBILITY(state, value) {
-      state.LINEUP_VISIBILITY = value;
-    },
-    setSPONSORS_VISIBILITY(state, value) {
-      state.SPONSORS_VISIBILITY = value;
-    },
-    setCJENIK_VISIBILITY(state, value) {
-      state.CJENIK_VISIBILITY = value;
-    },
-    setSATNICA_VISIBILITY(state, value) {
-      state.SATNICA_VISIBILITY = value;
-    },
-    setTLOCRT_VISIBILITY(state, value) {
-      state.TLOCRT_VISIBILITY = value;
-    },
-    setULAZNICA_VISIBILITY(state, value) {
-      state.ULAZNICA_VISIBILITY = value;
-    },
-    setTIMER_VISIBILITY(state, value) {
-      state.TIMER_VISIBILITY = value;
-    },
-    setIGRICA_VISIBILITY(state, value) {
-      state.IGRICA_VISIBILITY = value;
-    },
-    setTIMER_TIME(state, value) {
-      state.TIMER_TIME = value;
-    },
-    setSPONSORS_INPUT_TIME(state, value) {
-      state.SPONSORS_INPUT_TIME = value;
+  mutations,
+  getters: {
+    sponsorsInputClosed: (state) => {
+      if (!state.SPONSORS_INPUT_TIME) return false;
+      const deadline = new Date(state.SPONSORS_INPUT_TIME).getTime();
+      return !Number.isNaN(deadline) && Date.now() > deadline;
     },
   },
   actions: {
@@ -77,17 +89,16 @@ export default createStore({
           const response = await publicApi.get(
             `/visibility/`
           );
-          const visibilityResp = response.data.reduce((result, obj) => {
-            result[obj.name] = obj.visible;
-            return result;
-          }, {});
 
-          for (const key in visibilityResp) {
-            if (Object.prototype.hasOwnProperty.call(visibilityResp, key)) {
-              const value = visibilityResp[key];
-              const mutationName = `set${key}`;
-              commit(mutationName, value);
+          for (const row of response.data) {
+            const mutationName = `set${row.name}`;
+            if (!Object.prototype.hasOwnProperty.call(mutations, mutationName)) {
+              continue;
             }
+            commit(
+              mutationName,
+              TIME_KEYS.has(row.name) ? row.time ?? null : row.visible
+            );
           }
         } catch (error) {
           console.error("Failed to fetch visibility data:", error);

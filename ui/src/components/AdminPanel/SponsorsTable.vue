@@ -114,6 +114,7 @@ import { useToast } from 'primevue/usetoast'
 import { FilterMatchMode } from '@primevue/core/api'
 
 import sponsorsStore from '@/store/sponsorsStore'
+import visibilityStore from '@/store/visibilityStore'
 
 export default {
   name: 'SponsorsTable',
@@ -193,7 +194,11 @@ export default {
     },
 
     toggleGuests(row, checked) {
-      return this.savePatch(row, { guestsEnabled: checked ? 1 : 0 })
+      if (!checked) {
+        return this.savePatch(row, { guestsEnabled: 0 })
+      }
+      const value = visibilityStore.getters.sponsorsInputClosed ? 2 : 1
+      return this.savePatch(row, { guestsEnabled: value })
     },
 
     isUnchanged(a, b) {

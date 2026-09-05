@@ -144,6 +144,7 @@ class Visibility(models.Model):
     name = models.CharField(max_length=100, default='',
                             blank=True, primary_key=True)
     visible = models.BooleanField(default=False)
+    time = models.DateTimeField(null=True, blank=True)
 
 
 class Translations(models.Model):

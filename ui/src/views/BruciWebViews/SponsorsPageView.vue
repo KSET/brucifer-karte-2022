@@ -128,27 +128,16 @@ export default {
 
                     this.guestsEnabled = this.sponsorsInstance.guestsEnabled;
 
-                    if (this.guestsEnabled !== 2) {
-                        let closeTime = Date.parse(store.state.SPONSORS_INPUT_TIME); // pravi closetime 12.11.2022 u 19.00
-                        console.log(closeTime)
-                        if (Date.now() > closeTime) {
-                            console.log("zatvaraaaaj")
-                            console.log(this.sponsorsInstance)
+                    if (this.guestsEnabled === 1 && store.getters.sponsorsInputClosed) {
+                        let formData = new FormData();
 
-                            let formData = new FormData();
+                        formData.append("guestsEnabled", 0);
+                        this.guestsEnabled = 0;
 
-                            formData.append("guestsEnabled", 0);
-                            this.guestsEnabled = 0;
-
-
-                            const resp = await api.put("/sponsors/" + this.sponsorsInstance.id + "/", formData, {
-                                    headers: { "Content-Type": "multipart/form-data" }
-                                })
-
-                            console.log("posted")
-                        }
+                        await api.put("/sponsors/" + this.sponsorsInstance.id + "/", formData, {
+                            headers: { "Content-Type": "multipart/form-data" }
+                        })
                     }
-                    console.log(Date.now())
 
                 })
         }

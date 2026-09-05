@@ -117,7 +117,7 @@
                     Vrijeme odbrojavanja Timera
                 </h1>
                 <label class="datetimePicker">
-                    <input @change="changeVisibility('TIMER_TIME', timerTime)" type="datetime-local" v-model="timerTime"
+                    <input @change="changeTime('TIMER_TIME', timerTime)" type="datetime-local" v-model="timerTime"
                         class="datetimePickerInput">
                     <span class="placeholderText">{{ formattedTimerTime }}</span>
                 </label>
@@ -126,7 +126,7 @@
                     Vrijeme sponzorima za unos
                 </h1>
                 <label class="datetimePicker">
-                    <input @change="changeVisibility('SPONSORS_INPUT_TIME', sponsorsInputTime)" type="datetime-local"
+                    <input @change="changeTime('SPONSORS_INPUT_TIME', sponsorsInputTime)" type="datetime-local"
                         v-model="sponsorsInputTime" class="datetimePickerInput">
                     <span class="placeholderText">{{ formattedSponsorsInputTime }}</span>
                 </label>
@@ -150,8 +150,13 @@
 import { api } from "@/plugins/api";
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import store from "@/store/visibilityStore.js";
-import { result } from 'lodash';
 import { deriveFerEmail } from '@/utils/ferEmail';
+import { zagrebLocalToDate, dateToZagrebLocalInput, formatZagreb, parseStored } from '@/utils/datetime';
+
+const TIME_FIELD_MODELS = {
+    TIMER_TIME: 'timerTime',
+    SPONSORS_INPUT_TIME: 'sponsorsInputTime',
+};
 
 export default {
     name: 'VisibilityView',
@@ -162,6 +167,7 @@ export default {
         return {
             timerTime: '',
             sponsorsInputTime: '',
+            timesSeeded: false,
             startIndex: 0,
             endIndex: 0,
             guests: [],
@@ -197,36 +203,45 @@ export default {
             return store.state.IGRICA_VISIBILITY;
         },
         formattedTimerTime() {
-            const timerTime = store.state.TIMER_TIME;
-            if (typeof timerTime !== 'string' || !timerTime) return '';
-            const formattedDate = timerTime.substring(8, 10) + '.' + timerTime.substring(5, 7) + '.' + timerTime.substring(0, 4);
-            const formattedTime = timerTime.substring(11, 16);
-            return formattedDate + '. ' + formattedTime;
+            return formatZagreb(parseStored(store.state.TIMER_TIME)) || 'nije postavljeno';
         },
         formattedSponsorsInputTime() {
-            const timerTime = store.state.SPONSORS_INPUT_TIME;
-            if (typeof timerTime !== 'string' || !timerTime) return '';
-            const formattedDate = timerTime.substring(8, 10) + '.' + timerTime.substring(5, 7) + '.' + timerTime.substring(0, 4);
-            const formattedTime = timerTime.substring(11, 16);
-            return formattedDate + '. ' + formattedTime;
+            return formatZagreb(parseStored(store.state.SPONSORS_INPUT_TIME)) || 'nije postavljeno';
         },
     },
     methods: {
         async changeVisibility(changeField, val) {
-            if (changeField == "TIMER_TIME" || changeField == "SPONSORS_INPUT_TIME") {
-                if (window.confirm("Pokušavate promijeniti jedno od VREMENA, jeste li sigurni?")) {
-                    await api.put('/visibility/' + changeField + '/',
-                        { visible: val },
-                    )
-                    await store.dispatch("fetchVisibilityData", { force: true })
-                }
-            } else {
-                await api.put('/visibility/' + changeField + '/',
-                    { visible: val },
-                )
-                await store.dispatch("fetchVisibilityData", { force: true })
+            await api.patch('/visibility/' + changeField + '/', { visible: val })
+            await store.dispatch("fetchVisibilityData", { force: true })
+        },
+        async changeTime(changeField, localValue) {
+            const cleared = !localValue
+            const date = cleared ? null : zagrebLocalToDate(localValue)
+            if (!cleared && !date) {
+                window.alert("Neispravan format vremena - ništa nije spremljeno.")
+                this.syncFieldFromStore(changeField)
+                return
             }
-
+            if (!window.confirm("Pokušavate promijeniti jedno od VREMENA, jeste li sigurni?")) {
+                this.syncFieldFromStore(changeField)
+                return
+            }
+            await api.patch('/visibility/' + changeField + '/',
+                { time: date ? date.toISOString() : null },
+            )
+            await store.dispatch("fetchVisibilityData", { force: true })
+            this.syncFieldFromStore(changeField)
+        },
+        seedFromStore() {
+            if (this.timesSeeded) return
+            this.timesSeeded = true
+            this.syncFieldFromStore('TIMER_TIME')
+            this.syncFieldFromStore('SPONSORS_INPUT_TIME')
+        },
+        syncFieldFromStore(changeField) {
+            const model = TIME_FIELD_MODELS[changeField]
+            if (!model) return
+            this[model] = dateToZagrebLocalInput(parseStored(store.state[changeField]))
         },
         async sendEmailsInRange(start, end) {
             try {
@@ -307,7 +322,20 @@ export default {
         },
 
 
-    }
+    },
+    mounted() {
+        if (store.state.TIMER_TIME || store.state.SPONSORS_INPUT_TIME) {
+            this.seedFromStore()
+        }
+    },
+    watch: {
+        formattedTimerTime() {
+            this.seedFromStore()
+        },
+        formattedSponsorsInputTime() {
+            this.seedFromStore()
+        },
+    },
 }
 </script>
 

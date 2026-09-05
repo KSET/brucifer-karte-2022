@@ -47,9 +47,11 @@ export default {
       return store.state.TIMER_VISIBILITY === true;
     },
     countdownTime() {
-      const timeMS = Date.parse(store.state.TIMER_TIME);
-      const seconds = new Date().getTime();
-      return timeMS - seconds;
+      const t = store.state.TIMER_TIME;
+      if (!t) return 0;
+      const target = new Date(t).getTime();
+      if (Number.isNaN(target)) return 0;
+      return Math.max(0, target - Date.now());
     },
   },
   methods: {

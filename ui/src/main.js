@@ -16,6 +16,8 @@ import { definePreset } from '@primeuix/themes';
 import ApiPlugin from '@/plugins/api'
 import ToastService from 'primevue/toastservice';
 
+try { localStorage.removeItem('vuex') } catch (e) {}
+
 const MyPreset = definePreset(Aura, {
     semantic: {
         primary: {

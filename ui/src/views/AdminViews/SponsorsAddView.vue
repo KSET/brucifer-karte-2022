@@ -174,8 +174,7 @@ export default {
 
             // guestsEnabled logic
             if (this.guestsEnabled) {
-                const closeTime = Date.parse(visibilityStore.state.SPONSORS_INPUT_TIME);
-                formData.append("guestsEnabled", Date.now() > closeTime ? 2 : 1)
+                formData.append("guestsEnabled", visibilityStore.getters.sponsorsInputClosed ? 2 : 1)
             } else {
                 formData.append("guestsEnabled", 0)
             }

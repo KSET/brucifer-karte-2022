@@ -1,6 +1,5 @@
 import { createStore } from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import visibilityStore from "./visibilityStore";
 
 export default createStore({
   state: {
@@ -13,7 +12,9 @@ export default createStore({
     accessToken: "",
     refreshToken: "",
   },
-  plugins: [createPersistedState({ storage: window.sessionStorage })],
+  plugins: [
+    createPersistedState({ key: "brucifer.auth", storage: window.sessionStorage }),
+  ],
   mutations: {
     setId(state, value) {
       state.id = value;
@@ -56,8 +57,5 @@ export default createStore({
       (state) =>
       (...roles) =>
         roles.includes(state.role),
-  },
-  modules: {
-    visibilityStore,
   },
 });

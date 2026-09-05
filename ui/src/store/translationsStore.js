@@ -7,7 +7,7 @@ export default createStore({
     translations: {},
     translationsTable: {},
   },
-  plugins: [createPersistedState()],
+  plugins: [createPersistedState({ key: "brucifer.translations" })],
   mutations: {
     settranslations(state, value) {
       state.translations = value;

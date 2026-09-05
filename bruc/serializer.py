@@ -77,7 +77,7 @@ class CjenikSerializer(serializers.HyperlinkedModelSerializer):
 class VisibilitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Visibility
-        fields = ["name", "visible"]
+        fields = ["name", "visible", "time"]
 
 
 class TranslationsSerializer(serializers.HyperlinkedModelSerializer):
