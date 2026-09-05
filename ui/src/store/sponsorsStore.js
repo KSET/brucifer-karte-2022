@@ -37,6 +37,26 @@ export default createStore({
             else state.list.push(payload)
         },
 
+        PATCH_LIST_ITEM(state, { id, changes }) {
+            const idx = state.list.findIndex(x => x.id === id)
+            if (idx >= 0) state.list.splice(idx, 1, { ...state.list[idx], ...changes })
+        },
+
+        SET_LIST_ORDER(state, rows) { state.list = rows },
+
+        RESTORE_LIST_ORDER(state, entries) {
+            const byId = new Map(state.list.map(r => [r.id, r]))
+            const ordered = []
+            entries.forEach(({ id, order }) => {
+                if (!byId.has(id)) return
+                const row = byId.get(id)
+                byId.delete(id)
+                ordered.push(row.order === order ? row : { ...row, order })
+            })
+            byId.forEach(r => ordered.push(r))
+            state.list = ordered
+        },
+
         REMOVE_LIST_ITEM(state, id) {
             state.list = state.list.filter(x => x.id !== id)
             if (state.item?.id === id) state.item = null
@@ -111,6 +131,20 @@ export default createStore({
             }
         },
 
+        async patch({ commit, state }, { id, changes }) {
+            commit('SET_ERROR', null)
+            try {
+                const { data } = await api.patch(`/sponsors/${id}/`, changes)
+                visibleLoaded = false
+                const local = state.list.find(x => x.id === id)
+                commit('UPSERT_LIST_ITEM',
+                    local ? { ...data, order: local.order } : data)
+                return data
+            } catch (e) {
+                commit('SET_ERROR', e); throw e
+            }
+        },
+
         async remove({ commit }, id) {
             commit('SET_LOADING', true); commit('SET_ERROR', null)
             try {
@@ -124,16 +158,26 @@ export default createStore({
             }
         },
 
-        // [{ id, order }, ...]
-        async reorder({ commit }, items) {
-            commit('SET_LOADING', true); commit('SET_ERROR', null)
+        async reorder({ commit, state, dispatch }, rows) {
+            const previous = state.list.map(r => ({ id: r.id, order: r.order }))
+            const reindexed = rows.map((r, i) => ({ ...r, order: i }))
+
+            commit('SET_LIST_ORDER', reindexed)
+            commit('SET_ERROR', null)
             try {
-                await api.post('/sponsors/reorder/', items)
+                await api.post('/sponsors/reorder/',
+                    reindexed.map(r => ({ id: r.id, order: r.order })))
                 visibleLoaded = false
+                return reindexed
             } catch (e) {
-                commit('SET_ERROR', e); throw e
-            } finally {
-                commit('SET_LOADING', false)
+                commit('SET_ERROR', e)
+                if (e?.response?.status === 404) {
+                    e.stale = true
+                    try { await dispatch('fetchAll') } catch { }
+                } else {
+                    commit('RESTORE_LIST_ORDER', previous)
+                }
+                throw e
             }
         },
 

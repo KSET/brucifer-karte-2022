@@ -12,7 +12,7 @@
         <div class="sidbar-element" @click="toggleDropdownLineup"
             v-bind:style="[(showDropdownLineup) ? { backgroundColor: '#D9D9D9' } : { backgroundColor: 'white' }]">
             <RouterElement class="sidebar-element" style="display: inline-block; width: 90%; border-bottom: none;"
-                :name="'Izvođači'">
+                :name="'Izvođači'" :label="true">
             </RouterElement>
             <img v-if="this.showDropdownLineup == false" class="dropdown-icon" style="z-index:-1"
                 src="@/assets/icons/dopdwn-notopen-icon.svg">
@@ -30,7 +30,7 @@
         <div class="sidbar-element" @click="toggleDropdownSponsors"
             v-bind:style="[(showDropdownSponsors) ? { backgroundColor: '#D9D9D9' } : { backgroundColor: 'white' }]">
             <RouterElement class="sidebar-element" style="display: inline-block; width: 90%; border-bottom: none;"
-                :name="'Sponzori'">
+                :name="'Sponzori'" :label="true">
             </RouterElement>
             <img v-if="this.showDropdownSponsors == false" class="dropdown-icon"
                 src="@/assets/icons/dopdwn-notopen-icon.svg">
@@ -216,6 +216,7 @@ export default {
     padding: 10px 10px;
     height: 93vh;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 @media screen and (max-width: 900px) {

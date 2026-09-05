@@ -58,6 +58,15 @@ class Lineup(models.Model):
     image = models.ImageField(
         upload_to='uploads/lineup', blank=True, null=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['slug'],
+                condition=~Q(slug=''),
+                name='uniq_lineup_slug_nonblank',
+            )
+        ]
+
     '''def get_image(self):
         if self.image:
             return 'http://127.0.0.1:8000' + self.image.url
@@ -85,6 +94,15 @@ class Sponsors(models.Model):
         upload_to='uploads/sponsors', blank=True, null=True)
     email = models.CharField(max_length=20000, default='', blank=True)
     guestCap = models.IntegerField(null=True, blank=True, default=None)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['slug'],
+                condition=~Q(slug=''),
+                name='uniq_sponsors_slug_nonblank',
+            )
+        ]
 
     '''def get_image(self):
         if self.image:

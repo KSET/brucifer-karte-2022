@@ -92,12 +92,16 @@ class GameLeaderboardSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class DynamicSearchFilter(filters.SearchFilter):
+    LOOKUP_PREFIXES = '^=@$'
+
     def get_search_fields(self, view, request):
-        allowed = set(getattr(view, 'search_fields', []))
+        allowed = list(getattr(view, 'search_fields', None) or [])
         requested = request.GET.getlist('search_fields', [])
         if not requested:
-            return list(allowed)
-        return [f for f in requested if f in allowed]
+            return allowed
+
+        by_name = {f.lstrip(self.LOOKUP_PREFIXES): f for f in allowed}
+        return [by_name[f] for f in requested if f in by_name]
     
 class BrucosiFormResponseSerializer(serializers.ModelSerializer):
     class Meta:

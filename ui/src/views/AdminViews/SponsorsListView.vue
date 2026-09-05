@@ -1,16 +1,15 @@
 <template>
   <div class="sponsorsp">
     <Sidebar />
-    <div class="admin-page-container">
+    <div class="admin-page-container sponsors-page">
 
-      <div class="header">
+      <div class="header sponsors-header">
         <h1 class="page-title">Sponzori</h1>
-        <router-link class="icon7" to="/admin/sponsors-add/0">
+        <router-link class="add-link" to="/admin/sponsors-add/0" title="Dodaj sponzora">
           <img src="../../assets/icons/add-icon.svg">
         </router-link>
 
-        <button class="button submit" style=" margin-top: 0px;  vertical-align: middle; " @click="sendMail">Pozovi
-          sponzore</button>
+        <button class="button submit invite-button" @click="sendMail">Pozovi sponzore</button>
       </div>
 
       <sponsors-table></sponsors-table>
@@ -30,23 +29,6 @@ export default {
     Sidebar
   },
   methods: {
-    async test() {
-      console.log("1")
-
-      await this.sleep(3000)
-      console.log("1")
-      await this.sleep(1000000)
-      console.log("1")
-
-      await this.sleep(1000000)
-      console.log("1")
-    },
-    async sleep(ms) {
-      return await new Promise(
-        resolve => setTimeout(resolve, ms)
-      );
-    },
-
     async sendMail() {
       if (window.confirm("Klikom na OK šaljete mail SVIM sponzorima!!!")) {
         const resp = await api.get('/sponsors/')
@@ -78,7 +60,7 @@ export default {
           let emails = [];
 
           resp.data.forEach(async element => {
-            if (element.guestCap != 0) {
+            if (element.guestCap !== 0) {
 
               let msg = element.name + " " + element.email + " " + element.slug
 
@@ -119,6 +101,54 @@ export default {
 }
 
 </script>
+
+<style scoped>
+.sponsors-page {
+  display: flex;
+  flex-direction: column;
+  height: 93vh;
+  min-height: 0;
+  box-sizing: border-box;
+  margin-left: 25%;
+  margin-right: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media screen and (max-width: 900px) {
+  .sponsors-page {
+    margin-left: 0;
+  }
+}
+
+.sponsors-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.sponsors-header .page-title {
+  margin: 0;
+}
+
+.add-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.add-link img {
+  width: 2rem;
+  height: 2rem;
+  display: block;
+}
+
+.invite-button {
+  margin-top: 0;
+  margin-left: auto;
+}
+</style>
 
 <style >
 .switchdiv {

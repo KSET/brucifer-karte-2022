@@ -55,7 +55,7 @@
 
           <div class="sidbar-element" v-if="isAdmin" @click="toggleDropdownLineup">
             <RouterElement class="overlay-element admin" style="left: 0%; position: abosolute; display: inline-block"
-              :name="'Izvođači'">
+              :name="'Izvođači'" :label="true">
             </RouterElement>
             <img v-if="this.showDropdownLineup == false" class="dropdown-icon"
               src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownLineup" />
@@ -70,7 +70,7 @@
 
           <div class="sidbar-element" v-if="isAdmin" @click="toggleDropdownSponsors">
             <RouterElement class="overlay-element admin" style="left: 0%; position: abosolute; display: inline-block"
-              :name="'Sponzori'">
+              :name="'Sponzori'" :label="true">
             </RouterElement>
             <img v-if="this.showDropdownSponsors == false" class="dropdown-icon" style="display: inline-block"
               src="@/assets/icons/dopdwn-notopen-icon.svg" @click="toggleDropdownSponsors" />

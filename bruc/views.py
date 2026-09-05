@@ -257,6 +257,7 @@ class LineupViewSet(viewsets.ModelViewSet):
     queryset = Lineup.objects.all()
     serializer_class = LineupSerializer
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
+    search_fields = ['=slug', 'name']
     ordering_fields = ['order']
     permission_classes = [HasRole(Role.ADMIN)]
 
@@ -315,6 +316,7 @@ class SponsorsViewSet(viewsets.ModelViewSet):
     queryset = Sponsors.objects.all()
     serializer_class = SponsorsSerializer
     filter_backends = [DynamicSearchFilter, filters.OrderingFilter]
+    search_fields = ['=slug', 'name', 'email']
     ordering_fields = ['order']
     permission_classes = [HasRole(Role.ADMIN)]
 
