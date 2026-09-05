@@ -52,6 +52,8 @@ export default {
 
 @import '~bootstrap/dist/css/bootstrap.css';
 @import './assets/fonts/antonio/antonio.css';
+@import './assets/fonts/GCEpicProCro/gcepicprocro.css';
+@import './assets/fonts/Rubik/rubik.css';
 @import './assets/scss/Admin-scss/global.scss';
 @import './bruciweb.css';
 @import './assets/primevue-overrides.css';
