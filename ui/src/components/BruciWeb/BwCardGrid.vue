@@ -43,7 +43,7 @@ export default {
 }
 
 .card-grid.sponsors {
-    grid-template-columns: repeat(auto-fit, 200px);
+    grid-template-columns: repeat(auto-fit, minmax(0, 200px));
     justify-content: center;
     grid-gap: clamp(32px, 5vw, 80px);
     max-width: 1040px;
@@ -53,8 +53,8 @@ export default {
 }
 
 .card-grid.sponsors .card-grid-card {
-    width: 200px;
-    height: 150px;
+    width: 100%;
+    aspect-ratio: 4 / 3;
     border-radius: 24px 0 0 0;
     background: rgba(156, 250, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -77,20 +77,21 @@ export default {
     display: none;
 }
 
+@media screen and (max-width: 900px) {
+    .card-grid.sponsors {
+        grid-template-columns: repeat(3, minmax(0, 200px));
+        grid-gap: clamp(16px, 3vw, 40px);
+    }
+}
+
 @media screen and (max-width: 550px) {
     .card-grid.sponsors {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-gap: 24px;
-    }
-
-    .card-grid.sponsors .card-grid-card {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 4 / 3;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-gap: 12px;
     }
 
     .card-grid.sponsors .card-grid-card :deep(a) {
-        padding: 14px 18px;
+        padding: 10px 12px;
     }
 }
 </style>

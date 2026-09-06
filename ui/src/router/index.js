@@ -294,17 +294,31 @@ const router = createRouter({
 
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition;
-    if (to.hash) {
-      const headerH =
-        parseInt(
-          getComputedStyle(document.documentElement).getPropertyValue(
-            "--bw-sticky-header-h"
-          ),
-          10
-        ) || 0;
-      return { el: to.hash, top: headerH };
-    }
-    return { top: 0, left: 0 };
+    if (!to.hash) return { top: 0, left: 0 };
+
+    const findTarget = () => {
+      try {
+        return document.querySelector(to.hash);
+      } catch (e) {
+        return null;
+      }
+    };
+
+    return new Promise((resolve) => {
+      const deadline = Date.now() + 2000;
+
+      const attempt = () => {
+        if (findTarget()) {
+          resolve({ el: to.hash, top: 0 });
+        } else if (Date.now() >= deadline) {
+          resolve({ top: 0, left: 0 });
+        } else {
+          requestAnimationFrame(attempt);
+        }
+      };
+
+      attempt();
+    });
   },
 });
 

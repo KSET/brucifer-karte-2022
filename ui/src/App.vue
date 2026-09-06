@@ -23,6 +23,20 @@ export default {
   async beforeCreate() {
     await translationsStore.dispatch('fetchTranslations');
   },
+  created() {
+    this.syncAppClass();
+  },
+  watch: {
+    $route() {
+      this.syncAppClass();
+    },
+  },
+  methods: {
+    syncAppClass() {
+      const isAdmin = window.location.pathname.split('/')[1] === 'admin';
+      document.documentElement.classList.toggle('bw-app', !isAdmin);
+    },
+  },
   computed: {
     navType() {
       if (window.location.href.split('/')[3] == 'admin') {

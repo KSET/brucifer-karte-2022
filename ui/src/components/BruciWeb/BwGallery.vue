@@ -6,22 +6,34 @@
         <div class="bw-gallery-tilt">
             <div class="bw-gallery-marquee-wrapper">
                 <div class="bw-gallery-marquee-track bw-gallery-marquee-left">
-                    <img v-for="(photo, i) in [...row1, ...row1, ...row1]" :key="`r1-${i}`" :src="photo.src"
-                        :alt="photo.alt" class="bw-gallery-marquee-image" decoding="async" />
+                    <img v-for="(photo, i) in row1" :key="`r1a-${i}`" :src="photo.src" :alt="photo.alt"
+                        class="bw-gallery-marquee-image" decoding="async" />
+                </div>
+                <div class="bw-gallery-marquee-track bw-gallery-marquee-left" aria-hidden="true">
+                    <img v-for="(photo, i) in row1" :key="`r1b-${i}`" :src="photo.src" alt=""
+                        class="bw-gallery-marquee-image" decoding="async" />
                 </div>
             </div>
 
             <div class="bw-gallery-marquee-wrapper">
                 <div class="bw-gallery-marquee-track bw-gallery-marquee-right">
-                    <img v-for="(photo, i) in [...row2, ...row2, ...row2]" :key="`r2-${i}`" :src="photo.src"
-                        :alt="photo.alt" class="bw-gallery-marquee-image" decoding="async" />
+                    <img v-for="(photo, i) in row2" :key="`r2a-${i}`" :src="photo.src" :alt="photo.alt"
+                        class="bw-gallery-marquee-image" decoding="async" />
+                </div>
+                <div class="bw-gallery-marquee-track bw-gallery-marquee-right" aria-hidden="true">
+                    <img v-for="(photo, i) in row2" :key="`r2b-${i}`" :src="photo.src" alt=""
+                        class="bw-gallery-marquee-image" decoding="async" />
                 </div>
             </div>
 
             <div class="bw-gallery-marquee-wrapper bw-gallery-marquee-wrapper--mobile">
                 <div class="bw-gallery-marquee-track bw-gallery-marquee-left bw-gallery-marquee-slow">
-                    <img v-for="(photo, i) in [...row3, ...row3, ...row3]" :key="`r3-${i}`" :src="photo.src"
-                        :alt="photo.alt" class="bw-gallery-marquee-image" decoding="async" />
+                    <img v-for="(photo, i) in row3" :key="`r3a-${i}`" :src="photo.src" :alt="photo.alt"
+                        class="bw-gallery-marquee-image" decoding="async" />
+                </div>
+                <div class="bw-gallery-marquee-track bw-gallery-marquee-left bw-gallery-marquee-slow" aria-hidden="true">
+                    <img v-for="(photo, i) in row3" :key="`r3b-${i}`" :src="photo.src" alt=""
+                        class="bw-gallery-marquee-image" decoding="async" />
                 </div>
             </div>
         </div>
@@ -37,15 +49,10 @@ import texture from '@/assets/design-elements/tekstura.png'
 import znak from '@/assets/design-elements/galerija-znak.svg'
 import strelica from '@/assets/design-elements/galerija-strelica.svg'
 
-const context = require.context('@/assets/galerija', false, /^\.\/gal\d+\.(png|jpe?g|webp)$/)
-
-const galleryIndex = (key) => {
-    const match = key.match(/gal(\d+)/)
-    return match ? Number(match[1]) : Number.MAX_SAFE_INTEGER
-}
+const context = require.context('@/assets/galerija', false, /^\.\/[^/]+\.webp$/)
 
 const photos = context.keys()
-    .sort((a, b) => galleryIndex(a) - galleryIndex(b))
+    .sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))
     .map((key, index) => ({
         src: context(key),
         alt: `Brucifer fotografija ${index + 1}`,
@@ -83,7 +90,7 @@ export default {
     overflow: hidden;
     height: 100vh;
     height: 100svh;
-    --bw-gallery-row-gap: 1rem;
+    --bw-gallery-gap: 20px;
 }
 
 .bw-gallery-tilt {
@@ -94,7 +101,7 @@ export default {
     height: calc(100svh * 1.25);
     display: flex;
     flex-direction: column;
-    gap: var(--bw-gallery-row-gap);
+    gap: var(--bw-gallery-gap);
     transform: translate(-50%, -50%) rotate(-4deg);
     transform-origin: center;
 }
@@ -102,6 +109,7 @@ export default {
 .bw-gallery-marquee-wrapper {
     position: relative;
     z-index: 1;
+    display: flex;
     flex: 1 1 0;
     min-height: 0;
     width: 100%;
@@ -134,10 +142,12 @@ export default {
 
 .bw-gallery-marquee-track {
     display: flex;
-    gap: 1rem;
+    gap: var(--bw-gallery-gap);
+    padding-right: var(--bw-gallery-gap);
     white-space: nowrap;
     width: max-content;
     height: 100%;
+    flex: 0 0 auto;
 }
 
 .bw-gallery-marquee-left {
@@ -157,7 +167,6 @@ export default {
 .bw-gallery-marquee-image {
     height: 68%;
     width: auto;
-    object-fit: cover;
     flex-shrink: 0;
 }
 
@@ -191,13 +200,13 @@ export default {
     }
 
     100% {
-        transform: translateX(-33.3333%);
+        transform: translateX(-100%);
     }
 }
 
 @keyframes bw-gallery-scroll-right {
     0% {
-        transform: translateX(-33.3333%);
+        transform: translateX(-100%);
     }
 
     100% {
@@ -213,11 +222,13 @@ export default {
     }
 }
 
-@media screen and (max-width: 980px) {
+@media screen and (min-width: 981px) {
     .bw-gallery {
-        --bw-gallery-row-gap: 0.75rem;
+        --bw-gallery-gap: 28px;
     }
+}
 
+@media screen and (max-width: 980px) {
     .bw-gallery-znak {
         width: clamp(56px, 16vw, 90px);
     }
@@ -228,27 +239,25 @@ export default {
 }
 
 @media screen and (max-width: 550px) {
-    .bw-gallery {
-        --bw-gallery-row-gap: 0.5rem;
-    }
-
     .bw-gallery-tilt {
         width: 100%;
         height: 100%;
+        box-sizing: border-box;
+        padding-block: var(--bw-gallery-gap);
         transform: translate(-50%, -50%);
     }
 
     .bw-gallery-marquee-wrapper--mobile {
-        display: block;
+        display: flex;
     }
 
     .bw-gallery-marquee-left,
     .bw-gallery-marquee-right {
-        align-items: center;
+        align-items: stretch;
     }
 
     .bw-gallery-marquee-image {
-        height: 86%;
+        height: 100%;
     }
 }
 </style>

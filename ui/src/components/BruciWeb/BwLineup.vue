@@ -14,14 +14,14 @@
                 <button type="button" class="bw-fetch-retry" @click="loadLineups">Pokušaj ponovno</button>
             </p>
 
-            <ul v-else class="bw-lineup-list">
+            <ul v-else class="bw-lineup-list" ref="list">
                 <li v-for="(item, index) in lineups" :key="item.id ?? index" class="bw-lineup-row">
                     <button type="button" class="bw-lineup-entry" @click="openDialog(item)">
                         <span v-if="item.image" class="bw-lineup-thumb">
                             <img :src="item.image" :alt="`${item.name} image`" loading="lazy" decoding="async" />
                         </span>
                         <span class="bw-lineup-bar">
-                            <span class="bw-lineup-name">{{ item.name }}</span>
+                            <span class="bw-lineup-name" ref="names">{{ item.name }}</span>
                         </span>
                     </button>
                 </li>
@@ -60,11 +60,130 @@ export default {
         },
     },
 
+    watch: {
+        lineups: {
+            flush: 'post',
+            handler() {
+                this.scheduleNameFit()
+            },
+        },
+    },
+
+    created() {
+        this._fitFrame = null
+        this._observedList = null
+        this._lastListWidth = null
+        this._resizeObserver = null
+        this._destroyed = false
+    },
+
     async mounted() {
         await this.loadLineups()
+
+        if (this._destroyed) return
+
+        this.scheduleNameFit()
+
+        if (document.fonts?.ready) {
+            document.fonts.ready.then(() => {
+                if (!this._destroyed) this.scheduleNameFit()
+            })
+        }
+    },
+
+    beforeUnmount() {
+        this._destroyed = true
+        this._resizeObserver?.disconnect()
+        this._resizeObserver = null
+        this._observedList = null
+        if (this._fitFrame) {
+            cancelAnimationFrame(this._fitFrame)
+            this._fitFrame = null
+        }
     },
 
     methods: {
+        observeList() {
+            const list = this.$refs.list
+
+            if (!list) {
+                this._resizeObserver?.disconnect()
+                this._observedList = null
+                this._lastListWidth = null
+                return
+            }
+            if (this._observedList === list || typeof ResizeObserver === 'undefined') return
+
+            if (this._resizeObserver) this._resizeObserver.disconnect()
+            else {
+                this._resizeObserver = new ResizeObserver(entries => {
+                    const width = entries[entries.length - 1].contentRect.width
+                    if (width === this._lastListWidth) return
+                    this._lastListWidth = width
+                    this.scheduleNameFit()
+                })
+            }
+
+            this._lastListWidth = list.getBoundingClientRect().width
+            this._observedList = list
+            this._resizeObserver.observe(list)
+        },
+
+        updateNameFit() {
+            this.observeList()
+
+            const refs = this.$refs.names
+            if (!refs) return
+            const names = Array.isArray(refs) ? refs : [refs]
+
+            const rows = []
+            for (const el of names) {
+                const bar = el.parentElement
+                const entry = bar?.parentElement
+                const row = entry?.parentElement
+                if (!bar || !entry || !row) continue
+
+                const barStyle = getComputedStyle(bar)
+                const thumb = entry.querySelector('.bw-lineup-thumb')
+                rows.push({
+                    el,
+                    available:
+                        row.clientWidth -
+                        (thumb ? thumb.getBoundingClientRect().width : 0) -
+                        parseFloat(barStyle.paddingLeft) -
+                        parseFloat(barStyle.paddingRight),
+                })
+            }
+            if (!rows.length) return
+
+            for (const r of rows) r.el.style.removeProperty('--bw-name-scale')
+
+            for (const r of rows) r.el.classList.add('is-measuring')
+            for (const r of rows) r.oneLine = r.el.getBoundingClientRect().width
+            for (const r of rows) r.el.classList.remove('is-measuring')
+
+            for (const r of rows) r.el.classList.toggle('is-nowrap', r.oneLine <= r.available)
+
+            for (const r of rows) {
+                const scale = r.oneLine > 0 ? Math.min(1, r.available / r.oneLine) : 1
+                if (scale < 1 && this.isUnbreakable(r.el.textContent)) {
+                    r.el.style.setProperty('--bw-name-scale', Math.max(scale, 0.5).toFixed(3))
+                }
+            }
+        },
+
+        isUnbreakable(text) {
+            return !/[\s\u00AD\u200B/\-\u2010\u2012\u2013\u2014]/.test((text ?? '').trim())
+        },
+
+        scheduleNameFit() {
+            if (this._fitFrame) return
+            this._fitFrame = requestAnimationFrame(() => {
+                this._fitFrame = null
+                if (!this._destroyed) this.updateNameFit()
+            })
+        },
+
         async loadLineups() {
             try {
                 await lineupStore.dispatch('fetchVisible')
@@ -159,6 +278,7 @@ export default {
 .bw-lineup-entry {
     display: flex;
     align-items: stretch;
+    width: fit-content;
     max-width: 100%;
     border: 0;
     background: none;
@@ -200,14 +320,28 @@ export default {
 }
 
 .bw-lineup-name {
+    --bw-name-scale: 1;
     font-family: 'GC Epic Pro Cro', sans-serif;
     font-weight: 800;
-    font-size: clamp(24px, 4.4vw, 64px);
+    font-size: calc(clamp(24px, 4.4vw, 64px) * var(--bw-name-scale));
     line-height: 1.08;
     text-transform: uppercase;
     color: white;
     overflow-wrap: normal;
     word-break: normal;
+    display: block;
+    width: min-content;
+    max-width: 100%;
+}
+
+.bw-lineup-name.is-nowrap {
+    width: max-content;
+}
+
+.bw-lineup-name.is-measuring {
+    width: max-content;
+    max-width: none;
+    white-space: nowrap;
 }
 
 .bw-lineup-name::after {
@@ -256,9 +390,7 @@ export default {
     }
 
     .bw-lineup-name {
-        width: min-content;
-        max-width: 100%;
-        font-size: 32px;
+        font-size: calc(32px * var(--bw-name-scale));
         line-height: 1;
         letter-spacing: 0;
         text-align: center;

@@ -41,6 +41,11 @@
   --background-default: url("./assets/bg/default/bg-desktop.png");
 }
 
+html.bw-app,
+html.bw-app body {
+  background-color: var(--bw-ink);
+}
+
 /* ------------------ TYPOGRAPHY ------------------ */
 
 .bw-page-container p {
