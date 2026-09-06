@@ -35,8 +35,8 @@
 <script>
 import lineupStore from '@/store/lineupStore'
 import BwArtistModal from '@/components/BruciWeb/BwArtistModal.vue'
-import rayPurple from '@/assets/design-elements/zraka-ljubicasta.png'
-import rayTeal from '@/assets/design-elements/zraka-plava.png'
+import rayPurple from '@/assets/design-elements/zraka-ljubicasta.webp'
+import rayTeal from '@/assets/design-elements/zraka-plava.webp'
 
 export default {
     name: 'BwLineup',
@@ -89,6 +89,8 @@ export default {
 
 .bw-lineup-ray {
     width: 34vw;
+    -webkit-mask-image: radial-gradient(circle at 0% 0%, #000 40%, transparent 74%);
+    mask-image: radial-gradient(circle at 0% 0%, #000 40%, transparent 74%);
 }
 
 .bw-lineup-ray--tl {
@@ -99,7 +101,9 @@ export default {
 .bw-lineup-ray--br {
     bottom: -12vw;
     right: -11vw;
-    transform: scale(-1);
+    --bw-ray-ratio: 1072 / 1400;
+    -webkit-mask-image: radial-gradient(circle at 100% 100%, #000 40%, transparent 74%);
+    mask-image: radial-gradient(circle at 100% 100%, #000 40%, transparent 74%);
 }
 
 .bw-lineup-content {

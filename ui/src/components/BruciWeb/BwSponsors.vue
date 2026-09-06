@@ -31,7 +31,7 @@
 <script>
 import BwCardGrid from '@/components/BruciWeb/BwCardGrid.vue'
 import sponsorsStore from '@/store/sponsorsStore'
-import rayTeal from '@/assets/design-elements/zraka-plava.png'
+import rayTeal from '@/assets/design-elements/zraka-plava.webp'
 
 export default {
     name: 'BwSponsors',
@@ -76,6 +76,7 @@ export default {
 
 .bw-sponsors-ray {
     width: 27vw;
+    --bw-ray-ratio: 1072 / 1400;
     -webkit-mask-image: radial-gradient(circle at 0% 0%, #000 32%, transparent 68%);
     mask-image: radial-gradient(circle at 0% 0%, #000 32%, transparent 68%);
 }
@@ -88,7 +89,8 @@ export default {
 .bw-sponsors-ray--tr {
     top: -13vw;
     right: -13vw;
-    transform: scaleX(-1);
+    -webkit-mask-image: radial-gradient(circle at 100% 0%, #000 32%, transparent 68%);
+    mask-image: radial-gradient(circle at 100% 0%, #000 32%, transparent 68%);
 }
 
 .bw-sponsors-content {

@@ -21,13 +21,13 @@
 
             <nav class="bw-hero-links">
                 <a v-if="LINEUP_VISIBILITY === true" class="bw-hero-btn bw-hero-btn--ghost bw-label"
-                    href="#lineup">Izvođači</a>
+                    href="#lineup" @click="scrollToSection($event, 'lineup')">Izvođači</a>
                 <router-link v-if="SATNICA_VISIBILITY === true" class="bw-hero-btn bw-hero-btn--ghost bw-label"
                     to="/satnica">Satnica</router-link>
                 <router-link v-if="TLOCRT_VISIBILITY === true" class="bw-hero-btn bw-hero-btn--ghost bw-label"
                     to="/tlocrt">Tlocrt</router-link>
                 <a v-if="SPONSORS_VISIBILITY === true" class="bw-hero-btn bw-hero-btn--ghost bw-label"
-                    href="#sponzori">Sponzori</a>
+                    href="#sponzori" @click="scrollToSection($event, 'sponzori')">Sponzori</a>
             </nav>
         </div>
 
@@ -36,9 +36,9 @@
 
 <script>
 import heroIcon from '@/assets/design-elements/hero-icon.svg'
-import rayYellow from '@/assets/design-elements/zraka-zuta.png'
-import rayPurple from '@/assets/design-elements/zraka-ljubicasta.png'
-import rayTeal from '@/assets/design-elements/zraka-plava.png'
+import rayYellow from '@/assets/design-elements/zraka-zuta.webp'
+import rayPurple from '@/assets/design-elements/zraka-ljubicasta.webp'
+import rayTeal from '@/assets/design-elements/zraka-plava.webp'
 import visibilityStore from '@/store/visibilityStore.js'
 
 export default {
@@ -70,6 +70,65 @@ export default {
             rayTeal,
         }
     },
+
+    beforeUnmount() {
+        this.stopScrollFollow();
+    },
+
+    methods: {
+        scrollToSection(event, id) {
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            if (event.button !== undefined && event.button !== 0) return;
+
+            const target = document.getElementById(id);
+            if (!target) return;
+
+            event.preventDefault();
+            this.stopScrollFollow();
+
+            const scrollToTarget = () => {
+                const headerH = parseInt(
+                    getComputedStyle(document.documentElement)
+                        .getPropertyValue('--bw-sticky-header-h'),
+                    10,
+                ) || 0;
+                const top = target.getBoundingClientRect().top + window.scrollY - headerH;
+                window.scrollTo({ top, left: 0, behavior: 'auto' });
+            };
+
+            scrollToTarget();
+
+            if (typeof ResizeObserver === 'undefined') return;
+
+            this.scrollFollow = new ResizeObserver(() => {
+                scrollToTarget();
+                clearTimeout(this.scrollFollowSettle);
+                this.scrollFollowSettle = setTimeout(() => this.stopScrollFollow(), 250);
+            });
+            this.scrollFollow.observe(document.documentElement);
+
+            this.scrollFollowCap = setTimeout(() => this.stopScrollFollow(), 2000);
+            this.scrollFollowRelease = () => this.stopScrollFollow();
+            window.addEventListener('wheel', this.scrollFollowRelease, { once: true, passive: true });
+            window.addEventListener('touchstart', this.scrollFollowRelease, { once: true, passive: true });
+
+            window.history.replaceState(null, '', `#${id}`);
+        },
+
+        stopScrollFollow() {
+            if (this.scrollFollow) {
+                this.scrollFollow.disconnect();
+                this.scrollFollow = null;
+            }
+            clearTimeout(this.scrollFollowSettle);
+            clearTimeout(this.scrollFollowCap);
+            if (this.scrollFollowRelease) {
+                window.removeEventListener('wheel', this.scrollFollowRelease);
+                window.removeEventListener('touchstart', this.scrollFollowRelease);
+                this.scrollFollowRelease = null;
+            }
+        },
+    },
 }
 </script>
 
@@ -98,25 +157,29 @@ export default {
 .bw-hero-ray--tr {
     top: -8vw;
     right: -8vw;
-    transform: scaleX(-1);
+    -webkit-mask-image: radial-gradient(circle at 100% 0%, #000 45%, transparent 78%);
+    mask-image: radial-gradient(circle at 100% 0%, #000 45%, transparent 78%);
 }
 
 .bw-hero-ray--bl {
     bottom: -8vw;
     left: -8vw;
-    transform: scaleY(-1);
+    -webkit-mask-image: radial-gradient(circle at 0% 100%, #000 45%, transparent 78%);
+    mask-image: radial-gradient(circle at 0% 100%, #000 45%, transparent 78%);
 }
 
 .bw-hero-ray--br {
     bottom: -8vw;
     right: -8vw;
-    transform: scale(-1);
+    -webkit-mask-image: radial-gradient(circle at 100% 100%, #000 45%, transparent 78%);
+    mask-image: radial-gradient(circle at 100% 100%, #000 45%, transparent 78%);
 }
 
 .bw-hero-ray--left,
 .bw-hero-ray--right {
     top: 50%;
     width: 20vw;
+    --bw-ray-ratio: 1072 / 1400;
     -webkit-mask-image: radial-gradient(circle at 0% 50%, #000 45%, transparent 80%);
     mask-image: radial-gradient(circle at 0% 50%, #000 45%, transparent 80%);
 }
@@ -128,7 +191,9 @@ export default {
 
 .bw-hero-ray--right {
     right: -10vw;
-    transform: translateY(-50%) scaleX(-1);
+    transform: translateY(-50%);
+    -webkit-mask-image: radial-gradient(circle at 100% 50%, #000 45%, transparent 80%);
+    mask-image: radial-gradient(circle at 100% 50%, #000 45%, transparent 80%);
 }
 
 .bw-hero-content {

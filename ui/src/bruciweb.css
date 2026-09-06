@@ -334,6 +334,20 @@ main::after {
   user-select: none;
   height: auto;
   opacity: 0.5;
+
+  aspect-ratio: var(--bw-ray-ratio, 1194 / 1400);
+
+  max-height: 100%;
+  object-fit: contain;
+
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-mode: alpha;
+  mask-mode: alpha;
 }
 
 .card-image-container {

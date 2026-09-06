@@ -294,6 +294,16 @@ const router = createRouter({
 
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition;
+    if (to.hash) {
+      const headerH =
+        parseInt(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            "--bw-sticky-header-h"
+          ),
+          10
+        ) || 0;
+      return { el: to.hash, top: headerH };
+    }
     return { top: 0, left: 0 };
   },
 });
