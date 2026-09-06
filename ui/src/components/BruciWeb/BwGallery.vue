@@ -6,34 +6,46 @@
         <div class="bw-gallery-tilt">
             <div class="bw-gallery-marquee-wrapper">
                 <div class="bw-gallery-marquee-track bw-gallery-marquee-left">
-                    <img v-for="(photo, i) in row1" :key="`r1a-${i}`" :src="photo.src" :alt="photo.alt"
-                        class="bw-gallery-marquee-image" decoding="async" />
-                </div>
-                <div class="bw-gallery-marquee-track bw-gallery-marquee-left" aria-hidden="true">
-                    <img v-for="(photo, i) in row1" :key="`r1b-${i}`" :src="photo.src" alt=""
-                        class="bw-gallery-marquee-image" decoding="async" />
+                    <div class="bw-gallery-marquee-group">
+                        <img v-for="(photo, i) in row1" :key="`r1a-${i}`" :src="photo.src" :alt="photo.alt"
+                            class="bw-gallery-marquee-image" :style="{ aspectRatio: photo.ratio }" :width="photo.width"
+                            :height="photo.height" decoding="async" />
+                    </div>
+                    <div class="bw-gallery-marquee-group" aria-hidden="true">
+                        <img v-for="(photo, i) in row1" :key="`r1b-${i}`" :src="photo.src" alt=""
+                            class="bw-gallery-marquee-image" :style="{ aspectRatio: photo.ratio }" :width="photo.width"
+                            :height="photo.height" decoding="async" />
+                    </div>
                 </div>
             </div>
 
             <div class="bw-gallery-marquee-wrapper">
                 <div class="bw-gallery-marquee-track bw-gallery-marquee-right">
-                    <img v-for="(photo, i) in row2" :key="`r2a-${i}`" :src="photo.src" :alt="photo.alt"
-                        class="bw-gallery-marquee-image" decoding="async" />
-                </div>
-                <div class="bw-gallery-marquee-track bw-gallery-marquee-right" aria-hidden="true">
-                    <img v-for="(photo, i) in row2" :key="`r2b-${i}`" :src="photo.src" alt=""
-                        class="bw-gallery-marquee-image" decoding="async" />
+                    <div class="bw-gallery-marquee-group">
+                        <img v-for="(photo, i) in row2" :key="`r2a-${i}`" :src="photo.src" :alt="photo.alt"
+                            class="bw-gallery-marquee-image" :style="{ aspectRatio: photo.ratio }" :width="photo.width"
+                            :height="photo.height" decoding="async" />
+                    </div>
+                    <div class="bw-gallery-marquee-group" aria-hidden="true">
+                        <img v-for="(photo, i) in row2" :key="`r2b-${i}`" :src="photo.src" alt=""
+                            class="bw-gallery-marquee-image" :style="{ aspectRatio: photo.ratio }" :width="photo.width"
+                            :height="photo.height" decoding="async" />
+                    </div>
                 </div>
             </div>
 
             <div class="bw-gallery-marquee-wrapper bw-gallery-marquee-wrapper--mobile">
                 <div class="bw-gallery-marquee-track bw-gallery-marquee-left bw-gallery-marquee-slow">
-                    <img v-for="(photo, i) in row3" :key="`r3a-${i}`" :src="photo.src" :alt="photo.alt"
-                        class="bw-gallery-marquee-image" decoding="async" />
-                </div>
-                <div class="bw-gallery-marquee-track bw-gallery-marquee-left bw-gallery-marquee-slow" aria-hidden="true">
-                    <img v-for="(photo, i) in row3" :key="`r3b-${i}`" :src="photo.src" alt=""
-                        class="bw-gallery-marquee-image" decoding="async" />
+                    <div class="bw-gallery-marquee-group">
+                        <img v-for="(photo, i) in row3" :key="`r3a-${i}`" :src="photo.src" :alt="photo.alt"
+                            class="bw-gallery-marquee-image" :style="{ aspectRatio: photo.ratio }" :width="photo.width"
+                            :height="photo.height" decoding="async" />
+                    </div>
+                    <div class="bw-gallery-marquee-group" aria-hidden="true">
+                        <img v-for="(photo, i) in row3" :key="`r3b-${i}`" :src="photo.src" alt=""
+                            class="bw-gallery-marquee-image" :style="{ aspectRatio: photo.ratio }" :width="photo.width"
+                            :height="photo.height" decoding="async" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -51,12 +63,37 @@ import strelica from '@/assets/design-elements/galerija-strelica.svg'
 
 const context = require.context('@/assets/galerija', false, /^\.\/[^/]+\.webp$/)
 
+const DIMENSIONS = {
+    '20251108_brucosijada_ignor_d_ela_kumer_2.webp': [1600, 900],
+    '20251108_brucosijada_ignor_d_ela_kumer_7.webp': [1600, 1000],
+    '20251108_brucosijada_repetitor_d_katarina_pesic_13.webp': [1600, 2240],
+    '20251108_brucosijada_repetitor_d_katarina_pesic_18.webp': [1600, 1067],
+    '20251108_brucosijada_rtificial_red_d_Barbara_Kralj_09.webp': [1600, 1067],
+    '20251108_brucosijada_svemirko_d_ana_madunic_01.webp': [1600, 2401],
+    '20251108_brucosijada_zevin_d_paula_fanton_01.webp': [1600, 1171],
+    '20251108_burcosijada_atmosfera_d_andro_anic_milic_08.webp': [1600, 1237],
+    '20251108_burcosijada_atmosfera_d_andro_anic_milic_09.webp': [1600, 1067],
+    '20251108_burcosijada_atmosfera_d_andro_anic_milic_14.webp': [1600, 900],
+    '20251108_burcosijada_atmosfera_d_andro_anic_milic_41.webp': [1600, 1280],
+    '20251108_burcosijada_atmosfera_d_andro_anic_milic_45.webp': [1600, 1067],
+    '20251108_d_d_ana_marija_devcic_12.webp': [1600, 1067],
+}
+
+const DEFAULT_DIMENSIONS = [1600, 1067]
+
 const photos = context.keys()
     .sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))
-    .map((key, index) => ({
-        src: context(key),
-        alt: `Brucifer fotografija ${index + 1}`,
-    }))
+    .map((key, index) => {
+        const [width, height] = DIMENSIONS[key.replace('./', '')] || DEFAULT_DIMENSIONS
+
+        return {
+            src: context(key),
+            alt: `Brucifer fotografija ${index + 1}`,
+            width,
+            height,
+            ratio: `${width} / ${height}`,
+        }
+    })
 
 const ROWS = 3
 const rowLength = photos.length ? Math.ceil(photos.length / ROWS) : 0
@@ -93,6 +130,13 @@ export default {
     height: 100svh;
     --bw-gallery-gap: 20px;
     --bw-gallery-padding: 70px;
+    --bw-gallery-tilt-height: calc((100vh - var(--bw-gallery-padding) * 2) * 1.0625);
+}
+
+@supports (height: 100svh) {
+    .bw-gallery {
+        --bw-gallery-tilt-height: calc((100svh - var(--bw-gallery-padding) * 2) * 1.0625);
+    }
 }
 
 .bw-gallery-tilt {
@@ -100,7 +144,7 @@ export default {
     top: 50%;
     left: 50%;
     width: 120%;
-    height: calc((100svh - var(--bw-gallery-padding) * 2) * 1.25);
+    height: var(--bw-gallery-tilt-height);
     display: flex;
     flex-direction: column;
     gap: var(--bw-gallery-gap);
@@ -144,22 +188,28 @@ export default {
 
 .bw-gallery-marquee-track {
     display: flex;
+    width: max-content;
+    height: 100%;
+    flex: 0 0 auto;
+    will-change: transform;
+    animation: bw-gallery-scroll 40s linear infinite;
+}
+
+.bw-gallery-marquee-group {
+    display: flex;
     gap: var(--bw-gallery-gap);
     padding-right: var(--bw-gallery-gap);
-    white-space: nowrap;
-    width: max-content;
     height: 100%;
     flex: 0 0 auto;
 }
 
 .bw-gallery-marquee-left {
     align-items: flex-end;
-    animation: bw-gallery-scroll-left 40s linear infinite;
 }
 
 .bw-gallery-marquee-right {
     align-items: flex-start;
-    animation: bw-gallery-scroll-right 40s linear infinite;
+    animation-direction: reverse;
 }
 
 .bw-gallery-marquee-slow {
@@ -167,7 +217,7 @@ export default {
 }
 
 .bw-gallery-marquee-image {
-    height: 85%;
+    height: 100%;
     width: auto;
     flex-shrink: 0;
 }
@@ -196,31 +246,30 @@ export default {
     height: auto;
 }
 
-@keyframes bw-gallery-scroll-left {
-    0% {
+@keyframes bw-gallery-scroll {
+    from {
         transform: translateX(0);
     }
 
-    100% {
-        transform: translateX(-100%);
-    }
-}
-
-@keyframes bw-gallery-scroll-right {
-    0% {
-        transform: translateX(-100%);
-    }
-
-    100% {
-        transform: translateX(0);
+    to {
+        transform: translateX(-50%);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-
-    .bw-gallery-marquee-left,
-    .bw-gallery-marquee-right {
+    .bw-gallery-marquee-track {
         animation: none;
+        width: 100%;
+        will-change: auto;
+    }
+
+    .bw-gallery-marquee-group {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .bw-gallery-marquee-group[aria-hidden="true"] {
+        display: none;
     }
 }
 
@@ -241,9 +290,12 @@ export default {
 }
 
 @media screen and (max-width: 550px) {
+    .bw-gallery {
+        --bw-gallery-tilt-height: calc(100vh - var(--bw-gallery-padding) * 2);
+    }
+
     .bw-gallery-tilt {
         width: 100%;
-        height: calc(100svh - var(--bw-gallery-padding) * 2);
         box-sizing: border-box;
         transform: translate(-50%, -50%);
     }
@@ -256,9 +308,13 @@ export default {
     .bw-gallery-marquee-right {
         align-items: stretch;
     }
+}
 
-    .bw-gallery-marquee-image {
-        height: 100%;
+@supports (height: 100svh) {
+    @media screen and (max-width: 550px) {
+        .bw-gallery {
+            --bw-gallery-tilt-height: calc(100svh - var(--bw-gallery-padding) * 2);
+        }
     }
 }
 </style>
