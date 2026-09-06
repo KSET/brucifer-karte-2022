@@ -313,7 +313,7 @@ export default {
     line-height: 1;
     text-decoration: none;
     transition: border-color 0.2s ease, background-color 0.2s ease,
-        box-shadow 0.2s ease, border-width 0.2s ease, padding 0.2s ease;
+        box-shadow 0.2s ease;
 }
 
 .bw-hero-btn.bw-hero-btn--primary {
@@ -324,13 +324,13 @@ export default {
 }
 
 .bw-hero-btn.bw-hero-btn--primary:hover {
-    border-width: 4px;
     border-color: rgba(255, 255, 255, 0.25);
-    padding: 22px 30px;
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.25);
 }
 
 .bw-hero-btn.bw-hero-btn--primary:active {
-    box-shadow: inset 0 0 0 100vmax rgba(255, 255, 255, 0.25);
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.25),
+        inset 0 0 0 100vmax rgba(255, 255, 255, 0.25);
 }
 
 .bw-hero-btn.bw-hero-btn--ghost {
@@ -413,10 +413,6 @@ export default {
         padding: 24px 32px;
     }
 
-    .bw-hero-btn.bw-hero-btn--primary:hover {
-        padding: 22px 30px;
-    }
-
     .bw-hero-btn.bw-hero-btn--ghost {
         padding: 18px;
     }
@@ -489,10 +485,6 @@ export default {
         padding: 24px 32px;
         font-size: 24px;
         line-height: 1;
-    }
-
-    .bw-hero-btn.bw-hero-btn--primary:hover {
-        padding: 22px 30px;
     }
 
     .bw-hero-btn.bw-hero-btn--ghost {
