@@ -12,7 +12,7 @@
         :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }"
         class="navbar-element hideTablet ulaznice-button" name="Kupi karte" link="/ulaznice" icon="pi-arrow-right" />
 
-      <RouterElement v-if="ULAZNICA_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('bwbrucosi') }"
+      <RouterElement v-if="BRUCOSI_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('brucosi') }"
               class="navbar-element hideTablet" name="Brucoši" link="/brucosi" />
 
 
@@ -47,7 +47,7 @@
             :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }" class="overlay-element ulaznice-button"
             name="Kupi karte" link="/ulaznice" icon="pi-arrow-right" @click="toggleNav" />
 
-          <RouterElement v-if="ULAZNICA_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('bwbrucosi') }"
+          <RouterElement v-if="BRUCOSI_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('brucosi') }"
             class="overlay-element" name="Brucoši" link="/brucosi" @click="toggleNav" />
 
           <RouterElement v-if="SATNICA_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('satnica') }"
@@ -99,6 +99,9 @@ export default {
     },
     ULAZNICA_VISIBILITY() {
       return store.state.ULAZNICA_VISIBILITY;
+    },
+    BRUCOSI_VISIBILITY() {
+      return store.state.BRUCOSI_VISIBILITY;
     },
     CJENIK_VISIBILITY() {
       return store.state.CJENIK_VISIBILITY;

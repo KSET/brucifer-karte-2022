@@ -15,7 +15,8 @@
 
             <div class="bw-hero-actions">
                 <router-link class="bw-hero-btn bw-hero-btn--primary bw-body-upper" to="/ulaznice">Kupi karte</router-link>
-                <router-link class="bw-hero-btn bw-hero-btn--primary bw-body-upper" to="/brucosi">Brucoši</router-link>
+                <router-link v-if="BRUCOSI_VISIBILITY === true"
+                    class="bw-hero-btn bw-hero-btn--primary bw-body-upper" to="/brucosi">Brucoši</router-link>
             </div>
 
             <nav class="bw-hero-links">
@@ -44,6 +45,9 @@ export default {
     name: 'BwHero',
 
     computed: {
+        BRUCOSI_VISIBILITY() {
+            return visibilityStore.state.BRUCOSI_VISIBILITY;
+        },
         LINEUP_VISIBILITY() {
             return visibilityStore.state.LINEUP_VISIBILITY;
         },

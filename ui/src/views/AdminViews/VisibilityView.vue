@@ -90,6 +90,18 @@
                 </button>
 
                 <h1 class="textfield">
+                    Prikaz stranice Brucoši
+                </h1>
+                <button v-if="BRUCOSI_VISIBILITY === true" class="button change"
+                    @click="changeVisibility('BRUCOSI_VISIBILITY', false)">
+                    <img src="../../assets/icons/yes-icon.svg">
+                </button>
+                <button v-else class="button change" @click="changeVisibility('BRUCOSI_VISIBILITY', true)"
+                    style="background-color: white;">
+                    <img class="image1" src="../../assets/icons/no-icon.svg">
+                </button>
+
+                <h1 class="textfield">
                     Prikaz stranice Igrice
                 </h1>
                 <button v-if="IGRICA_VISIBILITY === true" class="button change"
@@ -195,6 +207,9 @@ export default {
         },
         ULAZNICA_VISIBILITY() {
             return store.state.ULAZNICA_VISIBILITY;
+        },
+        BRUCOSI_VISIBILITY() {
+            return store.state.BRUCOSI_VISIBILITY;
         },
         TIMER_VISIBILITY() {
             return store.state.TIMER_VISIBILITY;

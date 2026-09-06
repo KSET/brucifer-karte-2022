@@ -260,6 +260,9 @@ const routes = [
     path: "/brucosi",
     name: "brucosi",
     component: BWbrucosi,
+    meta: {
+      visibilityCheck: "BRUCOSI_VISIBILITY",
+    },
   },
   {
     path: "/",

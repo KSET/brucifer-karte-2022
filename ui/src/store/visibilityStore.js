@@ -31,6 +31,9 @@ const mutations = {
   setULAZNICA_VISIBILITY(state, value) {
     state.ULAZNICA_VISIBILITY = value;
   },
+  setBRUCOSI_VISIBILITY(state, value) {
+    state.BRUCOSI_VISIBILITY = value;
+  },
   setTIMER_VISIBILITY(state, value) {
     state.TIMER_VISIBILITY = value;
   },
@@ -55,6 +58,7 @@ export default createStore({
     SATNICA_VISIBILITY: false,
     TLOCRT_VISIBILITY: false,
     ULAZNICA_VISIBILITY: false,
+    BRUCOSI_VISIBILITY: false,
     TIMER_VISIBILITY: false,
     IGRICA_VISIBILITY: false,
     TIMER_TIME: null,
