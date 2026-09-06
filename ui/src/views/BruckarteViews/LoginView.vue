@@ -62,21 +62,40 @@ export default {
         },
     },
     mounted() {
-        const googleScript = document.createElement("script");
-        googleScript.src = "https://accounts.google.com/gsi/client";
-        document.head.appendChild(googleScript);
+        const init = () => {
+            try {
+                window.google.accounts.id.initialize({
+                    client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID,
+                    hosted_domain: "kset.org",
+                    callback: this.handleCredentialResponse,
+                });
+                window.google.accounts.id.renderButton(
+                    document.getElementById("signin_button"),
+                    { theme: "outline", size: "large" }
+                );
+            } catch (err) {
+                console.error("Google Sign-In init failed:", err);
+            }
+        };
 
-        window.addEventListener("load", () => {
-            window.google.accounts.id.initialize({
-                client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID,
-                hosted_domain: "kset.org",
-                callback: this.handleCredentialResponse,
-            });
-            window.google.accounts.id.renderButton(
-                document.getElementById("signin_button"),
-                { theme: "outline", size: "large" }
-            );
-        });
+        if (window.google?.accounts?.id) {
+            init();
+            return;
+        }
+
+        const src = "https://accounts.google.com/gsi/client";
+        let script = document.querySelector(`script[src="${src}"]`);
+        if (!script) {
+            script = document.createElement("script");
+            script.src = src;
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        }
+        script.addEventListener("load", init);
+        script.addEventListener("error", () =>
+            console.error("Failed to load Google Sign-In script")
+        );
     },
 };
 </script>
