@@ -343,7 +343,8 @@ router.beforeEach((to, from, next) => {
   if (
     !to.path.includes("admin") &&
     to.name !== "naslovnica" &&
-    to.name !== "BWPageNotFound"
+    to.name !== "BWPageNotFound" &&
+    to.name !== "stage"
   ) {
     if (visibilityStore.state.COMINGSOON_VISIBILITY == 1) {
       next({ name: "BWPageNotFound" });
