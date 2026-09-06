@@ -15,7 +15,8 @@
             <p class="bw-hero-subtitle bw-body" :class="{ 'bw-hero-subtitle--wrapped': subtitleWrapped }" ref="subtitle"><span ref="subtitlePlace">Studentski centar u Zagrebu</span><span class="bw-hero-sep" aria-hidden="true"></span><span class="bw-hero-date" ref="subtitleDate">7. 11. 2026.</span></p>
 
             <div class="bw-hero-actions">
-                <router-link class="bw-hero-btn bw-hero-btn--primary bw-body-upper" to="/ulaznice">Kupi karte</router-link>
+                <router-link v-if="ULAZNICA_VISIBILITY === true"
+                    class="bw-hero-btn bw-hero-btn--primary bw-body-upper" to="/ulaznice">Kupi karte</router-link>
                 <router-link v-if="BRUCOSI_VISIBILITY === true"
                     class="bw-hero-btn bw-hero-btn--primary bw-body-upper" to="/brucosi">Brucoši</router-link>
             </div>
@@ -46,6 +47,9 @@ export default {
     name: 'BwHero',
 
     computed: {
+        ULAZNICA_VISIBILITY() {
+            return visibilityStore.state.ULAZNICA_VISIBILITY;
+        },
         BRUCOSI_VISIBILITY() {
             return visibilityStore.state.BRUCOSI_VISIBILITY;
         },

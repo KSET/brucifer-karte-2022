@@ -1,14 +1,13 @@
 <template>
   <div class="lineupp">
     <Sidebar />
-    <div class="admin-page-container" style="overflow: auto;">
+    <div class="admin-page-container lineup-page">
 
-      <div class="header">
+      <div class="header lineup-header">
         <h1 class="page-title">Izvođači</h1>
-        <router-link class="icon7" to="/admin/lineup-add/0">
+        <router-link class="add-link" to="/admin/lineup-add/0" title="Dodaj izvođača">
           <img src="../../assets/icons/add-icon.svg">
         </router-link>
-
       </div>
 
       <lineup-table></lineup-table>
@@ -16,14 +15,12 @@
   </div>
 </template>
 
-
-
 <script>
 import LineupTable from '@/components/AdminPanel/LineupTable.vue'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 
 export default {
-  name: 'SponsorsView',
+  name: 'LineupView',
   components: {
     LineupTable,
     Sidebar
@@ -31,88 +28,45 @@ export default {
 }
 </script>
 
-<style >
-.switchdiv {
-  display: inline;
-  margin-right: 2%;
-  position: absolute;
-  overflow: hidden;
-  vertical-align: middle;
-  right: 0%;
-  top: 3%;
-
-
-  margin-top: auto;
+<style scoped>
+.lineup-page {
+  display: flex;
+  flex-direction: column;
+  height: 93vh;
+  min-height: 0;
+  box-sizing: border-box;
+  margin-left: 25%;
+  margin-right: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
-.switch {
-  position: relative;
-  vertical-align: middle;
-  width: 60px;
-  height: 34px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #D9D9D9;
-  ;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked+.slider {
-  background-color: black;
-}
-
-input:focus+.slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked+.slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-</style>
-
-<style lang="scss" module>
-:global(#app) .forceNewLine {
-  @media screen and (max-width: 550px) {
-    display: block;
-    position: relative;
-    text-align: right;
+@media screen and (max-width: 900px) {
+  .lineup-page {
+    margin-left: 0;
   }
+}
+
+.lineup-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.lineup-header .page-title {
+  margin: 0;
+}
+
+.add-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.add-link img {
+  width: 2rem;
+  height: 2rem;
+  display: block;
 }
 </style>
