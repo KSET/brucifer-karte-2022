@@ -1,7 +1,7 @@
 <template>
     <section id="lineup" class="bw-lineup bw-textured">
         <img class="bw-ray bw-lineup-ray bw-lineup-ray--tl" :src="rayPurple" alt="" aria-hidden="true" />
-        <img class="bw-ray bw-lineup-ray bw-lineup-ray--br" :src="rayTeal" alt="" aria-hidden="true" />
+        <img class="bw-ray bw-lineup-ray bw-lineup-ray--br" :src="rayPurple" alt="" aria-hidden="true" />
 
         <div class="bw-lineup-content">
             <div class="bw-lineup-head">
@@ -36,7 +36,6 @@
 import lineupStore from '@/store/lineupStore'
 import BwArtistModal from '@/components/BruciWeb/BwArtistModal.vue'
 import rayPurple from '@/assets/design-elements/zraka-ljubicasta.webp'
-import rayTeal from '@/assets/design-elements/zraka-plava.webp'
 
 export default {
     name: 'BwLineup',
@@ -47,7 +46,6 @@ export default {
             showDialog: false,
             selectedLineup: null,
             rayPurple,
-            rayTeal,
         }
     },
 
@@ -203,7 +201,6 @@ export default {
 <style scoped>
 .bw-lineup {
     padding: 6vw 4vw 8vw;
-    scroll-margin-top: var(--bw-sticky-header-h);
 }
 
 .bw-lineup-ray {
@@ -220,7 +217,6 @@ export default {
 .bw-lineup-ray--br {
     bottom: -12vw;
     right: -11vw;
-    --bw-ray-ratio: 1072 / 1400;
     -webkit-mask-image: radial-gradient(circle at 100% 100%, #000 40%, transparent 74%);
     mask-image: radial-gradient(circle at 100% 100%, #000 40%, transparent 74%);
 }
@@ -253,11 +249,17 @@ export default {
     font: inherit;
     line-height: 1;
     cursor: pointer;
-    transition: filter 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .bw-fetch-retry:hover {
-    filter: brightness(1.15);
+    border-width: 4px;
+    border-color: rgba(255, 255, 255, 0.25);
+    padding: 10px 18px;
+}
+
+.bw-fetch-retry:active {
+    box-shadow: inset 0 0 0 100vmax rgba(255, 255, 255, 0.25);
 }
 
 .bw-lineup-list {

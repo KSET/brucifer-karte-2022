@@ -1,7 +1,6 @@
 <template>
   <div class="bw-page-container stage-page bw-overlay-footer"
     :class="{ 'stage-page--no-sponsors': SPONSORS_VISIBILITY !== true }">
-    <BwStickyHeader />
     <BwHero />
     <BwBreakMarquee />
     <BwGallery />
@@ -19,7 +18,6 @@
 
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
-import BwStickyHeader from '@/components/BruciWeb/BwStickyHeader.vue'
 import BwHero from '@/components/BruciWeb/BwHero.vue'
 import BwBreakMarquee from '@/components/BruciWeb/BwBreakMarquee.vue'
 import BwGallery from '@/components/BruciWeb/BwGallery.vue'
@@ -29,7 +27,7 @@ import visibilityStore from '@/store/visibilityStore.js'
 
 export default {
   name: 'Stage',
-  components: { Footer, BwStickyHeader, BwHero, BwBreakMarquee, BwGallery, BwLineup, BwSponsors },
+  components: { Footer, BwHero, BwBreakMarquee, BwGallery, BwLineup, BwSponsors },
 
   computed: {
     LINEUP_VISIBILITY() {

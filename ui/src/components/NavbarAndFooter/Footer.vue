@@ -194,9 +194,11 @@ export default {
     text-decoration: none;
     vertical-align: middle;
     padding: 0;
+    transition: color .15s ease;
 }
 
-.footer .footer-text:hover {
+.footer .footer-text:hover,
+.footer a:hover .footer-text {
     color: #dbe9f4;
 }
 
@@ -223,11 +225,12 @@ export default {
     display: block;
     filter: invert(1);
     opacity: 0.9;
-    transition: opacity .15s ease;
+    transition: opacity .15s ease, filter .15s ease;
 }
 
 .footer-icon:hover {
     opacity: 1;
+    filter: invert(1) sepia(1) saturate(0.55) hue-rotate(170deg) brightness(1.06);
 }
 
 .footer .footer-mail {
@@ -236,10 +239,11 @@ export default {
     letter-spacing: 0;
     text-align: center;
     text-decoration: none;
+    transition: color .15s ease;
 }
 
 .footer .footer-mail:hover {
-    color: white;
+    color: #dbe9f4;
 }
 
 .footer .footer-separator {

@@ -39,7 +39,7 @@ export default {
 
     data() {
         return {
-            previousOverflow: null,
+            scrollLock: null,
         }
     },
 
@@ -89,15 +89,47 @@ export default {
         },
 
         lockScroll() {
-            if (this.previousOverflow !== null) return
-            this.previousOverflow = document.body.style.overflow
-            document.body.style.overflow = 'hidden'
+            if (this.scrollLock) return
+
+            const html = document.documentElement
+            const body = document.body
+            const scrollY = window.scrollY || html.scrollTop || 0
+            const scrollbar = window.innerWidth - html.clientWidth
+
+            this.scrollLock = {
+                scrollY,
+                htmlOverflow: html.style.overflow,
+                htmlPaddingRight: html.style.paddingRight,
+                bodyOverflow: body.style.overflow,
+                bodyPosition: body.style.position,
+                bodyTop: body.style.top,
+                bodyWidth: body.style.width,
+            }
+
+            html.style.overflow = 'hidden'
+            body.style.overflow = 'hidden'
+            body.style.position = 'fixed'
+            body.style.top = `-${scrollY}px`
+            body.style.width = '100%'
+            if (scrollbar > 0) html.style.paddingRight = `${scrollbar}px`
         },
 
         unlockScroll() {
-            if (this.previousOverflow === null) return
-            document.body.style.overflow = this.previousOverflow
-            this.previousOverflow = null
+            const lock = this.scrollLock
+            if (!lock) return
+            this.scrollLock = null
+
+            const html = document.documentElement
+            const body = document.body
+
+            html.style.overflow = lock.htmlOverflow
+            html.style.paddingRight = lock.htmlPaddingRight
+            body.style.overflow = lock.bodyOverflow
+            body.style.position = lock.bodyPosition
+            body.style.top = lock.bodyTop
+            body.style.width = lock.bodyWidth
+
+            window.scrollTo(0, lock.scrollY)
         },
 
         onKeydown(e) {
@@ -240,7 +272,7 @@ export default {
 
 .bw-artist-bio {
     font-family: 'Rubik', sans-serif;
-    font-weight: 300;
+    font-weight: 400;
     font-size: clamp(15px, 1.5vw, 20px);
     line-height: 1.9;
     color: white;

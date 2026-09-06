@@ -2,6 +2,7 @@
     <section class="bw-hero bw-textured">
         <img class="bw-ray bw-hero-ray bw-hero-ray--tl" :src="rayYellow" alt="" aria-hidden="true" />
         <img class="bw-ray bw-hero-ray bw-hero-ray--tr" :src="rayPurple" alt="" aria-hidden="true" />
+        <img class="bw-ray bw-hero-ray bw-hero-ray--tc" :src="rayTeal" alt="" aria-hidden="true" />
         <img class="bw-ray bw-hero-ray bw-hero-ray--left" :src="rayTeal" alt="" aria-hidden="true" />
         <img class="bw-ray bw-hero-ray bw-hero-ray--right" :src="rayTeal" alt="" aria-hidden="true" />
         <img class="bw-ray bw-hero-ray bw-hero-ray--bl" :src="rayPurple" alt="" aria-hidden="true" />
@@ -11,7 +12,7 @@
             <img class="bw-hero-mark" :src="heroIcon" alt="" aria-hidden="true" />
 
             <h1 class="bw-hero-title bw-display-1">Brucifer</h1>
-            <p class="bw-hero-subtitle bw-body">Studentski centar u Zagrebu &middot; 7. 11. 2026.</p>
+            <p class="bw-hero-subtitle bw-body" :class="{ 'bw-hero-subtitle--wrapped': subtitleWrapped }" ref="subtitle"><span ref="subtitlePlace">Studentski centar u Zagrebu</span><span class="bw-hero-sep" aria-hidden="true"></span><span class="bw-hero-date" ref="subtitleDate">7. 11. 2026.</span></p>
 
             <div class="bw-hero-actions">
                 <router-link class="bw-hero-btn bw-hero-btn--primary bw-body-upper" to="/ulaznice">Kupi karte</router-link>
@@ -68,14 +69,47 @@ export default {
             rayYellow,
             rayPurple,
             rayTeal,
+            subtitleWrapped: false,
+        }
+    },
+
+    mounted() {
+        this.updateSubtitleWrap();
+
+        if (typeof ResizeObserver !== 'undefined' && this.$refs.subtitle) {
+            this.subtitleObserver = new ResizeObserver(() => this.updateSubtitleWrap());
+            this.subtitleObserver.observe(this.$refs.subtitle);
+        } else {
+            window.addEventListener('resize', this.updateSubtitleWrap);
+        }
+
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(() => {
+                if (!this.isUnmounted) this.updateSubtitleWrap();
+            });
         }
     },
 
     beforeUnmount() {
+        this.isUnmounted = true;
         this.stopScrollFollow();
+
+        if (this.subtitleObserver) {
+            this.subtitleObserver.disconnect();
+            this.subtitleObserver = null;
+        }
+        window.removeEventListener('resize', this.updateSubtitleWrap);
     },
 
     methods: {
+        updateSubtitleWrap() {
+            const place = this.$refs.subtitlePlace;
+            const date = this.$refs.subtitleDate;
+            if (!place || !date) return;
+
+            this.subtitleWrapped = date.offsetTop > place.offsetTop;
+        },
+
         scrollToSection(event, id) {
             if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
             if (event.button !== undefined && event.button !== 0) return;
@@ -87,12 +121,7 @@ export default {
             this.stopScrollFollow();
 
             const scrollToTarget = () => {
-                const headerH = parseInt(
-                    getComputedStyle(document.documentElement)
-                        .getPropertyValue('--bw-sticky-header-h'),
-                    10,
-                ) || 0;
-                const top = target.getBoundingClientRect().top + window.scrollY - headerH;
+                const top = target.getBoundingClientRect().top + window.scrollY;
                 window.scrollTo({ top, left: 0, behavior: 'auto' });
             };
 
@@ -144,33 +173,37 @@ export default {
 }
 
 .bw-hero-ray {
-    width: 27vw;
+    width: 32.4vw;
     -webkit-mask-image: radial-gradient(circle at 0% 0%, #000 45%, transparent 78%);
     mask-image: radial-gradient(circle at 0% 0%, #000 45%, transparent 78%);
 }
 
 .bw-hero-ray--tl {
-    top: -8vw;
-    left: -8vw;
+    top: -13vw;
+    left: -13vw;
+}
+
+.bw-hero-ray--tc {
+    display: none;
 }
 
 .bw-hero-ray--tr {
-    top: -8vw;
-    right: -8vw;
+    top: -13vw;
+    right: -13vw;
     -webkit-mask-image: radial-gradient(circle at 100% 0%, #000 45%, transparent 78%);
     mask-image: radial-gradient(circle at 100% 0%, #000 45%, transparent 78%);
 }
 
 .bw-hero-ray--bl {
-    bottom: -8vw;
-    left: -8vw;
+    bottom: -13vw;
+    left: -13vw;
     -webkit-mask-image: radial-gradient(circle at 0% 100%, #000 45%, transparent 78%);
     mask-image: radial-gradient(circle at 0% 100%, #000 45%, transparent 78%);
 }
 
 .bw-hero-ray--br {
-    bottom: -8vw;
-    right: -8vw;
+    bottom: -13vw;
+    right: -13vw;
     -webkit-mask-image: radial-gradient(circle at 100% 100%, #000 45%, transparent 78%);
     mask-image: radial-gradient(circle at 100% 100%, #000 45%, transparent 78%);
 }
@@ -178,7 +211,7 @@ export default {
 .bw-hero-ray--left,
 .bw-hero-ray--right {
     top: 50%;
-    width: 20vw;
+    width: 24vw;
     --bw-ray-ratio: 1072 / 1400;
     -webkit-mask-image: radial-gradient(circle at 0% 50%, #000 45%, transparent 80%);
     mask-image: radial-gradient(circle at 0% 50%, #000 45%, transparent 80%);
@@ -226,14 +259,28 @@ export default {
 }
 
 .bw-hero-subtitle.bw-hero-subtitle {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
     margin: 0;
     padding-top: 24px;
 }
 
-.bw-hero-subtitle::before {
-    content: "";
-    display: block;
-    margin-top: -0.1425em;
+.bw-hero-date {
+    white-space: nowrap;
+}
+
+.bw-hero-sep {
+    flex: 0 0 auto;
+    width: 4px;
+    height: 4px;
+    background-color: currentColor;
+}
+
+.bw-hero-subtitle--wrapped .bw-hero-sep {
+    visibility: hidden;
 }
 
 .bw-hero-actions,
@@ -242,7 +289,7 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 24px;
 }
 
 .bw-hero-actions {
@@ -250,7 +297,7 @@ export default {
 }
 
 .bw-hero-links {
-    margin-top: 1vw;
+    margin-top: 24px;
 }
 
 .bw-hero-btn.bw-hero-btn {
@@ -261,12 +308,8 @@ export default {
     border-radius: 24px 0px 0px 0px;
     line-height: 1;
     text-decoration: none;
-    transition: filter 0.2s ease, transform 0.2s ease;
-}
-
-.bw-hero-btn:hover {
-    filter: brightness(1.15);
-    transform: translateX(-0.25rem);
+    transition: border-color 0.2s ease, background-color 0.2s ease,
+        box-shadow 0.2s ease, border-width 0.2s ease, padding 0.2s ease;
 }
 
 .bw-hero-btn.bw-hero-btn--primary {
@@ -276,10 +319,28 @@ export default {
     border: 2px solid var(--bw-primary-yellow);
 }
 
+.bw-hero-btn.bw-hero-btn--primary:hover {
+    border-width: 4px;
+    border-color: rgba(255, 255, 255, 0.25);
+    padding: 22px 30px;
+}
+
+.bw-hero-btn.bw-hero-btn--primary:active {
+    box-shadow: inset 0 0 0 100vmax rgba(255, 255, 255, 0.25);
+}
+
 .bw-hero-btn.bw-hero-btn--ghost {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.1);
     color: white;
-    border: 2px solid rgba(255, 255, 255, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.bw-hero-btn.bw-hero-btn--ghost:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.bw-hero-btn.bw-hero-btn--ghost:active {
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 @media screen and (max-width: 980px) {
@@ -288,32 +349,32 @@ export default {
     }
 
     .bw-hero-ray {
-        width: 42vw;
+        width: 50.4vw;
     }
 
     .bw-hero-ray--tl,
     .bw-hero-ray--tr {
-        top: -13vw;
+        top: -20vw;
     }
 
     .bw-hero-ray--bl,
     .bw-hero-ray--br {
-        bottom: -13vw;
+        bottom: -20vw;
     }
 
     .bw-hero-ray--tl,
     .bw-hero-ray--bl {
-        left: -13vw;
+        left: -20vw;
     }
 
     .bw-hero-ray--tr,
     .bw-hero-ray--br {
-        right: -13vw;
+        right: -20vw;
     }
 
     .bw-hero-ray--left,
     .bw-hero-ray--right {
-        width: 32vw;
+        width: 38.4vw;
     }
 
     .bw-hero-ray--left {
@@ -330,12 +391,12 @@ export default {
 
     .bw-hero-actions {
         margin-top: 8vw;
-        gap: 12px;
+        gap: 24px;
     }
 
     .bw-hero-links {
-        margin-top: 2vw;
-        gap: 12px;
+        margin-top: 24px;
+        gap: 24px;
     }
 
     .bw-hero-btn.bw-hero-btn {
@@ -345,65 +406,66 @@ export default {
     }
 
     .bw-hero-btn.bw-hero-btn--primary {
-        padding: 18px 26px;
+        padding: 24px 32px;
+    }
+
+    .bw-hero-btn.bw-hero-btn--primary:hover {
+        padding: 22px 30px;
     }
 
     .bw-hero-btn.bw-hero-btn--ghost {
-        padding: 14px 20px;
+        padding: 18px;
     }
 
 }
 
 @media screen and (max-width: 550px) {
     .bw-hero-ray {
-        width: 55vw;
+        width: 66vw;
+    }
+
+    .bw-hero-ray--bl,
+    .bw-hero-ray--br,
+    .bw-hero-ray--left,
+    .bw-hero-ray--right {
+        display: none;
     }
 
     .bw-hero-ray--tl,
     .bw-hero-ray--tr {
-        top: -17vw;
+        top: calc(-25vw - 50px);
     }
 
-    .bw-hero-ray--bl,
-    .bw-hero-ray--br {
-        bottom: -17vw;
+    .bw-hero-ray--tl {
+        left: -25vw;
     }
 
-    .bw-hero-ray--tl,
-    .bw-hero-ray--bl {
-        left: -17vw;
+    .bw-hero-ray--tr {
+        right: -25vw;
     }
 
-    .bw-hero-ray--tr,
-    .bw-hero-ray--br {
-        right: -17vw;
-    }
-
-    .bw-hero-ray--left,
-    .bw-hero-ray--right {
-        width: 42vw;
-    }
-
-    .bw-hero-ray--left {
-        left: -21vw;
-    }
-
-    .bw-hero-ray--right {
-        right: -21vw;
+    .bw-hero-ray--tc {
+        display: block;
+        top: calc(-25vw - 50px);
+        left: 50%;
+        transform: translateX(-50%);
+        -webkit-mask-image: radial-gradient(circle at 50% 0%, #000 45%, transparent 78%);
+        mask-image: radial-gradient(circle at 50% 0%, #000 45%, transparent 78%);
     }
 
     .bw-hero-subtitle.bw-hero-subtitle {
         font-size: 16px;
+        padding-top: 12px;
     }
 
     .bw-hero-actions {
         margin-top: 12vw;
-        gap: 12px;
+        gap: 24px;
     }
 
     .bw-hero-links {
-        margin-top: 3vw;
-        gap: 10px;
+        margin-top: 24px;
+        gap: 24px;
     }
 
     .bw-hero-actions,
@@ -420,11 +482,19 @@ export default {
     }
 
     .bw-hero-btn.bw-hero-btn--primary {
-        padding: 14px 20px;
+        padding: 24px 32px;
+        font-size: 24px;
+        line-height: 1;
+    }
+
+    .bw-hero-btn.bw-hero-btn--primary:hover {
+        padding: 22px 30px;
     }
 
     .bw-hero-btn.bw-hero-btn--ghost {
-        padding: 11px 16px;
+        padding: 18px;
+        font-size: 20px;
+        line-height: 1;
     }
 
 }

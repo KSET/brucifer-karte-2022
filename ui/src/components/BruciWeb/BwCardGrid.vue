@@ -28,7 +28,7 @@ export default {
 .card-grid-card {
     background: var(--bw-card-bg);
     border-radius: 18px;
-    transition: filter 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    transition: filter 0.2s ease, transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .card-grid-card:hover {
@@ -38,8 +38,20 @@ export default {
 
 .card-grid.sponsors .card-grid-card:hover {
     filter: none;
-    transform: translateX(-0.25rem);
-    border-color: rgba(255, 255, 255, 0.28);
+    transform: none;
+}
+
+.card-grid.sponsors .card-grid-card :deep(> a) {
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-grid.sponsors .card-grid-card :deep(> a:hover) {
+    background: rgba(156, 250, 255, 0.2);
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.card-grid.sponsors .card-grid-card :deep(> a:active) {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .card-grid.sponsors {
@@ -57,10 +69,11 @@ export default {
     aspect-ratio: 4 / 3;
     border-radius: 24px 0 0 0;
     background: rgba(156, 250, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-.card-grid.sponsors .card-grid-card :deep(a) {
+.card-grid.sponsors .card-grid-card :deep(> a),
+.card-grid.sponsors .card-grid-card :deep(> div) {
     display: block;
     box-sizing: border-box;
     width: 100%;
@@ -90,7 +103,8 @@ export default {
         grid-gap: 12px;
     }
 
-    .card-grid.sponsors .card-grid-card :deep(a) {
+    .card-grid.sponsors .card-grid-card :deep(> a),
+    .card-grid.sponsors .card-grid-card :deep(> div) {
         padding: 10px 12px;
     }
 }

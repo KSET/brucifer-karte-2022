@@ -15,13 +15,15 @@
 
             <BwCardGrid v-else :items="sponsors">
                 <template #default="{ item }">
-                    <a :href="item.url" rel="noreferrer noopener" target="_blank">
+                    <component :is="links.get(item) ? 'a' : 'div'" :href="links.get(item)"
+                        :rel="links.get(item) ? 'noreferrer noopener' : null"
+                        :target="links.get(item) ? '_blank' : null">
                         <div class="card-image-container">
                             <div class="card-image-sizer"></div>
                             <img class="card-image-frame" :src="item.image" :alt="item.name ? `${item.name} logo` : 'sponsor'"
                                 loading="lazy" decoding="async">
                         </div>
-                    </a>
+                    </component>
                 </template>
             </BwCardGrid>
         </div>
@@ -32,6 +34,25 @@
 import BwCardGrid from '@/components/BruciWeb/BwCardGrid.vue'
 import sponsorsStore from '@/store/sponsorsStore'
 import rayTeal from '@/assets/design-elements/zraka-plava.webp'
+
+const HOSTNAME = /^[a-z0-9-]+(\.[a-z0-9-]+)+$/i
+
+function sponsorLink(item) {
+    const url = (item.url || '').trim()
+    if (!url || url === '0') return null
+
+    if (/^https?:\/\//i.test(url)) {
+        try {
+            const parsed = new URL(url)
+            return HOSTNAME.test(parsed.hostname) ? url : null
+        } catch {
+            return null
+        }
+    }
+
+    const [host] = url.split(/[/?#]/)
+    return HOSTNAME.test(host) ? `https://${url}` : null
+}
 
 export default {
     name: 'BwSponsors',
@@ -54,6 +75,9 @@ export default {
         error() {
             return sponsorsStore.state.error
         },
+        links() {
+            return new Map(this.sponsors.map((item) => [item, sponsorLink(item)]))
+        },
     },
 
     methods: {
@@ -71,7 +95,6 @@ export default {
 <style scoped>
 .bw-sponsors {
     padding: 6vw 4vw calc(4vw + var(--bw-footer-measured-h, var(--bw-footer-h)));
-    scroll-margin-top: var(--bw-sticky-header-h);
 }
 
 .bw-sponsors-ray {

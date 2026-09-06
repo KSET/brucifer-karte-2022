@@ -26,12 +26,10 @@
   --bw-purple: #622568;
   --bw-teal: #6cc9cd;
   --bw-outline: #14161f;
-  --bw-lineup-bar-bg: #0c3a45;
+  --bw-lineup-bar-bg: #5d2d58;
   --bw-teal-ink: #0c3743;
   --bw-wine-ink: #5d0b23;
   --bw-texture: url("./assets/design-elements/tekstura.png");
-
-  --bw-sticky-header-h: 68px;
 
   --bw-footer-h: 64px;
   --bw-footer-sponsors-h: 48px;
@@ -44,6 +42,33 @@
 html.bw-app,
 html.bw-app body {
   background-color: var(--bw-ink);
+}
+
+html.bw-app {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bw-primary-yellow) var(--bw-ink);
+}
+
+html.bw-app ::-webkit-scrollbar,
+html.bw-app::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+html.bw-app ::-webkit-scrollbar-track,
+html.bw-app::-webkit-scrollbar-track {
+  background: var(--bw-ink);
+}
+
+html.bw-app ::-webkit-scrollbar-thumb,
+html.bw-app::-webkit-scrollbar-thumb {
+  background: var(--bw-primary-yellow);
+  border-radius: 5px;
+}
+
+html.bw-app ::-webkit-scrollbar-corner,
+html.bw-app::-webkit-scrollbar-corner {
+  background: var(--bw-ink);
 }
 
 /* ------------------ TYPOGRAPHY ------------------ */
@@ -413,16 +438,10 @@ main::after {
   .contents p + h1 {
     margin-top: 4rem;
   }
-
-  :root {
-    --bw-sticky-header-h: 52px;
-  }
 }
 
 @media screen and (max-width: 550px) {
   :root {
-    --bw-sticky-header-h: 40px;
-
     --bw-footer-h: 256px;
   }
 

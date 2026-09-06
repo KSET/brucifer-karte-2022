@@ -88,9 +88,11 @@ export default {
 .bw-gallery {
     position: relative;
     overflow: hidden;
+    box-sizing: border-box;
     height: 100vh;
     height: 100svh;
     --bw-gallery-gap: 20px;
+    --bw-gallery-padding: 70px;
 }
 
 .bw-gallery-tilt {
@@ -98,7 +100,7 @@ export default {
     top: 50%;
     left: 50%;
     width: 120%;
-    height: calc(100svh * 1.25);
+    height: calc((100svh - var(--bw-gallery-padding) * 2) * 1.25);
     display: flex;
     flex-direction: column;
     gap: var(--bw-gallery-gap);
@@ -165,7 +167,7 @@ export default {
 }
 
 .bw-gallery-marquee-image {
-    height: 68%;
+    height: 85%;
     width: auto;
     flex-shrink: 0;
 }
@@ -241,9 +243,8 @@ export default {
 @media screen and (max-width: 550px) {
     .bw-gallery-tilt {
         width: 100%;
-        height: 100%;
+        height: calc(100svh - var(--bw-gallery-padding) * 2);
         box-sizing: border-box;
-        padding-block: var(--bw-gallery-gap);
         transform: translate(-50%, -50%);
     }
 
