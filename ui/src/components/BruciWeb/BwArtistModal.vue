@@ -1,6 +1,6 @@
 <template>
     <Teleport to="body">
-        <Transition name="bw-artist-modal">
+        <Transition name="bw-artist-modal" @after-leave="unlockScroll">
             <div v-if="visible" class="bw-artist-overlay" role="presentation" @click.self="close">
                 <div ref="panel" class="bw-artist-panel bw-textured" role="dialog" aria-modal="true"
                     :aria-label="artist ? artist.name : 'Izvođač'" tabindex="-1" @keydown.tab="trapFocus">
@@ -39,7 +39,8 @@ export default {
 
     data() {
         return {
-            scrollLock: null,
+            scrollLocked: false,
+            lastFocused: null,
         }
     },
 
@@ -70,17 +71,19 @@ export default {
     beforeUnmount() {
         document.removeEventListener('keydown', this.onKeydown)
         this.unlockScroll()
+        this.lastFocused = null
     },
 
     methods: {
         applyVisibility(open) {
             if (open) {
+                this.lastFocused = document.activeElement
                 this.lockScroll()
                 document.addEventListener('keydown', this.onKeydown)
-                this.$nextTick(() => this.$refs.panel?.focus())
+                this.$nextTick(() => this.$refs.panel?.focus({ preventScroll: true }))
             } else {
-                this.unlockScroll()
                 document.removeEventListener('keydown', this.onKeydown)
+                this.restoreFocus()
             }
         },
 
@@ -89,47 +92,23 @@ export default {
         },
 
         lockScroll() {
-            if (this.scrollLock) return
-
-            const html = document.documentElement
-            const body = document.body
-            const scrollY = window.scrollY || html.scrollTop || 0
-            const scrollbar = window.innerWidth - html.clientWidth
-
-            this.scrollLock = {
-                scrollY,
-                htmlOverflow: html.style.overflow,
-                htmlPaddingRight: html.style.paddingRight,
-                bodyOverflow: body.style.overflow,
-                bodyPosition: body.style.position,
-                bodyTop: body.style.top,
-                bodyWidth: body.style.width,
-            }
-
-            html.style.overflow = 'hidden'
-            body.style.overflow = 'hidden'
-            body.style.position = 'fixed'
-            body.style.top = `-${scrollY}px`
-            body.style.width = '100%'
-            if (scrollbar > 0) html.style.paddingRight = `${scrollbar}px`
+            if (this.scrollLocked) return
+            this.scrollLocked = true
+            document.documentElement.classList.add('bw-scroll-locked')
         },
 
         unlockScroll() {
-            const lock = this.scrollLock
-            if (!lock) return
-            this.scrollLock = null
+            if (!this.scrollLocked) return
+            this.scrollLocked = false
+            document.documentElement.classList.remove('bw-scroll-locked')
+        },
 
-            const html = document.documentElement
-            const body = document.body
-
-            html.style.overflow = lock.htmlOverflow
-            html.style.paddingRight = lock.htmlPaddingRight
-            body.style.overflow = lock.bodyOverflow
-            body.style.position = lock.bodyPosition
-            body.style.top = lock.bodyTop
-            body.style.width = lock.bodyWidth
-
-            window.scrollTo(0, lock.scrollY)
+        restoreFocus() {
+            const el = this.lastFocused
+            this.lastFocused = null
+            if (el && typeof el.focus === 'function' && el.isConnected) {
+                el.focus({ preventScroll: true })
+            }
         },
 
         onKeydown(e) {
@@ -149,7 +128,7 @@ export default {
             const items = this.focusables()
             if (!items.length) {
                 e.preventDefault()
-                this.$refs.panel?.focus()
+                this.$refs.panel?.focus({ preventScroll: true })
                 return
             }
 
@@ -159,10 +138,10 @@ export default {
 
             if (e.shiftKey && (active === first || !this.$refs.panel?.contains(active))) {
                 e.preventDefault()
-                last.focus()
+                last.focus({ preventScroll: true })
             } else if (!e.shiftKey && active === last) {
                 e.preventDefault()
-                first.focus()
+                first.focus({ preventScroll: true })
             }
         },
     },

@@ -47,6 +47,16 @@ html.bw-app body {
 html.bw-app {
   scrollbar-width: thin;
   scrollbar-color: var(--bw-primary-yellow) var(--bw-ink);
+  scrollbar-gutter: stable;
+}
+
+html.bw-scroll-locked {
+  overflow: hidden;
+  /* Bootstrap sets `:root { scroll-behavior: smooth }`, which would turn the
+     scroll that .focus() performs when the modal opens into a visible
+     animation. Scoped to the locked state so nav-anchor scrolling stays
+     smooth. */
+  scroll-behavior: auto;
 }
 
 html.bw-app ::-webkit-scrollbar,
