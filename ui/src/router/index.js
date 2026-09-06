@@ -35,8 +35,7 @@ import Translations from "../views/AdminViews/TranslationsView.vue";
 import DailyReport from "../views/AdminViews/DailyReportView.vue";
 
 /* BruciWeb Views */
-import Bwlineup from "../views/BruciWebViews/BWlineupView.vue";
-import BWsponsors from "../views/BruciWebViews/BWsponsorsView.vue";
+import Stage from "../views/BruciWebViews/StageView.vue";
 import Kontakt from "../views/BruciWebViews/KontaktView.vue";
 import Ulaznice from "../views/BruciWebViews/UlazniceView.vue";
 import Pravila from "../views/BruciWebViews/PravilaView.vue";
@@ -48,7 +47,6 @@ import Satnica from "../views/BruciWebViews/SatnicaView.vue";
 import Igrica from "../views/BruciWebViews/IgricaView.vue";
 import UvjetiKoristenja from "../views/BruciWebViews/UvjetiKoristenjaView.vue";
 import BWbrucosi from "../views/BruciWebViews/BWbrucosiView.vue";
-
 
 import SponsorsPage from "../views/BruciWebViews/SponsorsPageView.vue";
 
@@ -197,22 +195,6 @@ const routes = [
 
   /* Brucweb Views setup */
   {
-    path: "/sponsors",
-    name: "bwsponsors",
-    component: BWsponsors,
-    meta: {
-      visibilityCheck: "SPONSORS_VISIBILITY",
-    },
-  },
-  {
-    path: "/lineup",
-    name: "bwlineup",
-    component: Bwlineup,
-    meta: {
-      visibilityCheck: "LINEUP_VISIBILITY",
-    },
-  },
-  {
     path: "/kontakt",
     name: "kontakt",
     component: Kontakt,
@@ -223,12 +205,16 @@ const routes = [
     component: Ulaznice,
     meta: {
       visibilityCheck: "ULAZNICA_VISIBILITY",
+      hideNavbar: true,
     },
   },
   {
     path: "/pravila-ponasanja",
     name: "pravila-ponasanja",
     component: Pravila,
+    meta: {
+      hideNavbar: true,
+    },
   },
   {
     path: "/uvjeti-koristenja",
@@ -281,6 +267,12 @@ const routes = [
     component: Naslovnica,
   },
   {
+    path: "/stage",
+    name: "stage",
+    component: Stage,
+    meta: { hideNavbar: true },
+  },
+  {
     path: "/:pathMatch(.*)*",
     name: "BWPageNotFound",
     component: BWPageNotFound,
@@ -296,6 +288,11 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition;
+    return { top: 0, left: 0 };
+  },
 });
 
 router.beforeEach((to, from, next) => {

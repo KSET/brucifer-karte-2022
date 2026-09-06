@@ -5,8 +5,8 @@
     </router-link>
 
     <div class="routes">
-      <RouterElement v-if="LINEUP_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('bwlineup') }"
-        class="navbar-element hideTablet" name="Izvođači" link="/lineup" />
+      <RouterElement v-if="STAGE_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('stage') }"
+        class="navbar-element hideTablet" name="Izvođači i sponzori" link="/stage" />
 
       <RouterElement v-if="ULAZNICA_VISIBILITY === true"
         :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }"
@@ -21,9 +21,6 @@
 
       <RouterElement v-if="TLOCRT_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('tlocrt') }"
         class="navbar-element hideTablet" name="Tlocrt" link="/tlocrt" />
-
-      <RouterElement v-if="SPONSORS_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('bwsponsors') }"
-        class="navbar-element hideTablet" name="Sponzori" link="/sponsors" />
 
       <RouterElement v-if="IGRICA_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('igrica') }"
         class="navbar-element hideTablet" name="Igrica" link="/igrica" />
@@ -43,8 +40,8 @@
 
       <div id="myNav" class="overlay bw">
         <div class="overlay-content bw">
-          <RouterElement v-if="LINEUP_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('bwlineup') }"
-            class="overlay-element" name="Izvođači" link="/lineup" @click="toggleNav" />
+          <RouterElement v-if="STAGE_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('stage') }"
+            class="overlay-element" name="Izvođači i sponzori" link="/stage" @click="toggleNav" />
 
           <RouterElement v-if="ULAZNICA_VISIBILITY === true"
             :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }" class="overlay-element ulaznice-button"
@@ -58,9 +55,6 @@
 
           <RouterElement v-if="TLOCRT_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('tlocrt') }"
             class="overlay-element" name="Tlocrt" link="/tlocrt" @click="toggleNav" />
-
-          <RouterElement v-if="SPONSORS_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('bwsponsors') }"
-            class="overlay-element" name="Sponzori" link="/sponsors" @click="toggleNav" />
 
           <RouterElement v-if="IGRICA_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('igrica') }"
             class="overlay-element" name="Igrica" link="/igrica" @click="toggleNav" />
@@ -100,11 +94,8 @@ export default {
       showNav: false,
     }
   }, computed: {
-    LINEUP_VISIBILITY() {
-      return store.state.LINEUP_VISIBILITY;
-    },
-    SPONSORS_VISIBILITY() {
-      return store.state.SPONSORS_VISIBILITY;
+    STAGE_VISIBILITY() {
+      return store.state.LINEUP_VISIBILITY === true || store.state.SPONSORS_VISIBILITY === true;
     },
     ULAZNICA_VISIBILITY() {
       return store.state.ULAZNICA_VISIBILITY;

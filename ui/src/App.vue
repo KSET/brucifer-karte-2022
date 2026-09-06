@@ -2,7 +2,7 @@
   <div id="app">
     <template v-if="visibilityLoaded">
       <NavbarAdmin v-if="navType === 'bruckarte'"></NavbarAdmin>
-      <NavbarBweb v-if="navType === 'brucweb' && comingSoonVisible"></NavbarBweb>
+      <NavbarBweb v-if="navType === 'brucweb' && comingSoonVisible && !hideNavbar"></NavbarBweb>
       <router-view />
     </template>
   </div>
@@ -37,6 +37,9 @@ export default {
     visibilityLoaded() {
       return visibilityStore.state.VISIBILITY_LOADED;
     },
+    hideNavbar() {
+      return this.$route.meta.hideNavbar === true;
+    },
   },
 };
 </script>
@@ -56,5 +59,4 @@ export default {
 @import './assets/fonts/Rubik/rubik.css';
 @import './assets/scss/Admin-scss/global.scss';
 @import './bruciweb.css';
-@import './assets/primevue-overrides.css';
 </style>

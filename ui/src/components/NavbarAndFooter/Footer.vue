@@ -1,6 +1,6 @@
 <template>
-    <div class="footer">
-        <div class="footer-sponsors-list">
+    <div ref="root" class="footer">
+        <div v-if="SPONSORS_VISIBILITY == 1" class="footer-sponsors-list">
             <sponsors-caroucel />
         </div>
 
@@ -38,7 +38,7 @@
                             <p class="footer-text">Uvjeti korištenja</p>
                         </router-link>
                     </div>
-                    <router-link class="footer-text" style="margin-left:30px" to="/pravila-ponasanja">
+                    <router-link class="footer-text" to="/pravila-ponasanja">
                         <p class="footer-text">Pravila ponašanja</p>
                     </router-link>
                 </div>
@@ -70,7 +70,6 @@
 
 </template>
 
-
 <script>
 import SponsorsCaroucel from '../BruciWeb/SponsorsCaroucel.vue';
 import visibilityStore from '@/store/visibilityStore';
@@ -84,26 +83,76 @@ export default {
             facebookUrl: 'https://web.facebook.com/BrucosijadaFER',
             instagramUrl: 'https://www.instagram.com/brucifer_fer/',
             websiteUrl: 'https://www.kset.org/',
+            observer: null,
+            overlayHost: null,
+            frame: null,
+            lastMeasured: 0,
         }
     },
     computed: {
         IGRICA_VISIBILITY() {
             return visibilityStore.state.IGRICA_VISIBILITY;
+        },
+        SPONSORS_VISIBILITY() {
+            return visibilityStore.state.SPONSORS_VISIBILITY;
         }
-    }
+    },
+
+    mounted() {
+        this.overlayHost = this.$refs.root?.closest('.bw-overlay-footer') || null;
+        if (!this.overlayHost) return;
+
+        this.measure();
+        if (typeof ResizeObserver !== 'undefined') {
+            this.observer = new ResizeObserver(this.schedule);
+            this.observer.observe(this.$refs.root);
+        }
+    },
+
+    beforeUnmount() {
+        this.observer?.disconnect();
+        this.observer = null;
+        if (this.frame !== null) {
+            cancelAnimationFrame(this.frame);
+            this.frame = null;
+        }
+        this.overlayHost?.style.removeProperty('--bw-footer-measured-h');
+        this.overlayHost = null;
+    },
+
+    methods: {
+        schedule() {
+            if (this.frame !== null) return;
+            this.frame = requestAnimationFrame(() => {
+                this.frame = null;
+                this.measure();
+            });
+        },
+
+        measure() {
+            const root = this.$refs.root;
+            if (!root || !this.overlayHost) return;
+
+            const height = root.getBoundingClientRect().height;
+            if (height <= 0) return;
+
+            if (Math.abs(height - this.lastMeasured) < 1) return;
+
+            this.lastMeasured = height;
+            this.overlayHost.style.setProperty('--bw-footer-measured-h', `${Math.ceil(height)}px`);
+        },
+    },
 }
 
 </script>
 
 <style>
 .footer-sponsors-list {
-    height: 4rem;
     display: flex;
     align-items: center;
 }
 
 .footer {
-    height: 7rem;
     background: var(--bw-footer-color);
 }
 
@@ -111,7 +160,7 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 4rem;
+    min-height: 4rem;
 
     display: flex;
     align-items: center;
@@ -136,17 +185,18 @@ export default {
     gap: 30px;
 }
 
-.footer-text {
+.footer .footer-text {
     margin: 0;
-    font: 400 14px/14px Ubuntu, sans-serif;
-    letter-spacing: -0.022em;
-    text-align: right;
+    font: 400 16px/1 Rubik, sans-serif;
+    letter-spacing: 0;
+    text-align: center;
     color: #fff;
     text-decoration: none;
     vertical-align: middle;
+    padding: 0;
 }
 
-.footer-text:hover {
+.footer .footer-text:hover {
     color: #dbe9f4;
 }
 
@@ -180,19 +230,24 @@ export default {
     opacity: 1;
 }
 
-.footer-mail {
+.footer .footer-mail {
     color: white;
-    font: 400 14px/14px Ubuntu, sans-serif;
+    font: 400 16px/1 Rubik, sans-serif;
+    letter-spacing: 0;
+    text-align: center;
+    text-decoration: none;
 }
 
-.footer-mail:hover {
+.footer .footer-mail:hover {
     color: white;
 }
 
-.footer-separator {
+.footer .footer-separator {
     color: white;
     opacity: 0.7;
     margin: 0 6px;
+    font: 400 16px/1 Rubik, sans-serif;
+    letter-spacing: 0;
 }
 
 @media (max-width: 640px) {
@@ -213,6 +268,77 @@ export default {
 
     .footery {
         justify-content: flex-start;
+        gap: 12px;
+        padding: 12px 3%;
+    }
+}
+
+.bw-overlay-footer .footer {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    min-height: var(--bw-footer-h);
+    z-index: 2;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.bw-overlay-footer .footery {
+    background-color: transparent;
+    flex: 1;
+    justify-content: center;
+}
+
+.stage-page .footer-sponsors-list {
+    display: none;
+}
+
+@media screen and (max-width: 550px) {
+    .bw-overlay-footer .footer-container {
+        flex-direction: column;
+        justify-content: center;
+        gap: 32px;
+    }
+
+    .bw-overlay-footer .footer-socials-container-mobile {
+        display: none;
+    }
+
+    .bw-overlay-footer .footer-socials-container-desktop {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+    }
+
+    .bw-overlay-footer .footer-socials-container-desktop .footer-separator {
+        display: none;
+    }
+
+    .bw-overlay-footer .footer-socials-container-desktop>div:not(.footer-socials) {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+    }
+
+    .bw-overlay-footer .footer-left-container {
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .bw-overlay-footer .footery {
+        gap: 14px;
+        padding: 20px 3%;
+    }
+
+    .bw-overlay-footer .footer .footer-text,
+    .bw-overlay-footer .footer .footer-mail,
+    .bw-overlay-footer .footer .footer-separator {
+        font-weight: 300;
     }
 }
 </style>

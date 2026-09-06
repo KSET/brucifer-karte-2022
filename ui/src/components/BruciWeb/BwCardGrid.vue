@@ -1,5 +1,5 @@
 <template>
-    <div class="card-grid" :class="variant">
+    <div class="card-grid sponsors">
         <div v-for="(item, index) in items" :key="item.id ?? index">
             <div class="card-grid-card">
                 <slot :item="item"></slot>
@@ -9,16 +9,10 @@
 </template>
 
 <script>
-// Responsive grid of translucent cards, used by the sponsors and lineup
 export default {
     name: 'BwCardGrid',
     props: {
         items: { type: Array, required: true },
-        variant: {
-            type: String,
-            default: 'sponsors',
-            validator: (value) => ['sponsors', 'lineup'].includes(value),
-        },
     },
 }
 </script>
@@ -34,81 +28,69 @@ export default {
 .card-grid-card {
     background: var(--bw-card-bg);
     border-radius: 18px;
+    transition: filter 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card-grid-card:hover {
+    filter: brightness(1.15);
+    transform: translateX(-0.5rem);
+}
+
+.card-grid.sponsors .card-grid-card:hover {
+    filter: none;
+    transform: translateX(-0.25rem);
+    border-color: rgba(255, 255, 255, 0.28);
 }
 
 .card-grid.sponsors {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    grid-gap: var(--bw-card-grid-gap);
+    grid-template-columns: repeat(auto-fit, 200px);
+    justify-content: center;
+    grid-gap: clamp(32px, 5vw, 80px);
+    max-width: 1040px;
+    padding: 0;
+    padding-top: clamp(32px, 6vw, 64px);
+    margin: 0 auto;
 }
 
 .card-grid.sponsors .card-grid-card {
-    padding: 30px;
+    width: 200px;
+    height: 150px;
+    border-radius: 24px 0 0 0;
+    background: rgba(156, 250, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.card-grid.lineup {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-row-gap: 3.45rem;
-    grid-column-gap: 5.25rem;
-    will-change: grid-row-gap, grid-column-gap;
-    transition-duration: .2s;
-    transition-timing-function: ease;
-    transition-property: grid-row-gap, grid-column-gap;
+.card-grid.sponsors .card-grid-card :deep(a) {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: 24px 32px;
+    border-radius: inherit;
 }
 
-.card-grid.lineup .card-grid-card {
-    padding: 15px 30px;
+.card-grid.sponsors .card-grid-card :deep(.card-image-container) {
+    height: 100%;
 }
 
-@media screen and (max-width: 1550px) {
-    .card-grid.sponsors {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .card-grid.lineup {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        grid-column-gap: 3rem;
-    }
+.card-grid.sponsors .card-grid-card :deep(.card-image-sizer) {
+    display: none;
 }
 
-@media screen and (max-width: 980px) {
-    .card-grid.sponsors {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .card-grid.lineup {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        grid-column-gap: 2.85rem;
-    }
-
-    .card-grid.lineup .card-grid-card {
-        padding: 10px 20px;
-    }
-}
-
-/* 635px and 21.875rem (350px) are deliberate exceptions to the breakpoint
-   scale — they are the column steps of these grids. */
-@media screen and (max-width: 635px) {
+@media screen and (max-width: 550px) {
     .card-grid.sponsors {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-gap: 24px;
     }
 
-    .card-grid.lineup {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
-        grid-column-gap: 2rem;
-    }
-}
-
-@media screen and (max-width: 21.875rem) {
-    .card-grid.sponsors {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
+    .card-grid.sponsors .card-grid-card {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4 / 3;
     }
 
-    .card-grid.lineup {
-        grid-row-gap: 1.2rem;
-    }
-
-    .card-grid.lineup .card-grid-card {
-        padding: 8px 12px;
+    .card-grid.sponsors .card-grid-card :deep(a) {
+        padding: 14px 18px;
     }
 }
 </style>

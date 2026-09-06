@@ -1,8 +1,15 @@
 <template>
-  <div class="bw-page-container">
-    <div>
-      <div class="contents">
+  <div class="bw-page-container ulaznice-page bw-overlay-footer bw-textured">
+    <div class="bw-ulaznice-content">
 
+      <BwBackButton />
+
+      <div class="bw-ulaznice-head">
+        <h2 class="bw-section-title">Ulaznice</h2>
+        <h4 class="bw-section-subtitle">Brucifer 2026.</h4>
+      </div>
+
+      <div class="bw-panel">
         <!-- Pretix Widget -->
         <pretix-widget event="https://karte.kset.org/kset/42-brucosijada/" data-domain="karte.kset.org"
           data-embed="true"></pretix-widget>
@@ -15,22 +22,21 @@
           </div>
         </noscript>
 
-        <div v-if="translationsLength != 0">
-          <section v-for="i in translationsLength" :key="i">
-            <h1>{{ translations.ulaznice["title" + i] }}</h1>
-            <div class="text">
-              <p class="pText" v-for="text in translations.ulaznice['text' + i].split('\n\n')" :key="text">{{ text }}
-              </p>
-            </div>
+        <template v-if="translationsLength != 0">
+          <section v-for="i in translationsLength" :key="i" class="bw-panel-section">
+            <h3 class="bw-panel-section-title">{{ translations.ulaznice["title" + i] }}</h3>
+            <p class="bw-panel-text" v-for="text in translations.ulaznice['text' + i].split('\n\n')" :key="text">
+              {{ text }}
+            </p>
           </section>
-        </div>
+        </template>
 
-        <div v-else>
-          <h1>ulaznice.title1</h1>
-          <h1>ulaznice.text1</h1>
-        </div>
-
+        <section v-else class="bw-panel-section">
+          <h3 class="bw-panel-section-title">ulaznice.title1</h3>
+          <p class="bw-panel-text">ulaznice.text1</p>
+        </section>
       </div>
+
     </div>
     <Footer></Footer>
   </div>
@@ -38,11 +44,12 @@
 
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
+import BwBackButton from '@/components/BruciWeb/BwBackButton.vue'
 import translationsStore from '@/store/translationsStore'
 
 export default {
   name: 'UlazniceView',
-  components: { Footer },
+  components: { Footer, BwBackButton },
   computed: {
     translations() {
       return translationsStore.state.translations;
@@ -62,9 +69,48 @@ export default {
 }
 </script>
 
-
 <style>
 .pretix-widget {
   background-color: white;
+}
+</style>
+
+<style scoped>
+.ulaznice-page {
+  overflow: visible;
+  justify-content: flex-start;
+  background-image: none;
+  background-color: var(--bw-teal-ink);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.bw-ulaznice-content {
+  position: relative;
+  z-index: 1;
+  padding: 0 4vw calc(4vw + var(--bw-footer-measured-h, var(--bw-footer-total-h)));
+}
+
+.bw-ulaznice-head {
+  text-align: center;
+  padding-top: clamp(88px, 11vw, 132px);
+}
+
+.bw-panel :deep(.bw-panel-section:last-child .bw-panel-text:last-child) {
+  text-align: center;
+  font-weight: 600;
+  padding-top: clamp(28px, 3vw, 40px);
+}
+
+@media screen and (max-width: 980px) {
+  .bw-ulaznice-content {
+    padding: 0 6vw calc(6vw + var(--bw-footer-measured-h, var(--bw-footer-total-h)));
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .bw-ulaznice-content {
+    padding: 0 6vw calc(8vw + var(--bw-footer-measured-h, var(--bw-footer-total-h)));
+  }
 }
 </style>

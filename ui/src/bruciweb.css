@@ -21,6 +21,21 @@
   --bw-dialog-bg: rgba(7, 72, 120, 0.7);
   --bw-text-block-bg: #00000026;
 
+  --bw-ink: #0f1011;
+  --bw-primary-yellow: #d8b741;
+  --bw-purple: #622568;
+  --bw-teal: #6cc9cd;
+  --bw-outline: #14161f;
+  --bw-lineup-bar-bg: #0c3a45;
+  --bw-teal-ink: #0c3743;
+  --bw-texture: url("./assets/design-elements/tekstura.png");
+
+  --bw-sticky-header-h: 68px;
+
+  --bw-footer-h: 64px;
+  --bw-footer-sponsors-h: 48px;
+  --bw-footer-total-h: calc(var(--bw-footer-h) + var(--bw-footer-sponsors-h));
+
   /* default page background image (consumed by .bw-page-container) */
   --background-default: url("./assets/bg/default/bg-desktop.png");
 }
@@ -31,7 +46,7 @@
   font-family: 'Ubuntu', sans-serif;
   font-weight: 400;
   font-size: 20px;
-  line-height: 18px;
+  line-height: 1;
   color: white;
   padding: 10px 0;
   transition: margin-top 0.3s ease;
@@ -50,13 +65,159 @@
   color: white;
 }
 
-.contents h1,
-.contents h2,
-.contents h3,
-.contents h4,
-.contents h5,
-.contents h6 {
+.bw-page-container .bw-display-1 {
+  font-family: 'GC Epic Pro Cro', sans-serif;
+  font-weight: 600;
+  font-size: 160px;
+  line-height: 1;
+  color: white;
+}
+
+.bw-page-container .bw-display-2 {
+  font-family: 'GC Epic Pro Cro', sans-serif;
+  font-weight: 800;
+  font-size: 96px;
+  line-height: 1;
+  text-transform: uppercase;
+  color: white;
+}
+
+.bw-page-container .bw-display-3 {
+  font-family: 'GC Epic Pro Cro', sans-serif;
+  font-weight: 800;
+  font-size: 64px;
+  line-height: 1;
+  text-transform: uppercase;
+  color: white;
+}
+
+.bw-page-container .bw-display-4 {
+  font-family: 'GC Epic Pro Cro', sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1;
+  text-transform: uppercase;
+  color: white;
+}
+
+.bw-page-container .bw-subtitle {
+  font-family: 'GC Epic Pro Cro', sans-serif;
+  font-weight: 800;
+  font-size: 32px;
+  line-height: 1;
+  text-transform: uppercase;
+  color: white;
+}
+
+.bw-page-container .bw-body {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1;
+  color: white;
+}
+
+.bw-page-container .bw-body-upper {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1;
+  text-transform: uppercase;
+  color: white;
+}
+
+.bw-page-container .bw-label {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1;
+  text-transform: uppercase;
+  color: white;
+}
+
+.bw-page-container .bw-section-title {
+  font-family: 'GC Epic Pro Cro', sans-serif;
+  font-weight: 800;
+  font-size: clamp(40px, 7vw, 96px);
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-align: center;
+  color: white;
+  margin: 0;
+}
+
+.bw-page-container .bw-section-title::after {
+  content: "";
+  display: block;
+  margin-bottom: -0.25em;
+}
+
+.bw-page-container .bw-section-subtitle {
+  font-family: 'GC Epic Pro Cro', sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  color: white;
+  margin: 0;
+  font-size: clamp(18px, 4vw, 36px);
+  padding-top: clamp(12px, 2.5vw, 24px);
+  opacity: 0.7;
+}
+
+.bw-page-container .bw-section-subtitle::before {
+  content: "";
+  display: block;
+  margin-top: -0.1425em;
+}
+
+.bw-page-container .bw-panel {
+  max-width: 62rem;
+  margin: clamp(40px, 5vw, 72px) auto 0;
+  padding: clamp(24px, 3vw, 40px);
+  border-radius: 24px 0 0 0;
+  background: rgba(156, 250, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bw-page-container .bw-panel-section {
+  padding-top: clamp(28px, 3.5vw, 48px);
+}
+
+.bw-page-container .bw-panel-section:first-child {
+  padding-top: 0;
+}
+
+.bw-page-container .bw-panel-section-title {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  color: white;
+  margin: 0;
+}
+
+.bw-page-container .bw-panel .bw-panel-text {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0;
+  color: white;
+  margin: 0;
+  padding: clamp(16px, 1.6vw, 22px) 0 0;
+}
+
+.bw-page-container .contents h1,
+.bw-page-container .contents h2,
+.bw-page-container .contents h3,
+.bw-page-container .contents h4,
+.bw-page-container .contents h5,
+.bw-page-container .contents h6 {
   font-size: 1.5em;
+  line-height: 1.3;
 }
 
 /* Inline page title (sits next to other inline-block content, e.g. cjenik) */
@@ -149,7 +310,30 @@ main::after {
   margin: 1.5rem 0;
 }
 
-/* ------------------ CARD IMAGE (inside BwCardGrid slots: lineup, sponsors) ------------------ */
+.bw-textured {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bw-ink);
+}
+
+.bw-textured::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--bw-texture);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.bw-ray {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  height: auto;
+  opacity: 0.5;
+}
 
 .card-image-container {
   position: relative;
@@ -209,4 +393,30 @@ main::after {
   .contents p + h1 {
     margin-top: 4rem;
   }
+
+  :root {
+    --bw-sticky-header-h: 52px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  :root {
+    --bw-sticky-header-h: 40px;
+
+    --bw-footer-h: 256px;
+  }
+
+  .bw-page-container .bw-section-title {
+    font-size: 48px;
+  }
+
+  .bw-page-container .bw-panel {
+    max-width: none;
+    margin-top: clamp(28px, 8vw, 40px);
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+  }
+
 }
