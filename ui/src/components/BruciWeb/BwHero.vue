@@ -16,7 +16,7 @@
 
             <div class="bw-hero-actions">
                 <router-link v-if="ULAZNICA_VISIBILITY === true"
-                    class="bw-hero-btn bw-hero-btn--primary bw-body-upper" to="/ulaznice">Kupi karte</router-link>
+                    class="bw-hero-btn bw-hero-btn--primary bw-body-upper" to="/ulaznice">Kupi ulaznice</router-link>
                 <router-link v-if="BRUCOSI_VISIBILITY === true"
                     class="bw-hero-btn bw-hero-btn--primary bw-body-upper" to="/brucosi">Brucoši</router-link>
             </div>
