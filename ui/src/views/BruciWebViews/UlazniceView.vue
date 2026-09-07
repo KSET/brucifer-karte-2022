@@ -11,13 +11,12 @@
 
       <div class="bw-panel">
         <!-- Pretix Widget -->
-        <pretix-widget event="https://karte.kset.org/kset/42-brucosijada/" data-domain="karte.kset.org"
-          data-embed="true"></pretix-widget>
+        <pretix-widget event="https://karte.kset.org/kset/43-brucifer/"></pretix-widget>
         <noscript>
           <div class="pretix-widget">
             <div class="pretix-widget-info-message">
               JavaScript is disabled in your browser. To access our ticket shop without JavaScript, please
-              <a target="_blank" rel="noopener" href="https://karte.kset.org/kset/brucosijada/">click here</a>.
+              <a target="_blank" rel="noopener" href="https://karte.kset.org/kset/43-brucifer/">click here</a>.
             </div>
           </div>
         </noscript>
@@ -61,7 +60,7 @@ export default {
   mounted() {
     // Dynamically load the Pretix widget JavaScript after Vue has mounted
     const script = document.createElement('script');
-    script.src = 'https://karte.kset.org/widget/v1.en.js';
+    script.src = 'https://karte.kset.org/widget/v2.en.js';
     script.async = true;
     script.crossOrigin = 'anonymous';
     document.body.appendChild(script);
