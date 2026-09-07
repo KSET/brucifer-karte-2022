@@ -13,7 +13,7 @@ export default {
     name: 'BwBackButton',
 
     props: {
-        to: { type: String, default: '/stage' },
+        to: { type: String, default: '/' },
         label: { type: String, default: 'Povratak na početnu' },
     },
 }

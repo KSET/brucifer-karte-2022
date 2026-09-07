@@ -295,7 +295,7 @@ export default {
     justify-content: center;
 }
 
-.stage-page .footer-sponsors-list {
+.naslovnica-page .footer-sponsors-list {
     display: none;
 }
 

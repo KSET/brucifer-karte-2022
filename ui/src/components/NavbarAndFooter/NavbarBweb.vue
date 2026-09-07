@@ -5,8 +5,8 @@
     </router-link>
 
     <div class="routes">
-      <RouterElement v-if="STAGE_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('stage') }"
-        class="navbar-element hideTablet" name="Izvođači i sponzori" link="/stage" />
+      <RouterElement v-if="NASLOVNICA_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('naslovnica') }"
+        class="navbar-element hideTablet" name="Izvođači i sponzori" link="/" />
 
       <RouterElement v-if="ULAZNICA_VISIBILITY === true"
         :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }"
@@ -40,8 +40,8 @@
 
       <div id="myNav" class="overlay bw">
         <div class="overlay-content bw">
-          <RouterElement v-if="STAGE_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('stage') }"
-            class="overlay-element" name="Izvođači i sponzori" link="/stage" @click="toggleNav" />
+          <RouterElement v-if="NASLOVNICA_VISIBILITY === true" :class="{ [$style.selected]: isCurrentPage('naslovnica') }"
+            class="overlay-element" name="Izvođači i sponzori" link="/" @click="toggleNav" />
 
           <RouterElement v-if="ULAZNICA_VISIBILITY === true"
             :class="{ ['ulaznice-button-selected']: isCurrentPage('ulaznice') }" class="overlay-element ulaznice-button"
@@ -94,7 +94,7 @@ export default {
       showNav: false,
     }
   }, computed: {
-    STAGE_VISIBILITY() {
+    NASLOVNICA_VISIBILITY() {
       return store.state.LINEUP_VISIBILITY === true || store.state.SPONSORS_VISIBILITY === true;
     },
     ULAZNICA_VISIBILITY() {

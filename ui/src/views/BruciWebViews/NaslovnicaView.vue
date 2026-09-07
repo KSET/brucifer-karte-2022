@@ -1,194 +1,56 @@
 <template>
-  <div class="page-container">
-    <div v-if="comingSoonVisible" class="page-container homepage-container" style="min-height: 100vh;">
-      <vue-countdown v-if="timerVisible" class="countdown-timer" :time="countdownTime" :transform="transformSlotProps"
-        v-slot="{ days, hours, minutes, seconds }">
-        <h5 class="countdown-textfield">{{ days }}</h5> :
-        <h5 class="countdown-textfield">{{ hours }}</h5> :
-        <h5 class="countdown-textfield">{{ minutes }}</h5> :
-        <h5 class="countdown-textfield">{{ seconds }}</h5>
-      </vue-countdown>
-
-      <div class="homepage">
-        <div class="image-container">
-          <div class="image-sizer"></div>
-          <div class="image-frame"></div>
-        </div>
-      </div>
-
-      <Footer />
-
-    </div>
-
-    <div v-else>
-      <div class="comingSoon">
-        <div class="image-container">
-          <div class="image-sizer"></div>
-          <div class="image-frame"></div>
-        </div>
-      </div>
-    </div>
-
+  <div class="bw-page-container naslovnica-page bw-overlay-footer"
+    :class="{ 'naslovnica-page--no-sponsors': SPONSORS_VISIBILITY !== true }">
+    <BwHero />
+    <BwBreakMarquee />
+    <BwGallery />
+    <template v-if="LINEUP_VISIBILITY === true">
+      <BwBreakMarquee />
+      <BwLineup />
+    </template>
+    <template v-if="SPONSORS_VISIBILITY === true">
+      <BwBreakMarquee />
+      <BwSponsors />
+    </template>
+    <Footer />
   </div>
 </template>
 
 <script>
-import Footer from '@/components/NavbarAndFooter/Footer.vue';
-import store from '@/store/visibilityStore';
+import Footer from '@/components/NavbarAndFooter/Footer.vue'
+import BwHero from '@/components/BruciWeb/BwHero.vue'
+import BwBreakMarquee from '@/components/BruciWeb/BwBreakMarquee.vue'
+import BwGallery from '@/components/BruciWeb/BwGallery.vue'
+import BwLineup from '@/components/BruciWeb/BwLineup.vue'
+import BwSponsors from '@/components/BruciWeb/BwSponsors.vue'
+import visibilityStore from '@/store/visibilityStore.js'
 
 export default {
   name: 'Naslovnica',
-  components: { Footer },
+  components: { Footer, BwHero, BwBreakMarquee, BwGallery, BwLineup, BwSponsors },
+
   computed: {
-    comingSoonVisible() {
-      return store.state.COMINGSOON_VISIBILITY === false;
+    LINEUP_VISIBILITY() {
+      return visibilityStore.state.LINEUP_VISIBILITY;
     },
-    timerVisible() {
-      return store.state.TIMER_VISIBILITY === true;
-    },
-    countdownTime() {
-      const t = store.state.TIMER_TIME;
-      if (!t) return 0;
-      const target = new Date(t).getTime();
-      if (Number.isNaN(target)) return 0;
-      return Math.max(0, target - Date.now());
+    SPONSORS_VISIBILITY() {
+      return visibilityStore.state.SPONSORS_VISIBILITY;
     },
   },
-  methods: {
-    transformSlotProps(props) {
-      const formattedProps = {};
-
-      Object.entries(props).forEach(([key, value]) => {
-        formattedProps[key] = value < 10 ? `0${value}` : String(value);
-      });
-
-      return formattedProps;
-    },
-  },
-};
+}
 </script>
 
-
-<style>
-:root {
-  /* BACKGROUND IMAGES
-  --background-image -> homepage images (view-local)
-  --background-default (default images on other pages) lives in bruciweb.css TOKENS
-  */
-
-  --background-image: url("../../assets/bg/home/bg-desktop.png");
-  --background-image-aspect-ratio: calc(1081 / 1930);
-
-  /* COUNTDOWN */
-
-  --countdown-right-offset: 10.5%;
-  --countdown-font-size: 5vw;
-  --countdown-top-offset: 32%;
-}
-
-@media screen and (max-width: 980px) {
-  :root {
-    --background-image-aspect-ratio: calc(1677 / 1048);
-    --countdown-right-offset: 17vw;
-    --countdown-font-size: 8vw;
-    --countdown-top-offset: 25.5%;
-    --background-image: url("../../assets/bg/home/bg-tablet.png");
-  }
-}
-
-@media screen and (max-width: 550px) {
-  :root {
-    --background-image-aspect-ratio: calc(1563 / 880);
-    --countdown-right-offset: 13vw;
-    --countdown-font-size: 8vw;
-    --countdown-top-offset: 17.5%;
-    --background-image: url("../../assets/bg/home/bg-mobile.png");
-  }
-}
-</style>
-
 <style scoped>
-.homepage-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.naslovnica-page {
+  justify-content: flex-start;
+  background-image: none;
+  background-color: var(--bw-ink);
+
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
-.comingSoon {
-  background-image: url("../../assets/bg/comingSoon/comingSoon-desktop.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-.page-container {
-  position: relative;
-  background-color: var(--bw-page-color);
-  min-height: 93vh;
-  flex: 1;
-}
-
-.countdown-timer {
-  position: absolute;
-  font-family: 'Cobya';
-  top: 0;
-  width: 100%;
-  right: 0;
-  padding-left: var(--countdown-right-offset);
-  text-align: left;
-  color: #c5ecff;
-  pointer-events: none;
-  user-select: none;
-  overflow: hidden;
-  font-size: var(--countdown-font-size);
-}
-
-.countdown-timer h5 {
-  font-size: var(--countdown-font-size);
-  font-family: 'Cobya';
-}
-
-.countdown-timer::before {
-  content: "";
-  display: block;
-  padding-top: var(--countdown-top-offset);
-}
-
-.countdown-textfield {
-  display: inline;
-  margin: 0px -15px;
-}
-
-.homepage {
-  background-image: var(--background-image);
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-@media screen and (max-width: 980px) {
-  .comingSoon {
-    background-image: url("../../assets/bg/comingSoon/comingSoon-tablet.png");
-  }
-
-  .countdown-timer {
-    padding-top: 35%;
-  }
-
-  .countdown-textfield {
-    margin: 0px -10px;
-  }
-}
-
-@media screen and (max-width: 550px) {
-  .comingSoon {
-    background-image: url("../../assets/bg/comingSoon/comingSoon-mobitel.png");
-  }
-
-  .countdown-timer {
-    padding-top: 48%;
-  }
-
-  .countdown-textfield {
-    margin: 0px -5px;
-  }
+.naslovnica-page--no-sponsors {
+  padding-bottom: var(--bw-footer-measured-h, var(--bw-footer-h));
 }
 </style>

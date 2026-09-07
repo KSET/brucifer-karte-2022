@@ -35,11 +35,10 @@ import Translations from "../views/AdminViews/TranslationsView.vue";
 import DailyReport from "../views/AdminViews/DailyReportView.vue";
 
 /* BruciWeb Views */
-import Stage from "../views/BruciWebViews/StageView.vue";
 import Kontakt from "../views/BruciWebViews/KontaktView.vue";
 import Ulaznice from "../views/BruciWebViews/UlazniceView.vue";
 import Pravila from "../views/BruciWebViews/PravilaView.vue";
-import Naslovnica from "../views/BruciWebViews/NaslovnicaView.vue";
+import Home from "../views/BruciWebViews/HomeView.vue";
 import BWPageNotFound from "../views/BruciWebViews/BWPageNotFound.vue";
 import BWcjenik from "../views/BruciWebViews/BWcjenikView.vue";
 import Tlocrt from "../views/BruciWebViews/TlocrtView.vue";
@@ -267,12 +266,7 @@ const routes = [
   {
     path: "/",
     name: "naslovnica",
-    component: Naslovnica,
-  },
-  {
-    path: "/stage",
-    name: "stage",
-    component: Stage,
+    component: Home,
     meta: { hideNavbar: true },
   },
   {
@@ -368,7 +362,6 @@ router.beforeEach((to, from, next) => {
     !to.path.includes("admin") &&
     to.name !== "naslovnica" &&
     to.name !== "BWPageNotFound" &&
-    to.name !== "stage" &&
     to.name !== "ulaznice" &&
     to.name !== "pravila-ponasanja"
   ) {
