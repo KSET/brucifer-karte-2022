@@ -308,16 +308,19 @@ export default {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 18px;
+    font-family: 'GC Epic Pro Cro', sans-serif;
+    font-weight: 700;
+    line-height: 0.8;
+    padding: calc(18px + 0.07em) 18px calc(18px - 0.07em);
     border-radius: 24px 0px 0px 0px;
-    line-height: 1;
     text-decoration: none;
     transition: border-color 0.2s ease, background-color 0.2s ease,
         box-shadow 0.2s ease;
 }
 
+
 .bw-hero-btn.bw-hero-btn--primary {
-    padding: 24px 32px;
+    padding: calc(24px + 0.07em) 32px calc(24px - 0.07em);
     background: var(--bw-primary-yellow);
     color: var(--bw-outline);
     border: 2px solid var(--bw-primary-yellow);
@@ -334,6 +337,7 @@ export default {
 }
 
 .bw-hero-btn.bw-hero-btn--ghost {
+    padding: calc(18px + 0.07em) 18px calc(18px - 0.07em);
     background: rgba(255, 255, 255, 0.1);
     color: white;
     border: 2px solid rgba(255, 255, 255, 0.1);
@@ -406,15 +410,14 @@ export default {
     .bw-hero-btn.bw-hero-btn {
         min-width: 0;
         font-size: 18px;
-        line-height: 1;
     }
 
     .bw-hero-btn.bw-hero-btn--primary {
-        padding: 24px 32px;
+        padding: calc(24px + 0.07em) 32px calc(24px - 0.07em);
     }
 
     .bw-hero-btn.bw-hero-btn--ghost {
-        padding: 18px;
+        padding: calc(18px + 0.07em) 18px calc(18px - 0.07em);
     }
 
 }
@@ -478,19 +481,16 @@ export default {
         min-width: 0;
         border-radius: 18px 0 0 0;
         font-size: 15px;
-        line-height: 1;
     }
 
     .bw-hero-btn.bw-hero-btn--primary {
-        padding: 24px 32px;
+        padding: calc(24px + 0.07em) 32px calc(24px - 0.07em);
         font-size: 24px;
-        line-height: 1;
     }
 
     .bw-hero-btn.bw-hero-btn--ghost {
-        padding: 18px;
+        padding: calc(18px + 0.07em) 18px calc(18px - 0.07em);
         font-size: 20px;
-        line-height: 1;
     }
 
 }
