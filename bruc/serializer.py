@@ -106,5 +106,5 @@ class DynamicSearchFilter(filters.SearchFilter):
 class BrucosiFormResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = BrucosiFormResponse
-        fields = ['id', 'name', 'surname', 'email', 'jmbag', 'submitted_at', 'status', 'gdpr_accepted']
+        fields = ['id', 'name', 'surname', 'jmbag', 'submitted_at', 'status', 'gdpr_accepted']
         read_only_fields = ['id', 'submitted_at']

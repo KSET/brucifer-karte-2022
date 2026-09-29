@@ -36,14 +36,6 @@
                         </Message>
                     </div>
 
-                    <!-- Email -->
-                    <div class="field">
-                        <InputText name="email" type="email" placeholder="@fer.hr Email" />
-                        <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
-                            {{ $form.email.error.message }}
-                        </Message>
-                    </div>
-
                     <!-- GDPR -->
                     <div class="field">
                         <div style="display: flex; flex-direction: row; gap: 0.5rem; color: white;">
@@ -82,7 +74,6 @@ import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import brucosiFormStore from '@/store/brucosiFormStore'
-import { deriveFerEmail } from '@/utils/ferEmail'
 
 export default {
     name: 'JmbagForm',
@@ -102,7 +93,6 @@ export default {
             initialValues: {
                 name: '',
                 surname: '',
-                email: '',
                 jmbag: '',
                 gdpr_accepted: false,
             },
@@ -111,17 +101,7 @@ export default {
                     name: z.string().min(1, { message: 'Ime je obavezno polje' }),
                     surname: z.string().min(1, { message: 'Prezime je obavezno polje' }),
                     jmbag: z.string().regex(/^\d{10}$/, { message: 'JMBAG mora biti 10 znamenki' }),
-                    email: z.string().email({ message: 'Email je obavezno polje' }),
                     gdpr_accepted: z.boolean().refine(val => val === true, { message: 'Prihvaćanje privole je obavezno', }),
-                }).superRefine((values, ctx) => {
-                    const expected = deriveFerEmail(values.name, values.surname, values.jmbag)
-                    if (expected !== null && values.email.trim().toLowerCase() !== expected) {
-                        ctx.addIssue({
-                            code: 'custom',
-                            path: ['email'],
-                            message: 'Email mora biti u FER formatu (ip34567@fer.hr)',
-                        })
-                    }
                 })
             ),
             toast: null,

@@ -81,7 +81,7 @@
               @click="selectSubmission(submission)" class="submission-item">
               <v-list-item-content>
                 <v-list-item-title>{{ submission.name }} {{ submission.surname }}</v-list-item-title>
-                <v-list-item-subtitle>{{ submission.email }}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ submissionEmail(submission) }}</v-list-item-subtitle>
                 <v-list-item-subtitle>{{ formatDate(submission.submitted_at) }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -175,6 +175,9 @@ export default {
 
   },
   methods: {
+    submissionEmail(submission) {
+      return deriveFerEmail(submission.name, submission.surname, submission.jmbag);
+    },
     async getTodayStats() {
       try {
         this.loading = true;

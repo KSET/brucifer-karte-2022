@@ -161,7 +161,6 @@ class GameLeaderboard(models.Model):
 class BrucosiFormResponse(models.Model):
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
-    email = models.EmailField()
     jmbag = models.CharField(max_length=20)
     gdpr_accepted = models.BooleanField(default=False)
     submitted_at = models.DateTimeField(auto_now_add=True)
