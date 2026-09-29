@@ -308,7 +308,7 @@ export default {
                     {
                         emails: [
                             {
-                                subject: "[#BRUCIFER25] Potvrda za kupljenu kartu",
+                                subject: "[#BRUCIFER26] Potvrda za kupljenu kartu",
                                 template: "guest_email",
                                 message: msg,
                                 name: guest.name,

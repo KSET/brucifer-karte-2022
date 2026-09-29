@@ -22,7 +22,7 @@ from rest_framework.decorators import action
 from django.db import transaction
 from django.utils import timezone
 import json
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, get_connection
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -130,14 +130,14 @@ class MailerViewSet(viewsets.ModelViewSet):
 
             if subject and msg and to and html_message:
                 text_content = strip_tags(html_message)
-                msg = EmailMultiAlternatives(subject, text_content, "42. Brucošijada FER-a<"+settings.EMAIL_HOST_USER+">", [to])
+                msg = EmailMultiAlternatives(subject, text_content, f"43. Brucifer <{settings.DEFAULT_FROM_EMAIL}>", [to])
                 msg.attach_alternative(html_message, "text/html")
                 messages.append(msg)
 
         if messages:
             try:
-                for msg in messages:
-                    msg.send()
+                with get_connection() as connection:
+                    connection.send_messages(messages)
                 return HttpResponse('Emails sent successfully.')
             except Exception:
                 return HttpResponse('Failed to send emails.', status=500)

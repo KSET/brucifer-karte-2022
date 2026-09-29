@@ -130,11 +130,13 @@ DATABASES = {
     }
 }
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")  
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_APP_PASSWORD")
+EMAIL_HOST = os.getenv("BREVO_SMTP_HOST", "smtp-relay.brevo.com")
+EMAIL_PORT = int(os.getenv("BREVO_SMTP_PORT", 587))
+EMAIL_HOST_USER = os.getenv("BREVO_SMTP_LOGIN") 
+EMAIL_HOST_PASSWORD = os.getenv("BREVO_SMTP_KEY") 
 EMAIL_USE_TLS = True
+EMAIL_TIMEOUT = 30
+DEFAULT_FROM_EMAIL = os.getenv("BREVO_SENDER_EMAIL")
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 # Password validation

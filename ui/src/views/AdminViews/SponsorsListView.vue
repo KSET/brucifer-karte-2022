@@ -70,7 +70,7 @@ export default {
 
               email.forEach((e) => {
                 emails.push({
-                  subject: "[KSET] Link za uređivanje popisa za 42. Brucošijadu FER-a",
+                  subject: "[KSET] Link za uređivanje popisa za 43. Brucifer",
                   template: "sponsors_email",
                   message: msg,
                   name: element.name,
@@ -80,7 +80,7 @@ export default {
               })
               await api.post('/mailer/',
                 {
-                  subject: "[KSET] Link za uređivanje popisa za 42. Brucošijadu FER-a",
+                  subject: "[KSET] Link za uređivanje popisa za 43. Brucifer",
                   template: "sponsors_email",
                   message: msg,
                   name: element.name,

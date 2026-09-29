@@ -153,7 +153,7 @@ export default {
       //   {
       //     emails:
       //       [{
-      //         subject: "[#BRUCIFER25] Promjena privilegije",
+      //         subject: "[#BRUCIFER26] Promjena privilegije",
       //         template: "user_email",
       //         message: user.name + " " + privilege_name,
       //         name: to_user_name,
@@ -166,7 +166,7 @@ export default {
 
       // await api.post('/mailer/',
       //   {
-      //     subject: "[#BRUCIFER25] Promjena privilegije",
+      //     subject: "[#BRUCIFER26] Promjena privilegije",
       //     template: "user_email",
       //     message: user.name + " " + privilege_name,
       //     name: to_user_name,
