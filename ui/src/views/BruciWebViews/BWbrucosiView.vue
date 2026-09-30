@@ -48,7 +48,7 @@
               <Checkbox name="gdpr_accepted" binary inputId="gdpr_accepted" />
               <label for="gdpr_accepted" class="bw-text bw-text-light">
                 Slažem se s
-                <a href="/Privola_za_prikupljanje_osobnih_podataka-Brucosijada_2025.pdf" target="_blank"
+                <a href="/Privola_za_prikupljanje_osobnih_podataka-Brucosijada_2026.pdf" target="_blank"
                   rel="noopener noreferrer">Privolom za prikupljanje osobnih podataka</a>
               </label>
             </div>
