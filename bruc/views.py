@@ -47,7 +47,6 @@ from .services import derive_fer_email, send_guest_ticket_email
 
 import hmac
 from datetime import datetime, time, timedelta
-from urllib.parse import quote
 from django.utils.timezone import make_aware
 
 class SponsorGuestThrottle(AnonRateThrottle):
@@ -125,13 +124,8 @@ class MailerViewSet(viewsets.ModelViewSet):
             elif template_name == "guest_email":
                 conf_code = email.get('confCode') or ''
                 guest = Guests.objects.filter(confCode=conf_code).first() if conf_code else None
-                if guest:
-                    ok, _ = send_guest_ticket_email(guest)
-                    guest_results.append(ok)
-                    continue
-                html_message = render_to_string('emails/guest_email.html', {
-                    'name': email.get('name', ''), 'confCode': conf_code,
-                    'qrSrc': "https://api.qrserver.com/v1/create-qr-code/?data="+quote(conf_code)+"&amp;size=300x300"})
+                guest_results.append(send_guest_ticket_email(guest)[0] if guest else False)
+                continue
             elif template_name == "sponsors_email":
                 sponsor = Sponsors.objects.filter(slug=(email.get('slug') or '')).first()
                 if not sponsor:
@@ -190,12 +184,16 @@ class GuestsViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='search-brucosi')
     def search_brucosi(self, request):
-        jmbag = request.query_params.get('jmbag')
+        jmbag = (request.query_params.get('jmbag') or '').strip()
         if not jmbag:
             return Response({"error": "Missing jmbag parameter"}, status=status.HTTP_400_BAD_REQUEST)
 
-        guests = Guests.objects.filter(jmbag__icontains=jmbag, tag="Brucoši")
-        submissions = BrucosiFormResponse.objects.filter(jmbag__icontains=jmbag)
+        guests = list(Guests.objects.filter(jmbag__startswith=jmbag, tag="Brucoši")[:2])
+        if len(guests) != 1:
+            count = Guests.objects.filter(jmbag__startswith=jmbag, tag="Brucoši").count() if guests else 0
+            return Response({"count": count, "guests": [], "submissions": []})
+
+        submissions = BrucosiFormResponse.objects.filter(jmbag=guests[0].jmbag)
 
         seen = set()
         unique_submissions = []
@@ -209,6 +207,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
         submission_data = BrucosiFormResponseSerializer(unique_submissions, many=True).data
 
         return Response({
+            "count": 1,
             "guests": guest_data,
             "submissions": submission_data
         })

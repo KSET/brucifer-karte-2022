@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-if="dialog" width="90px" >
+    <v-dialog :model-value="!!dialog" persistent width="90px">
       <v-card  height="90px" style="overflow:hidden">
         <v-progress-circular size="90px" indeterminate color="black"></v-progress-circular>
       </v-card>

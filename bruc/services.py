@@ -1,8 +1,11 @@
+import io
 import logging
 import smtplib
 import socket
+from email.mime.image import MIMEImage
 from email.utils import make_msgid
-from urllib.parse import quote
+
+import segno
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -15,6 +18,7 @@ from .models import Mailer
 logger = logging.getLogger(__name__)
 
 GUEST_TICKET_SUBJECT = "[#BRUCIFER26] Potvrda za kupljenu kartu"
+QR_CID = 'ticket-qr@brucifer'
 
 DIACRITICS = {'č': 'c', 'š': 's', 'ž': 'z', 'đ': 'd', 'ć': 'c'}
 
@@ -56,6 +60,12 @@ def classify_mail_error(exc):
     return 'nepoznata greška'
 
 
+def build_ticket_qr_png(conf_code):
+    buf = io.BytesIO()
+    segno.make_qr(conf_code, error='m').save(buf, kind='png', scale=8, border=4)
+    return buf.getvalue()
+
+
 def send_guest_ticket_email(guest):
     """Send the ticket mail and record the outcome on the guest. Returns (ok, reason)."""
     to = derive_fer_email(guest.name, guest.surname, guest.jmbag)
@@ -66,14 +76,18 @@ def send_guest_ticket_email(guest):
         return False, reason
 
     html_message = render_to_string('emails/guest_email.html', {
-        'name': guest.name, 'confCode': guest.confCode,
-        'qrSrc': "https://api.qrserver.com/v1/create-qr-code/?data=" + quote(guest.confCode) + "&amp;size=300x300"})
+        'name': guest.name, 'confCode': guest.confCode, 'qrCid': QR_CID})
     message_id = make_msgid(domain='kset.org')
     msg = EmailMultiAlternatives(
         GUEST_TICKET_SUBJECT, strip_tags(html_message),
         f"43. Brucifer <{settings.DEFAULT_FROM_EMAIL}>", [to],
         headers={'Message-ID': message_id})
     msg.attach_alternative(html_message, "text/html")
+    msg.mixed_subtype = 'related'
+    qr = MIMEImage(build_ticket_qr_png(guest.confCode), 'png')
+    qr.add_header('Content-ID', f'<{QR_CID}>')
+    qr.add_header('Content-Disposition', 'inline', filename='karta.png')
+    msg.attach(qr)
 
     try:
         msg.send()

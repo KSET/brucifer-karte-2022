@@ -541,6 +541,51 @@ class GuestSaleTests(APITestCase):
         self.assertEqual(len(mail.outbox), 2)
         self.assertEqual(Mailer.objects.count(), 2)  # one log row per send
 
+    def test_bulk_mailer_unknown_conf_code_fails(self):
+        self.login_as(Role.ADMIN)
+        res = self.client.post('/api/mailer/send_mail/', {'emails': [{
+            'subject': 's', 'message': 'm', 'template': 'guest_email',
+            'name': 'X', 'confCode': 'not-a-real-code', 'to_mail': 'x@x.hr',
+        }]}, format='json')
+        self.assertEqual(res.status_code, 500)
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_ticket_mail_has_inline_qr(self):
+        self.login_as(Role.TICKETS)
+        self.sell()
+        msg = mail.outbox[-1]
+        html = msg.alternatives[0][0]
+        self.assertIn('src="cid:ticket-qr@brucifer"', html)
+        self.assertNotIn('qrserver', html)
+        mime = msg.message()
+        self.assertEqual(mime.get_content_subtype(), 'related')
+        images = [part for part in mime.walk() if part.get_content_type() == 'image/png']
+        self.assertEqual(len(images), 1)
+        self.assertEqual(images[0]['Content-ID'], '<ticket-qr@brucifer>')
+        self.assertTrue(images[0].get_payload(decode=True).startswith(b'\x89PNG'))
+
+    def search(self, jmbag):
+        return self.client.get('/api/guests/search-brucosi/', {'jmbag': jmbag})
+
+    def test_search_single_match_returns_guest_and_submissions(self):
+        self.login_as(Role.TICKETS)
+        BrucosiFormResponse.objects.create(name='Ana', surname='Anić', jmbag='0036999999', gdpr_accepted=True)
+        res = self.search('0036123')
+        self.assertEqual(res.data['count'], 1)
+        self.assertEqual([g['id'] for g in res.data['guests']], [self.guest.pk])
+        self.assertEqual([s['name'] for s in res.data['submissions']], ['Ivan'])
+
+    def test_search_is_prefix_only(self):
+        self.login_as(Role.TICKETS)
+        self.assertEqual(self.search('123456').data['count'], 0)
+
+    def test_search_multiple_matches_returns_count_only(self):
+        self.login_as(Role.TICKETS)
+        Guests.objects.create(jmbag='0036123999', tag='Brucoši')
+        Guests.objects.create(jmbag='0036123888', tag='kset VIP')
+        res = self.search('0036123')
+        self.assertEqual((res.data['count'], res.data['guests'], res.data['submissions']), (2, [], []))
+
     def test_today_stats_zagreb_day_and_tag(self):
         zg = ZoneInfo('Europe/Zagreb')
         Guests.objects.create(tag='Brucoši', bought=True, boughtTicketTime=datetime(2026, 10, 1, 9, 0, tzinfo=zg))

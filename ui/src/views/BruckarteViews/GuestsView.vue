@@ -1,12 +1,12 @@
 <template>
   <div class="guestss">
-    <CircularLoading :dialog="dialogProgress"></CircularLoading>
+    <CircularLoading :dialog="selling"></CircularLoading>
 
     <div class="header guests">
       <input class="nosubmit search" @input="prepSearchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
 
       <v-progress-circular v-if="loading == true" size="90px" indeterminate color="black"></v-progress-circular>
-      <h1 class="textfield" :class="{ 'error-text': isFormMissing }"> {{ this.nomatch }}</h1>
+      <h1 class="textfield" :class="{ 'error-text': isFormMissing || isError }"> {{ this.nomatch }}</h1>
       <button class="button change" @click="getTodayStats">Dohvati broj prodanih karata</button>
     </div>
     <p style="color: black; text-align: center;">
@@ -25,11 +25,10 @@
 
       <h1 class="textfield">Karta </h1>
 
-      <button class="button change" :disabled="this.id == ''" v-if="guest.bought == true"
-        @click="prepChangebought(guest, false)">
+      <button class="button change" :disabled="this.id == ''" v-if="guest.bought == true" @click="onSoldClick">
         <img src="../../assets/icons/yes-icon.svg">
       </button>
-      <button class="button change" :disabled="this.id == ''" v-else @click="prepChangebought(guest, true)"
+      <button class="button change" :disabled="this.id == '' || selling" v-else @click="sell"
         style="background-color: white;">
         <img class="image1" src="../../assets/icons/no-icon.svg">
       </button>
@@ -39,6 +38,13 @@
 
       <h1 class="textfield">Vrijeme kupnje karte </h1>
       <h1 class="textfield">{{ formatDate(this.boughtTicketTime) }} </h1>
+    </div>
+
+    <div class="mail-warning" v-if="mailFailureReason">
+      <p><strong>Karta prodana, ali mail nije poslan:</strong> {{ mailFailureReason }}. Javite blagajniku ili web adminu.</p>
+      <p>Email: {{ ticketEmail }}</p>
+      <p>Potvrda: {{ confCode }}</p>
+      <v-btn v-if="isAdmin" color="primary" :loading="resending" @click="resendMail">Pošalji ponovno</v-btn>
     </div>
 
 
@@ -65,6 +71,29 @@
 
         <v-card-actions>
           <v-btn color="primary" block @click="dialog = false">Zatvori</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="unsellInfoOpen" max-width="500px">
+      <v-card>
+        <v-card-text>
+          <p>Pokušavate maknuti kupljenu kartu, javite se blagajniku ili web adminu</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" block @click="unsellInfoOpen = false">Zatvori</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="confirmUnsellOpen" max-width="500px" :persistent="unselling">
+      <v-card>
+        <v-card-title>
+          Poništiti prodaju za {{ name }} {{ surname }}?
+        </v-card-title>
+        <v-card-actions>
+          <v-btn text :disabled="unselling" @click="confirmUnsellOpen = false">Odustani</v-btn>
+          <v-btn color="error" :loading="unselling" @click="unsell">Poništi prodaju</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -119,13 +148,16 @@
 
 
 <script>
-import { uuid } from 'vue-uuid';
 import GuestsAdd from '@/components/Bruckarte/GuestsAdd.vue'
 import GuestsTable from '@/components/Bruckarte/GuestsTable.vue'
 import CircularLoading from '@/components/Default/CircularLoading.vue';
 import debounce from 'lodash/debounce';
 import { api } from "@/plugins/api";
+import store from "@/store/index.js";
+import { ADMIN } from "@/plugins/roles";
 import { deriveFerEmail } from '@/utils/ferEmail';
+
+const FAILED_MAIL_STATUSES = ['failed', 'bounced'];
 
 export default {
   name: 'GuestsView',
@@ -136,43 +168,55 @@ export default {
   },
   data() {
     return {
+      search: '',
       guest: '',
-      guests: [],
-      mails: [],
       id: '',
       name: '',
       surname: '',
       jmbag: '',
-      phone: '',
-      tag: '',
-      bought: '',
-      entered: false,
-      deleted: '',
+      email: '',
       nomatch: '',
       confCode: '',
       boughtTicketTime: '',
       isFormMissing: false,
+      isError: false,
       dialog: false,
-      dialogProgress: false,
 
       loading: false,
-      loadingStats: false,
+      searchSeq: 0,
+
+      selling: false,
+      resending: false,
+      unselling: false,
+      mailWarning: '',
+      unsellInfoOpen: false,
+      confirmUnsellOpen: false,
 
       todayStatsDialog: false,
       todayStats: null,
 
       submissionPickerOpen: false,
       submissionCandidates: [],
-
-      uuid: uuid.v4(),
-
     }
   },
-  mounted() {
-    this.searchGuest = debounce(this.searchGuest, 1000);
+  computed: {
+    isAdmin() {
+      return store.getters.hasAnyRole(ADMIN);
+    },
+    ticketEmail() {
+      return this.email || deriveFerEmail(this.name, this.surname, this.jmbag);
+    },
+    mailFailureReason() {
+      if (this.mailWarning) return this.mailWarning;
+      if (this.guest && this.guest.bought && FAILED_MAIL_STATUSES.includes(this.guest.mailStatus)) {
+        return this.guest.mailError || 'nepoznata greška';
+      }
+      return '';
+    }
+  },
+  created() {
+    this.searchGuest = debounce(this.searchGuest, 400);
     this.changeValue = debounce(this.changeValue, 1000);
-    this.changeBought = debounce(this.changeBought, 1000);
-
   },
   methods: {
     submissionEmail(submission) {
@@ -197,140 +241,200 @@ export default {
         this.loading = false;
       }
     },
-    changeValue() {
-      if (this.guest != '') {
-        api.put('/guests/' + this.guest.id + '/',
-          { name: this.name, surname: this.surname },
-        )
+    loadGuest(guest) {
+      this.guest = guest;
+      this.id = guest.id;
+      this.name = guest.name || "";
+      this.surname = guest.surname || "";
+      this.jmbag = guest.jmbag || "";
+      this.email = guest.email || "";
+      this.confCode = guest.confCode || "";
+      this.boughtTicketTime = guest.boughtTicketTime || "";
+      this.mailWarning = "";
+    },
+    resetGuest() {
+      this.changeValue.cancel();
+      this.guest = "";
+      this.id = "";
+      this.name = "";
+      this.surname = "";
+      this.jmbag = "";
+      this.email = "";
+      this.confCode = "";
+      this.boughtTicketTime = "";
+      this.mailWarning = "";
+      this.isFormMissing = false;
+    },
+    showError(message) {
+      this.nomatch = message;
+      this.isError = true;
+    },
+    async changeValue() {
+      const guest = this.guest;
+      if (!guest) return;
+      const name = this.name.trim();
+      const surname = this.surname.trim();
+      if (name === (guest.name || "") && surname === (guest.surname || "")) return;
+      try {
+        await api.patch(`/guests/${guest.id}/`, { name, surname });
+        guest.name = name;
+        guest.surname = surname;
+      } catch (err) {
+        if (this.guest === guest) this.showError("Spremanje imena nije uspjelo.");
       }
     },
-    prepChangebought(guest, changenum) {
-      if (changenum === true) {
-        this.dialogProgress = true;
-      }
-
-      this.changeBought(guest, changenum)
-    },
-    changeBought(guest, changenum) {
-      if (this.name === "" || this.surname === "") {
+    async sell() {
+      if (!this.guest || this.selling) return;
+      if (!this.name.trim() || !this.surname.trim()) {
         window.alert("Ispunite polja ime i prezime!");
-      } else {
-        let confCode, boughtTicketTime;
-
-        if (changenum === true) {
-          confCode = uuid.v4();
-          boughtTicketTime = new Date().toISOString();
+        return;
+      }
+      if (!deriveFerEmail(this.name, this.surname, this.jmbag)) {
+        this.showError("Nedostaje ime, prezime ili JMBAG - email nije poslan.");
+        return;
+      }
+      const guestId = this.id;
+      this.selling = true;
+      try {
+        await this.changeValue.flush();
+        const { data } = await api.post(`/guests/${guestId}/sell/`,
+          { name: this.name.trim(), surname: this.surname.trim() });
+        if (this.id !== guestId) return;
+        this.loadGuest(data.guest);
+        if (data.mail_sent) {
+          this.dialog = true;
         } else {
-          confCode = "";
-          boughtTicketTime = null;
+          this.mailWarning = data.mail_error || 'nepoznata greška';
         }
-
-        api.put(`/guests/${guest.id}/`, {
-          name: this.name,
-          surname: this.surname,
-          bought: changenum,
-          confCode: confCode,
-          boughtTicketTime: boughtTicketTime
-        })
-          .then(() => {
-            guest.bought = changenum;
-            guest.confCode = confCode;
-            guest.boughtTicketTime = boughtTicketTime;
-            guest.name = this.name;
-            guest.surname = this.surname;
-
-            this.boughtTicketTime = boughtTicketTime;
-            this.confCode = confCode;
-
-            if (changenum === true) {
-              this.sendMail(guest);
-            }
-          });
+      } catch (err) {
+        if (err?.response?.status === 409) {
+          this.showError("Karta je već prodana.");
+          this.refreshGuest(guestId);
+        } else {
+          this.showError(err?.response?.data?.detail || "Greška prilikom prodaje, pokušajte ponovno.");
+        }
+      } finally {
+        this.selling = false;
+      }
+    },
+    async refreshGuest(guestId) {
+      try {
+        const { data } = await api.get(`/guests/${guestId}/`);
+        if (this.id === guestId) this.loadGuest(data);
+      } catch (err) {
+        // the error message from the failed action is already shown
+      }
+    },
+    async resendMail() {
+      const guestId = this.id;
+      this.resending = true;
+      try {
+        const { data } = await api.post(`/guests/${guestId}/resend-mail/`,
+          { name: this.name.trim(), surname: this.surname.trim() });
+        if (this.id !== guestId) return;
+        this.loadGuest(data.guest);
+        if (data.mail_sent) {
+          this.dialog = true;
+        } else {
+          this.mailWarning = data.mail_error || 'nepoznata greška';
+        }
+      } catch (err) {
+        this.mailWarning = err?.response?.data?.detail || 'ponovno slanje nije uspjelo';
+      } finally {
+        this.resending = false;
+      }
+    },
+    onSoldClick() {
+      if (this.isAdmin) {
+        this.confirmUnsellOpen = true;
+      } else {
+        this.unsellInfoOpen = true;
+      }
+    },
+    async unsell() {
+      const guestId = this.id;
+      this.unselling = true;
+      try {
+        const { data } = await api.post(`/guests/${guestId}/unsell/`);
+        if (this.id === guestId) this.loadGuest(data.guest);
+      } catch (err) {
+        this.showError(err?.response?.data?.detail || "Poništavanje prodaje nije uspjelo.");
+      } finally {
+        this.unselling = false;
+        this.confirmUnsellOpen = false;
       }
     },
     prepSearchGuest() {
-      this.nomatch = ""
-      this.loading = true;
+      this.changeValue.flush();
+      this.nomatch = "";
+      this.isError = false;
 
+      if (!this.search.trim()) {
+        this.searchGuest.cancel();
+        this.searchSeq++;
+        this.loading = false;
+        this.resetGuest();
+        return;
+      }
+      this.loading = true;
       this.searchGuest()
     },
-    searchGuest() {
-      api.get(`/guests/search-brucosi/?jmbag=${encodeURIComponent(this.search)}`)
-        .then(response => {
-          this.loading = false;
-          this.isFormMissing = false;
+    async searchGuest() {
+      const seq = ++this.searchSeq;
+      try {
+        const response = await api.get(`/guests/search-brucosi/?jmbag=${encodeURIComponent(this.search.trim())}`);
+        if (seq !== this.searchSeq) return;
+        this.isFormMissing = false;
 
-          const { guests = [], submissions = [] } = response.data;
-          this.guests = guests;
+        const { count = 0, guests = [], submissions = [] } = response.data;
 
-          console.log(submissions)
-
-          if (this.guests.length === 1) {
-            this.nomatch = "";
-            this.guest = this.guests[0];
-            this.id = this.guest.id;
-            this.name = this.guest.name || "";
-            this.surname = this.guest.surname || "";
-            this.jmbag = this.guest.jmbag || "";
-            this.confCode = this.guest.confCode || "";
-            this.boughtTicketTime = this.guest.boughtTicketTime || "";
-
-            const needsName = !this.name;
-            const needsSurname = !this.surname;
-
-            if (submissions.length == 0) {
-              this.nomatch = `JMBAG pronađen, ali korisnik nije ispunio formu.`;
-              this.isFormMissing = true;
-              return
-            }
-
-            if (needsName || needsSurname) {
-              const fillCandidates = submissions.filter(s =>
-                s &&
-                s.jmbag === this.jmbag && (
-                  (needsName && s.name) ||
-                  (needsSurname && s.surname)
-                )
-              );
-
-              if (fillCandidates.length === 1) {
-                const s = fillCandidates[0];
-                if (needsName && s.name) this.name = s.name;
-                if (needsSurname && s.surname) this.surname = s.surname;
-              } else if (fillCandidates.length > 1) {
-                this.openSubmissionPicker?.(fillCandidates);
-                this.nomatch = `Pronađeno ${fillCandidates.length} podudaranja iz prijava – odaberite ispravno ime/prezime.`;
-              }
-            }
-
-          } else if (this.guests.length === 0) {
+        if (count !== 1) {
+          this.resetGuest();
+          if (count === 0) {
             this.nomatch = "JMBAG nije pronađen!";
-            this.id = "";
-            this.name = "";
-            this.surname = "";
-            this.jmbag = "";
-            this.confCode = "";
-            this.boughtTicketTime = "";
-
-          } else if (this.guests.length > 1 && this.guests.length < 20) {
-            this.nomatch = `Pronađeno ${this.guests.length} podudaranja, nastavite upisivati`;
-
-          } else {
-            this.nomatch = "";
-            this.id = "";
-            this.name = "";
-            this.surname = "";
-            this.jmbag = "";
-            this.confCode = "";
-            this.boughtTicketTime = "";
-            this.bought = false;
+          } else if (count < 10) {
+            this.nomatch = `Pronađeno ${count} podudaranja, nastavite upisivati`;
           }
-        })
-        .catch(err => {
-          this.loading = false;
-          console.error("Search error:", err?.response?.data || err.message);
-          this.nomatch = "Greška prilikom pretraživanja.";
-        });
+          return;
+        }
+
+        this.nomatch = "";
+        this.loadGuest(guests[0]);
+
+        const needsName = !this.name;
+        const needsSurname = !this.surname;
+
+        if (submissions.length == 0) {
+          this.nomatch = `JMBAG pronađen, ali korisnik nije ispunio formu.`;
+          this.isFormMissing = true;
+          return
+        }
+
+        if (needsName || needsSurname) {
+          const fillCandidates = submissions.filter(s =>
+            s &&
+            s.jmbag === this.jmbag && (
+              (needsName && s.name) ||
+              (needsSurname && s.surname)
+            )
+          );
+
+          if (fillCandidates.length === 1) {
+            const s = fillCandidates[0];
+            if (needsName && s.name) this.name = s.name;
+            if (needsSurname && s.surname) this.surname = s.surname;
+          } else if (fillCandidates.length > 1) {
+            this.openSubmissionPicker(fillCandidates);
+            this.nomatch = `Pronađeno ${fillCandidates.length} podudaranja iz prijava – odaberite ispravno ime/prezime.`;
+          }
+        }
+      } catch (err) {
+        if (seq !== this.searchSeq) return;
+        this.resetGuest();
+        this.showError("Greška prilikom pretraživanja.");
+      } finally {
+        if (seq === this.searchSeq) this.loading = false;
+      }
     },
     openSubmissionPicker(candidates) {
       this.submissionCandidates = candidates;
@@ -341,39 +445,6 @@ export default {
       if (!this.surname && submission.surname) this.surname = submission.surname;
 
       this.submissionPickerOpen = false;
-    },
-    async sendMail(guest) {
-
-      console.log("send mail attempt")
-
-      var email = deriveFerEmail(this.name, this.surname, guest.jmbag);
-      if (!email) {
-        this.dialogProgress = false;
-        this.nomatch = "Nedostaje ime, prezime ili JMBAG - email nije poslan.";
-        return;
-      }
-
-      this.email = email
-      // za testiranje, maknuti u produkciji
-      // email = "pavleergovic@gmail.com"
-
-      var msg = this.name + " " + this.surname + " " + guest.confCode
-
-      await api.post('/mailer/send_mail/',
-        {
-          emails: [
-            {
-              subject: "[#BRUCIFER26] Potvrda za kupljenu kartu",
-              template: "guest_email",
-              message: msg,
-              name: this.name,
-              confCode: guest.confCode,
-              to_mail: email
-            }]
-        },
-      )
-      this.dialogProgress = false;
-      this.dialog = true;
     },
     formatDate(date) {
       if (date == '' || date == null) {
@@ -468,6 +539,17 @@ p {
 }
 
 .error-text {
+  color: red;
+}
+
+.mail-warning {
+  margin: 1.5rem 6%;
+  padding: 1rem;
+  border: 2px solid red;
+  color: red;
+}
+
+.mail-warning p {
   color: red;
 }
 </style>
