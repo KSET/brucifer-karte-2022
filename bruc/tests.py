@@ -354,6 +354,31 @@ class GuestSaleTests(APITestCase):
         self.login_as(Role.TICKETS)
         self.assertEqual(self.client.get('/api/guests/failed-mails/').status_code, 403)
 
+    def login_with_jwt(self, role):
+        email = f'jwt-{role}@kset.org'
+        user = Users.objects.create(email=email, privilege=role)
+        token = RefreshToken.for_user(DjangoUser.objects.create(username=email)).access_token
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+        return user
+
+    def test_deleted_user_with_live_token_is_denied(self):
+        user = self.login_with_jwt(Role.TICKETS)
+        self.assertEqual(self.client.get('/api/guests/').status_code, 200)
+        user.delete()
+        self.assertEqual(self.client.get('/api/guests/').status_code, 403)
+        self.assertEqual(self.sell().status_code, 403)
+        self.guest.refresh_from_db()
+        self.assertFalse(self.guest.bought)
+
+    def test_demoted_seller_with_live_token_cannot_sell(self):
+        user = self.login_with_jwt(Role.TICKETS)
+        user.privilege = Role.ENTRY
+        user.save()
+        self.assertEqual(self.client.get('/api/guests/').status_code, 200)
+        self.assertEqual(self.sell().status_code, 403)
+        self.guest.refresh_from_db()
+        self.assertFalse(self.guest.bought)
+
     def test_non_admin_cannot_fill_blank_name(self):
         BrucosiFormResponse.objects.all().delete()
         self.login_as(Role.TICKETS)

@@ -7,6 +7,11 @@ import {
   GUEST_LINK_ROLES,
   ENTRY_LINK_ROLES,
 } from "@/plugins/roles.js";
+import {
+  refreshRole,
+  alertNoPrivilege,
+  resetNoPrivilegeAlert,
+} from "@/plugins/api.js";
 
 /* Buckarte page Views */
 import Guests from "../views/BruckarteViews/GuestsView.vue";
@@ -324,25 +329,29 @@ const router = createRouter({
   },
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   //provjera auth i privilegija
   if (to.path.startsWith("/admin")) {
+    const loggedIn =
+      store.state.id !== "" && Date.now() / 1000 <= store.state.tokenExp;
+    if (loggedIn && to.name !== "login" && to.name !== "logout") {
+      try {
+        await refreshRole();
+      } catch (e) {
+      }
+    }
     if (Date.now() / 1000 > store.state.tokenExp && to.name !== "logout") {
       next({ path: "/admin/logout" });
     } else if (store.state.id === "" && to.name !== "login") {
       next({ path: "/admin/login" });
     } else if (store.getters.hasRole(NONE) && to.name !== "login") {
-      window.alert(
-        "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-      );
+      alertNoPrivilege();
       next({ path: "/admin/login" });
     } else if (
       to.meta.roles !== undefined &&
       !store.getters.hasAnyRole(...to.meta.roles)
     ) {
-      window.alert(
-        "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-      );
+      alertNoPrivilege();
       next({ path: "/admin" });
     } else {
       next();
@@ -350,6 +359,10 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
+});
+
+router.afterEach((to, from, failure) => {
+  if (!failure) resetNoPrivilegeAlert();
 });
 
 let visibilityFetch = null;

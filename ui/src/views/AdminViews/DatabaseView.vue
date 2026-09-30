@@ -5,7 +5,7 @@
             <div class="admin-table-header">
                 <h1 class="page-title">Baza podataka</h1>
             </div>
-            <AdminTable v-if="authorized" :key="table" :rows="rows" :loading="loading" :dataKey="pk" :searchFields="columns"
+            <AdminTable :key="table" :rows="rows" :loading="loading" :dataKey="pk" :searchFields="columns"
                 :minWidth="`${Math.max(columns.length, 4) * 10}rem`" :hint="truncatedHint"
                 :emptyText="table ? 'Tablica je prazna.' : 'Odaberi tablicu.'">
                 <template #toolbar-start>
@@ -29,15 +29,12 @@ import Select from 'primevue/select'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import AdminTable from '@/components/AdminPanel/AdminTable.vue'
 import { api } from '@/plugins/api';
-import store from '@/store/index.js';
-import { ADMIN } from '@/plugins/roles';
 
 export default {
     name: 'DatabaseView',
     components: { Sidebar, AdminTable, Column, Select },
     data() {
         return {
-            authorized: false,
             tables: [],
             tablesLoading: false,
             table: this.$route.query.table || null,
@@ -74,21 +71,12 @@ export default {
         },
     },
     async mounted() {
-        try {
-            const { data } = await api.get('/me/');
-            store.commit('setRole', data.role);
-            if (data.role !== ADMIN) return this.deny();
-        } catch (error) {
-            return this.deny();
-        }
-        this.authorized = true;
-
         this.tablesLoading = true;
         try {
             const response = await api.get('/db/tables/');
             this.tables = response.data;
         } catch (error) {
-            if (error.response?.status === 403) return this.deny();
+            if (error.response?.status === 403) return;
             console.error('Failed to fetch tables:', error);
         } finally {
             this.tablesLoading = false;
@@ -96,16 +84,6 @@ export default {
         if (this.table) this.fetchRows();
     },
     methods: {
-        deny() {
-            this.authorized = false;
-            this.tables = [];
-            this.columns = [];
-            this.rows = [];
-            window.alert(
-                "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-            );
-            this.$router.replace({ path: '/admin' });
-        },
         async fetchRows() {
             const table = this.table;
             if (!table) {
@@ -124,7 +102,6 @@ export default {
                 this.total = data.total;
                 this.truncated = data.truncated;
             } catch (error) {
-                if (error.response?.status === 403) return this.deny();
                 console.error('Failed to fetch table:', error);
                 if (table === this.table) {
                     this.columns = [];
