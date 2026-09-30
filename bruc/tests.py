@@ -1,10 +1,17 @@
+import os
+import shutil
+import tempfile
+from io import BytesIO
+
 from django.contrib.auth.models import User as DjangoUser
 from django.core.cache import cache
-from django.test import override_settings
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase, override_settings
+from PIL import Image
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import BrucosiFormResponse, Users
+from .models import BrucosiFormResponse, Lineup, Users
 from .roles import Role
 
 SUBMIT_URL = '/api/forms/brucosi-form-submit/'
@@ -189,3 +196,60 @@ class DbBrowserTests(APITestCase):
         for table in ('nope', 'auth_user', 'django_session'):
             with self.subTest(table=table):
                 self.assertEqual(self.client.get(DB_TABLES_URL + table + '/').status_code, 404)
+
+
+def make_jpeg(size=(4000, 3000), name='photo.jpg', orientation=None):
+    img = Image.new('RGB', size, (200, 50, 50))
+    buf = BytesIO()
+    if orientation:
+        exif = img.getexif()
+        exif[0x0112] = orientation
+        img.save(buf, format='JPEG', exif=exif)
+    else:
+        img.save(buf, format='JPEG')
+    return SimpleUploadedFile(name, buf.getvalue(), content_type='image/jpeg')
+
+
+class LineupImageTests(TestCase):
+    def setUp(self):
+        self.media = tempfile.mkdtemp()
+        self.override = override_settings(MEDIA_ROOT=self.media)
+        self.override.enable()
+
+    def tearDown(self):
+        self.override.disable()
+        shutil.rmtree(self.media, ignore_errors=True)
+
+    def test_upload_converted_to_resized_webp(self):
+        item = Lineup.objects.create(name='Band', image=make_jpeg())
+        self.assertTrue(item.image.name.endswith('.webp'))
+        with Image.open(item.image.path) as img:
+            self.assertEqual(img.format, 'WEBP')
+            self.assertEqual(img.size, (2000, 1500))
+
+    def test_exif_orientation_applied(self):
+        item = Lineup.objects.create(name='Band', image=make_jpeg(orientation=6))
+        with Image.open(item.image.path) as img:
+            self.assertLess(img.width, img.height)
+
+    def test_editing_other_fields_does_not_reencode(self):
+        item = Lineup.objects.create(name='Band', image=make_jpeg())
+        name, mtime = item.image.name, os.path.getmtime(item.image.path)
+        item = Lineup.objects.get(pk=item.pk)
+        item.visible = True
+        item.save()
+        self.assertEqual(item.image.name, name)
+        self.assertEqual(os.path.getmtime(item.image.path), mtime)
+
+    def test_replacing_image_deletes_old_file(self):
+        item = Lineup.objects.create(name='Band', image=make_jpeg(name='a.jpg'))
+        old_path = item.image.path
+        item.image = make_jpeg(name='b.jpg')
+        item.save()
+        self.assertFalse(os.path.exists(old_path))
+        self.assertTrue(os.path.exists(item.image.path))
+
+    def test_delete_without_image(self):
+        item = Lineup.objects.create(name='Band')
+        item.delete()
+        self.assertFalse(Lineup.objects.filter(pk=item.pk).exists())

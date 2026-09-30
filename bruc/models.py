@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
 
+from .images import to_webp
 from .roles import Role
 
 # Create your models here.
@@ -72,13 +73,26 @@ class Lineup(models.Model):
             return 'http://127.0.0.1:8000' + self.image.url
         return '' '''
 
+    def save(self, *args, **kwargs):
+        old_name = None
+        if self.image and not self.image._committed:
+            if self.pk:
+                old_name = Lineup.objects.filter(pk=self.pk).values_list('image', flat=True).first()
+            webp = to_webp(self.image)
+            if webp is not None:
+                self.image.save(webp.name, webp, save=False)
+        super(Lineup, self).save(*args, **kwargs)
+        if old_name and old_name != self.image.name:
+            self.image.storage.delete(old_name)
+
     def delete(self, *args, **kwargs):
         # You have to prepare what you need before delete the model
-        storage, path = self.image.storage, self.image.path
+        storage, name = self.image.storage, self.image.name
         # Delete the model before the file
         super(Lineup, self).delete(*args, **kwargs)
         # Delete the file after the model
-        storage.delete(path)
+        if name:
+            storage.delete(name)
 
 
 class Sponsors(models.Model):
