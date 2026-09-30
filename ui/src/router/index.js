@@ -268,6 +268,7 @@ const routes = [
     component: BWbrucosi,
     meta: {
       visibilityCheck: "BRUCOSI_VISIBILITY",
+      hideNavbar: true,
     },
   },
   {
@@ -370,6 +371,7 @@ router.beforeEach((to, from, next) => {
     to.name !== "naslovnica" &&
     to.name !== "BWPageNotFound" &&
     to.name !== "ulaznice" &&
+    to.name !== "brucosi" &&
     to.name !== "pravila-ponasanja"
   ) {
     if (visibilityStore.state.COMINGSOON_VISIBILITY == 1) {

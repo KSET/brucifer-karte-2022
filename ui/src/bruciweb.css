@@ -212,13 +212,17 @@ html.bw-app::-webkit-scrollbar-corner {
   margin-top: -0.1425em;
 }
 
+.bw-page-container .bw-panel,
+.bw-page-container .bw-surface {
+  border-radius: 24px 0 0 0;
+  background: rgba(156, 250, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .bw-page-container .bw-panel {
   max-width: 62rem;
   margin: clamp(40px, 5vw, 72px) auto 0;
   padding: clamp(24px, 3vw, 40px);
-  border-radius: 24px 0 0 0;
-  background: rgba(156, 250, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .bw-page-container .bw-panel-section {
@@ -240,12 +244,29 @@ html.bw-app::-webkit-scrollbar-corner {
   margin: 0;
 }
 
+.bw-page-container .bw-heading {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 38px;
+  letter-spacing: 0;
+  margin: 0;
+}
+
+.bw-page-container .bw-text,
 .bw-page-container .bw-panel .bw-panel-text {
   font-family: 'Rubik', sans-serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 1;
   letter-spacing: 0;
+}
+
+.bw-page-container .bw-text-light {
+  font-weight: 300;
+}
+
+.bw-page-container .bw-panel .bw-panel-text {
   color: white;
   margin: 0;
   padding: clamp(16px, 1.6vw, 22px) 0 0;
