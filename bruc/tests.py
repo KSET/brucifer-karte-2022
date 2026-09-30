@@ -2,6 +2,7 @@ from django.contrib.auth.models import User as DjangoUser
 from django.core.cache import cache
 from django.test import override_settings
 from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import BrucosiFormResponse, Users
 from .roles import Role
@@ -91,3 +92,100 @@ class BrucosiFormTests(APITestCase):
             for i in range(101)
         ]
         self.assertEqual(statuses[-1], 429)
+
+
+DB_TABLES_URL = '/api/db/tables/'
+
+
+class DbBrowserTests(APITestCase):
+    ROWS_URL = DB_TABLES_URL + 'bruc_users/'
+
+    def login_as(self, role):
+        email = f'{role}@kset.org'
+        user = Users.objects.create(email=email, privilege=role)
+        self.client.force_authenticate(DjangoUser.objects.create(username=email))
+        return user
+
+    def assert_denied(self, expected=(403,)):
+        for url in (DB_TABLES_URL, self.ROWS_URL, DB_TABLES_URL + 'nope/'):
+            with self.subTest(url=url):
+                res = self.client.get(url)
+                self.assertIn(res.status_code, expected)
+                self.assertNotIn('rows', getattr(res, 'data', None) or {})
+
+    def test_anonymous_denied(self):
+        self.assert_denied(expected=(401, 403))
+
+    def test_non_admin_roles_denied(self):
+        for role in (Role.NONE, Role.TICKETS, Role.ENTRY, Role.ENTRY_TICKETS):
+            with self.subTest(role=role):
+                self.login_as(role)
+                self.assert_denied()
+
+    def test_authenticated_without_users_row_denied(self):
+        self.client.force_authenticate(DjangoUser.objects.create(username='ghost@kset.org'))
+        self.assert_denied()
+
+    def test_django_superuser_without_admin_role_denied(self):
+        email = 'super@kset.org'
+        Users.objects.create(email=email, privilege=Role.TICKETS)
+        self.client.force_authenticate(
+            DjangoUser.objects.create(username=email, is_staff=True, is_superuser=True))
+        self.assert_denied()
+
+    def test_demoted_admin_loses_access_immediately(self):
+        user = self.login_as(Role.ADMIN)
+        self.assertEqual(self.client.get(self.ROWS_URL).status_code, 200)
+        user.privilege = Role.TICKETS
+        user.save()
+        self.assert_denied()
+
+    def test_real_jwt_non_admin_denied_admin_allowed(self):
+        for role, expected in ((Role.TICKETS, 403), (Role.ADMIN, 200)):
+            with self.subTest(role=role):
+                email = f'jwt-{role}@kset.org'
+                Users.objects.create(email=email, privilege=role)
+                token = RefreshToken.for_user(DjangoUser.objects.create(username=email)).access_token
+                self.client.force_authenticate(None)
+                self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+                self.assertEqual(self.client.get(self.ROWS_URL).status_code, expected)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer not-a-token')
+        self.assertEqual(self.client.get(self.ROWS_URL).status_code, 401)
+
+    def test_read_only_for_admin(self):
+        self.login_as(Role.ADMIN)
+        for method in ('post', 'put', 'patch', 'delete'):
+            with self.subTest(method=method):
+                self.assertEqual(getattr(self.client, method)(self.ROWS_URL, {}).status_code, 405)
+
+    def test_responses_not_cacheable(self):
+        self.login_as(Role.ADMIN)
+        for url in (DB_TABLES_URL, self.ROWS_URL):
+            with self.subTest(url=url):
+                cache_control = self.client.get(url)['Cache-Control']
+                self.assertIn('no-store', cache_control)
+                self.assertIn('private', cache_control)
+
+    def test_admin_lists_tables(self):
+        self.login_as(Role.ADMIN)
+        res = self.client.get(DB_TABLES_URL)
+        self.assertEqual(res.status_code, 200)
+        tables = {t['table'] for t in res.data}
+        self.assertIn('bruc_guests', tables)
+        self.assertTrue(all(t.startswith('bruc_') for t in tables))
+
+    def test_admin_reads_rows(self):
+        self.login_as(Role.ADMIN)
+        res = self.client.get(self.ROWS_URL)
+        self.assertEqual(res.status_code, 200)
+        self.assertIn('email', res.data['columns'])
+        self.assertEqual(res.data['pk'], 'id')
+        self.assertEqual(res.data['total'], 1)
+        self.assertEqual(res.data['rows'][0]['email'], 'admin@kset.org')
+        self.assertFalse(res.data['truncated'])
+
+    def test_unknown_or_non_bruc_table_404(self):
+        self.login_as(Role.ADMIN)
+        for table in ('nope', 'auth_user', 'django_session'):
+            with self.subTest(table=table):
+                self.assertEqual(self.client.get(DB_TABLES_URL + table + '/').status_code, 404)

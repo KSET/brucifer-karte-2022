@@ -33,6 +33,7 @@ import Cjenik from "../views/AdminViews/CjenikView.vue";
 import Visibility from "../views/AdminViews/VisibilityView.vue";
 import Translations from "../views/AdminViews/TranslationsView.vue";
 import DailyReport from "../views/AdminViews/DailyReportView.vue";
+import Database from "../views/AdminViews/DatabaseView.vue";
 
 /* BruciWeb Views */
 import Kontakt from "../views/BruciWebViews/KontaktView.vue";
@@ -184,6 +185,12 @@ const routes = [
     path: "/admin/daily-report",
     name: "dailyReport",
     component: DailyReport,
+    meta: { roles: [ADMIN] },
+  },
+  {
+    path: "/admin/database",
+    name: "database",
+    component: Database,
     meta: { roles: [ADMIN] },
   },
   {

@@ -19,6 +19,7 @@ from django.views.decorators.cache import never_cache
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
+from django.apps import apps
 from django.db import transaction
 from django.utils import timezone
 import json
@@ -659,3 +660,50 @@ class MeView(APIView):
                 "name": "",
                 "role": "none",
             })
+
+def _db_models():
+    return {
+        m._meta.db_table: m
+        for m in apps.get_models()
+        if m._meta.db_table.startswith('bruc_')
+    }
+
+
+@method_decorator(never_cache, name='dispatch')
+class DbTablesView(APIView):
+    """GET /api/db/tables/ — every bruc_* table with its row count."""
+    permission_classes = [IsAuthenticated, HasRole(Role.ADMIN)]
+
+    def get(self, request):
+        tables = [
+            {
+                "table": table,
+                "label": f"{model._meta.app_label}.{model.__name__}",
+                "count": model.objects.count(),
+            }
+            for table, model in sorted(_db_models().items())
+        ]
+        return Response(tables)
+
+
+@method_decorator(never_cache, name='dispatch')
+class DbTableRowsView(APIView):
+    """GET /api/db/tables/<table>/ — read-only dump of one table (capped)."""
+    permission_classes = [IsAuthenticated, HasRole(Role.ADMIN)]
+
+    def get(self, request, table):
+        model = _db_models().get(table)
+        if model is None:
+            return Response({"error": "Unknown table."}, status=status.HTTP_404_NOT_FOUND)
+
+        columns = [f.attname for f in model._meta.concrete_fields]
+        rows = list(model.objects.order_by('pk').values(*columns)[:MAX_BULK_RECORDS])
+        total = model.objects.count()
+        return Response({
+            "table": table,
+            "columns": columns,
+            "pk": model._meta.pk.attname,
+            "rows": rows,
+            "total": total,
+            "truncated": total > len(rows),
+        })

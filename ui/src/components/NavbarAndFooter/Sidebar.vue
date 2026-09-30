@@ -50,6 +50,7 @@
         <RouterElement class="sidebar-element" :name="'Cjenik'" :link="'/admin/cjenik'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Prikazi'" :link="'/admin/visibility'"></RouterElement>
         <RouterElement class="sidebar-element" :name="'Prijevodi'" :link="'/admin/translations'"></RouterElement>
+        <RouterElement class="sidebar-element" :name="'Baza podataka'" :link="'/admin/database'"></RouterElement>
 
     </div>
 </template>

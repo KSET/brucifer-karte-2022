@@ -2,6 +2,8 @@
   <div class="admin-table" :class="{ filtering: isFiltering }" @mousedown="onRowDragStart"
     @dragend="onRowDragEnd">
     <div v-if="hasToolbar" class="table-toolbar">
+      <slot name="toolbar-start"></slot>
+
       <IconField v-if="searchFields.length">
         <InputIcon class="pi pi-search" />
         <InputText v-model="filters.global.value" :placeholder="searchPlaceholder" />
@@ -116,7 +118,7 @@ export default {
       return parts.join(' ')
     },
     hasToolbar() {
-      return !!(this.searchFields.length || this.$slots.toolbar || this.hintText)
+      return !!(this.searchFields.length || this.$slots['toolbar-start'] || this.$slots.toolbar || this.hintText)
     },
   },
 

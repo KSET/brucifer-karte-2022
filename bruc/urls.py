@@ -18,7 +18,9 @@ from .views import (
     BrucosiFormResponseViewSet,
     GoogleAuthView,
     PublicSponsorsViewSet,
-    MeView
+    MeView,
+    DbTablesView,
+    DbTableRowsView,
 )
 
 router = routers.DefaultRouter()
@@ -43,4 +45,6 @@ urlpatterns = [
     path('auth/google/', GoogleAuthView.as_view(), name="google-auth"),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name="token-refresh"),
     path('me/', MeView.as_view(), name="me"),
+    path('db/tables/', DbTablesView.as_view(), name="db-tables"),
+    path('db/tables/<str:table>/', DbTableRowsView.as_view(), name="db-table-rows"),
 ]
