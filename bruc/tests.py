@@ -505,7 +505,16 @@ class GuestSaleTests(APITestCase):
         self.assertEqual(Guests.objects.get(pk=self.guest.pk).mailStatus, 'bounced')
         self.client.post(url, {'event': 'delivered', 'message-id': message_id}, format='json')
         self.guest.refresh_from_db()
-        self.assertEqual((self.guest.mailStatus, self.guest.mailError), ('sent', ''))
+        self.assertEqual((self.guest.mailStatus, self.guest.mailError), ('delivered', ''))
+
+    def test_webhook_delivered(self):
+        self.login_as(Role.TICKETS)
+        self.sell()
+        message_id = Guests.objects.get(pk=self.guest.pk).mailMessageId
+        self.client.force_authenticate(None)
+        self.client.post('/api/brevo/webhook/secret-token/',
+                         {'event': 'delivered', 'message-id': message_id}, format='json')
+        self.assertEqual(Guests.objects.get(pk=self.guest.pk).mailStatus, 'delivered')
 
     def test_webhook_delivered_keeps_hard_bounce(self):
         self.login_as(Role.TICKETS)

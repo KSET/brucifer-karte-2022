@@ -21,6 +21,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from django.apps import apps
 from django.db import transaction
+from django.db.models import Q
 from django.utils import timezone
 import json
 from django.core.mail import EmailMultiAlternatives, get_connection
@@ -790,8 +791,10 @@ class BrevoWebhookView(APIView):
 
             if event.get('event') == 'delivered':
                 if message_id:
-                    Guests.objects.filter(mailMessageId=f'<{message_id}>', mailStatus='bounced',
-                                          mailError=SOFT_BOUNCE_REASON).update(mailStatus='sent', mailError='')
+                    Guests.objects.filter(
+                        Q(mailStatus='sent') | Q(mailStatus='bounced', mailError=SOFT_BOUNCE_REASON),
+                        mailMessageId=f'<{message_id}>',
+                    ).update(mailStatus='delivered', mailError='')
                 continue
 
             reason = BREVO_BOUNCE_REASONS.get(event.get('event'))

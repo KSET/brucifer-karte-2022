@@ -24,6 +24,7 @@ class Guests(models.Model):
     MAIL_STATUS_CHOICES = [
         ('none', 'None'),
         ('sent', 'Sent'),
+        ('delivered', 'Delivered'),
         ('failed', 'Failed'),
         ('bounced', 'Bounced'),
     ]
