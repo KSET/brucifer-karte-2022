@@ -54,7 +54,7 @@
                     </div>
 
 
-                    <Button type="submit" label="Submit" />
+                    <Button type="submit" label="Submit" :loading="submitting" :disabled="submitting" />
                 </Form>
             </div>
         </div>
@@ -73,7 +73,7 @@ import Checkbox from 'primevue/checkbox'
 import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
-import brucosiFormStore from '@/store/brucosiFormStore'
+import { api } from '@/plugins/api'
 
 export default {
     name: 'JmbagForm',
@@ -105,6 +105,7 @@ export default {
                 })
             ),
             toast: null,
+            submitting: false,
         }
     },
 
@@ -124,8 +125,11 @@ export default {
                 return
             }
 
+            if (this.submitting) return
+            this.submitting = true
+
             try {
-                const res = await brucosiFormStore.dispatch('submit', values)
+                await api.post('/forms/brucosi-form-submit/', values)
 
                 this.toast.add({
                     severity: 'success',
@@ -136,12 +140,33 @@ export default {
 
                 reset()
             } catch (e) {
-                this.toast.add({
-                    severity: 'info',
-                    summary: 'Submission received',
-                    detail: 'Your data has been submitted.',
-                    life: 3000,
-                })
+                this.toast.add({ severity: 'error', life: 5000, ...this.submitErrorMessage(e) })
+            } finally {
+                this.submitting = false
+            }
+        },
+
+        submitErrorMessage(e) {
+            const status = e.response?.status
+
+            if (status === 400) {
+                const fieldErrors = Object.values(e.response.data || {}).flat().join(' ')
+                return {
+                    summary: 'Neispravni podaci',
+                    detail: fieldErrors || 'Molimo pregledajte podatke u formi te pokušajte ponovno.',
+                }
+            }
+
+            if (status === 429) {
+                return {
+                    summary: 'Previše pokušaja',
+                    detail: 'Pokušaj ponovno za nekoliko minuta.',
+                }
+            }
+
+            return {
+                summary: 'Greška poslužitelja',
+                detail: 'Podaci nisu spremljeni, pokušaj ponovno kasnije.',
             }
         },
     },

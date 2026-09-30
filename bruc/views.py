@@ -53,7 +53,7 @@ class MailerThrottle(AnonRateThrottle):
     rate = '200/hour'
 
 class FormThrottle(AnonRateThrottle):
-    rate = '20/hour'
+    rate = '100/hour'
 
 
 MAX_BULK_RECORDS = 5000
@@ -575,23 +575,12 @@ class GameLeaderboardViewSet(viewsets.ModelViewSet):
     ordering_fields = ['score']
 
 
-class AllowPostAnyOtherwiseAuthenticated(BasePermission):
-    """
-    Allow anyone to POST.
-    Require authentication for all other methods.
-    """
-    def has_permission(self, request, view):
-        if request.method == "POST":
-            return True
-        return bool(request.user and request.user.is_authenticated)
-
-class BrucosiFormResponseViewSet(viewsets.ModelViewSet):
+class BrucosiFormResponseViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = BrucosiFormResponse.objects.all()
     serializer_class = BrucosiFormResponseSerializer
-    permission_classes = [AllowPostAnyOtherwiseAuthenticated]
-    throttle_classes = [FormThrottle]
+    permission_classes = [HasRole(*GUEST_ROLES)]
 
-    @action(detail=False, methods=['post'], url_path='brucosi-form-submit', throttle_classes=[FormThrottle])
+    @action(detail=False, methods=['post'], url_path='brucosi-form-submit', permission_classes=[AllowAny], throttle_classes=[FormThrottle])
     def brucosi_form_submit(self, request):
         serializer = BrucosiFormResponseSerializer(data=request.data)
         if serializer.is_valid():

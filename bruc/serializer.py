@@ -1,4 +1,4 @@
-from socket import if_indextoname
+import re
 from rest_framework import serializers, filters
 from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
 
@@ -107,4 +107,14 @@ class BrucosiFormResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = BrucosiFormResponse
         fields = ['id', 'name', 'surname', 'jmbag', 'submitted_at', 'status', 'gdpr_accepted']
-        read_only_fields = ['id', 'submitted_at']
+        read_only_fields = ['id', 'submitted_at', 'status']
+
+    def validate_jmbag(self, value):
+        if not re.fullmatch(r"\d{10}", value):
+            raise serializers.ValidationError("JMBAG mora imati točno 10 znamenki.")
+        return value
+
+    def validate_gdpr_accepted(self, value):
+        if value is not True:
+            raise serializers.ValidationError("Prihvaćanje privole je obavezno.")
+        return value

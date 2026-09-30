@@ -80,7 +80,9 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    # Reverse proxies in front of Django; throttling trusts only the X-Forwarded-For entry they append.
+    'NUM_PROXIES': int(os.getenv('DJANGO_NUM_PROXIES', '1' if PRODUCTION else '0')),
 }
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8080',
