@@ -94,6 +94,10 @@ export default {
     Toast,
   },
 
+  setup() {
+    return { toast: useToast() }
+  },
+
   data() {
     return {
       initialValues: {
@@ -110,13 +114,8 @@ export default {
           gdpr_accepted: z.boolean().refine(val => val === true, { message: 'Prihvaćanje privole je obavezno', }),
         })
       ),
-      toast: null,
       submitting: false,
     }
-  },
-
-  mounted() {
-    this.toast = useToast()
   },
 
   methods: {
@@ -135,7 +134,7 @@ export default {
       this.submitting = true
 
       try {
-        await api.post('/forms/brucosi-form-submit/', values)
+        await api.post('/forms/', values)
 
         this.toast.add({
           severity: 'success',

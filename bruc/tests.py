@@ -21,8 +21,8 @@ from .models import BrucosiFormResponse, Guests, Lineup, Mailer, Users
 from .roles import Role
 from .services import classify_mail_error, derive_fer_email
 
-SUBMIT_URL = '/api/forms/brucosi-form-submit/'
 LIST_URL = '/api/forms/'
+SUBMIT_URL = LIST_URL
 
 
 def valid_payload(**overrides):
@@ -91,7 +91,7 @@ class BrucosiFormTests(APITestCase):
         url = f'{LIST_URL}{row.id}/'
         self.assertEqual(self.client.put(url, valid_payload(), format='json').status_code, 405)
         self.assertEqual(self.client.delete(url).status_code, 405)
-        self.assertEqual(self.client.post(LIST_URL, valid_payload(), format='json').status_code, 405)
+        self.assertEqual(self.client.patch(url, {'status': 'redeemed'}, format='json').status_code, 405)
 
     @override_settings(REST_FRAMEWORK={
         'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTAuthentication'],

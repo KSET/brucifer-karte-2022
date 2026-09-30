@@ -1,53 +1,36 @@
+import hmac
+import json
+from datetime import datetime, time, timedelta
 from uuid import uuid4
-from django.http import HttpResponse
-from django.shortcuts import render
-from rest_framework import filters
-from rest_framework import routers, serializers, viewsets
-from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
-from django_filters.rest_framework import DjangoFilterBackend
-from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer, PublicLineupSerializer, PublicSponsorsSerializer, PublicGuestSerializer
-from django.core.mail import send_mail
-from django.conf import settings
-from django.core.mail import BadHeaderError, send_mail
-from django.http import HttpResponse, HttpResponseRedirect
-from rest_framework.decorators import action
-from django.template.loader import render_to_string
-from django.utils.decorators import method_decorator
-from django.utils.html import strip_tags
-from django.views.decorators.cache import never_cache
 
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.decorators import action
 from django.apps import apps
+from django.conf import settings
+from django.contrib.auth.models import User as DjangoUser
+from django.core.mail import EmailMultiAlternatives, get_connection
 from django.db import transaction
 from django.db.models import Q
-from django.utils import timezone
-import json
-from django.core.mail import EmailMultiAlternatives, get_connection
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
-from django.conf import settings
-from rest_framework.decorators import action
-from rest_framework import viewsets
-
-from google.oauth2 import id_token
-from google.auth.transport import requests
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny, BasePermission, SAFE_METHODS, IsAuthenticated
-from rest_framework.throttling import AnonRateThrottle
-from django.contrib.auth.models import User as DjangoUser
-from .roles import Role, GUEST_ROLES
-from .services import derive_fer_email, send_guest_ticket_email
-
-import hmac
-from datetime import datetime, time, timedelta
 from django.utils.timezone import make_aware
+from django.views.decorators.cache import never_cache
+from django_filters.rest_framework import DjangoFilterBackend
+from google.auth.transport import requests
+from google.oauth2 import id_token
+from rest_framework import filters, mixins, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, BasePermission, SAFE_METHODS, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
+from .roles import Role, GUEST_ROLES
+from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer, PublicLineupSerializer, PublicSponsorsSerializer, PublicGuestSerializer
+from .services import derive_fer_email, send_guest_ticket_email
 
 class SponsorGuestThrottle(AnonRateThrottle):
     rate = '30/hour'
@@ -677,18 +660,21 @@ class GameLeaderboardViewSet(viewsets.ModelViewSet):
     ordering_fields = ['score']
 
 
-class BrucosiFormResponseViewSet(viewsets.ReadOnlyModelViewSet):
+class BrucosiFormResponseViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
+    """Anyone can submit the form (throttled); only guest roles can read submissions."""
     queryset = BrucosiFormResponse.objects.all()
     serializer_class = BrucosiFormResponseSerializer
     permission_classes = [HasRole(*GUEST_ROLES)]
 
-    @action(detail=False, methods=['post'], url_path='brucosi-form-submit', permission_classes=[AllowAny], throttle_classes=[FormThrottle])
-    def brucosi_form_submit(self, request):
-        serializer = BrucosiFormResponseSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Submission received."}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_permissions(self):
+        if self.action == 'create':
+            return [AllowAny()]
+        return super().get_permissions()
+
+    def get_throttles(self):
+        if self.action == 'create':
+            return [FormThrottle()]
+        return super().get_throttles()
 
 class GoogleAuthView(APIView):
     permission_classes = [AllowAny]

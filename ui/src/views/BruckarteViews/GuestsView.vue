@@ -5,8 +5,8 @@
     <div class="header guests">
       <input class="nosubmit search" @input="prepSearchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
 
-      <v-progress-circular v-if="loading == true" size="90px" indeterminate color="black"></v-progress-circular>
-      <h1 class="textfield" :class="{ 'error-text': isFormMissing || isError }"> {{ this.nomatch }}</h1>
+      <v-progress-circular v-if="loading" size="90px" indeterminate color="black"></v-progress-circular>
+      <h1 class="textfield" :class="{ 'error-text': isFormMissing || isError }"> {{ nomatch }}</h1>
       <button class="button change" @click="getTodayStats">Dohvati broj prodanih karata</button>
     </div>
     <p style="color: black; text-align: center;">
@@ -15,29 +15,29 @@
 
     <div class="grid-container guests">
       <h1 class="textfield">Ime </h1>
-      <input class="inputfield" :disabled="this.name == ''" type="text" @input="changeValue" v-model="name">
+      <input class="inputfield" :disabled="name === ''" type="text" @input="changeValue" v-model="name">
 
       <h1 class="textfield">Prezime </h1>
-      <input class="inputfield" :disabled="this.surname == ''" type="text" @input="changeValue" v-model="surname">
+      <input class="inputfield" :disabled="surname === ''" type="text" @input="changeValue" v-model="surname">
 
       <h1 class="textfield">JMBAG </h1>
       <input class="inputfield" readonly type="text" v-model="jmbag">
 
       <h1 class="textfield">Karta </h1>
 
-      <button class="button change" :disabled="this.id == ''" v-if="guest.bought == true" @click="onSoldClick">
+      <button class="button change" :disabled="id === ''" v-if="guest?.bought" @click="onSoldClick">
         <img src="../../assets/icons/yes-icon.svg">
       </button>
-      <button class="button change" :disabled="this.id == '' || selling" v-else @click="sell"
+      <button class="button change" :disabled="id === '' || selling" v-else @click="sell"
         style="background-color: white;">
         <img class="image1" src="../../assets/icons/no-icon.svg">
       </button>
 
       <h1 class="textfield">Potvrda </h1>
-      <h1 class="textfield">{{ this.confCode }} </h1>
+      <h1 class="textfield">{{ confCode }} </h1>
 
       <h1 class="textfield">Vrijeme kupnje karte </h1>
-      <h1 class="textfield">{{ formatDate(this.boughtTicketTime) }} </h1>
+      <h1 class="textfield">{{ formatDate(boughtTicketTime) }} </h1>
     </div>
 
     <div class="mail-warning" v-if="mailFailureReason">
@@ -62,7 +62,7 @@
             <input class="inputfield" readonly type="text" v-model="jmbag">
 
             <h1 class="textfield" style="grid-column: span 2;"> Brucoš je uspješno kupio kartu, te mu je poslan
-              konfirmacijski mail na: {{ this.email }}
+              konfirmacijski mail na: {{ email }}
             </h1>
           </div>
 
@@ -148,8 +148,6 @@
 
 
 <script>
-import GuestsAdd from '@/components/Bruckarte/GuestsAdd.vue'
-import GuestsTable from '@/components/Bruckarte/GuestsTable.vue'
 import CircularLoading from '@/components/Default/CircularLoading.vue';
 import debounce from 'lodash/debounce';
 import { api } from "@/plugins/api";
@@ -162,14 +160,12 @@ const FAILED_MAIL_STATUSES = ['failed', 'bounced'];
 export default {
   name: 'GuestsView',
   components: {
-    GuestsTable,
-    GuestsAdd,
     CircularLoading
   },
   data() {
     return {
       search: '',
-      guest: '',
+      guest: null,
       id: '',
       name: '',
       surname: '',
@@ -254,7 +250,7 @@ export default {
     },
     resetGuest() {
       this.changeValue.cancel();
-      this.guest = "";
+      this.guest = null;
       this.id = "";
       this.name = "";
       this.surname = "";
@@ -404,7 +400,7 @@ export default {
         const needsName = !this.name;
         const needsSurname = !this.surname;
 
-        if (submissions.length == 0) {
+        if (submissions.length === 0) {
           this.nomatch = `JMBAG pronađen, ali korisnik nije ispunio formu.`;
           this.isFormMissing = true;
           return
@@ -447,24 +443,10 @@ export default {
       this.submissionPickerOpen = false;
     },
     formatDate(date) {
-      if (date == '' || date == null) {
-        return ''
-      }
-      const d = new Date(date);
-      const day = d.getDate().toString().padStart(2, '0');
-      const month = (d.getMonth() + 1).toString().padStart(2, '0');
-      const year = d.getFullYear();
-      const hours = d.getHours().toString().padStart(2, '0');
-      const minutes = d.getMinutes().toString().padStart(2, '0');
-      const seconds = d.getSeconds().toString().padStart(2, '0');
-      return `${day}.${month}.${year}. ${hours}:${minutes}:${seconds}`;
+      return date ? new Date(date).toLocaleString('hr-HR') : '';
     },
     formatStatDate(date) {
-      const d = new Date(date);
-      const day = d.getDate().toString().padStart(2, '0');
-      const month = (d.getMonth() + 1).toString().padStart(2, '0');
-      const year = d.getFullYear();
-      return `${day}.${month}.${year}.`;
+      return date ? new Date(date).toLocaleDateString('hr-HR') : '';
     }
   }
 
