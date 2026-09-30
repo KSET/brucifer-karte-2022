@@ -1,45 +1,35 @@
 <template>
   <div class="tagss">
     <Sidebar />
-    <div class="admin-page-container">
-      <div class="page-header">
+    <div class="admin-page-container admin-table-page">
+      <div class="admin-table-header">
         <h1 class="page-title">Dnevni Izveještaj</h1>
       </div>
-      <div class="tags-table">
-        <div class="row">
-          <table id="guests">
-            <thead>
-              <th>Datum</th>
-              <th>Prodane ukupno u danu</th>
-              <th>Prodane smjena prije 12.00</th>
-              <th>Prodane smjena poslije 12.00</th>
-            </thead>
-            <tbody>
-              <tr v-for="date in dateSummary" :key="date.date">
-                <td>{{ formatDate(date.date) }}</td>
-                <td>{{ date.totalEntries }}</td>
-                <td>{{ date.ticketsBefore12 }}</td>
-                <td>{{ date.ticketsAfter12 }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <AdminTable :rows="dateSummary" dataKey="date" :loading="loading" emptyText="Nema prodanih karata.">
+        <Column field="date" header="Datum">
+          <template #body="{ data }">{{ formatDate(data.date) }}</template>
+        </Column>
+        <Column field="totalEntries" header="Prodane ukupno u danu" />
+        <Column field="ticketsBefore12" header="Prodane smjena prije 12.00" />
+        <Column field="ticketsAfter12" header="Prodane smjena poslije 12.00" />
+      </AdminTable>
     </div>
   </div>
 </template>
 
 <script>
+import Column from 'primevue/column'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+import AdminTable from '@/components/AdminPanel/AdminTable.vue'
 import { api } from "@/plugins/api";
 
 export default {
   name: 'DailyReportView',
-  components: { Sidebar },
+  components: { Sidebar, AdminTable, Column },
   data() {
     return {
       dateSummary: [],
-      name: ''
+      loading: false,
     };
   },
   created() {
@@ -47,9 +37,14 @@ export default {
   },
   methods: {
     async fetchGuests() {
-      const response = await api.get('/guests/?bought=true');
-      this.guests = response.data;
-      this.processDailyReport();
+      this.loading = true;
+      try {
+        const response = await api.get('/guests/?bought=true');
+        this.guests = response.data;
+        this.processDailyReport();
+      } finally {
+        this.loading = false;
+      }
     },
     processDailyReport() {
       let entries = this.guests;
@@ -87,39 +82,3 @@ export default {
   }
 }
 </script>
-
-
-
-<style>
-#title0 {
-  display: inline-block;
-}
-
-.tags-table {
-  height: 100%;
-}
-
-.inputtag {
-  height: 40px;
-  text-align: left;
-  width: 80%;
-  vertical-align: top;
-  font-family: 'Montserrat';
-
-  height: 39px;
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700;
-
-  font-size: 16px;
-
-  border: 1px solid black;
-}
-
-.add-icon {
-  padding-top: 2px;
-  padding-left: 5px;
-  height: 40px;
-  vertical-align: top;
-}
-</style>

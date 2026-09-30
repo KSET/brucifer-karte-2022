@@ -1,112 +1,63 @@
 <template>
     <div id="firme">
         <Sidebar />
-        <div class="admin-page-container">
-            <h1 class="page-title">Firme</h1>
-
-            <h1 class="textfield">Ime Firme</h1>
-            <input @input="searchFirm" class="inputfield" type="text" v-model="search">
-            <table class="table" id="guests">
-                <thead>
-                    <th>Firma</th>
-                    <th>Odobreno</th>
-                    <th>Upisano</th>
-                    <th>Ušlo</th>
-                </thead>
-                <tbody>
-                    <tr v-for="guest in firms" :key="guest.id">
-                        <td>{{ guest.name }}</td>
-                        <td>{{ guest.guestCap }}</td>
-                        <td>{{ guest.guestsAdded }}</td>
-                        <td>{{ guest.guetsEntered }}</td>
-                    </tr>
-                </tbody>
-            </table>
-
+        <div class="admin-page-container admin-table-page">
+            <div class="admin-table-header">
+                <h1 class="page-title">Firme</h1>
+            </div>
+            <AdminTable :rows="firms" :loading="loading" :searchFields="['name']"
+                searchPlaceholder="Pretraži po imenu firme" emptyText="Nema firmi.">
+                <Column field="name" header="Firma">
+                    <template #body="{ data }">
+                        <span class="cell-text" :title="data.name">{{ data.name }}</span>
+                    </template>
+                </Column>
+                <Column field="guestCap" header="Odobreno" style="width: 8rem" bodyClass="center-cell"
+                    headerClass="center-head">
+                    <template #body="{ data }">{{ data.guestCap ?? '—' }}</template>
+                </Column>
+                <Column field="guestsAdded" header="Upisano" style="width: 8rem" bodyClass="center-cell"
+                    headerClass="center-head" />
+                <Column field="guestsEntered" header="Ušlo" style="width: 8rem" bodyClass="center-cell"
+                    headerClass="center-head" />
+            </AdminTable>
         </div>
     </div>
-
 </template>
 
 <script>
+import Column from 'primevue/column'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+import AdminTable from '@/components/AdminPanel/AdminTable.vue'
 import { api } from '@/plugins/api';
 
 export default {
-    name: 'GuestsTable',
-    props: {
-        msg: String
-    },
-    components: {
-        Sidebar
-    },
+    name: 'FirmeView',
+    components: { Sidebar, AdminTable, Column },
     data() {
         return {
             firms: [],
-            search: '',
-
-            guestsAdded: '',
-            guetsEntered: 0,
+            loading: false,
         }
     },
-    mounted() {
-        this.created();
-    },
-    methods: {
-        created() {
-            api.get('/sponsors/',)
-                .then(response => {
-                    this.firms = response.data;
-                    this.firms.splice(0, 1);
+    async mounted() {
+        this.loading = true;
+        try {
+            const response = await api.get('/sponsors/');
 
-                    this.firms.forEach(element => {
-                        api.get('/guests/?search=' + element.slug + "&search_fields=tag")
-                            .then(response => {
-                                var sponsorGuests = response.data;
-                                element.guestsAdded = sponsorGuests.length;
-                                var enter = 0;
-                                sponsorGuests.forEach(elementy => {
-                                    if (elementy.entered === true)
-                                        enter = enter + 1;
-                                });
-
-                                element.guetsEntered = enter;
-                            })
-
-                    });
-
-                })
-        },
-        searchFirm() {
-            api.get('/sponsors/?search=' + this.search + "&search_fields=name",)
-                .then(response => {
-                    this.firms = response.data;
-                    var ids = [];
-                    this.firms.forEach(element => {
-                        ids.push(element.id)
-                    });
-                    if (ids.includes('314159')) {
-                        this.firms.splice(0, 1);
-                    }
-
-                    this.firms.forEach(element => {
-                        api.get('/guests/?search=' + element.slug + "&search_fields=tag")
-                            .then(response => {
-                                var sponsorGuests = response.data;
-                                element.guestsAdded = sponsorGuests.length;
-                                var enter = 0;
-                                sponsorGuests.forEach(elementy => {
-                                    if (elementy.entered === true)
-                                        enter = enter + 1;
-                                });
-
-                                element.guetsEntered = enter;
-                            })
-
-                    });
-                })
+            this.firms = await Promise.all(response.data.map(async sponsor => {
+                const guests = await api.get('/guests/?search=' + sponsor.slug + "&search_fields=tag")
+                    .then(r => r.data)
+                    .catch(() => []);
+                return {
+                    ...sponsor,
+                    guestsAdded: guests.length,
+                    guestsEntered: guests.filter(g => g.entered === true).length,
+                };
+            }));
+        } finally {
+            this.loading = false;
         }
-    }
-
+    },
 }
 </script>

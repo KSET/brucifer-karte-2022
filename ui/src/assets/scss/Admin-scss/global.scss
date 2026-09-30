@@ -111,3 +111,21 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.admin-table-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.admin-table-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-table-header .page-title {
+  margin: 0;
+}

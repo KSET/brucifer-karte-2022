@@ -1,10 +1,10 @@
 <template>
   <div class="tagss">
     <Sidebar />
-    <div class="admin-page-container">
-      <div class="page-header">
+    <div class="admin-page-container admin-table-page">
+      <div class="admin-table-header">
         <h1 class="page-title">Tagovi</h1>
-        <form onsubmit="return false" style="display: inline-block;  vertical-align: middle;">
+        <form onsubmit="return false" style="flex: 1; max-width: 32rem;">
           <input required type="text" class="inputtag" v-model="name" placeholder="Unesi ime taga">
           <button class="button-icon" @click="postTag"> <img class="add-icon"
               src="@/assets/icons/add-icon.svg"></button>
@@ -53,14 +53,6 @@ export default {
 
 
 <style>
-#title0 {
-  display: inline-block;
-}
-
-.tags-table {
-  height: 100%;
-}
-
 .inputtag {
   height: 40px;
   text-align: left;

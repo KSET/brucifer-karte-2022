@@ -1,120 +1,78 @@
 <template>
   <div id="privileges">
     <Sidebar />
-    <div class="admin-page-container">
-      <h1 class="page-title">Privilegije</h1>
-      <h1 class="text1" style="word-spacing: 10px;">UKUPNO
-        {{ this.countNista + this.countAdmin + this.countUlaz + this.countKarte + this.countUlplK }}</h1>
-      <table class="table" id="guests">
-        <thead>
-          <th>Oznaka</th>
-          <th>Ime</th>
-          <th>Broj</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>0</td>
-            <td>Ništa</td>
-            <td>{{ this.countNista }}</td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>Admin</td>
-            <td>{{ this.countAdmin }}</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Ulaz</td>
-            <td>{{ this.countUlaz }}</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Karte</td>
-            <td>{{ this.countKarte }}</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>Ulaz+Karte</td>
-            <td>{{ this.countUlplK }}</td>
-          </tr>
-
-
-        </tbody>
-      </table>
-
-
-
+    <div class="admin-page-container admin-table-page">
+      <div class="admin-table-header">
+        <h1 class="page-title">Privilegije</h1>
+      </div>
+      <AdminTable :rows="rows" dataKey="code" :loading="loading" minWidth="20rem">
+        <template #toolbar>
+          <strong class="privileges-total">Ukupno {{ total }}</strong>
+        </template>
+        <Column field="code" header="Oznaka" style="width: 7rem" />
+        <Column field="name" header="Ime" />
+        <Column field="count" header="Broj" style="width: 7rem" bodyClass="center-cell" headerClass="center-head" />
+      </AdminTable>
     </div>
   </div>
-
 </template>
 
 <script>
+import Column from 'primevue/column'
 import { api } from "@/plugins/api";
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
+import AdminTable from '@/components/AdminPanel/AdminTable.vue'
 import { NONE, ADMIN, ENTRY, TICKETS, ENTRY_TICKETS } from "@/plugins/roles";
 
+const PRIVILEGES = [
+  { code: 0, role: NONE, name: 'Ništa' },
+  { code: 1, role: ADMIN, name: 'Admin' },
+  { code: 2, role: ENTRY, name: 'Ulaz' },
+  { code: 3, role: TICKETS, name: 'Karte' },
+  { code: 4, role: ENTRY_TICKETS, name: 'Ulaz+Karte' },
+];
+
 export default {
-  name: 'GuestsTable',
-  props: {
-    msg: String
-  },
-  components: {
-    Sidebar
-  },
+  name: 'PrivilegesView',
+  components: { Sidebar, AdminTable, Column },
   data() {
     return {
-      countNista: 0,
-      countAdmin: 0,
-      countUlaz: 0,
-      countKarte: 0,
-      countUlplK: 0,
+      users: [],
+      loading: false,
     }
   },
-  mounted() {
-    this.created();
+  computed: {
+    rows() {
+      return PRIVILEGES.map(p => ({
+        code: p.code,
+        name: p.name,
+        count: this.users.filter(u => u.privilege == p.role).length,
+      }));
+    },
+    total() {
+      return this.rows.reduce((sum, r) => sum + r.count, 0);
+    },
   },
-  methods: {
-    created() {
-      api.get('/users/',)
-        .then(response => {
-          this.users = response.data;
-          this.users.forEach(element => {
-            if (element.privilege == NONE) {
-              this.countNista++
-            } else if (element.privilege == ADMIN) {
-              this.countAdmin++
-            } else if (element.privilege == ENTRY) {
-              this.countUlaz++
-            } else if (element.privilege == TICKETS) {
-              this.countKarte++
-            } else if (element.privilege == ENTRY_TICKETS) {
-              this.countUlplK++
-            }
-          });
-        })
+  async mounted() {
+    this.loading = true;
+    try {
+      const response = await api.get('/users/');
+      this.users = response.data;
+    } finally {
+      this.loading = false;
     }
-  }
-
+  },
 }
 </script>
-<style>
-.text1 {
-  padding-bottom: 3%;
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 36px;
-  /* identical to box height, or 225% */
 
-  display: flex;
-  align-items: left;
-  letter-spacing: -0.015em;
-
-  color: #000000;
+<style scoped>
+.privileges-total {
+  font-size: 14px;
+  word-spacing: 6px;
 }
+</style>
 
+<style>
 #guests {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
