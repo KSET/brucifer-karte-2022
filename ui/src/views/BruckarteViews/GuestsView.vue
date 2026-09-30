@@ -372,16 +372,6 @@ export default {
             }]
         },
       )
-      await api.post('/mailer/',
-        {
-          subject: "[#BRUCIFER26] Potvrda za kupljenu kartu",
-          template: "guest_email",
-          message: msg,
-          name: this.name,
-          confCode: guest.confCode,
-          to_mail: email
-        },
-      )
       this.dialogProgress = false;
       this.dialog = true;
     },

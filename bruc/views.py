@@ -42,8 +42,10 @@ from rest_framework.permissions import AllowAny, BasePermission, SAFE_METHODS, I
 from rest_framework.throttling import AnonRateThrottle
 from django.contrib.auth.models import User as DjangoUser
 from .roles import Role, GUEST_ROLES
+from .services import derive_fer_email, send_guest_ticket_email
 
-from datetime import datetime, time
+import hmac
+from datetime import datetime, time, timedelta
 from urllib.parse import quote
 from django.utils.timezone import make_aware
 
@@ -58,6 +60,7 @@ class FormThrottle(AnonRateThrottle):
 
 
 MAX_BULK_RECORDS = 5000
+FAILED_MAIL_STATUSES = ('failed', 'bounced')
 
 
 def _caller_role(request):
@@ -107,6 +110,7 @@ class MailerViewSet(viewsets.ModelViewSet):
         emails = request.data.get('emails', [])  # Expecting a list of email details
 
         messages = []
+        guest_results = []
         for email in emails:
             subject = email.get('subject', '')
             msg = email.get('message', '')
@@ -118,9 +122,15 @@ class MailerViewSet(viewsets.ModelViewSet):
                 html_message = render_to_string('emails/user_email.html', {
                     'name': email.get('name', ''), 'privilege_name': email.get('privilege_name', ''), })
             elif template_name == "guest_email":
+                conf_code = email.get('confCode') or ''
+                guest = Guests.objects.filter(confCode=conf_code).first() if conf_code else None
+                if guest:
+                    ok, _ = send_guest_ticket_email(guest)
+                    guest_results.append(ok)
+                    continue
                 html_message = render_to_string('emails/guest_email.html', {
-                    'name': email.get('name', ''), 'confCode': email.get('confCode', ''),
-                    'qrSrc': "https://api.qrserver.com/v1/create-qr-code/?data="+quote(email.get('confCode', ''))+"&amp;size=300x300"})
+                    'name': email.get('name', ''), 'confCode': conf_code,
+                    'qrSrc': "https://api.qrserver.com/v1/create-qr-code/?data="+quote(conf_code)+"&amp;size=300x300"})
             elif template_name == "sponsors_email":
                 sponsor = Sponsors.objects.filter(slug=(email.get('slug') or '')).first()
                 if not sponsor:
@@ -139,11 +149,13 @@ class MailerViewSet(viewsets.ModelViewSet):
             try:
                 with get_connection() as connection:
                     connection.send_messages(messages)
-                return HttpResponse('Emails sent successfully.')
             except Exception:
                 return HttpResponse('Failed to send emails.', status=500)
-        else:
+        if not messages and not guest_results:
             return HttpResponse('Make sure all fields are entered and valid for each email.')
+        if not all(guest_results):
+            return HttpResponse('Failed to send emails.', status=500)
+        return HttpResponse('Emails sent successfully.')
 
 
 class GuestsViewSet(viewsets.ModelViewSet):
@@ -202,25 +214,114 @@ class GuestsViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=["get"], url_path="today-stats")
     def today_stats(self, request):
-        now = datetime.now()
-        today_start = make_aware(datetime.combine(now.date(), time.min))
-        noon_time = make_aware(datetime.combine(now.date(), time(12, 0)))
-        today_end = make_aware(datetime.combine(now.date(), time.max))
+        today = timezone.localdate()
+        today_start = make_aware(datetime.combine(today, time.min))
+        noon_time = make_aware(datetime.combine(today, time(12, 0)))
+        tomorrow_start = make_aware(datetime.combine(today + timedelta(days=1), time.min))
 
-        guests = Guests.objects.filter(
-            boughtTicketTime__range=(today_start, today_end)
-        )
+        brucosi = Guests.objects.filter(tag="Brucoši")
+        guests = brucosi.filter(boughtTicketTime__gte=today_start, boughtTicketTime__lt=tomorrow_start)
 
         total_entries = guests.count()
         tickets_before_12 = guests.filter(boughtTicketTime__lt=noon_time).count()
         tickets_after_12 = guests.filter(boughtTicketTime__gte=noon_time).count()
 
         return Response({
-            "date": now.date().isoformat(),
+            "date": today.isoformat(),
             "totalEntries": total_entries,
             "ticketsBefore12": tickets_before_12,
             "ticketsAfter12": tickets_after_12,
+            "failedMails": brucosi.filter(bought=True, mailStatus__in=FAILED_MAIL_STATUSES).count(),
         })
+
+    @staticmethod
+    def _sale_names(request, guest):
+        is_admin = _caller_role(request) == Role.ADMIN
+        submissions = BrucosiFormResponse.objects.filter(jmbag=guest.jmbag)
+        result = []
+        for field in ('name', 'surname'):
+            stored = getattr(guest, field).strip()
+            submitted = sorted({getattr(s, field).strip() for s in submissions} - {''})
+            value = stored or (submitted[0] if len(submitted) == 1 else '')
+            body = str(request.data.get(field) or '').strip()
+            if body and (is_admin or stored or submitted):
+                value = body
+            result.append(value)
+        return result
+
+    @action(detail=True, methods=['post'], url_path='sell',
+            permission_classes=[HasRole(Role.TICKETS, Role.ENTRY_TICKETS, Role.ADMIN)])
+    def sell(self, request, pk=None):
+        guest = self.get_object()
+        if guest.tag != "Brucoši":
+            return Response({"detail": "Gost nije brucoš."}, status=status.HTTP_400_BAD_REQUEST)
+
+        name, surname = self._sale_names(request, guest)
+        if not name or not surname:
+            return Response({"detail": "Nedostaje ime/prezime – brucoš nije ispunio formu."},
+                            status=status.HTTP_400_BAD_REQUEST)
+        email = derive_fer_email(name, surname, guest.jmbag)
+        if not email:
+            return Response({"detail": "Nije moguće odrediti email adresu."}, status=status.HTTP_400_BAD_REQUEST)
+
+        with transaction.atomic():
+            claimed = Guests.objects.filter(pk=guest.pk, bought=False).update(
+                bought=True, confCode=str(uuid4()), boughtTicketTime=timezone.now(),
+                name=name, surname=surname, email=email,
+                mailStatus='none', mailError='', mailSentAt=None, mailMessageId='')
+            if not claimed:
+                return Response({"detail": "Karta je već prodana."}, status=status.HTTP_409_CONFLICT)
+            BrucosiFormResponse.objects.filter(jmbag=guest.jmbag).update(status='redeemed')
+
+        guest.refresh_from_db()
+        mail_sent, mail_error = send_guest_ticket_email(guest)
+        return Response({
+            "guest": GuestsSerializer(guest).data,
+            "email": email,
+            "mail_sent": mail_sent,
+            "mail_error": mail_error,
+        })
+
+    @action(detail=True, methods=['post'], url_path='unsell', permission_classes=[HasRole(Role.ADMIN)])
+    def unsell(self, request, pk=None):
+        guest = self.get_object()
+        with transaction.atomic():
+            cleared = Guests.objects.filter(pk=guest.pk, entered=False).update(
+                bought=False, confCode='', boughtTicketTime=None,
+                mailStatus='none', mailError='', mailSentAt=None, mailMessageId='')
+            if not cleared:
+                return Response({"detail": "Gost je već ušao, prodaja se ne može poništiti."},
+                                status=status.HTTP_409_CONFLICT)
+            BrucosiFormResponse.objects.filter(jmbag=guest.jmbag).update(status='invalid')
+        guest.refresh_from_db()
+        return Response({"guest": GuestsSerializer(guest).data})
+
+    @action(detail=True, methods=['post'], url_path='resend-mail', permission_classes=[HasRole(Role.ADMIN)])
+    def resend_mail(self, request, pk=None):
+        guest = self.get_object()
+        if not guest.bought or not guest.confCode:
+            return Response({"detail": "Karta nije prodana."}, status=status.HTTP_400_BAD_REQUEST)
+
+        name = str(request.data.get('name') or '').strip()
+        surname = str(request.data.get('surname') or '').strip()
+        if name or surname:
+            guest.name = name or guest.name
+            guest.surname = surname or guest.surname
+            guest.save(update_fields=['name', 'surname'])
+
+        mail_sent, mail_error = send_guest_ticket_email(guest)
+        return Response({
+            "guest": GuestsSerializer(guest).data,
+            "email": guest.email,
+            "mail_sent": mail_sent,
+            "mail_error": mail_error,
+        })
+
+    @action(detail=False, methods=['get'], url_path='failed-mails', permission_classes=[HasRole(Role.ADMIN)])
+    def failed_mails(self, request):
+        guests = Guests.objects.filter(bought=True, mailStatus__in=FAILED_MAIL_STATUSES) \
+            .order_by('-boughtTicketTime')
+        return Response(GuestsSerializer(guests, many=True).data)
 
 class TagsViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
@@ -660,6 +761,54 @@ class MeView(APIView):
                 "name": "",
                 "role": "none",
             })
+
+SOFT_BOUNCE_REASON = 'mail se vratio (privremena greška)'
+BREVO_BOUNCE_REASONS = {
+    'hard_bounce': 'mail se vratio (trajna greška)',
+    'soft_bounce': SOFT_BOUNCE_REASON,
+    'blocked': 'mail blokiran',
+    'invalid_email': 'neispravna adresa',
+    'error': 'greška pri isporuci',
+}
+
+
+class BrevoWebhookView(APIView):
+    """POST /api/brevo/webhook/<token>/ — Brevo transactional events; flags bounced ticket mails."""
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request, token):
+        expected = settings.BREVO_WEBHOOK_TOKEN
+        if not expected or not hmac.compare_digest(token.encode(), expected.encode()):
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        events = request.data if isinstance(request.data, list) else [request.data]
+        for event in events:
+            if not isinstance(event, dict):
+                continue
+            message_id = str(event.get('message-id') or '').strip().strip('<>')
+
+            if event.get('event') == 'delivered':
+                if message_id:
+                    Guests.objects.filter(mailMessageId=f'<{message_id}>', mailStatus='bounced',
+                                          mailError=SOFT_BOUNCE_REASON).update(mailStatus='sent', mailError='')
+                continue
+
+            reason = BREVO_BOUNCE_REASONS.get(event.get('event'))
+            if not reason:
+                continue
+
+            email = str(event.get('email') or '').strip()
+            if message_id:
+                guests = Guests.objects.filter(mailMessageId=f'<{message_id}>')
+            elif email:
+                guests = Guests.objects.filter(email__iexact=email, bought=True)
+            else:
+                continue
+            guests.update(mailStatus='bounced', mailError=reason)
+
+        return Response({"status": "ok"})
+
 
 def _db_models():
     return {

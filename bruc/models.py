@@ -21,6 +21,17 @@ class Guests(models.Model):
     confCode = models.CharField(max_length=50, default='', blank=True)
     boughtTicketTime = models.DateTimeField(null=True, blank=True)
 
+    MAIL_STATUS_CHOICES = [
+        ('none', 'None'),
+        ('sent', 'Sent'),
+        ('failed', 'Failed'),
+        ('bounced', 'Bounced'),
+    ]
+    mailStatus = models.CharField(max_length=10, choices=MAIL_STATUS_CHOICES, default='none')
+    mailError = models.CharField(max_length=200, default='', blank=True)
+    mailSentAt = models.DateTimeField(null=True, blank=True)
+    mailMessageId = models.CharField(max_length=255, default='', blank=True)
+
 
 class Users(models.Model):
     id = models.AutoField(primary_key=True)

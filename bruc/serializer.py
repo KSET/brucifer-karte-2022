@@ -7,7 +7,9 @@ class GuestsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Guests
         fields = ["id", "name", "surname", "jmbag",
-                  "email", "tag", "bought", "entered", "confCode", "boughtTicketTime"]
+                  "email", "tag", "bought", "entered", "confCode", "boughtTicketTime",
+                  "mailStatus", "mailError", "mailSentAt"]
+        read_only_fields = ["mailStatus", "mailError", "mailSentAt"]
 
 
 class TagsSerializer(serializers.HyperlinkedModelSerializer):
