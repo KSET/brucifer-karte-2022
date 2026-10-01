@@ -3,7 +3,7 @@ import shutil
 import smtplib
 import socket
 import tempfile
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from io import BytesIO
 from unittest import mock
 from zoneinfo import ZoneInfo
@@ -13,6 +13,7 @@ from django.core.cache import cache
 from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
+from django.utils import timezone
 from PIL import Image
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -20,6 +21,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import BrucosiFormResponse, Guests, Lineup, Mailer, Users
 from .roles import Role
 from .services import classify_mail_error, derive_fer_email
+from .views import FormThrottle
 
 LIST_URL = '/api/forms/'
 SUBMIT_URL = LIST_URL
@@ -48,7 +50,7 @@ class BrucosiFormTests(APITestCase):
     def test_anonymous_submit_ignores_status(self):
         res = self.client.post(SUBMIT_URL, valid_payload(status='redeemed'), format='json')
         self.assertEqual(res.status_code, 201)
-        self.assertEqual(BrucosiFormResponse.objects.get().status, 'invalid')
+        self.assertEqual(BrucosiFormResponse.objects.get().status, 'pending')
 
     def test_submit_strips_whitespace(self):
         res = self.client.post(SUBMIT_URL, valid_payload(name='  Ivan ', jmbag=' 0036123456 '), format='json')
@@ -60,52 +62,68 @@ class BrucosiFormTests(APITestCase):
         for bad in (
             {'jmbag': '123'},
             {'jmbag': 'abcdefghij'},
+            {'jmbag': '٠٠٣٦١٢٣٤٥٦'},
             {'gdpr_accepted': False},
             {'name': '   '},
+            {'name': '1van'},
+            {'name': '<b>'},
+            {'surname': "'Horvat"},
+            {'name': 'Émile', 'jmbag': '0036999999'},
         ):
             with self.subTest(bad=bad):
                 res = self.client.post(SUBMIT_URL, valid_payload(**bad), format='json')
                 self.assertEqual(res.status_code, 400)
         self.assertEqual(BrucosiFormResponse.objects.count(), 0)
 
+    def test_names_with_diacritics_spaces_hyphens_allowed(self):
+        res = self.client.post(SUBMIT_URL, valid_payload(name='Ana Marija', surname="Đurić-O'Neil"), format='json')
+        self.assertEqual(res.status_code, 201)
+
     def test_duplicate_jmbag_allowed(self):
         self.client.post(SUBMIT_URL, valid_payload(), format='json')
         self.client.post(SUBMIT_URL, valid_payload(name='Marko'), format='json')
         self.assertEqual(BrucosiFormResponse.objects.filter(jmbag='0036123456').count(), 2)
 
-    def test_list_anonymous(self):
-        self.assertEqual(self.client.get(LIST_URL).status_code, 401)
-
-    def test_list_role_none(self):
-        self.login_as(Role.NONE)
-        self.assertEqual(self.client.get(LIST_URL).status_code, 403)
-
-    def test_list_role_tickets(self):
-        self.login_as(Role.TICKETS)
-        self.assertEqual(self.client.get(LIST_URL).status_code, 200)
-
-    def test_no_update_or_delete(self):
+    def test_no_read_update_or_delete(self):
         self.client.post(SUBMIT_URL, valid_payload(), format='json')
         row = BrucosiFormResponse.objects.get()
         self.login_as(Role.ADMIN)
+        self.assertEqual(self.client.get(LIST_URL).status_code, 405)
         url = f'{LIST_URL}{row.id}/'
-        self.assertEqual(self.client.put(url, valid_payload(), format='json').status_code, 405)
-        self.assertEqual(self.client.delete(url).status_code, 405)
-        self.assertEqual(self.client.patch(url, {'status': 'redeemed'}, format='json').status_code, 405)
+        self.assertEqual(self.client.get(url).status_code, 404)
+        self.assertEqual(self.client.put(url, valid_payload(), format='json').status_code, 404)
+        self.assertEqual(self.client.delete(url).status_code, 404)
+        self.assertEqual(self.client.patch(url, {'status': 'redeemed'}, format='json').status_code, 404)
+
+    def test_throttle_per_jmbag(self):
+        statuses = [self.client.post(SUBMIT_URL, valid_payload(), format='json').status_code for _ in range(6)]
+        self.assertEqual(statuses, [201] * 5 + [429])
+        res = self.client.post(SUBMIT_URL, valid_payload(jmbag='0036654321'), format='json')
+        self.assertEqual(res.status_code, 201)
+
+    def test_jmbag_throttle_does_not_lock_out_other_ips(self):
+        for _ in range(6):
+            self.client.post(SUBMIT_URL, valid_payload(), format='json', REMOTE_ADDR='6.6.6.6')
+        res = self.client.post(SUBMIT_URL, valid_payload(), format='json', REMOTE_ADDR='1.2.3.4')
+        self.assertEqual(res.status_code, 201)
+
+    def test_non_object_body_rejected(self):
+        self.assertEqual(self.client.post(SUBMIT_URL, [], format='json').status_code, 400)
 
     @override_settings(REST_FRAMEWORK={
         'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTAuthentication'],
         'NUM_PROXIES': 1,
     })
+    @mock.patch.object(FormThrottle, 'rate', '3/hour')
     def test_throttle_ignores_spoofed_forwarded_for(self):
         statuses = [
             self.client.post(
-                SUBMIT_URL, valid_payload(), format='json',
+                SUBMIT_URL, valid_payload(jmbag=f'003612345{i}'), format='json',
                 HTTP_X_FORWARDED_FOR=f'10.0.0.{i}, 1.2.3.4',
             ).status_code
-            for i in range(101)
+            for i in range(4)
         ]
-        self.assertEqual(statuses[-1], 429)
+        self.assertEqual(statuses, [201, 201, 201, 429])
 
 
 DB_TABLES_URL = '/api/db/tables/'
@@ -272,6 +290,12 @@ class DeriveFerEmailTests(TestCase):
     def test_diacritics_and_whitespace(self):
         self.assertEqual(derive_fer_email(' Čedo ', 'Šimić', ' 0036123456 '), 'cs12345@fer.hr')
 
+    def test_unusable_parts(self):
+        for args in (('1van', 'Horvat', '0036123456'), ('Ivan', '<b>', '0036123456'),
+                     ('Ivan', 'Horvat', '٠٠٣٦١٢٣٤٥٦'), ('Ivan', 'Horvat', '0036')):
+            with self.subTest(args=args):
+                self.assertIsNone(derive_fer_email(*args))
+
     def test_blank_parts(self):
         for args in (('', 'Horvat', '0036123456'), ('Ivan', ' ', '0036123456'), ('Ivan', 'Horvat', '')):
             with self.subTest(args=args):
@@ -299,7 +323,7 @@ def guests_url(guest, action):
     return f'/api/guests/{guest.id}/{action}/'
 
 
-@override_settings(BREVO_WEBHOOK_TOKEN='secret-token')
+@override_settings(BREVO_WEBHOOK_TOKEN='secret-token', TICKET_MAIL_ASYNC=False)
 class GuestSaleTests(APITestCase):
     def setUp(self):
         self.guest = Guests.objects.create(jmbag='0036123456', tag='Brucoši')
@@ -317,7 +341,6 @@ class GuestSaleTests(APITestCase):
         self.login_as(Role.TICKETS)
         res = self.sell()
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(res.data['mail_sent'])
         self.assertEqual(res.data['email'], 'ih12345@fer.hr')
         self.guest.refresh_from_db()
         self.assertTrue(self.guest.bought)
@@ -420,7 +443,7 @@ class GuestSaleTests(APITestCase):
         self.login_as(Role.ADMIN)
         res = self.client.post(guests_url(self.guest, 'unsell'), {}, format='json')
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(set(BrucosiFormResponse.objects.values_list('status', flat=True)), {'invalid'})
+        self.assertEqual(set(BrucosiFormResponse.objects.values_list('status', flat=True)), {'pending'})
         self.guest.refresh_from_db()
         self.assertEqual((self.guest.bought, self.guest.confCode, self.guest.boughtTicketTime), (False, '', None))
 
@@ -439,8 +462,6 @@ class GuestSaleTests(APITestCase):
                 self.assertLogs('bruc.services', 'ERROR'):
             res = self.sell()
         self.assertEqual(res.status_code, 200)
-        self.assertFalse(res.data['mail_sent'])
-        self.assertEqual(res.data['mail_error'], 'adresa odbijena')
         self.guest.refresh_from_db()
         self.assertTrue(self.guest.bought)
         self.assertEqual((self.guest.mailStatus, self.guest.mailError), ('failed', 'adresa odbijena'))
@@ -450,18 +471,37 @@ class GuestSaleTests(APITestCase):
         self.login_as(Role.TICKETS)
         with mock.patch('bruc.services.EmailMultiAlternatives.send', side_effect=ConnectionRefusedError()), \
                 self.assertLogs('bruc.services', 'ERROR'):
-            res = self.sell()
-        self.assertEqual(res.data['mail_error'], 'mail server nedostupan')
+            self.sell()
+        self.assertEqual(Guests.objects.get(pk=self.guest.pk).mailError, 'mail server nedostupan')
 
     def test_brevo_rate_limit(self):
         self.login_as(Role.TICKETS)
         limited = smtplib.SMTPDataError(421, b'4.7.0 Too many messages')
         with mock.patch('bruc.services.EmailMultiAlternatives.send', side_effect=limited), \
                 self.assertLogs('bruc.services', 'ERROR'):
+            self.sell()
+        guest = Guests.objects.get(pk=self.guest.pk)
+        self.assertEqual((guest.mailStatus, guest.mailError), ('failed', 'Brevo privremeno odbija slanje, pokušaj ponovno'))
+        self.assertTrue(guest.bought)
+
+    @override_settings(TICKET_MAIL_ASYNC=True)
+    def test_sell_sends_mail_in_background(self):
+        self.login_as(Role.TICKETS)
+        with mock.patch('bruc.services.threading.Thread') as thread:
             res = self.sell()
-        self.assertFalse(res.data['mail_sent'])
-        self.assertEqual(res.data['mail_error'], 'Brevo privremeno odbija slanje, pokušaj ponovno')
-        self.assertTrue(Guests.objects.get(pk=self.guest.pk).bought)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.data['guest']['mailStatus'], 'pending')
+        thread.return_value.start.assert_called_once()
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_stale_pending_mail_counts_as_failed(self):
+        now = timezone.now()
+        stale = Guests.objects.create(tag='Brucoši', bought=True, mailStatus='pending',
+                                      boughtTicketTime=now - timedelta(minutes=10))
+        Guests.objects.create(tag='Brucoši', bought=True, mailStatus='pending', boughtTicketTime=now)
+        self.login_as(Role.ADMIN)
+        res = self.client.get('/api/guests/failed-mails/')
+        self.assertEqual([g['id'] for g in res.data], [stale.id])
 
     def test_admin_resend_and_failed_list(self):
         self.login_as(Role.TICKETS)
@@ -478,6 +518,30 @@ class GuestSaleTests(APITestCase):
         self.assertEqual(res.data['email'], 'ih12345@fer.hr')
         self.assertEqual(Guests.objects.get(pk=self.guest.pk).name, 'Ivo')
         self.assertEqual(self.client.get('/api/guests/failed-mails/').data, [])
+
+    def test_mail_outcome_dropped_if_unsold_during_send(self):
+        def unsell_mid_send(*args, **kwargs):
+            Guests.objects.filter(pk=self.guest.pk).update(bought=False, confCode='', mailStatus='none')
+        self.login_as(Role.TICKETS)
+        with mock.patch('bruc.services.EmailMultiAlternatives.send', side_effect=unsell_mid_send), \
+                self.assertLogs('bruc.services', 'WARNING'):
+            self.sell()
+        guest = Guests.objects.get(pk=self.guest.pk)
+        self.assertEqual((guest.bought, guest.mailStatus), (False, 'none'))
+
+    def test_resend_while_pending_conflicts(self):
+        Guests.objects.filter(pk=self.guest.pk).update(
+            bought=True, confCode='abc', name='Ivan', surname='Horvat', mailStatus='pending',
+            boughtTicketTime=timezone.now())
+        self.login_as(Role.ADMIN)
+        res = self.client.post(guests_url(self.guest, 'resend-mail'), {}, format='json')
+        self.assertEqual(res.status_code, 409)
+        self.assertEqual(len(mail.outbox), 0)
+
+        Guests.objects.filter(pk=self.guest.pk).update(boughtTicketTime=timezone.now() - timedelta(minutes=10))
+        res = self.client.post(guests_url(self.guest, 'resend-mail'), {}, format='json')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(len(mail.outbox), 1)
 
     def test_resend_unsold_rejected(self):
         self.login_as(Role.ADMIN)

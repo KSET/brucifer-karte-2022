@@ -23,14 +23,14 @@ from rest_framework import filters, mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, BasePermission, SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.throttling import AnonRateThrottle
+from rest_framework.throttling import AnonRateThrottle, SimpleRateThrottle
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
 from .roles import Role, GUEST_ROLES
 from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer, PublicLineupSerializer, PublicSponsorsSerializer, PublicGuestSerializer
-from .services import derive_fer_email, send_guest_ticket_email
+from .services import derive_fer_email, send_guest_ticket_email, send_guest_ticket_email_async
 
 class SponsorGuestThrottle(AnonRateThrottle):
     rate = '30/hour'
@@ -39,11 +39,32 @@ class MailerThrottle(AnonRateThrottle):
     rate = '200/hour'
 
 class FormThrottle(AnonRateThrottle):
-    rate = '100/hour'
+    # Loose per-IP flood guard: freshmen on FER eduroam share one public IP.
+    rate = '1000/hour'
+
+
+class FormJmbagThrottle(SimpleRateThrottle):
+    scope = 'form_jmbag'
+    rate = '5/hour'
+
+    def get_cache_key(self, request, view):
+        # Keyed per IP too, so nobody can lock a student out by spamming their JMBAG from elsewhere.
+        data = request.data if isinstance(request.data, dict) else {}
+        jmbag = str(data.get('jmbag') or '').strip()
+        if not jmbag:
+            return None
+        return self.cache_format % {'scope': self.scope, 'ident': f'{self.get_ident(request)}:{jmbag}'}
 
 
 MAX_BULK_RECORDS = 5000
 FAILED_MAIL_STATUSES = ('failed', 'bounced')
+STALE_PENDING_MAIL = timedelta(minutes=5)
+
+
+def _failed_mail_q():
+    """Failed or bounced mails, plus background sends that never finished (e.g. server restart)."""
+    return Q(mailStatus__in=FAILED_MAIL_STATUSES) | Q(
+        mailStatus='pending', boughtTicketTime__lt=timezone.now() - STALE_PENDING_MAIL)
 
 
 def _caller_role(request):
@@ -214,7 +235,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
             "totalEntries": total_entries,
             "ticketsBefore12": tickets_before_12,
             "ticketsAfter12": tickets_after_12,
-            "failedMails": brucosi.filter(bought=True, mailStatus__in=FAILED_MAIL_STATUSES).count(),
+            "failedMails": brucosi.filter(_failed_mail_q(), bought=True).count(),
         })
 
     @staticmethod
@@ -251,19 +272,14 @@ class GuestsViewSet(viewsets.ModelViewSet):
             claimed = Guests.objects.filter(pk=guest.pk, bought=False).update(
                 bought=True, confCode=str(uuid4()), boughtTicketTime=timezone.now(),
                 name=name, surname=surname, email=email,
-                mailStatus='none', mailError='', mailSentAt=None, mailMessageId='')
+                mailStatus='pending', mailError='', mailSentAt=None, mailMessageId='')
             if not claimed:
                 return Response({"detail": "Karta je već prodana."}, status=status.HTTP_409_CONFLICT)
             BrucosiFormResponse.objects.filter(jmbag=guest.jmbag).update(status='redeemed')
 
         guest.refresh_from_db()
-        mail_sent, mail_error = send_guest_ticket_email(guest)
-        return Response({
-            "guest": GuestsSerializer(guest).data,
-            "email": email,
-            "mail_sent": mail_sent,
-            "mail_error": mail_error,
-        })
+        send_guest_ticket_email_async(guest.pk)
+        return Response({"guest": GuestsSerializer(guest).data, "email": email})
 
     @action(detail=True, methods=['post'], url_path='unsell', permission_classes=[HasRole(Role.ADMIN)])
     def unsell(self, request, pk=None):
@@ -275,7 +291,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
             if not cleared:
                 return Response({"detail": "Gost je već ušao, prodaja se ne može poništiti."},
                                 status=status.HTTP_409_CONFLICT)
-            BrucosiFormResponse.objects.filter(jmbag=guest.jmbag).update(status='invalid')
+            BrucosiFormResponse.objects.filter(jmbag=guest.jmbag).update(status='pending')
         guest.refresh_from_db()
         return Response({"guest": GuestsSerializer(guest).data})
 
@@ -284,6 +300,8 @@ class GuestsViewSet(viewsets.ModelViewSet):
         guest = self.get_object()
         if not guest.bought or not guest.confCode:
             return Response({"detail": "Karta nije prodana."}, status=status.HTTP_400_BAD_REQUEST)
+        if guest.mailStatus == 'pending' and not Guests.objects.filter(_failed_mail_q(), pk=guest.pk).exists():
+            return Response({"detail": "Mail se još šalje, pričekajte."}, status=status.HTTP_409_CONFLICT)
 
         name = str(request.data.get('name') or '').strip()
         surname = str(request.data.get('surname') or '').strip()
@@ -302,8 +320,7 @@ class GuestsViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='failed-mails', permission_classes=[HasRole(Role.ADMIN)])
     def failed_mails(self, request):
-        guests = Guests.objects.filter(bought=True, mailStatus__in=FAILED_MAIL_STATUSES) \
-            .order_by('-boughtTicketTime')
+        guests = Guests.objects.filter(_failed_mail_q(), bought=True).order_by('-boughtTicketTime')
         return Response(GuestsSerializer(guests, many=True).data)
 
 class TagsViewSet(viewsets.ModelViewSet):
@@ -660,21 +677,12 @@ class GameLeaderboardViewSet(viewsets.ModelViewSet):
     ordering_fields = ['score']
 
 
-class BrucosiFormResponseViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
-    """Anyone can submit the form (throttled); only guest roles can read submissions."""
+class BrucosiFormResponseViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """Anyone can submit the form (throttled). Submissions are read only through search-brucosi."""
     queryset = BrucosiFormResponse.objects.all()
     serializer_class = BrucosiFormResponseSerializer
-    permission_classes = [HasRole(*GUEST_ROLES)]
-
-    def get_permissions(self):
-        if self.action == 'create':
-            return [AllowAny()]
-        return super().get_permissions()
-
-    def get_throttles(self):
-        if self.action == 'create':
-            return [FormThrottle()]
-        return super().get_throttles()
+    permission_classes = [AllowAny]
+    throttle_classes = [FormThrottle, FormJmbagThrottle]
 
 class GoogleAuthView(APIView):
     permission_classes = [AllowAny]

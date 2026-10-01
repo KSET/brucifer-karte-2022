@@ -1,7 +1,9 @@
 import io
 import logging
+import re
 import smtplib
 import socket
+import threading
 from email.mime.image import MIMEImage
 from email.utils import make_msgid
 
@@ -9,11 +11,12 @@ import segno
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.db import connection
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.html import strip_tags
 
-from .models import Mailer
+from .models import Guests, Mailer
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +36,8 @@ def derive_fer_email(name, surname, jmbag):
 
     digits = jmbag[4:9] if jmbag.startswith('003') else jmbag[:9]
     initials = ''.join(DIACRITICS.get(c, c) for c in (name[0].lower(), surname[0].lower()))
+    if not re.fullmatch(r"[a-z]{2}", initials) or not re.fullmatch(r"[0-9]{5}(?:[0-9]{4})?", digits):
+        return None
     return f"{initials}{digits}@fer.hr"
 
 
@@ -66,13 +71,21 @@ def build_ticket_qr_png(conf_code):
     return buf.getvalue()
 
 
+def _record_mail_outcome(guest, **fields):
+    """Save mail fields only if the guest is still on the same sale (not unsold or resold meanwhile)."""
+    for field, value in fields.items():
+        setattr(guest, field, value)
+    updated = Guests.objects.filter(pk=guest.pk, bought=True, confCode=guest.confCode).update(**fields)
+    if not updated:
+        logger.warning("Guest %s changed during ticket mail send; outcome not recorded", guest.pk)
+
+
 def send_guest_ticket_email(guest):
     """Send the ticket mail and record the outcome on the guest. Returns (ok, reason)."""
     to = derive_fer_email(guest.name, guest.surname, guest.jmbag)
     if not to:
         reason = 'nedostaje ime, prezime ili JMBAG'
-        guest.mailStatus, guest.mailError = 'failed', reason
-        guest.save(update_fields=['mailStatus', 'mailError'])
+        _record_mail_outcome(guest, mailStatus='failed', mailError=reason)
         return False, reason
 
     html_message = render_to_string('emails/guest_email.html', {
@@ -94,17 +107,34 @@ def send_guest_ticket_email(guest):
     except Exception as exc:
         logger.exception("Ticket mail to guest %s failed", guest.pk)
         reason = classify_mail_error(exc)
-        guest.email, guest.mailStatus, guest.mailError = to, 'failed', reason
-        guest.save(update_fields=['email', 'mailStatus', 'mailError'])
+        _record_mail_outcome(guest, email=to, mailStatus='failed', mailError=reason)
         return False, reason
 
-    guest.email = to
-    guest.mailStatus, guest.mailError = 'sent', ''
-    guest.mailSentAt = timezone.now()
-    guest.mailMessageId = message_id
-    guest.save(update_fields=['email', 'mailStatus', 'mailError', 'mailSentAt', 'mailMessageId'])
+    _record_mail_outcome(guest, email=to, mailStatus='sent', mailError='',
+                         mailSentAt=timezone.now(), mailMessageId=message_id)
     Mailer.objects.create(
         subject=GUEST_TICKET_SUBJECT,
         message=f"{guest.name} {guest.surname} {guest.confCode}",
         to_mail=to)
     return True, None
+
+
+def send_guest_ticket_email_async(guest_id):
+    """Send the ticket mail off the request thread; the outcome lands on the guest's mailStatus."""
+    run_async = settings.TICKET_MAIL_ASYNC
+
+    def run():
+        try:
+            guest = Guests.objects.filter(pk=guest_id, bought=True, mailStatus='pending').first()
+            if guest:
+                send_guest_ticket_email(guest)
+        except Exception:
+            logger.exception("Background ticket mail for guest %s crashed", guest_id)
+        finally:
+            if run_async:
+                connection.close()
+
+    if run_async:
+        threading.Thread(target=run, daemon=True).start()
+    else:
+        run()

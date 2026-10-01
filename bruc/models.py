@@ -23,6 +23,7 @@ class Guests(models.Model):
 
     MAIL_STATUS_CHOICES = [
         ('none', 'None'),
+        ('pending', 'Pending'),
         ('sent', 'Sent'),
         ('delivered', 'Delivered'),
         ('failed', 'Failed'),
@@ -192,13 +193,12 @@ class BrucosiFormResponse(models.Model):
     submitted_at = models.DateTimeField(auto_now_add=True)
 
     STATUS_CHOICES = [
-        ('valid', 'Valid'),
-        ('invalid', 'Invalid'),
+        ('pending', 'Pending'),
         ('redeemed', 'Redeemed'),
     ]
 
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
-        default='invalid'
+        default='pending'
     )

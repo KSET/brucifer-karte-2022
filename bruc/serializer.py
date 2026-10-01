@@ -105,14 +105,26 @@ class DynamicSearchFilter(filters.SearchFilter):
         by_name = {f.lstrip(self.LOOKUP_PREFIXES): f for f in allowed}
         return [by_name[f] for f in requested if f in by_name]
     
+NAME_RE = re.compile(r"[a-zA-ZčćđšžČĆĐŠŽ](?:[^\W\d_]|[ '’-])*")
+NAME_ERROR = "Smije sadržavati samo slova"
+
+
 class BrucosiFormResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = BrucosiFormResponse
         fields = ['id', 'name', 'surname', 'jmbag', 'submitted_at', 'status', 'gdpr_accepted']
         read_only_fields = ['id', 'submitted_at', 'status']
 
+    def validate_name(self, value):
+        if not NAME_RE.fullmatch(value):
+            raise serializers.ValidationError(NAME_ERROR)
+        return value
+
+    def validate_surname(self, value):
+        return self.validate_name(value)
+
     def validate_jmbag(self, value):
-        if not re.fullmatch(r"\d{10}", value):
+        if not re.fullmatch(r"[0-9]{10}", value):
             raise serializers.ValidationError("JMBAG mora imati točno 10 znamenki.")
         return value
 

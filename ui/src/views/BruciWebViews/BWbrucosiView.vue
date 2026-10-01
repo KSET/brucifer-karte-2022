@@ -20,7 +20,7 @@
           class="bw-brucosi-form">
           <!-- Name -->
           <div class="field">
-            <InputText class="bw-text" name="name" placeholder="Ime" />
+            <InputText class="bw-text" name="name" placeholder="Ime" maxlength="100" autocomplete="given-name" />
             <Message v-if="$form.name?.invalid" severity="error" size="small" variant="simple">
               {{ $form.name.error.message }}
             </Message>
@@ -28,7 +28,7 @@
 
           <!-- Surname -->
           <div class="field">
-            <InputText class="bw-text" name="surname" placeholder="Prezime" />
+            <InputText class="bw-text" name="surname" placeholder="Prezime" maxlength="100" autocomplete="family-name" />
             <Message v-if="$form.surname?.invalid" severity="error" size="small" variant="simple">
               {{ $form.surname.error.message }}
             </Message>
@@ -36,7 +36,7 @@
 
           <!-- JMBAG -->
           <div class="field">
-            <InputText class="bw-text" name="jmbag" placeholder="JMBAG" />
+            <InputText class="bw-text" name="jmbag" placeholder="JMBAG" inputmode="numeric" maxlength="20" autocomplete="off" />
             <Message v-if="$form.jmbag?.invalid" severity="error" size="small" variant="simple">
               {{ $form.jmbag.error.message }}
             </Message>
@@ -80,6 +80,10 @@ import Footer from '@/components/NavbarAndFooter/Footer.vue'
 import BwBackButton from '@/components/BruciWeb/BwBackButton.vue'
 import { api } from '@/plugins/api'
 
+// Same rule as NAME_RE in bruc/serializer.py
+const NAME_PATTERN = /^[a-zA-ZčćđšžČĆĐŠŽ][\p{L} '’-]*$/u
+const NAME_ERROR = 'Smije sadržavati samo slova, razmake, crtice i apostrofe, a prvo slovo mora biti a–z ili č, ć, đ, š, ž'
+
 export default {
   name: 'BrucosiView',
 
@@ -108,9 +112,15 @@ export default {
       },
       resolver: zodResolver(
         z.object({
-          name: z.string().min(1, { message: 'Ime je obavezno polje' }),
-          surname: z.string().min(1, { message: 'Prezime je obavezno polje' }),
-          jmbag: z.string().regex(/^\d{10}$/, { message: 'JMBAG mora biti 10 znamenki' }),
+          name: z.string().trim()
+            .min(1, { message: 'Ime je obavezno polje' })
+            .max(100, { message: 'Ime smije imati najviše 100 znakova' })
+            .regex(NAME_PATTERN, { message: NAME_ERROR }),
+          surname: z.string().trim()
+            .min(1, { message: 'Prezime je obavezno polje' })
+            .max(100, { message: 'Prezime smije imati najviše 100 znakova' })
+            .regex(NAME_PATTERN, { message: NAME_ERROR }),
+          jmbag: z.string().trim().regex(/^[0-9]{10}$/, { message: 'JMBAG mora biti 10 znamenki' }),
           gdpr_accepted: z.boolean().refine(val => val === true, { message: 'Prihvaćanje privole je obavezno', }),
         })
       ),

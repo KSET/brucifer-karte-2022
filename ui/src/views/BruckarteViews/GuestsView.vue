@@ -3,7 +3,7 @@
     <CircularLoading :dialog="selling"></CircularLoading>
 
     <div class="header guests">
-      <input class="nosubmit search" @input="prepSearchGuest" type="form" v-model="search" placeholder="Unesi JMBAG">
+      <input class="nosubmit search" @input="prepSearchGuest" type="search" inputmode="numeric" v-model="search" placeholder="Unesi JMBAG">
 
       <v-progress-circular v-if="loading" size="90px" indeterminate color="black"></v-progress-circular>
       <h1 class="textfield" :class="{ 'error-text': isFormMissing || isError }"> {{ nomatch }}</h1>
@@ -15,10 +15,10 @@
 
     <div class="grid-container guests">
       <h1 class="textfield">Ime </h1>
-      <input class="inputfield" :disabled="name === ''" type="text" @input="changeValue" v-model="name">
+      <input class="inputfield" :disabled="!guest" type="text" @input="changeValue" v-model="name">
 
       <h1 class="textfield">Prezime </h1>
-      <input class="inputfield" :disabled="surname === ''" type="text" @input="changeValue" v-model="surname">
+      <input class="inputfield" :disabled="!guest" type="text" @input="changeValue" v-model="surname">
 
       <h1 class="textfield">JMBAG </h1>
       <input class="inputfield" readonly type="text" v-model="jmbag">
@@ -39,6 +39,8 @@
       <h1 class="textfield">Vrijeme kupnje karte </h1>
       <h1 class="textfield">{{ formatDate(boughtTicketTime) }} </h1>
     </div>
+
+    <p class="mail-pending" v-if="guest?.mailStatus === 'pending' && !mailStale">Mail se šalje…</p>
 
     <div class="mail-warning" v-if="mailFailureReason">
       <p><strong>Karta prodana, ali mail nije poslan:</strong> {{ mailFailureReason }}. Javite blagajniku ili web adminu.</p>
@@ -61,8 +63,8 @@
             <h1 class="textfield">JMBAG </h1>
             <input class="inputfield" readonly type="text" v-model="jmbag">
 
-            <h1 class="textfield" style="grid-column: span 2;"> Brucoš je uspješno kupio kartu, te mu je poslan
-              konfirmacijski mail na: {{ email }}
+            <h1 class="textfield" style="grid-column: span 2;"> Brucoš je uspješno kupio kartu, konfirmacijski
+              mail se šalje na: {{ email }}
             </h1>
           </div>
 
@@ -108,11 +110,9 @@
           <v-list>
             <v-list-item v-for="submission in submissionCandidates" :key="submission.id"
               @click="selectSubmission(submission)" class="submission-item">
-              <v-list-item-content>
-                <v-list-item-title>{{ submission.name }} {{ submission.surname }}</v-list-item-title>
-                <v-list-item-subtitle>{{ submissionEmail(submission) }}</v-list-item-subtitle>
-                <v-list-item-subtitle>{{ formatDate(submission.submitted_at) }}</v-list-item-subtitle>
-              </v-list-item-content>
+              <v-list-item-title>{{ submission.name }} {{ submission.surname }}</v-list-item-title>
+              <v-list-item-subtitle>{{ submissionEmail(submission) }}</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ formatDate(submission.submitted_at) }}</v-list-item-subtitle>
             </v-list-item>
           </v-list>
         </v-card-text>
@@ -134,6 +134,7 @@
           <p><strong>Ukupno prodano:</strong> {{ todayStats.totalEntries }}</p>
           <p><strong>Prije 12h:</strong> {{ todayStats.ticketsBefore12 }}</p>
           <p><strong>Poslije 12h:</strong> {{ todayStats.ticketsAfter12 }}</p>
+          <p><strong>Neuspjeli mailovi:</strong> {{ todayStats.failedMails }}</p>
         </v-card-text>
 
         <v-card-actions>
@@ -156,6 +157,11 @@ import { ADMIN } from "@/plugins/roles";
 import { deriveFerEmail } from '@/utils/ferEmail';
 
 const FAILED_MAIL_STATUSES = ['failed', 'bounced'];
+// Poll fast at first, then slower, until the send would count as stale anyway.
+const MAIL_POLL_FAST_TRIES = 15;
+const MAIL_POLL_FAST_MS = 2000;
+const MAIL_POLL_SLOW_MS = 10000;
+const STALE_PENDING_MAIL_MS = 5 * 60 * 1000;
 
 export default {
   name: 'GuestsView',
@@ -180,6 +186,9 @@ export default {
 
       loading: false,
       searchSeq: 0,
+      mailPollSeq: 0,
+      now: Date.now(),
+      nowTimer: null,
 
       selling: false,
       resending: false,
@@ -202,17 +211,29 @@ export default {
     ticketEmail() {
       return this.email || deriveFerEmail(this.name, this.surname, this.jmbag);
     },
+    // Same rule as STALE_PENDING_MAIL in bruc/views.py: a background send that never finished.
+    mailStale() {
+      const g = this.guest;
+      return !!g && g.mailStatus === 'pending' && !!g.boughtTicketTime
+        && this.now - new Date(g.boughtTicketTime).getTime() > STALE_PENDING_MAIL_MS;
+    },
     mailFailureReason() {
       if (this.mailWarning) return this.mailWarning;
       if (this.guest && this.guest.bought && FAILED_MAIL_STATUSES.includes(this.guest.mailStatus)) {
         return this.guest.mailError || 'nepoznata greška';
       }
+      if (this.guest && this.guest.bought && this.mailStale) return 'slanje nije dovršeno';
       return '';
     }
   },
   created() {
     this.searchGuest = debounce(this.searchGuest, 400);
     this.changeValue = debounce(this.changeValue, 1000);
+    this.nowTimer = setInterval(() => { this.now = Date.now(); }, 30000);
+  },
+  beforeUnmount() {
+    this.mailPollSeq++;
+    clearInterval(this.nowTimer);
   },
   methods: {
     submissionEmail(submission) {
@@ -231,6 +252,7 @@ export default {
           totalEntries: "-",
           ticketsBefore12: "-",
           ticketsAfter12: "-",
+          failedMails: "-",
         };
         this.todayStatsDialog = true;
       } finally {
@@ -250,6 +272,7 @@ export default {
     },
     resetGuest() {
       this.changeValue.cancel();
+      this.mailPollSeq++;
       this.guest = null;
       this.id = "";
       this.name = "";
@@ -297,11 +320,8 @@ export default {
           { name: this.name.trim(), surname: this.surname.trim() });
         if (this.id !== guestId) return;
         this.loadGuest(data.guest);
-        if (data.mail_sent) {
-          this.dialog = true;
-        } else {
-          this.mailWarning = data.mail_error || 'nepoznata greška';
-        }
+        this.dialog = true;
+        this.pollMailStatus(guestId);
       } catch (err) {
         if (err?.response?.status === 409) {
           this.showError("Karta je već prodana.");
@@ -311,6 +331,27 @@ export default {
         }
       } finally {
         this.selling = false;
+      }
+    },
+    // The ticket mail is sent in the background; watch the guest until it leaves 'pending'.
+    async pollMailStatus(guestId) {
+      const seq = ++this.mailPollSeq;
+      const current = () => seq === this.mailPollSeq && this.id === guestId;
+      const deadline = Date.now() + STALE_PENDING_MAIL_MS;
+      for (let i = 0; Date.now() < deadline; i++) {
+        const delay = i < MAIL_POLL_FAST_TRIES ? MAIL_POLL_FAST_MS : MAIL_POLL_SLOW_MS;
+        await new Promise(resolve => setTimeout(resolve, delay));
+        if (!current()) return;
+        try {
+          const { data } = await api.get(`/guests/${guestId}/`);
+          if (!current()) return;
+          // only the mail fields: the seller may be editing the name inputs
+          this.guest = data;
+          this.email = data.email || this.email;
+          if (data.mailStatus !== 'pending') return;
+        } catch (err) {
+          // transient network error: keep polling until the deadline
+        }
       }
     },
     async refreshGuest(guestId) {
@@ -454,7 +495,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url('https://fonts.cdnfonts.com/css/montserrat');
 @import '../../assets/scss/Admin-scss/gird-view.scss';
 
 .header.guests {
@@ -522,6 +562,10 @@ p {
 
 .error-text {
   color: red;
+}
+
+.mail-pending {
+  margin: 1.5rem 6% 0;
 }
 
 .mail-warning {
