@@ -29,7 +29,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
 from .roles import Role, GUEST_ROLES
-from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer, PublicLineupSerializer, PublicSponsorsSerializer, PublicGuestSerializer
+from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer, PublicLineupSerializer, PublicSponsorsSerializer, PublicGuestSerializer, SponsorPortalSerializer
 from .services import derive_fer_email, send_guest_ticket_email, send_guest_ticket_email_async
 
 class SponsorGuestThrottle(AnonRateThrottle):
@@ -425,22 +425,27 @@ class SponsorsViewSet(viewsets.ModelViewSet):
     ordering_fields = ['order']
     permission_classes = [HasRole(Role.ADMIN)]
 
-    @action(detail=False, methods=['get'], permission_classes=[AllowAny], url_path='public')
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny],
+            throttle_classes=[SponsorGuestThrottle], url_path='public')
     def public(self, request):
         """
-        GET /api/sponsors/public/?slug=<slug>
+        GET /api/sponsors/public/?slug=<slug>&access_token=<token>
         Returns a trimmed, safe payload for the sponsor portal.
         """
-        slug = request.query_params.get('slug')
-        if not slug:
-            return Response({"detail": "slug is required"}, status=400)
+        slug = (request.query_params.get('slug') or '').strip()
+        access_token = (request.query_params.get('access_token') or '').strip()
+        if not slug or not access_token:
+            return Response({"detail": "slug and access_token are required"}, status=400)
 
-        sponsor = Sponsors.objects.filter(slug=slug, visible=True).first()
+        sponsor = Sponsors.objects.filter(slug=slug, access_token=access_token, visible=True).first()
         if not sponsor:
             return Response({"detail": "Not found"}, status=404)
 
-        serializer = self.get_serializer(sponsor)
-        return Response(serializer.data)
+        data = SponsorPortalSerializer(sponsor, context={'request': request}).data
+        # Report the effective state so the portal matches the POST/DELETE deadline check.
+        if not self._sponsor_input_open(sponsor):
+            data['guestsEnabled'] = 0
+        return Response(data)
 
     @staticmethod
     def _sponsor_input_open(sponsor):

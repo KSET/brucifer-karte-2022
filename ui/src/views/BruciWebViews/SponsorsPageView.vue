@@ -80,9 +80,7 @@
 
 <script>
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
-import store from '@/store/visibilityStore'
 import { publicApi } from "@/plugins/publicApi";
-import { api } from "@/plugins/api";
 
 export default {
     components: { Footer },
@@ -96,11 +94,9 @@ export default {
             message: "",
 
             name: '',
-            id: '',
             len: '',
             guestCap: null,
             guestsAdded: '',
-            guestIDs: '',
             sponsorGuests: [],
             guests: [],
             guestsEnabled: 0,
@@ -110,8 +106,8 @@ export default {
         this.slug = this.$route.params.slug;
         this.accessToken = this.$route.params.token || '';
         if (this.slug != '0') {
-            publicApi.get("/sponsors/public/", { params: { slug: this.slug } })
-                .then(async response => {
+            publicApi.get("/sponsors/public/", { params: { slug: this.slug, access_token: this.accessToken } })
+                .then(response => {
                     this.sponsors = response.data;
                     if (this.sponsors.length === 0) {
                         this.$router.push({ path: '/admin/sponsors-add/0' });
@@ -120,25 +116,12 @@ export default {
                     this.sponsorsInstance = this.sponsors;
                     this.name = this.sponsorsInstance.name;
                     this.previewImage = this.sponsorsInstance.image;
-                    this.id = this.sponsorsInstance.id;
                     this.guestCap = this.sponsorsInstance.guestCap;
 
                     this.currentImage = this.sponsorsInstance.image;
-                    this.guestIDs = this.sponsorsInstance.guests;
 
+                    // Server already reports 0 once the input deadline has passed.
                     this.guestsEnabled = this.sponsorsInstance.guestsEnabled;
-
-                    if (this.guestsEnabled === 1 && store.getters.sponsorsInputClosed) {
-                        let formData = new FormData();
-
-                        formData.append("guestsEnabled", 0);
-                        this.guestsEnabled = 0;
-
-                        await api.put("/sponsors/" + this.sponsorsInstance.id + "/", formData, {
-                            headers: { "Content-Type": "multipart/form-data" }
-                        })
-                    }
-
                 })
         }
 

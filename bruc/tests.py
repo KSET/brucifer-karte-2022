@@ -18,7 +18,7 @@ from PIL import Image
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import BrucosiFormResponse, Guests, Lineup, Mailer, Users
+from .models import BrucosiFormResponse, Guests, Lineup, Mailer, Sponsors, Users, Visibility
 from .roles import Role
 from .services import classify_mail_error, derive_fer_email
 from .views import FormThrottle
@@ -318,6 +318,53 @@ class ClassifyMailErrorTests(TestCase):
         for exc, expected in cases:
             with self.subTest(exc=repr(exc)):
                 self.assertEqual(classify_mail_error(exc), expected)
+
+class SponsorPortalTests(APITestCase):
+    url = '/api/sponsors/public/'
+
+    def setUp(self):
+        cache.clear()
+        self.sponsor = Sponsors.objects.create(
+            name='Acme', slug='acme-slug', access_token='acme-token', visible=True,
+            email='boss@acme.hr', guestCap=5, guestsEnabled=1)
+
+    def get(self, **params):
+        return self.client.get(self.url, {'slug': 'acme-slug', 'access_token': 'acme-token', **params})
+
+    def set_deadline(self, delta):
+        Visibility.objects.update_or_create(name='SPONSORS_INPUT_TIME', defaults={'time': timezone.now() + delta})
+
+    def test_returns_only_portal_fields(self):
+        res = self.get()
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(set(res.data), {'name', 'image', 'guestCap', 'guestsEnabled'})
+        self.assertEqual(res.data['guestCap'], 5)
+        self.assertEqual(res.data['guestsEnabled'], 1)
+
+    def test_requires_access_token(self):
+        res = self.client.get(self.url, {'slug': 'acme-slug'})
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(self.get(access_token='wrong').status_code, 404)
+
+    def test_invisible_sponsor_not_found(self):
+        self.sponsor.visible = False
+        self.sponsor.save()
+        self.assertEqual(self.get().status_code, 404)
+
+    def test_reports_closed_after_deadline(self):
+        self.set_deadline(-timedelta(hours=1))
+        self.assertEqual(self.get().data['guestsEnabled'], 0)
+
+    def test_open_before_deadline(self):
+        self.set_deadline(timedelta(hours=1))
+        self.assertEqual(self.get().data['guestsEnabled'], 1)
+
+    def test_always_open_ignores_deadline(self):
+        self.sponsor.guestsEnabled = 2
+        self.sponsor.save()
+        self.set_deadline(-timedelta(hours=1))
+        self.assertEqual(self.get().data['guestsEnabled'], 2)
+
 
 def guests_url(guest, action):
     return f'/api/guests/{guest.id}/{action}/'
