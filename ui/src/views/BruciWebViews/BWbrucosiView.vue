@@ -52,7 +52,7 @@
                   rel="noopener noreferrer">Privolom za prikupljanje osobnih podataka</a>
               </label>
             </div>
-            <Message v-if="$form.gdpr_accepted?.invalid" class="gdpr-message bw-text bw-text-light" severity="error" size="small" variant="simple">
+            <Message v-if="$form.gdpr_accepted?.invalid" severity="error" size="small" variant="simple">
               {{ $form.gdpr_accepted.error.message }}
             </Message>
           </div>
@@ -260,10 +260,6 @@ export default {
   left: 0;
 }
 
-.gdpr-message :deep(.p-message-text) {
-  font: inherit;
-}
-
 .bw-brucosi-form :deep(.p-inputtext) {
   width: 100%;
   padding: 0.6rem 0.75rem;
@@ -312,11 +308,20 @@ export default {
 .bw-brucosi-form :deep(.p-button:not(:disabled):hover),
 .bw-brucosi-form :deep(.p-button:not(:disabled):active) {
   width: 100%;
-  text-transform: uppercase;
+  padding: 20px;
   color: #FFFFFF;
   background: var(--bw-teal-ink);
   border: 2px solid var(--border);
   box-shadow: inset 0 0 0 100vmax var(--overlay);
+}
+
+.bw-brucosi-form :deep(.p-button-label) {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
 }
 
 @media screen and (max-width: 980px) {
