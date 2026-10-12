@@ -44,16 +44,16 @@
 
           <!-- GDPR -->
           <div class="field">
-            <div class="gdpr-row">
-              <Checkbox name="gdpr_accepted" binary inputId="gdpr_accepted" />
-              <label for="gdpr_accepted" class="bw-text bw-text-light">
+            <div class="bw-brucosi-agree">
+              <Checkbox name="privola" binary inputId="brucosi-privola" />
+              <label for="brucosi-privola" class="bw-text bw-text-light">
                 Slažem se s
                 <a href="/Privola_za_prikupljanje_osobnih_podataka-Brucosijada_2026.pdf" target="_blank"
                   rel="noopener noreferrer">Privolom za prikupljanje osobnih podataka</a>
               </label>
             </div>
-            <Message v-if="$form.gdpr_accepted?.invalid" severity="error" size="small" variant="simple">
-              {{ $form.gdpr_accepted.error.message }}
+            <Message v-if="$form.privola?.invalid" severity="error" size="small" variant="simple">
+              {{ $form.privola.error.message }}
             </Message>
           </div>
 
@@ -108,7 +108,7 @@ export default {
         name: '',
         surname: '',
         jmbag: '',
-        gdpr_accepted: false,
+        privola: false,
       },
       resolver: zodResolver(
         z.object({
@@ -121,7 +121,7 @@ export default {
             .max(100, { message: 'Prezime smije imati najviše 100 znakova' })
             .regex(NAME_PATTERN, { message: NAME_ERROR }),
           jmbag: z.string().trim().regex(/^[0-9]{10}$/, { message: 'JMBAG mora biti 10 znamenki' }),
-          gdpr_accepted: z.boolean().refine(val => val === true, { message: 'Prihvaćanje privole je obavezno', }),
+          privola: z.boolean().refine(val => val === true, { message: 'Prihvaćanje privole je obavezno', }),
         })
       ),
       submitting: false,
@@ -144,7 +144,8 @@ export default {
       this.submitting = true
 
       try {
-        await api.post('/forms/', values)
+        const { privola, ...fields } = values
+        await api.post('/forms/', { ...fields, gdpr_accepted: privola })
 
         this.toast.add({
           severity: 'success',
@@ -278,13 +279,13 @@ export default {
   box-shadow: none;
 }
 
-.gdpr-row {
+.bw-brucosi-agree {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
 }
 
-.gdpr-row a {
+.bw-brucosi-agree a {
   color: inherit;
   text-decoration: underline;
 }
