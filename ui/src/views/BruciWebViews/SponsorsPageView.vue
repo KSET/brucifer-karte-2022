@@ -1,491 +1,463 @@
 <template>
-    <div class="bw-page-container sponsors-page">
-        <div class="popis">
+  <div class="bw-page-container sponsor-portal bw-overlay-footer bw-textured">
+    <Toast :breakpoints="{ '550px': { width: 'calc(100vw - 32px)', right: '16px', left: '16px' } }" />
 
-            <div v-if="this.guestsEnabled !== 0" class="popis-element1">
-                <h1 class="page-title">Popis uzvanika</h1>
+    <div class="sp-content">
+      <div v-if="loading" class="sp-state">
+        <p class="sp-text">Učitavanje…</p>
+      </div>
 
-                <h1 class="textfield">Ime i prezime </h1>
-                <input class="inputfield " type="text" v-model="sponsorName">
+      <div v-else-if="notFound" class="sp-state">
+        <h1 class="bw-heading">Link nije valjan</h1>
+        <p class="sp-text">Provjerite jeste li otvorili cijeli link iz maila ili se javite organizatoru.</p>
+      </div>
 
-                <button class="button submit" @click="sponsorPost">
-                    Dodaj
-                </button>
-            </div>
+      <div v-else class="sp-layout">
+        <div class="sp-side bw-surface">
+          <img v-if="sponsor.image && !logoFailed" class="sp-logo" :src="sponsor.image" :alt="sponsor.name"
+            @error="logoFailed = true" />
+          <h1 class="bw-heading">Popis uzvanika</h1>
+          <p class="sp-text">{{ sponsor.name }}</p>
 
-            <div>
-                <h1 v-if="this.guestsEnabled === 0" class="page-title-dis">
-                    Popis
-                    uzvanika</h1>
+          <p class="sp-text sp-info">
+            Uneseno: {{ guests.length }}{{ hasCap ? ` / ${sponsor.guestCap}` : '' }}<br>
+            <template v-if="!isOpen">Unos je zatvoren. Ovo je vaš konačni popis.</template>
+            <template v-else-if="deadlineText">Unos moguć do {{ deadlineText }}</template>
+          </p>
 
-                <div v-if="this.guestsEnabled !== 0" class="infofield">
-                    <div class="artist">
-                        <div class="image-container">
-                            <img class="card-image-frame" :src="previewImage" alt="Pregled slike">
-                        </div>
-                    </div>
-
-                    <div class="infofield-element">
-                        <div class="grid-container">
-                            <h1 class="textfield mb">Ograničenje</h1>
-                            <h1 class="textfield val mb">{{ this.guestCap }}</h1>
-                            <h1 class="textfield">Broj unesenih</h1>
-                            <h1 class="textfield val">{{ this.guestsAdded }}</h1>
-                        </div>
-                    </div>
-                </div>
-                <div v-else class="infofield-tablet">
-                    <div class="artist tabb">
-                        <div class="image-container">
-                            <img class="card-image-frame" :src="previewImage" alt="Pregled slike">
-                        </div>
-                    </div>
-
-                    <div class="infofield-element">
-                        <div class="grid-container">
-                            <h1 class="textfield mb">Ograničenje</h1>
-                            <h1 class="textfield val mb">{{ this.guestCap }}</h1>
-                            <h1 class="textfield">Broj unesenih</h1>
-                            <h1 class="textfield val">{{ this.guestsAdded }}</h1>
-                        </div>
-                    </div>
-                </div>
-                <h1 v-if="this.guestsEnabled === 0" class="textfield dis">Vrijeme za promjenu
-                    popisa je isteklo! <br>
-                    Ovo je vaš konačni popis!</h1>
-
-            </div>
+          <form v-if="isOpen" class="sp-form" @submit.prevent="addGuest">
+            <InputText v-model.trim="draft" placeholder="Ime i prezime" maxlength="100" autocomplete="off"
+              aria-label="Ime i prezime" :disabled="capReached || busy" />
+            <Button type="submit" class="sp-primary" label="Dodaj" :disabled="capReached || busy || !draft" />
+          </form>
+          <p v-if="isOpen && capReached" class="sp-text">Unijeli ste maksimalan broj gostiju.</p>
         </div>
 
-        <div class="sponsorsPage-table">
-            <div class=row>
-                <table id="guests">
-                    <tbody :class="{ [$style.tbodyHigh]: this.tbodyHigh }" class="tbody">
-                        <tr v-for="guest in sponsorGuests" :key="guest.id">
-                            <td class="cell-name">{{ guest.name }}</td>
-                            <td v-if="this.guestsEnabled !== 0" class="cell-action"><button
-                                    class="button-icon" @click=sponsorDelete(guest)> <img
-                                        src="@/assets/icons/trash-icon-white.svg"></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="sp-list-panel">
+          <h2 class="sp-list-title">Uneseni gosti</h2>
+          <p v-if="!guests.length" class="sp-text sp-muted">Još nema unesenih gostiju.</p>
 
-            </div>
+          <ul v-else class="sp-list">
+            <li v-for="(guest, i) in guests" :key="guest.id" class="sp-row">
+              <span class="sp-index">{{ i + 1 }}.</span>
+
+              <template v-if="isOpen && editing && editing.id === guest.id">
+                <InputText v-model.trim="editing.name" maxlength="100" :disabled="busy" autofocus
+                  @keyup.enter="saveEdit" @keyup.esc="editing = null" />
+                <div class="sp-actions">
+                  <Button icon="pi pi-check" text rounded title="Spremi" aria-label="Spremi"
+                    :disabled="busy || !editing.name" @click="saveEdit" />
+                  <Button icon="pi pi-times" text rounded title="Odustani" aria-label="Odustani" :disabled="busy"
+                    @click="editing = null" />
+                </div>
+              </template>
+
+              <template v-else>
+                <span class="sp-name">{{ guest.name }}</span>
+                <span v-if="guest.entered" class="sp-text sp-muted">Ušao/la</span>
+                <div v-else-if="isOpen" class="sp-actions">
+                  <Button icon="pi pi-pencil" text rounded title="Uredi" aria-label="Uredi" :disabled="busy"
+                    @click="startEdit(guest)" />
+                  <Button icon="pi pi-trash" text rounded title="Obriši" aria-label="Obriši" :disabled="busy"
+                    @click="removeGuest(guest)" />
+                </div>
+              </template>
+            </li>
+          </ul>
         </div>
-
+      </div>
     </div>
-    <Footer></Footer>
+    <Footer />
+  </div>
 </template>
 
 <script>
+import InputText from 'primevue/inputtext'
+import Button from 'primevue/button'
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
 import Footer from '@/components/NavbarAndFooter/Footer.vue'
-import { publicApi } from "@/plugins/publicApi";
+import { publicApi } from '@/plugins/publicApi'
+import { formatZagreb, parseStored } from '@/utils/datetime'
 
 export default {
-    components: { Footer },
-    data() {
-        return {
-            currentImage: undefined,
-            previewImage: undefined,
-            slug: '0',
-            accessToken: '',
-            progress: 0,
-            message: "",
+  name: 'SponsorsPage',
+  components: { InputText, Button, Toast, Footer },
 
-            name: '',
-            len: '',
-            guestCap: null,
-            guestsAdded: '',
-            sponsorGuests: [],
-            guests: [],
-            guestsEnabled: 0,
-        };
-    },
-    mounted() {
-        this.slug = this.$route.params.slug;
-        this.accessToken = this.$route.params.token || '';
-        if (this.slug != '0') {
-            publicApi.get("/sponsors/public/", { params: { slug: this.slug, access_token: this.accessToken } })
-                .then(response => {
-                    this.sponsors = response.data;
-                    if (this.sponsors.length === 0) {
-                        this.$router.push({ path: '/admin/sponsors-add/0' });
-                    }
+  setup() {
+    return { toast: useToast() }
+  },
 
-                    this.sponsorsInstance = this.sponsors;
-                    this.name = this.sponsorsInstance.name;
-                    this.previewImage = this.sponsorsInstance.image;
-                    this.guestCap = this.sponsorsInstance.guestCap;
-
-                    this.currentImage = this.sponsorsInstance.image;
-
-                    // Server already reports 0 once the input deadline has passed.
-                    this.guestsEnabled = this.sponsorsInstance.guestsEnabled;
-                })
-        }
-
-
-        this.created();
-    },
-
-    methods: {
-        created() {
-            if (this.slug !== '0') {
-                publicApi
-                    .get(`/sponsors/public/guests/`, {
-                        params: { slug: this.slug, access_token: this.accessToken }
-                    })
-                    .then(response => {
-                        this.sponsorGuests = response.data;
-                        this.guestsAdded = this.sponsorGuests.length;
-                    })
-                    .catch(err => {
-                        const msg = err?.response?.data?.detail || "Greška pri dohvaćanju gostiju";
-                        window.alert(msg);
-                    });
-            }
-        },
-        sponsorDelete(guest) {
-            publicApi.delete(
-                `/sponsors/public/guests/`,
-                { params: { slug: this.slug, id: guest.id, access_token: this.accessToken } }
-            ).then(() => {
-                this.created();
-            }).catch(err => {
-                const msg = err?.response?.data?.detail || "Greška pri brisanju gosta";
-                window.alert(msg);
-            });
-        },
-        sponsorPost() {
-            // Check if sponsor reached guest limit
-            if (this.guestCap === this.guestsAdded) {
-                window.alert("Već ste unijeli maksimalan broj dozvoljenih gostiju");
-                return;
-            }
-
-            const guestName = (this.sponsorName || "").trim();
-            if (!guestName) {
-                return;
-            }
-
-            const payload = {
-                slug: this.slug,
-                name: guestName,
-                access_token: this.accessToken,
-            };
-
-            publicApi.post(`/sponsors/public/guests/`, payload)
-                .then(() => {
-                    this.sponsorName = "";
-                    this.created();
-                })
-                .catch(err => {
-                    const msg = err?.response?.data?.detail || "Greška pri unosu gosta";
-                    window.alert(msg);
-                });
-        }
-
+  data() {
+    return {
+      loading: true,
+      notFound: false,
+      busy: false,
+      sponsor: {},
+      guests: [],
+      draft: '',
+      editing: null,
+      logoFailed: false,
+      now: Date.now(),
     }
+  },
+
+  computed: {
+    base() {
+      return `/sponsor-portal/${encodeURIComponent(this.$route.params.token)}/`
+    },
+    deadline() {
+      return parseStored(this.sponsor.deadline)
+    },
+    deadlineText() {
+      return formatZagreb(this.deadline)
+    },
+    isOpen() {
+      // The server enforces the deadline too; re-checked here every 30s so the form closes on time.
+      return this.sponsor.open && (!this.deadline || this.now <= this.deadline.getTime())
+    },
+    hasCap() {
+      return !!this.sponsor.guestCap
+    },
+    capReached() {
+      return this.hasCap && this.guests.length >= this.sponsor.guestCap
+    },
+  },
+
+  async mounted() {
+    this.clock = setInterval(() => { this.now = Date.now() }, 30000)
+    try {
+      await this.load()
+    } catch (e) {
+      if (e.response?.status === 404) this.notFound = true
+      else this.notifyError(e)
+    } finally {
+      this.loading = false
+    }
+  },
+
+  beforeUnmount() {
+    clearInterval(this.clock)
+  },
+
+  methods: {
+    async load() {
+      const { data } = await publicApi.get(this.base)
+      this.sponsor = data
+      this.guests = data.guests
+    },
+
+    async run(fn) {
+      if (this.busy) return
+      this.busy = true
+      try {
+        await fn()
+      } catch (e) {
+        const status = e.response?.status
+        this.notifyError(e)
+        // 403/404/409 mean the list changed under us (deadline, a colleague on the same link, an admin): resync.
+        if ([403, 404, 409].includes(status)) {
+          this.editing = null
+          try {
+            await this.load()
+          } catch {
+            if (status === 403) this.sponsor = { ...this.sponsor, open: false }
+          }
+        }
+      } finally {
+        this.busy = false
+      }
+    },
+
+    addGuest() {
+      return this.run(async () => {
+        const { data } = await publicApi.post(`${this.base}guests/`, { name: this.draft })
+        this.guests.push(data)
+        this.draft = ''
+      })
+    },
+
+    startEdit(guest) {
+      this.editing = { ...guest }
+    },
+
+    saveEdit() {
+      if (!this.editing?.name) return
+      const { id, name } = this.editing
+      return this.run(async () => {
+        const { data } = await publicApi.patch(`${this.base}guests/${id}/`, { name })
+        this.guests.splice(this.guests.findIndex(g => g.id === id), 1, data)
+        this.editing = null
+      })
+    },
+
+    removeGuest(guest) {
+      if (!window.confirm(`Obrisati gosta ${guest.name}?`)) return
+      return this.run(async () => {
+        await publicApi.delete(`${this.base}guests/${guest.id}/`)
+        this.guests = this.guests.filter(g => g.id !== guest.id)
+      })
+    },
+
+    notifyError(e) {
+      const status = e.response?.status
+      let detail = e.response?.data?.detail
+      if (status === 400) detail = Object.values(e.response.data || {}).flat().join(' ')
+      if (status === 429) detail = 'Previše zahtjeva, pokušajte ponovno za nekoliko minuta.'
+      this.toast.add({ severity: 'error', summary: 'Greška', detail: detail || 'Pokušajte ponovno kasnije.', life: 5000 })
+    },
+  },
 }
 </script>
-<style module>
-:global(#app) .tbodyHigh {
-    height: 100%;
-}
-</style>
 
 <style scoped>
-.page-title-dis {
-    vertical-align: middle;
-    display: inline-block;
-    margin-left: 50px;
-    margin-top: 70px;
-    padding-top: 3%;
-    padding-bottom: 3%;
-    padding-right: 5%;
-
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 32px;
-    line-height: 36px;
-    /* identical to box height, or 112% */
-
-    letter-spacing: -0.015em;
-
-    color: white;
+.sponsor-portal {
+  overflow: visible;
+  justify-content: flex-start;
+  background-image: none;
+  background-color: var(--bw-teal-ink);
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
-.image-container {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+/* No global border-box in this app; without it width: 100% + padding overflows on phones. */
+.sp-layout,
+.sp-side,
+.sp-list-panel,
+.sponsor-portal :deep(.p-inputtext) {
+  box-sizing: border-box;
 }
 
-.artist {
-    width: 15rem;
-    height: 15rem;
-    background: var(--bw-card-bg);
-    border-radius: 18px;
-    padding: 15px 30px;
+.sp-content {
+  position: relative;
+  z-index: 1;
+  padding: 0 4vw calc(4vw + var(--bw-footer-measured-h, var(--bw-footer-total-h)));
+  color: white;
 }
 
-.popis-element1 {
-    border-bottom: white solid 2px !important;
-    padding-left: 6%;
-    padding-top: 5.5rem;
-    padding-bottom: 5rem;
+.sp-state {
+  max-width: 420px;
+  margin: 0 auto;
+  padding-top: clamp(96px, 14vw, 180px);
+  text-align: center;
 }
 
-.sponsorsPage-table {
-    margin-top: 6.75rem;
+.sponsor-portal .sp-text {
+  margin: 12px 0 0;
+  padding: 0;
+  font-family: 'Rubik', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: white;
 }
 
-.grid-container {
-    grid-template-columns: 95% auto;
-    row-gap: 0%;
+/* Two cards: sponsor info + add form | guest list */
+.sp-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(24px, 3vw, 48px);
+  align-items: start;
+  max-width: 68rem;
+  margin: 0 auto;
+  padding-top: clamp(56px, 8vw, 112px);
 }
 
-.sponsors-page {
-    position: relative;
-    display: grid;
-    grid-template-columns: 50% 50%;
-    width: 100%;
-    height: 93vh;
-
-    background-color: #CCCCCCCC;
-    background-blend-mode: multiply;
+.sp-side {
+  position: sticky;
+  top: 24px;
+  padding: clamp(24px, 2.5vw, 32px);
 }
 
-.popis {
-    position: relative;
-    display: grid;
-    grid-template-rows: 55% 45%;
-    width: 100%;
-    height: 100%;
-    border-bottom: white solid 2px !important;
-    border-right: white solid 2px !important;
-
+.sp-logo {
+  display: block;
+  max-width: 180px;
+  max-height: 72px;
+  margin-bottom: 24px;
+  object-fit: contain;
 }
 
-h1 {
-    color: white;
+.sponsor-portal .sp-info {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #FFFFFF1F;
 }
 
-.infofield-element {
-    padding-left: 12%;
+.sp-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
 }
 
-.inputfield {
-    background: transparent;
-    border: none;
-    border: white solid 2px !important;
-    color: white;
-
-    margin-top: 2%;
-    margin-bottom: 5%;
+.sponsor-portal :deep(.p-inputtext) {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0.8rem;
+  font-family: 'Rubik', sans-serif;
+  font-size: 16px;
+  color: var(--bw-teal-ink);
+  background: white;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  box-shadow: none;
 }
 
-.button.submit {
-    color: black;
-    font-family: 'Montserrat';
-    font-weight: 500;
-    border: none;
-    background-color: white;
-    margin-top: 0;
-    display: block;
+.sponsor-portal :deep(.p-inputtext::placeholder) {
+  color: #0C374380;
 }
 
-.textfield.mb {
-    margin-bottom: 1em;
+.sponsor-portal :deep(.p-inputtext:enabled:focus) {
+  border-color: var(--bw-teal);
+  box-shadow: none;
 }
 
-.textfield.val {
-    font-weight: 400;
+.sponsor-portal :deep(.p-inputtext:disabled) {
+  opacity: 0.6;
 }
 
-.button-icon {
-    margin-left: 0.9rem;
-    background: transparent;
+.sp-list-panel :deep(.p-inputtext) {
+  padding: 0.5rem 0.7rem;
+  border-color: #0C374326;
 }
 
-.tbody {
-    overflow: auto;
-    height: 35rem;
+.sp-list-panel :deep(.p-inputtext:enabled:focus) {
+  border-color: var(--bw-teal-ink);
 }
 
-.textfield.dis {
-    text-align: center;
+.sponsor-portal :deep(.sp-primary.p-button),
+.sponsor-portal :deep(.sp-primary.p-button:not(:disabled):hover),
+.sponsor-portal :deep(.sp-primary.p-button:not(:disabled):active) {
+  flex: none;
+  padding: 0.65rem 1.4rem;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 500;
+  color: var(--bw-teal-ink);
+  background: var(--bw-teal);
+  border: 0;
+  border-radius: 8px;
 }
 
-#guests tr {
-    width: 100%;
+.sponsor-portal :deep(.sp-primary.p-button:not(:disabled):hover) {
+  background: #8DDADD;
 }
 
-#guests .cell-name {
-    padding-left: 20%;
+.sponsor-portal :deep(.sp-primary.p-button:disabled) {
+  opacity: 0.45;
 }
 
-#guests .cell-action {
-    padding-left: 10%;
+/* Icon buttons. The global primary palette is all black, so Aura's hover would fill them black. */
+.sponsor-portal :deep(.p-button-text),
+.sponsor-portal :deep(.p-button-text:not(:disabled):hover),
+.sponsor-portal :deep(.p-button-text:not(:disabled):active) {
+  color: var(--bw-teal-ink);
+  background: transparent;
+  border-color: transparent;
 }
 
-.row {
-    margin-left: 0px;
+.sponsor-portal :deep(.p-button-text:not(:disabled):hover) {
+  background: #0C374314;
 }
 
-.infofield {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-left: 6%;
-    height: 100%;
-
+.sponsor-portal :deep(.p-button:focus-visible) {
+  outline: 2px solid var(--bw-teal);
+  outline-offset: 2px;
+  box-shadow: none;
 }
 
-.infofield-tablet {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-left: 6%;
-    height: 100%;
+.sp-list-panel {
+  min-height: 240px;
+  padding: clamp(20px, 2.5vw, 32px);
+  color: var(--bw-teal-ink);
+  background: white;
+  border-radius: 24px 0 0 0;
 }
 
-#guests td {
-    color: white;
-    border-bottom: 2px solid white;
+.sp-list-title {
+  margin: 0;
+  padding-bottom: 14px;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--bw-teal-ink);
+  border-bottom: 2px solid #0C37431A;
 }
 
-#guests tr:nth-child(even) {
-    background-color: transparent;
+.sponsor-portal .sp-list-panel .sp-text {
+  margin-top: 16px;
+  color: #0C374399;
 }
 
-#guests tr:hover {
-    background-color: transparent;
+.sp-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sp-row {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 3.25rem;
+  border-bottom: 1px solid #0C374314;
+}
+
+.sp-row:last-child {
+  border-bottom: none;
+}
+
+.sp-row:has(.p-inputtext) {
+  padding: 6px 0;
+}
+
+.sp-index {
+  font-family: 'Rubik', sans-serif;
+  color: #0C374380;
+}
+
+.sp-name {
+  font-family: 'Rubik', sans-serif;
+  font-size: 16px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.sp-actions {
+  display: flex;
 }
 
 @media screen and (max-width: 980px) {
-    .popis-element1 {
-        margin-top: 0rem;
-        padding-bottom: 0rem;
-    }
+  .sp-layout {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 560px;
+  }
 
-    .sponsors-page {
-        display: flex;
-        flex-direction: column;
-    }
+  .sp-side {
+    position: static;
+  }
 
-    .popis {
-        display: grid;
-        grid-template-columns: 65% auto;
-        width: 100%;
-        padding-top: 5.75rem;
-        padding-bottom: 2rem;
-
-    }
-
-    .infofield {
-        display: flex;
-        flex-direction: column;
-        border: none !important;
-        padding: 0px;
-        margin: 0px;
-        align-items: flex-start;
-    }
-
-    .popis-element1 {
-        border: none !important;
-        padding-top: 0px;
-    }
-
-    .grid-container {
-        row-gap: 0%;
-        padding-left: 0%;
-    }
-
-    .artist {
-        margin-top: 3%;
-        width: 12rem;
-        height: 12rem;
-        padding: 20px;
-    }
-
-    .infofield-element {
-        padding-top: 6%;
-        padding-left: 0%;
-    }
-
-    .inputfield {
-        margin-top: 5%;
-        margin-bottom: 7%;
-    }
-
-    .page-title {
-        padding-bottom: 7%;
-    }
-
-    .sponsorsPage-table {
-        margin-top: 0rem;
-    }
-
-    .image-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 9rem;
-    }
-
-    .page-title-dis {
-        margin-top: 0px !important;
-        margin-bottom: 10px;
-    }
-
-    .infofield-tablet {
-        width: 100%;
-        margin-left: 10%;
-    }
-
-    .textfield.dis {
-        margin-top: 30px;
-        margin-left: 45%;
-
-    }
-
-    .artist.tabb {
-        margin-right: 5%;
-    }
+  .sp-list-panel {
+    min-height: 0;
+  }
 }
 
 @media screen and (max-width: 550px) {
-    .artist {
-        width: 8rem;
-        height: 8rem;
-        padding: 12px;
-    }
+  .sp-content {
+    padding: 0 16px calc(8vw + var(--bw-footer-measured-h, var(--bw-footer-total-h)));
+  }
 
-    .image-container {
-        width: 100%;
-        height: 6rem;
-    }
+  .sp-layout {
+    gap: 20px;
+    padding-top: 32px;
+  }
 
-    .popis {
-        grid-template-columns: 60% auto;
-    }
+  .sp-side,
+  .sp-list-panel {
+    padding: 20px 16px;
+  }
 
-    .page-title-dis {
-        width: 150%;
-    }
-
-    .textfield.dis {
-        margin-top: 30px;
-        margin-left: 7%;
-        width: 150%;
-
-    }
+  .sp-form {
+    flex-direction: column;
+  }
 }
 </style>

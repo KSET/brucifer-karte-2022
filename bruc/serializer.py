@@ -1,6 +1,7 @@
 import re
 from rest_framework import serializers, filters
-from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
+from .services import sponsor_input_state, sponsor_portal_link
+from .models import SPONSOR_TAG_MARKER, Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
 
 
 class GuestsSerializer(serializers.HyperlinkedModelSerializer):
@@ -10,6 +11,23 @@ class GuestsSerializer(serializers.HyperlinkedModelSerializer):
                   "email", "tag", "bought", "entered", "confCode", "boughtTicketTime",
                   "mailStatus", "mailError", "mailSentAt"]
         read_only_fields = ["mailStatus", "mailError", "mailSentAt"]
+
+    def validate(self, attrs):
+        # guests.sponsor follows the tag, so admins can add/import sponsor guests as an override
+        # (past cap or deadline) and moving a guest to another tag unlinks it.
+        # Admin forms resend the unchanged tag on every edit, so compare trimmed (DRF strips it too).
+        tag = attrs.get("tag")
+        if tag is None or (self.instance is not None and tag == (self.instance.tag or "").strip()):
+            return attrs
+        if SPONSOR_TAG_MARKER.strip() not in tag:
+            attrs["sponsor"] = None
+            return attrs
+        slug = tag.split(" ", 1)[0]
+        sponsor = Sponsors.objects.filter(slug=slug).exclude(slug="").first()
+        if sponsor is None:
+            raise serializers.ValidationError({"tag": "Nepoznat sponzor za ovaj tag."})
+        attrs["sponsor"], attrs["tag"] = sponsor, sponsor.guest_tag
+        return attrs
 
 
 class TagsSerializer(serializers.HyperlinkedModelSerializer):
@@ -39,29 +57,53 @@ class PublicLineupSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 class SponsorsSerializer(serializers.HyperlinkedModelSerializer):
+    link = serializers.SerializerMethodField()
+    guestsAdded = serializers.IntegerField(read_only=True, default=0)
+    guestsEntered = serializers.IntegerField(read_only=True, default=0)
+
     class Meta:
         model = Sponsors
-        fields = ["id", "slug", "access_token", "order", "visible", "guestsEnabled",
-                  "name", "url", "image", "email", "guestCap"]
-        # access_token is a secret used to authenticate the public sponsor
-        # portal; never expose it in read responses (it is generated
-        # server-side in SponsorsViewSet.perform_create).
-        extra_kwargs = {"access_token": {"write_only": True}}
-        
+        fields = ["id", "slug", "link", "order", "visible", "guestsEnabled",
+                  "name", "url", "image", "email", "guestCap", "guestsAdded", "guestsEntered"]
+        # Admin-only serializer; the token is generated once on create and never changes.
+        # The slug is baked into guest tags (entry view, FirmeView search), so it is fixed at creation.
+        read_only_fields = ["slug"]
+
+    def get_link(self, obj):
+        return sponsor_portal_link(obj)
+
+
 class PublicSponsorsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sponsors
         fields = ["name", "url", "image"]
 
-class SponsorPortalSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Sponsors
-        fields = ["name", "image", "guestCap", "guestsEnabled"]
 
-class PublicGuestSerializer(serializers.ModelSerializer):
+class SponsorGuestSerializer(serializers.ModelSerializer):
+    # Sponsors enter "Ime Prezime" as one field.
+    name = serializers.CharField(max_length=100, trim_whitespace=True)
+
     class Meta:
         model = Guests
-        fields = ["id", "name", "tag"]
+        fields = ["id", "name", "entered"]
+        read_only_fields = ["entered"]
+
+
+class SponsorPortalSerializer(serializers.ModelSerializer):
+    guests = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Sponsors
+        fields = ["name", "image", "guestCap", "guests"]
+
+    def to_representation(self, obj):
+        data = super().to_representation(obj)
+        data["open"], data["deadline"] = sponsor_input_state(obj)
+        return data
+
+    def get_guests(self, obj):
+        return SponsorGuestSerializer(obj.guests.order_by("id"), many=True).data
+
 
 class ContactSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

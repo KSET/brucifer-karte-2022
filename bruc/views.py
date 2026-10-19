@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth.models import User as DjangoUser
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils import timezone
@@ -21,6 +21,7 @@ from google.auth.transport import requests
 from google.oauth2 import id_token
 from rest_framework import filters, mixins, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import AllowAny, BasePermission, SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle, SimpleRateThrottle
@@ -29,11 +30,29 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
 from .roles import Role, GUEST_ROLES
-from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer, PublicLineupSerializer, PublicSponsorsSerializer, PublicGuestSerializer, SponsorPortalSerializer
-from .services import derive_fer_email, send_guest_ticket_email, send_guest_ticket_email_async
+from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer, PublicLineupSerializer, PublicSponsorsSerializer, SponsorGuestSerializer, SponsorPortalSerializer
+from .services import (
+    SponsorGuestCapReached, SponsorGuestEntered, SponsorInputClosed, add_sponsor_guest, delete_sponsor_guest, derive_fer_email,
+    send_guest_ticket_email, send_guest_ticket_email_async, sponsor_portal_link, update_sponsor_guest,
+)
 
-class SponsorGuestThrottle(AnonRateThrottle):
-    rate = '30/hour'
+class SponsorPortalTokenThrottle(SimpleRateThrottle):
+    # Per link, so colleagues behind one office NAT share a budget only with their own sponsor.
+    # One request per add/edit/delete; a sponsor entering a long list must not get locked out.
+    scope = 'sponsor_portal'
+    rate = '600/hour'
+
+    def get_cache_key(self, request, view):
+        # Unknown tokens get no bucket of their own (the IP throttle still applies), so random URLs can't fill the cache.
+        if view.sponsor is None:
+            return None
+        return self.cache_format % {'scope': self.scope, 'ident': view.sponsor.pk}
+
+
+class SponsorPortalIPThrottle(AnonRateThrottle):
+    # Loose flood guard across tokens; links are 256-bit, so guessing isn't what this protects against.
+    scope = 'sponsor_portal_ip'
+    rate = '1000/hour'
 
 class MailerThrottle(AnonRateThrottle):
     rate = '200/hour'
@@ -134,7 +153,7 @@ class MailerViewSet(viewsets.ModelViewSet):
                 sponsor = Sponsors.objects.filter(slug=(email.get('slug') or '')).first()
                 if not sponsor:
                     continue
-                link = f"https://brucosijada.kset.org/sponzori/{sponsor.slug}/{sponsor.access_token}"
+                link = sponsor_portal_link(sponsor)
                 html_message = render_to_string('emails/sponsors_email.html', {
                     'name': email.get('name', ''), 'link': link})
 
@@ -425,136 +444,10 @@ class SponsorsViewSet(viewsets.ModelViewSet):
     ordering_fields = ['order']
     permission_classes = [HasRole(Role.ADMIN)]
 
-    @action(detail=False, methods=['get'], permission_classes=[AllowAny],
-            throttle_classes=[SponsorGuestThrottle], url_path='public')
-    def public(self, request):
-        """
-        GET /api/sponsors/public/?slug=<slug>&access_token=<token>
-        Returns a trimmed, safe payload for the sponsor portal.
-        """
-        slug = (request.query_params.get('slug') or '').strip()
-        access_token = (request.query_params.get('access_token') or '').strip()
-        if not slug or not access_token:
-            return Response({"detail": "slug and access_token are required"}, status=400)
-
-        sponsor = Sponsors.objects.filter(slug=slug, access_token=access_token, visible=True).first()
-        if not sponsor:
-            return Response({"detail": "Not found"}, status=404)
-
-        data = SponsorPortalSerializer(sponsor, context={'request': request}).data
-        # Report the effective state so the portal matches the POST/DELETE deadline check.
-        if not self._sponsor_input_open(sponsor):
-            data['guestsEnabled'] = 0
-        return Response(data)
-
-    @staticmethod
-    def _sponsor_input_open(sponsor):
-        if sponsor.guestsEnabled == 2:
-            return True
-        if sponsor.guestsEnabled != 1:
-            return False
-
-        deadline = (
-            Visibility.objects.filter(name="SPONSORS_INPUT_TIME")
-            .values_list("time", flat=True)
-            .first()
-        )
-        return deadline is None or timezone.now() <= deadline
-
-    @action(
-        detail=False,
-        methods=['get', 'post', 'delete'],
-        permission_classes=[AllowAny],
-        throttle_classes=[SponsorGuestThrottle],
-        url_path='public/guests'
-    )
-    def public_guests(self, request):
-        """
-        GET    /api/sponsors/public/guests/?slug=<slug>
-        POST   /api/sponsors/public/guests/
-        DELETE /api/sponsors/public/guests/?slug=<slug>&id=<guest_id>
-        """
-
-        # ------------------ GET ------------------
-        if request.method == 'GET':
-            slug = (request.query_params.get("slug") or "").strip()
-            access_token = (request.query_params.get("access_token") or "").strip()
-            if not slug or not access_token:
-                return Response({"detail": "slug and access_token are required"}, status=400)
-
-            sponsor = Sponsors.objects.filter(slug=slug, access_token=access_token).first()
-            if not sponsor:
-                return Response({"detail": "Sponsor not found"}, status=404)
-
-            tag_prefix = f"{sponsor.slug} "
-            qs = Guests.objects.filter(tag__istartswith=tag_prefix).order_by("id")
-
-            return Response(
-                PublicGuestSerializer(qs, many=True).data,
-                status=200,
-            )
-
-        # ------------------ DELETE ------------------
-        if request.method == 'DELETE':
-            slug = (request.query_params.get("slug") or "").strip()
-            guest_id = (request.query_params.get("id") or "").strip()
-            access_token = (request.query_params.get("access_token") or "").strip()
-
-            if not slug or not guest_id or not access_token:
-                return Response({"detail": "slug, id and access_token are required"}, status=400)
-
-            sponsor = Sponsors.objects.filter(slug=slug, access_token=access_token).first()
-            if not sponsor:
-                return Response({"detail": "Sponsor not found"}, status=404)
-
-            if not self._sponsor_input_open(sponsor):
-                return Response({"detail": "Unos gostiju je zatvoren"}, status=403)
-
-            guest = Guests.objects.filter(id=guest_id, tag__istartswith=f"{sponsor.slug} ").first()
-            if not guest:
-                return Response({"detail": "Guest not found"}, status=404)
-
-            guest.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        # ------------------ POST ------------------
-        slug = (request.data.get("slug") or "").strip()
-        name = (request.data.get("name") or "").strip()
-        access_token = (request.data.get("access_token") or "").strip()
-
-        if not slug or not name or not access_token:
-            return Response({"detail": "slug, name and access_token are required"}, status=400)
-
-        with transaction.atomic():
-            sponsor = (
-                Sponsors.objects.select_for_update()
-                .filter(slug=slug, access_token=access_token)
-                .first()
-            )
-            if not sponsor:
-                return Response({"detail": "Sponsor not found"}, status=404)
-
-            if not self._sponsor_input_open(sponsor):
-                return Response({"detail": "Unos gostiju je zatvoren"}, status=403)
-
-            tag_prefix = f"{sponsor.slug} "
-            if sponsor.guestCap is not None and sponsor.guestCap > 0:
-                count = Guests.objects.filter(tag__istartswith=tag_prefix).count()
-                if count >= sponsor.guestCap:
-                    return Response({"detail": "Guest limit reached"}, status=409)
-
-            tag = f"{sponsor.slug} VIP - Sponzor - {sponsor.name}"
-
-            guest = Guests.objects.create(
-                name=name,
-                tag=tag,
-                bought=True,
-                entered=False,
-            )
-
-        return Response(
-            {"id": guest.id, "name": guest.name, "tag": guest.tag},
-            status=status.HTTP_201_CREATED,
+    def get_queryset(self):
+        return Sponsors.objects.annotate(
+            guestsAdded=Count('guests'),
+            guestsEntered=Count('guests', filter=Q(guests__entered=True)),
         )
 
     @transaction.atomic
@@ -562,11 +455,11 @@ class SponsorsViewSet(viewsets.ModelViewSet):
         """
         When creating a Sponsor:
         - Take the current max `order`, increment by 1.
-        - Generate a new UUID slug.
+        - Generate a new UUID slug (the access token gets its own default).
         """
         last = Sponsors.objects.select_for_update().order_by('-order').first()
         next_order = (last.order if last else 0) + 1
-        serializer.save(order=next_order, slug=str(uuid4()), access_token=str(uuid4()))
+        serializer.save(order=next_order, slug=str(uuid4()))
 
     @action(detail=False, methods=['post'])
     @transaction.atomic
@@ -614,6 +507,74 @@ class SponsorsViewSet(viewsets.ModelViewSet):
         Sponsors.objects.bulk_update(objs.values(), ['order'])
 
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
+
+class SponsorPortalMixin:
+    """Public sponsor guest list, authenticated by the secret token in the URL."""
+    permission_classes = [AllowAny]
+    authentication_classes = []
+    throttle_classes = [SponsorPortalTokenThrottle, SponsorPortalIPThrottle]
+
+    def initial(self, request, *args, **kwargs):
+        # Resolved before throttling so the per-token throttle can key on real sponsors only.
+        # `visible` only controls the public sponsors page; new sponsors are hidden by default but get invited.
+        self.sponsor = Sponsors.objects.filter(access_token=kwargs.get('token', '')).first()
+        super().initial(request, *args, **kwargs)
+
+    def get_sponsor(self):
+        if self.sponsor is None:
+            raise NotFound()
+        return self.sponsor
+
+    def run_guarded(self, fn):
+        try:
+            return fn()
+        except (Guests.DoesNotExist, Sponsors.DoesNotExist):
+            raise NotFound()
+        except SponsorInputClosed:
+            return Response({"detail": "Unos gostiju je zatvoren."}, status=status.HTTP_403_FORBIDDEN)
+        except SponsorGuestCapReached:
+            return Response({"detail": "Unijeli ste maksimalan broj gostiju."}, status=status.HTTP_409_CONFLICT)
+        except SponsorGuestEntered:
+            return Response({"detail": "Gost je već ušao i ne može se mijenjati."}, status=status.HTTP_409_CONFLICT)
+
+
+class SponsorPortalView(SponsorPortalMixin, APIView):
+    def get(self, request, token):
+        sponsor = self.get_sponsor()
+        return Response(SponsorPortalSerializer(sponsor, context={'request': request}).data)
+
+
+class SponsorPortalGuestsView(SponsorPortalMixin, APIView):
+    def post(self, request, token):
+        sponsor = self.get_sponsor()
+        serializer = SponsorGuestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        def create():
+            guest = add_sponsor_guest(sponsor, **serializer.validated_data)
+            return Response(SponsorGuestSerializer(guest).data, status=status.HTTP_201_CREATED)
+        return self.run_guarded(create)
+
+
+class SponsorPortalGuestDetailView(SponsorPortalMixin, APIView):
+    def patch(self, request, token, guest_id):
+        sponsor = self.get_sponsor()
+        serializer = SponsorGuestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        def update():
+            guest = update_sponsor_guest(sponsor, guest_id, **serializer.validated_data)
+            return Response(SponsorGuestSerializer(guest).data)
+        return self.run_guarded(update)
+
+    def delete(self, request, token, guest_id):
+        sponsor = self.get_sponsor()
+
+        def remove():
+            delete_sponsor_guest(sponsor, guest_id)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return self.run_guarded(remove)
+
 
 class PublicSponsorsViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PublicSponsorsSerializer

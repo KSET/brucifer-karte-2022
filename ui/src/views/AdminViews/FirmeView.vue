@@ -44,17 +44,7 @@ export default {
         this.loading = true;
         try {
             const response = await api.get('/sponsors/');
-
-            this.firms = await Promise.all(response.data.map(async sponsor => {
-                const guests = await api.get('/guests/?search=' + sponsor.slug + "&search_fields=tag")
-                    .then(r => r.data)
-                    .catch(() => []);
-                return {
-                    ...sponsor,
-                    guestsAdded: guests.length,
-                    guestsEntered: guests.filter(g => g.entered === true).length,
-                };
-            }));
+            this.firms = response.data;
         } finally {
             this.loading = false;
         }

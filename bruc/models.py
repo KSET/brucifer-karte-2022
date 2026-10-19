@@ -1,4 +1,6 @@
-from django.db import models
+import secrets
+
+from django.db import models, transaction
 from django.db.models import Q
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
@@ -33,6 +35,7 @@ class Guests(models.Model):
     mailError = models.CharField(max_length=200, default='', blank=True)
     mailSentAt = models.DateTimeField(null=True, blank=True)
     mailMessageId = models.CharField(max_length=255, default='', blank=True)
+    sponsor = models.ForeignKey('Sponsors', null=True, blank=True, on_delete=models.SET_NULL, related_name='guests')
 
 
 class Users(models.Model):
@@ -108,13 +111,25 @@ class Lineup(models.Model):
             storage.delete(name)
 
 
+def generate_access_token():
+    return secrets.token_urlsafe(32)
+
+
+SPONSOR_TAG_MARKER = " VIP - Sponzor - "
+
+
 class Sponsors(models.Model):
+    class GuestInput(models.IntegerChoices):
+        CLOSED = 0, 'Closed'
+        UNTIL_DEADLINE = 1, 'Open until deadline'
+        ALWAYS_OPEN = 2, 'Open past deadline'
+
     id = models.AutoField(primary_key=True)
     slug = models.CharField(max_length=200, default='', blank=True)
-    access_token = models.CharField(max_length=200, default='', blank=True)
+    access_token = models.CharField(max_length=64, unique=True, default=generate_access_token)
     order = models.IntegerField(default=0)
     visible = models.BooleanField(default=False)
-    guestsEnabled = models.IntegerField(default=1)
+    guestsEnabled = models.IntegerField(choices=GuestInput.choices, default=GuestInput.UNTIL_DEADLINE)
     name = models.CharField(max_length=49, default='', blank=True)
     url = models.CharField(max_length=400, default='0', blank=True)
     image = models.ImageField(
@@ -131,10 +146,19 @@ class Sponsors(models.Model):
             )
         ]
 
-    '''def get_image(self):
-        if self.image:
-            return 'http://127.0.0.1:8000' + self.image.url
-        return '' '''
+    @property
+    def guest_tag(self):
+        return f"{self.slug}{SPONSOR_TAG_MARKER}{self.name}"
+
+    def save(self, *args, **kwargs):
+        update_fields = kwargs.get('update_fields')
+        if not self.pk or (update_fields is not None and 'name' not in update_fields):
+            return super().save(*args, **kwargs)
+        with transaction.atomic():
+            old_name = Sponsors.objects.select_for_update().filter(pk=self.pk).values_list('name', flat=True).first()
+            super().save(*args, **kwargs)
+            if old_name is not None and old_name != self.name:
+                self.guests.update(tag=self.guest_tag)
 
     def delete(self, *args, **kwargs):
         # You have to prepare what you need before delete the model

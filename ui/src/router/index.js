@@ -283,16 +283,21 @@ const routes = [
     meta: { hideNavbar: true },
   },
   {
+    path: "/sponzori/:token",
+    name: "sponzori-page",
+    component: SponsorsPage,
+    meta: { hideNavbar: true },
+  },
+  {
+    path: "/sponzori/:slug/:token",
+    redirect: (to) => ({ name: "sponzori-page", params: { token: to.params.token } }),
+  },
+  {
     path: "/:pathMatch(.*)*",
     name: "BWPageNotFound",
     component: BWPageNotFound,
   },
 
-  {
-    path: "/sponzori/:slug/:token",
-    name: "sponzori-page",
-    component: SponsorsPage,
-  },
 ];
 
 const router = createRouter({
@@ -385,6 +390,7 @@ router.beforeEach((to, from, next) => {
     to.name !== "BWPageNotFound" &&
     to.name !== "ulaznice" &&
     to.name !== "brucosi" &&
+    to.name !== "sponzori-page" &&
     to.name !== "pravila-ponasanja"
   ) {
     if (visibilityStore.state.COMINGSOON_VISIBILITY == 1) {

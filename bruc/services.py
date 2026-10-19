@@ -11,12 +11,12 @@ import segno
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
-from django.db import connection
+from django.db import connection, transaction
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.html import strip_tags
 
-from .models import Guests, Mailer
+from .models import Guests, Mailer, Sponsors, Visibility
 
 logger = logging.getLogger(__name__)
 
@@ -138,3 +138,84 @@ def send_guest_ticket_email_async(guest_id):
         threading.Thread(target=run, daemon=True).start()
     else:
         run()
+
+
+SPONSOR_PORTAL_URL = "https://brucosijada.kset.org/sponzori/{token}"
+SPONSORS_INPUT_TIME = "SPONSORS_INPUT_TIME"
+
+
+class SponsorInputClosed(Exception):
+    pass
+
+
+class SponsorGuestCapReached(Exception):
+    pass
+
+
+class SponsorGuestEntered(Exception):
+    pass
+
+
+def sponsor_portal_link(sponsor):
+    return SPONSOR_PORTAL_URL.format(token=sponsor.access_token)
+
+
+def sponsor_input_deadline():
+    return Visibility.objects.filter(name=SPONSORS_INPUT_TIME).values_list("time", flat=True).first()
+
+
+def sponsor_input_state(sponsor):
+    """(open, deadline) from the admin switch and SPONSORS_INPUT_TIME."""
+    if sponsor.guestsEnabled == Sponsors.GuestInput.CLOSED:
+        return False, None
+    if sponsor.guestsEnabled == Sponsors.GuestInput.ALWAYS_OPEN:
+        return True, None
+    deadline = sponsor_input_deadline()
+    return deadline is None or timezone.now() <= deadline, deadline
+
+
+def sponsor_input_open(sponsor):
+    return sponsor_input_state(sponsor)[0]
+
+
+
+def _locked_open_sponsor(sponsor):
+    """Re-fetch with a row lock so concurrent adds can't overshoot the cap.
+
+    A sponsor deleted while the request was in flight raises Sponsors.DoesNotExist.
+    """
+    sponsor = Sponsors.objects.select_for_update().get(pk=sponsor.pk)
+    if not sponsor_input_open(sponsor):
+        raise SponsorInputClosed
+    return sponsor
+
+
+def add_sponsor_guest(sponsor, name):
+    with transaction.atomic():
+        sponsor = _locked_open_sponsor(sponsor)
+        if sponsor.guestCap and sponsor.guests.count() >= sponsor.guestCap:
+            raise SponsorGuestCapReached
+        return Guests.objects.create(
+            sponsor=sponsor, name=name, tag=sponsor.guest_tag, bought=True)
+
+
+def _editable_guest(sponsor, guest_id):
+    guest = sponsor.guests.get(pk=guest_id)
+    if guest.entered:
+        raise SponsorGuestEntered
+    return guest
+
+
+def update_sponsor_guest(sponsor, guest_id, name):
+    with transaction.atomic():
+        sponsor = _locked_open_sponsor(sponsor)
+        guest = _editable_guest(sponsor, guest_id)
+        guest.name = name
+        guest.save(update_fields=["name"])
+    return guest
+
+
+def delete_sponsor_guest(sponsor, guest_id):
+    with transaction.atomic():
+        sponsor = _locked_open_sponsor(sponsor)
+        _editable_guest(sponsor, guest_id).delete()

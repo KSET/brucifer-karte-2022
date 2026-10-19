@@ -35,7 +35,7 @@
 
     <Column field="guestCap" header="Uzvanici" style="width: 6.5rem" bodyClass="center-cell" headerClass="center-head">
       <template #body="{ data }">
-        <span class="cell-text">{{ data.guestCap ?? '—' }}</span>
+        <span class="cell-text" title="Upisano / dozvoljeno">{{ data.guestsAdded ?? 0 }} / {{ data.guestCap || '∞' }}</span>
       </template>
       <template #editor="{ data, field }">
         <InputNumber v-model="data[field]" :min="0" autofocus fluid />
@@ -55,8 +55,15 @@
           :disabled="isSaving(data.id)"
           :title="guestsLabel(data.guestsEnabled)"
           @update:modelValue="v => toggleGuests(data, v)" />
-        <i v-if="data.guestsEnabled === 2" class="pi pi-lock closed-badge"
+        <i v-if="data.guestsEnabled === 2" class="pi pi-lock-open closed-badge"
           :title="guestsLabel(data.guestsEnabled)"></i>
+      </template>
+    </Column>
+
+    <Column header="Link za popis" style="width: 6.5rem" bodyClass="center-cell" headerClass="center-head">
+      <template #body="{ data }">
+        <Button icon="pi pi-copy" text rounded size="small" title="Kopiraj link za unos gostiju"
+          @click.stop="copyLink(data)" />
       </template>
     </Column>
   </AdminTable>
@@ -69,18 +76,20 @@ import InputNumber from 'primevue/inputnumber'
 import Textarea from 'primevue/textarea'
 import Checkbox from 'primevue/checkbox'
 import Toast from 'primevue/toast'
+import Button from 'primevue/button'
+import { useToast } from 'primevue/usetoast'
 
 import AdminTable from '@/components/AdminPanel/AdminTable.vue'
 import { useOptimisticList } from '@/composables/useOptimisticList'
 import sponsorsStore from '@/store/sponsorsStore'
-import visibilityStore from '@/store/visibilityStore'
+import { enabledGuestsValue } from '@/utils/sponsorGuests'
 
 export default {
   name: 'SponsorsTable',
-  components: { AdminTable, Column, InputText, InputNumber, Textarea, Checkbox, Toast },
+  components: { AdminTable, Column, InputText, InputNumber, Textarea, Checkbox, Toast, Button },
 
   setup() {
-    return useOptimisticList(sponsorsStore)
+    return { ...useOptimisticList(sponsorsStore), toast: useToast() }
   },
 
   computed: {
@@ -110,9 +119,18 @@ export default {
       this.notifyError(detail)
     },
 
+    async copyLink(row) {
+      try {
+        await navigator.clipboard.writeText(row.link)
+        this.toast.add({ severity: 'success', summary: 'Link kopiran', detail: row.name, life: 2000 })
+      } catch (e) {
+        window.prompt('Kopirajte link:', row.link)
+      }
+    },
+
     guestsLabel(value) {
       if (value === 0) return 'Isključeno'
-      if (value === 2) return 'Zatvoreno (isteklo vrijeme unosa)'
+      if (value === 2) return 'Otvoreno i nakon isteka roka'
       return 'Otvoreno'
     },
 
@@ -120,8 +138,7 @@ export default {
       if (!checked) {
         return this.savePatch(row, { guestsEnabled: 0 })
       }
-      const value = visibilityStore.getters.sponsorsInputClosed ? 2 : 1
-      return this.savePatch(row, { guestsEnabled: value })
+      return this.savePatch(row, { guestsEnabled: enabledGuestsValue(row.name) })
     },
 
     isUnchanged(a, b) {

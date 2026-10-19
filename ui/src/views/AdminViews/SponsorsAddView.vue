@@ -51,16 +51,16 @@
                         promjene</button>
 
 
-                    <button v-if="(this.slug != '0')" class="button submit del"
+                    <button type="button" v-if="(this.slug != '0')" class="button submit del"
                         style="background-color: white; margin-top: 0px; " @click="deleteSponsors">
                         <img class="va" src="../../assets/icons/trash-icon.svg">
                     </button>
 
-                    <button v-if="(this.slug != '0')" class="button submit" style=" margin-top: 0px "
+                    <button type="button" v-if="(this.slug != '0')" class="button submit" style=" margin-top: 0px "
                         @click="sendMail">Pozovi</button>
 
-                    <button v-if="(this.slug != '0')" class="button submit" style=" margin-top: 0px "
-                        @click="reroutePopis">Popis</button>
+                    <button type="button" v-if="(this.slug != '0')" class="button submit" style=" margin-top: 0px "
+                        :disabled="!portalLink" @click="reroutePopis">Popis</button>
 
                 </div>
             </form>
@@ -75,7 +75,7 @@ import { uuid } from 'vue-uuid'
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import sponsorsStore from '@/store/sponsorsStore'
 import ToggleSwitch from 'primevue/toggleswitch'
-import visibilityStore from '@/store/visibilityStore'
+import { enabledGuestsValue } from '@/utils/sponsorGuests'
 
 export default {
     name: "SponsorsAdd",
@@ -97,6 +97,8 @@ export default {
             guestCap: null,
             visible: false,
             guestsEnabled: 0,
+            savedGuestsEnabled: 0,
+            portalLink: '',
 
             uuid: uuid.v4(),
             buttonEnabled: true,
@@ -121,8 +123,10 @@ export default {
             this.email = sponsor.email
             this.guestCap = sponsor.guestCap
             this.guestsEnabled = sponsor.guestsEnabled !== 0;
+            this.savedGuestsEnabled = sponsor.guestsEnabled
             this.visible = sponsor.visible
             this.currentImage = sponsor.image
+            this.portalLink = sponsor.link
         } else {
             // fetch all sponsors to compute next order
             await sponsorsStore.dispatch('fetchAll')
@@ -150,7 +154,9 @@ export default {
         },
 
         reroutePopis() {
-            this.$router.push({ path: '/sponzori/' + this.slug })
+            // The link points at production; open the same path on this host.
+            if (!this.portalLink) return
+            this.$router.push(new URL(this.portalLink).pathname)
         },
 
         async deleteSponsors() {
@@ -172,18 +178,17 @@ export default {
             formData.append("guestCap", this.guestCap)
             formData.append("visible", this.visible)
 
-            // guestsEnabled logic
+            // Keep the stored mode (1 vs 2) when the switch wasn't touched; only a fresh enable picks one.
+            let guestsEnabled = 0
             if (this.guestsEnabled) {
-                formData.append("guestsEnabled", visibilityStore.getters.sponsorsInputClosed ? 2 : 1)
-            } else {
-                formData.append("guestsEnabled", 0)
+                guestsEnabled = this.savedGuestsEnabled || enabledGuestsValue(this.name)
             }
+            formData.append("guestsEnabled", guestsEnabled)
 
             if (this.slug !== "0") {
                 // update
                 formData.append("id", this.id)
                 formData.append("order", this.order)
-                formData.append("slug", this.slug)
 
                 if (this.currentImage instanceof File) {
                     formData.append("image", this.currentImage)
@@ -195,7 +200,6 @@ export default {
                 const last = this.sponsors[this.sponsors.length - 1]
                 const nextOrder = last ? last.order + 1 : 0
                 formData.append("order", nextOrder.toString())
-                formData.append("slug", uuid.v4())
                 formData.append("image", this.currentImage)
 
                 await sponsorsStore.dispatch('create', formData)

@@ -20,8 +20,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import BrucosiFormResponse, Guests, Lineup, Mailer, Sponsors, Users, Visibility
 from .roles import Role
-from .services import classify_mail_error, derive_fer_email
-from .views import FormThrottle
+from .services import add_sponsor_guest, classify_mail_error, derive_fer_email
+from .views import FormThrottle, SponsorPortalTokenThrottle
 
 LIST_URL = '/api/forms/'
 SUBMIT_URL = LIST_URL
@@ -320,50 +320,241 @@ class ClassifyMailErrorTests(TestCase):
                 self.assertEqual(classify_mail_error(exc), expected)
 
 class SponsorPortalTests(APITestCase):
-    url = '/api/sponsors/public/'
-
     def setUp(self):
         cache.clear()
         self.sponsor = Sponsors.objects.create(
-            name='Acme', slug='acme-slug', access_token='acme-token', visible=True,
-            email='boss@acme.hr', guestCap=5, guestsEnabled=1)
-
-    def get(self, **params):
-        return self.client.get(self.url, {'slug': 'acme-slug', 'access_token': 'acme-token', **params})
+            name='Acme', slug='acme-slug', visible=True, email='boss@acme.hr', guestCap=2, guestsEnabled=1)
+        self.base = f'/api/sponsor-portal/{self.sponsor.access_token}/'
 
     def set_deadline(self, delta):
         Visibility.objects.update_or_create(name='SPONSORS_INPUT_TIME', defaults={'time': timezone.now() + delta})
 
-    def test_returns_only_portal_fields(self):
-        res = self.get()
+    def add(self, name='Ana Anić'):
+        return self.client.post(self.base + 'guests/', {'name': name}, format='json')
+
+    def guest_url(self, guest_id):
+        return f'{self.base}guests/{guest_id}/'
+
+    def test_token_is_long_and_random(self):
+        other = Sponsors.objects.create(name='Other', slug='other')
+        self.assertGreaterEqual(len(self.sponsor.access_token), 40)
+        self.assertNotEqual(self.sponsor.access_token, other.access_token)
+
+    def test_unknown_token_404(self):
+        self.assertEqual(self.client.get('/api/sponsor-portal/nope/').status_code, 404)
+        self.assertEqual(self.client.post('/api/sponsor-portal/nope/guests/', {}).status_code, 404)
+
+    def test_get_shape(self):
+        self.add()
+        res = self.client.get(self.base)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(set(res.data), {'name', 'image', 'guestCap', 'guestsEnabled'})
-        self.assertEqual(res.data['guestCap'], 5)
-        self.assertEqual(res.data['guestsEnabled'], 1)
+        self.assertEqual(set(res.data), {'name', 'image', 'guestCap', 'open', 'deadline', 'guests'})
+        self.assertTrue(res.data['open'])
+        self.assertEqual(res.data['guests'], [{'id': res.data['guests'][0]['id'], 'name': 'Ana Anić', 'entered': False}])
 
-    def test_requires_access_token(self):
-        res = self.client.get(self.url, {'slug': 'acme-slug'})
+    def test_add_edit_delete(self):
+        res = self.add(name='  Ana Anić ')
+        self.assertEqual(res.status_code, 201)
+        guest = Guests.objects.get(pk=res.data['id'])
+        self.assertEqual((guest.name, guest.sponsor), ('Ana Anić', self.sponsor))
+        self.assertEqual(guest.tag, 'acme-slug VIP - Sponzor - Acme')
+        self.assertTrue(guest.bought)
+
+        res = self.client.patch(self.guest_url(guest.id), {'name': 'Ana Horvat'}, format='json')
+        self.assertEqual(res.status_code, 200)
+        guest.refresh_from_db()
+        self.assertEqual(guest.name, 'Ana Horvat')
+
+        self.assertEqual(self.client.delete(self.guest_url(guest.id)).status_code, 204)
+        self.assertFalse(Guests.objects.filter(pk=guest.pk).exists())
+
+    def test_name_required(self):
+        self.assertEqual(self.add(name='').status_code, 400)
+        self.assertEqual(self.add(name='   ').status_code, 400)
+        guest_id = self.add().data['id']
+        self.assertEqual(self.client.patch(self.guest_url(guest_id), {'name': ''}, format='json').status_code, 400)
+
+    def test_cap(self):
+        self.add()
+        self.add()
+        self.assertEqual(self.add().status_code, 409)
+        self.assertEqual(self.sponsor.guests.count(), 2)
+
+    def test_no_cap_when_blank_or_zero(self):
+        for cap in (None, 0):
+            with self.subTest(cap=cap):
+                Sponsors.objects.filter(pk=self.sponsor.pk).update(guestCap=cap)
+                for _ in range(3):
+                    self.assertEqual(self.add().status_code, 201)
+
+    def test_closed_states(self):
+        guest_id = self.add().data['id']
+        cases = (
+            (0, None, False, False),
+            (1, -timedelta(hours=1), False, True),
+            (1, timedelta(hours=1), True, True),
+            (2, -timedelta(hours=1), True, False),
+        )
+        for enabled, delta, is_open, has_deadline in cases:
+            with self.subTest(enabled=enabled, delta=delta):
+                Sponsors.objects.filter(pk=self.sponsor.pk).update(guestsEnabled=enabled)
+                Visibility.objects.filter(name='SPONSORS_INPUT_TIME').delete()
+                if delta is not None:
+                    self.set_deadline(delta)
+                res = self.client.get(self.base)
+                self.assertEqual(res.data['open'], is_open)
+                self.assertEqual(res.data['deadline'] is not None, has_deadline)
+                expected = (201, 200) if is_open else (403, 403)
+                self.assertEqual(self.add().status_code, expected[0])
+                patch = self.client.patch(self.guest_url(guest_id), {'name': 'X'}, format='json')
+                self.assertEqual(patch.status_code, expected[1])
+                if not is_open:
+                    self.assertEqual(self.client.delete(self.guest_url(guest_id)).status_code, 403)
+                Guests.objects.exclude(pk=guest_id).delete()
+
+    def test_cannot_touch_other_sponsors_guest(self):
+        other = Sponsors.objects.create(name='Other', slug='other')
+        foreign = Guests.objects.create(name='Foreign', sponsor=other)
+        self.assertEqual(self.client.patch(self.guest_url(foreign.id), {'name': 'X'}, format='json').status_code, 404)
+        self.assertEqual(self.client.delete(self.guest_url(foreign.id)).status_code, 404)
+        self.assertNotIn('Foreign', [g['name'] for g in self.client.get(self.base).data['guests']])
+
+    def test_admin_list_shows_link_and_counts(self):
+        Users.objects.create(email='admin@kset.org', privilege=Role.ADMIN)
+        self.client.force_authenticate(DjangoUser.objects.create(username='admin@kset.org'))
+        self.add()
+        listed = self.client.get('/api/sponsors/').data[0]
+        self.assertEqual(listed['link'], f'https://brucosijada.kset.org/sponzori/{self.sponsor.access_token}')
+        self.assertEqual((listed['guestsAdded'], listed['guestsEntered']), (1, 0))
+        self.assertNotIn('access_token', listed)
+
+    def test_admin_cannot_write_token(self):
+        Users.objects.create(email='admin@kset.org', privilege=Role.ADMIN)
+        self.client.force_authenticate(DjangoUser.objects.create(username='admin@kset.org'))
+        self.client.patch(f'/api/sponsors/{self.sponsor.id}/', {'access_token': 'guessable'}, format='json')
+        self.sponsor.refresh_from_db()
+        self.assertNotEqual(self.sponsor.access_token, 'guessable')
+
+    def test_hidden_sponsor_portal_still_works(self):
+        Sponsors.objects.filter(pk=self.sponsor.pk).update(visible=False)
+        self.assertEqual(self.client.get(self.base).status_code, 200)
+        self.assertEqual(self.add().status_code, 201)
+
+    def test_sponsor_deleted_mid_request(self):
+        Sponsors.objects.filter(pk=self.sponsor.pk).delete()
+        with self.assertRaises(Sponsors.DoesNotExist):
+            add_sponsor_guest(self.sponsor, 'Ana')
+
+    def test_throttle_is_per_token(self):
+        other = Sponsors.objects.create(name='Other', slug='other')
+        with mock.patch.object(SponsorPortalTokenThrottle, 'rate', '1/hour'):
+            self.assertEqual(self.client.get(self.base).status_code, 200)
+            self.assertEqual(self.client.get(self.base).status_code, 429)
+            self.assertEqual(self.client.get(f'/api/sponsor-portal/{other.access_token}/').status_code, 200)
+
+    def login_admin(self):
+        Users.objects.create(email='admin@kset.org', privilege=Role.ADMIN)
+        self.client.force_authenticate(DjangoUser.objects.create(username='admin@kset.org'))
+
+    def test_admin_resending_tag_keeps_fk(self):
+        self.login_admin()
+        guest = Guests.objects.get(pk=self.add().data['id'])
+        res = self.client.patch(f'/api/guests/{guest.id}/', {'name': 'VIP2', 'tag': guest.tag}, format='json')
+        self.assertEqual(res.status_code, 200)
+        guest.refresh_from_db()
+        self.assertEqual((guest.name, guest.sponsor), ('VIP2', self.sponsor))
+
+    def test_admin_sponsor_tag_links_fk_past_cap(self):
+        self.login_admin()
+        self.add()
+        self.add()
+        res = self.client.post('/api/guests/', {'name': 'X', 'tag': self.sponsor.guest_tag}, format='json')
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(Guests.objects.get(pk=res.data['id']).sponsor, self.sponsor)
+
+        res = self.client.post('/api/guests/bulk-import/', [{'name': 'Y', 'tag': self.sponsor.guest_tag}], format='json')
+        self.assertIn(res.status_code, (200, 201))
+        self.assertEqual(self.sponsor.guests.count(), 4)
+
+        plain = Guests.objects.create(name='P', tag='Brucoši')
+        res = self.client.patch(f'/api/guests/{plain.id}/', {'tag': self.sponsor.guest_tag}, format='json')
+        self.assertEqual(res.status_code, 200)
+        plain.refresh_from_db()
+        self.assertEqual(plain.sponsor, self.sponsor)
+
+    def test_admin_retag_unlinks_sponsor_guest(self):
+        self.login_admin()
+        guest = Guests.objects.get(pk=self.add().data['id'])
+        res = self.client.patch(f'/api/guests/{guest.id}/', {'tag': 'Brucoši', 'surname': 'S'}, format='json')
+        self.assertEqual(res.status_code, 200)
+        guest.refresh_from_db()
+        self.assertIsNone(guest.sponsor)
+
+    def test_admin_unknown_sponsor_tag_rejected(self):
+        self.login_admin()
+        res = self.client.post('/api/guests/', {'name': 'X', 'tag': 'nope VIP - Sponzor - Nope'}, format='json')
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(self.get(access_token='wrong').status_code, 404)
 
-    def test_invisible_sponsor_not_found(self):
-        self.sponsor.visible = False
-        self.sponsor.save()
-        self.assertEqual(self.get().status_code, 404)
+    def test_save_without_name_skips_old_name_query(self):
+        with self.assertNumQueries(1):
+            self.sponsor.save(update_fields=['order'])
 
-    def test_reports_closed_after_deadline(self):
-        self.set_deadline(-timedelta(hours=1))
-        self.assertEqual(self.get().data['guestsEnabled'], 0)
+    def test_rename_retags_guests_only_on_name_change(self):
+        self.login_admin()
+        guest = Guests.objects.get(pk=self.add().data['id'])
+        Guests.objects.filter(pk=guest.pk).update(tag='hand edited')
+        self.client.patch(f'/api/sponsors/{self.sponsor.id}/', {'guestsEnabled': 2}, format='json')
+        guest.refresh_from_db()
+        self.assertEqual(guest.tag, 'hand edited')
 
-    def test_open_before_deadline(self):
-        self.set_deadline(timedelta(hours=1))
-        self.assertEqual(self.get().data['guestsEnabled'], 1)
+        self.client.patch(f'/api/sponsors/{self.sponsor.id}/', {'name': 'Acme2'}, format='json')
+        guest.refresh_from_db()
+        self.assertEqual(guest.tag, 'acme-slug VIP - Sponzor - Acme2')
 
-    def test_always_open_ignores_deadline(self):
-        self.sponsor.guestsEnabled = 2
-        self.sponsor.save()
-        self.set_deadline(-timedelta(hours=1))
-        self.assertEqual(self.get().data['guestsEnabled'], 2)
+    def test_entered_guest_is_locked(self):
+        guest_id = self.add().data['id']
+        Guests.objects.filter(pk=guest_id).update(entered=True)
+        self.assertEqual(self.client.patch(self.guest_url(guest_id), {'name': 'X'}, format='json').status_code, 409)
+        self.assertEqual(self.client.delete(self.guest_url(guest_id)).status_code, 409)
+        self.assertEqual(Guests.objects.get(pk=guest_id).name, 'Ana Anić')
+
+    def test_unknown_token_not_throttled_per_token(self):
+        with mock.patch.object(SponsorPortalTokenThrottle, 'rate', '1/hour'):
+            for _ in range(3):
+                self.assertEqual(self.client.get('/api/sponsor-portal/nope/').status_code, 404)
+
+    def test_admin_cannot_change_slug(self):
+        Users.objects.create(email='admin@kset.org', privilege=Role.ADMIN)
+        self.client.force_authenticate(DjangoUser.objects.create(username='admin@kset.org'))
+        self.client.patch(f'/api/sponsors/{self.sponsor.id}/', {'slug': 'new'}, format='json')
+        self.sponsor.refresh_from_db()
+        self.assertEqual(self.sponsor.slug, 'acme-slug')
+
+    def test_missing_guest_404(self):
+        self.assertEqual(self.client.patch(self.guest_url(999999), {'name': 'X'}, format='json').status_code, 404)
+        self.assertEqual(self.client.delete(self.guest_url(999999)).status_code, 404)
+
+    def test_migration_backfill(self):
+        from importlib import import_module
+        from django.apps import apps as django_apps
+        backfill = import_module('bruc.migrations.0091_sponsor_guests_fk_and_token').backfill
+        old = Guests.objects.create(name='Old', tag='acme-slug VIP - Sponzor - Acme')
+        unrelated = Guests.objects.create(name='Bruc', tag='Brucoši')
+        blank = Sponsors.objects.create(name='Blank', slug='')
+        blank_guest = Guests.objects.create(name='B', tag='VIP - Sponzor - Blank')
+        long_token = Sponsors.objects.create(name='Long', slug='long')
+        Sponsors.objects.filter(pk=long_token.pk).update(access_token='x' * 100)
+        token = self.sponsor.access_token
+        backfill(django_apps, None)
+        for obj in (old, unrelated, blank, blank_guest, long_token, self.sponsor):
+            obj.refresh_from_db()
+        self.assertEqual(old.sponsor, self.sponsor)
+        self.assertIsNone(unrelated.sponsor)
+        self.assertEqual(self.sponsor.access_token, token)
+        self.assertEqual(blank_guest.sponsor, blank)
+        self.assertTrue(blank.slug)
+        self.assertEqual(blank_guest.tag, blank.guest_tag)
+        self.assertLessEqual(len(long_token.access_token), 64)
 
 
 def guests_url(guest, action):

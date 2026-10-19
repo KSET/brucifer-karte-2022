@@ -22,6 +22,9 @@ from .views import (
     DbTablesView,
     DbTableRowsView,
     BrevoWebhookView,
+    SponsorPortalView,
+    SponsorPortalGuestsView,
+    SponsorPortalGuestDetailView,
 )
 
 router = routers.DefaultRouter()
@@ -49,4 +52,8 @@ urlpatterns = [
     path('db/tables/', DbTablesView.as_view(), name="db-tables"),
     path('db/tables/<str:table>/', DbTableRowsView.as_view(), name="db-table-rows"),
     path('brevo/webhook/<str:token>/', BrevoWebhookView.as_view(), name="brevo-webhook"),
+    path('sponsor-portal/<str:token>/', SponsorPortalView.as_view(), name="sponsor-portal"),
+    path('sponsor-portal/<str:token>/guests/', SponsorPortalGuestsView.as_view(), name="sponsor-portal-guests"),
+    path('sponsor-portal/<str:token>/guests/<int:guest_id>/', SponsorPortalGuestDetailView.as_view(),
+         name="sponsor-portal-guest"),
 ]
