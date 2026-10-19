@@ -296,6 +296,7 @@ const routes = [
     path: "/:pathMatch(.*)*",
     name: "BWPageNotFound",
     component: BWPageNotFound,
+    meta: { hideNavbar: true },
   },
 
 ];
