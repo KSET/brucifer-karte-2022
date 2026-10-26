@@ -8,6 +8,8 @@
       <BwBreakMarquee />
       <BwLineup />
     </template>
+    <BwBreakMarquee />
+    <BwSadrzaj />
     <template v-if="SPONSORS_VISIBILITY === true">
       <BwBreakMarquee />
       <BwSponsors />
@@ -23,11 +25,12 @@ import BwBreakMarquee from '@/components/BruciWeb/BwBreakMarquee.vue'
 import BwGallery from '@/components/BruciWeb/BwGallery.vue'
 import BwLineup from '@/components/BruciWeb/BwLineup.vue'
 import BwSponsors from '@/components/BruciWeb/BwSponsors.vue'
+import BwSadrzaj from '@/components/BruciWeb/BwSadrzaj.vue'
 import visibilityStore from '@/store/visibilityStore.js'
 
 export default {
   name: 'Naslovnica',
-  components: { Footer, BwHero, BwBreakMarquee, BwGallery, BwLineup, BwSponsors },
+  components: { Footer, BwHero, BwBreakMarquee, BwGallery, BwLineup, BwSadrzaj, BwSponsors },
 
   computed: {
     LINEUP_VISIBILITY() {
