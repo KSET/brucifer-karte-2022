@@ -17,6 +17,7 @@ import ApiPlugin from '@/plugins/api'
 import ToastService from 'primevue/toastservice';
 
 try { localStorage.removeItem('vuex') } catch (e) {}
+try { sessionStorage.removeItem('brucifer.auth') } catch (e) {}
 
 const MyPreset = definePreset(Aura, {
     semantic: {

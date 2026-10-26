@@ -19,9 +19,108 @@ export function resetNoPrivilegeAlert() {
     privilegeAlertShown = false;
 }
 
-export const api = axios.create({
+const clientConfig = {
     baseURL: process.env.VUE_APP_BASE_URL,
+    withCredentials: true,
+};
+
+export const api = axios.create(clientConfig);
+
+const authClient = axios.create({
+    ...clientConfig,
+    headers: { "X-Requested-With": "XMLHttpRequest" },
 });
+
+const isSessionRejected = (error) => error.response?.status === 401;
+const isTransient = (error) => !error.response || error.response.status >= 500;
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function postRefresh(attempt = 0) {
+    try {
+        return await authClient.post("/auth/token/refresh/");
+    } catch (error) {
+        const retry = isTransient(error)
+            ? attempt < 2
+            : !navigator.locks && isSessionRejected(error) && attempt === 0;
+        if (!retry) throw error;
+        await sleep(1000 * 2 ** attempt);
+        return postRefresh(attempt + 1);
+    }
+}
+
+let tokenRefresh = null;
+
+export function refreshAccessToken() {
+    if (tokenRefresh === null) {
+        const doRefresh = () =>
+            postRefresh().then(({ data }) => {
+                store.commit("setAccessToken", data.access);
+                store.commit("setUser", data.user);
+                return data.access;
+            });
+        tokenRefresh = (navigator.locks
+            ? navigator.locks.request("brucifer-token-refresh", doRefresh)
+            : doRefresh()
+        ).finally(() => {
+            tokenRefresh = null;
+        });
+    }
+    return tokenRefresh;
+}
+
+// Resolves to true when it just refreshed (and so already loaded the user).
+export async function restoreSession() {
+    if (store.state.accessToken) return false;
+    try {
+        await refreshAccessToken();
+        return true;
+    } catch (error) {
+        if (isSessionRejected(error)) {
+            store.commit("clearAuth");
+        } else {
+            console.error("Session restore failed:", error);
+        }
+        return false;
+    }
+}
+
+let pendingAuthGuards = 0;
+
+export async function whileAuthGuardPending(fn) {
+    pendingAuthGuards++;
+    try {
+        return await fn();
+    } finally {
+        pendingAuthGuards--;
+    }
+}
+
+export async function login(googleCredential) {
+    const { data } = await authClient.post("/auth/google/", {
+        token: googleCredential,
+    });
+    store.commit("setAccessToken", data.access);
+    store.commit("setUser", data.user);
+    return data.user;
+}
+
+export async function logout() {
+    try {
+        await authClient.post("/auth/logout/");
+    } catch (e) {
+    }
+    store.commit("clearAuth");
+}
+
+async function redirectToLogin() {
+    store.commit("clearAuth");
+    if (pendingAuthGuards > 0) return;
+    const { default: router } = await import("@/router/index.js");
+    const current = router.currentRoute.value;
+    if (current.name !== "login") {
+        router.replace({ name: "login", query: { redirect: current.fullPath } });
+    }
+}
 
 api.interceptors.request.use((config) => {
     const token = store.state.accessToken;
@@ -36,39 +135,30 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if (error.response?.status === 401 && !originalRequest._retry && store.state.accessToken) {
             originalRequest._retry = true;
             try {
-                const refreshResponse = await api.post("/auth/token/refresh/", {
-                    refresh: store.state.refreshToken,
-                });
-
-                const newAccess = refreshResponse.data.access;
-                store.commit("setAccessToken", newAccess);
-
-                // refresh tokens rotate — persist the new one each time
-                if (refreshResponse.data.refresh) {
-                    store.commit("setRefreshToken", refreshResponse.data.refresh);
+                if (originalRequest.headers.Authorization === `Bearer ${store.state.accessToken}`) {
+                    await refreshAccessToken();
                 }
-
-                originalRequest.headers.Authorization = `Bearer ${newAccess}`;
                 return api(originalRequest);
             } catch (refreshError) {
-                store.commit("clearAuth");
-                window.location.href = "/admin/login";
+                if (isSessionRejected(refreshError)) {
+                    await redirectToLogin();
+                }
                 return Promise.reject(refreshError);
             }
         }
 
-        if (error.response?.status === 403 && store.state.id !== "") {
+        if (error.response?.status === 403 && store.getters.isLoggedIn) {
             try {
                 const role = await refreshRole();
                 const { default: router } = await import("@/router/index.js");
                 const allowed = router.currentRoute.value.meta.roles;
                 if (role === NONE) {
                     alertNoPrivilege();
-                    store.commit("clearAuth");
-                    window.location.href = "/admin/login";
+                    await logout();
+                    router.replace({ name: "login" });
                 } else if (allowed !== undefined && !allowed.includes(role)) {
                     alertNoPrivilege();
                     router.replace({ path: "/admin" });
@@ -87,7 +177,7 @@ export function refreshRole() {
         roleFetch = api
             .get("/me/")
             .then(({ data }) => {
-                store.commit("setRole", data.role);
+                store.commit("setUser", data);
                 return data.role;
             })
             .finally(() => {

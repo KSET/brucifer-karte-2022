@@ -8,10 +8,12 @@ from io import BytesIO
 from unittest import mock
 from zoneinfo import ZoneInfo
 
+from django.conf import settings
 from django.contrib.auth.models import User as DjangoUser
 from django.core.cache import cache
 from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db import IntegrityError
 from django.test import TestCase, override_settings
 from django.utils import timezone
 from PIL import Image
@@ -21,7 +23,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import BrucosiFormResponse, Guests, Lineup, Mailer, Sponsors, Users, Visibility
 from .roles import Role
 from .services import add_sponsor_guest, classify_mail_error, derive_fer_email
-from .views import FormThrottle, SponsorPortalTokenThrottle
+from .views import FormThrottle, RefreshThrottle, SponsorPortalTokenThrottle
 
 LIST_URL = '/api/forms/'
 SUBMIT_URL = LIST_URL
@@ -927,3 +929,191 @@ class GuestSaleTests(APITestCase):
         self.assertEqual(
             (res.data['totalEntries'], res.data['ticketsBefore12'], res.data['ticketsAfter12'], res.data['failedMails']),
             (2, 1, 1, 1))
+
+
+GOOGLE_AUTH_URL = '/api/auth/google/'
+REFRESH_URL = '/api/auth/token/refresh/'
+LOGOUT_URL = '/api/auth/logout/'
+
+
+class AuthCookieTests(APITestCase):
+    EMAIL = 'admin@kset.org'
+
+    def setUp(self):
+        cache.clear()
+        Users.objects.create(email=self.EMAIL, name='Admin', privilege=Role.ADMIN)
+        self.client.defaults['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+
+    @mock.patch('bruc.views.id_token.verify_oauth2_token')
+    def login(self, verify):
+        verify.return_value = {'email': self.EMAIL, 'email_verified': True, 'hd': 'kset.org', 'name': 'Admin'}
+        return self.client.post(GOOGLE_AUTH_URL, {'token': 'google-id-token'}, format='json')
+
+    def refresh_cookie(self, res):
+        return res.cookies[settings.AUTH_REFRESH_COOKIE]
+
+    def test_login_sets_httponly_cookie_and_hides_refresh(self):
+        res = self.login()
+        self.assertEqual(res.status_code, 200)
+        self.assertIn('access', res.data)
+        self.assertNotIn('refresh', res.data)
+        self.assertEqual(res.data['user']['role'], Role.ADMIN)
+        cookie = self.refresh_cookie(res)
+        self.assertTrue(cookie['httponly'])
+        self.assertEqual(cookie['path'], settings.AUTH_REFRESH_COOKIE_PATH)
+        self.assertEqual(cookie['samesite'], 'Strict')
+
+    @mock.patch('bruc.views.id_token.verify_oauth2_token', side_effect=ValueError('bad token'))
+    def test_invalid_google_token_rejected(self, _):
+        res = self.client.post(GOOGLE_AUTH_URL, {'token': 'forged'}, format='json')
+        self.assertEqual(res.status_code, 400)
+        self.assertNotIn(settings.AUTH_REFRESH_COOKIE, res.cookies)
+
+    def test_refresh_rotates_cookie_and_old_one_is_rejected(self):
+        old = self.refresh_cookie(self.login()).value
+        res = self.client.post(REFRESH_URL)
+        self.assertEqual(res.status_code, 200)
+        self.assertIn('access', res.data)
+        self.assertNotEqual(self.refresh_cookie(res).value, old)
+
+        self.client.cookies[settings.AUTH_REFRESH_COOKIE] = old
+        self.assertEqual(self.client.post(REFRESH_URL).status_code, 401)
+
+    def test_login_without_role_gets_no_session(self):
+        Users.objects.filter(email=self.EMAIL).update(privilege=Role.NONE)
+        res = self.login()
+        self.assertEqual(res.status_code, 403)
+        self.assertEqual(res.data['code'], 'no_privileges')
+        self.assertNotIn('access', res.data)
+        self.assertNotIn(settings.AUTH_REFRESH_COOKIE, res.cookies)
+
+    def test_refresh_returns_user(self):
+        self.login()
+        self.assertEqual(self.client.post(REFRESH_URL).data['user']['role'], Role.ADMIN)
+
+    def test_cookie_endpoints_require_xhr_header(self):
+        self.login()
+        del self.client.defaults['HTTP_X_REQUESTED_WITH']
+        self.assertEqual(self.client.post(REFRESH_URL).status_code, 403)
+        self.assertEqual(self.client.post(LOGOUT_URL).status_code, 403)
+
+    def test_refreshed_access_token_works(self):
+        self.login()
+        access = self.client.post(REFRESH_URL).data['access']
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access}')
+        self.assertEqual(self.client.get('/api/me/').data['role'], Role.ADMIN)
+
+    def test_refresh_without_cookie_is_401(self):
+        self.assertEqual(self.client.post(REFRESH_URL).status_code, 401)
+
+    def test_logout_revokes_refresh_token(self):
+        token = self.refresh_cookie(self.login()).value
+        res = self.client.post(LOGOUT_URL)
+        self.assertEqual(res.status_code, 204)
+        self.assertEqual(self.refresh_cookie(res).value, '')
+
+        self.client.cookies[settings.AUTH_REFRESH_COOKIE] = token
+        self.assertEqual(self.client.post(REFRESH_URL).status_code, 401)
+
+    def test_refresh_ends_session_of_user_without_rights(self):
+        for change in ('demote', 'delete'):
+            with self.subTest(change=change):
+                Users.objects.update_or_create(email=self.EMAIL, defaults={'privilege': Role.ADMIN})
+                token = self.refresh_cookie(self.login()).value
+                users = Users.objects.filter(email=self.EMAIL)
+                if change == 'demote':
+                    users.update(privilege=Role.NONE)
+                else:
+                    users.delete()
+
+                res = self.client.post(REFRESH_URL)
+                self.assertEqual(res.status_code, 401)
+                self.assertEqual(self.refresh_cookie(res).value, '')
+
+                # revoked for good, even if the role comes back
+                Users.objects.update_or_create(email=self.EMAIL, defaults={'privilege': Role.ADMIN})
+                self.client.cookies[settings.AUTH_REFRESH_COOKIE] = token
+                self.assertEqual(self.client.post(REFRESH_URL).status_code, 401)
+
+    @mock.patch('bruc.views.id_token.verify_oauth2_token')
+    def test_login_rejects_cross_site_posts(self, verify):
+        verify.return_value = {'email': self.EMAIL, 'email_verified': True, 'hd': 'kset.org', 'name': 'Admin'}
+        res = self.client.post(GOOGLE_AUTH_URL, {'token': 'google-id-token'})
+        self.assertEqual(res.status_code, 415)
+        self.assertNotIn(settings.AUTH_REFRESH_COOKIE, res.cookies)
+
+        del self.client.defaults['HTTP_X_REQUESTED_WITH']
+        res = self.client.post(GOOGLE_AUTH_URL, {'token': 'google-id-token'}, format='json')
+        self.assertEqual(res.status_code, 403)
+        self.assertNotIn(settings.AUTH_REFRESH_COOKIE, res.cookies)
+
+    def test_relogin_revokes_previous_refresh_token(self):
+        old = self.refresh_cookie(self.login()).value
+        self.assertNotEqual(self.refresh_cookie(self.login()).value, old)
+
+        self.client.cookies[settings.AUTH_REFRESH_COOKIE] = old
+        self.assertEqual(self.client.post(REFRESH_URL).status_code, 401)
+
+    def test_login_db_error_is_400(self):
+        with mock.patch.object(DjangoUser.objects, 'get_or_create', side_effect=IntegrityError):
+            res = self.login()
+        self.assertEqual(res.status_code, 400)
+        self.assertNotIn(settings.AUTH_REFRESH_COOKIE, res.cookies)
+
+    def test_refresh_ends_session_of_deactivated_user(self):
+        self.login()
+        DjangoUser.objects.filter(username=self.EMAIL).update(is_active=False)
+        res = self.client.post(REFRESH_URL)
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(self.refresh_cookie(res).value, '')
+
+    def test_login_rejects_deactivated_user(self):
+        DjangoUser.objects.create(username=self.EMAIL, email=self.EMAIL, is_active=False)
+        res = self.login()
+        self.assertEqual(res.status_code, 403)
+        self.assertEqual(res.data['code'], 'no_privileges')
+        self.assertNotIn('access', res.data)
+        self.assertNotIn(settings.AUTH_REFRESH_COOKIE, res.cookies)
+
+    def test_login_token_db_error_is_400(self):
+        with mock.patch('bruc.views.RefreshToken.for_user', side_effect=IntegrityError):
+            res = self.login()
+        self.assertEqual(res.status_code, 400)
+        self.assertNotIn(settings.AUTH_REFRESH_COOKIE, res.cookies)
+
+    def test_concurrent_refresh_loser_is_rejected(self):
+        self.login()
+        # another request blacklisted the token between our blacklist check and our write
+        with mock.patch('bruc.views.RefreshToken.blacklist', return_value=(None, False)):
+            res = self.client.post(REFRESH_URL)
+        self.assertEqual(res.status_code, 401)
+        self.assertNotIn(settings.AUTH_REFRESH_COOKIE, res.cookies)
+
+    def test_refresh_db_error_is_503(self):
+        self.login()
+        with mock.patch('bruc.views.RefreshToken.for_user', side_effect=IntegrityError):
+            res = self.client.post(REFRESH_URL)
+        self.assertEqual(res.status_code, 503)
+        self.assertNotIn(settings.AUTH_REFRESH_COOKIE, res.cookies)
+
+    def test_me_matches_refresh_payload(self):
+        self.login()
+        data = self.client.post(REFRESH_URL).data
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {data['access']}")
+        me = self.client.get('/api/me/').data
+        self.assertEqual(me, data['user'])
+        self.assertNotIn('id', me)
+
+    def test_refresh_is_throttled(self):
+        self.login()
+        with mock.patch.object(RefreshThrottle, 'rate', '1/minute'):
+            self.assertEqual(self.client.post(REFRESH_URL).status_code, 200)
+            self.assertEqual(self.client.post(REFRESH_URL).status_code, 429)
+
+    def test_revocation_db_error_is_503(self):
+        self.login()
+        Users.objects.filter(email=self.EMAIL).update(privilege=Role.NONE)
+        with mock.patch('bruc.views.RefreshToken.blacklist', side_effect=IntegrityError):
+            res = self.client.post(REFRESH_URL)
+        self.assertEqual(res.status_code, 503)
+        self.assertNotIn(settings.AUTH_REFRESH_COOKIE, res.cookies)

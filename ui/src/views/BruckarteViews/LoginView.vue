@@ -15,50 +15,47 @@
 </template>
 
 <script>
-import store from "@/store/index.js";
-import { api } from "@/plugins/api";
-import { NONE, ADMIN, ENTRY, TICKETS, ENTRY_TICKETS } from "@/plugins/roles";
+import { login, logout, alertNoPrivilege, resetNoPrivilegeAlert } from "@/plugins/api";
+import { ADMIN, ENTRY, TICKETS, ENTRY_TICKETS } from "@/plugins/roles";
+
+const HOME_BY_ROLE = {
+    [TICKETS]: { name: "guests" },
+    [ENTRY_TICKETS]: { name: "guests" },
+    [ENTRY]: { name: "entry" },
+    [ADMIN]: { name: "home" },
+};
 
 export default {
     name: "Login",
     methods: {
         async handleCredentialResponse(res) {
+            const denyLogin = () => {
+                alertNoPrivilege();
+                resetNoPrivilegeAlert();
+            };
+            let user;
             try {
-                const response = await api.post("/auth/google/", {
-                    token: res.credential,
-                });
-
-                const { access, refresh, user } = response.data;
-
-                store.commit("setAccessToken", access);
-                store.commit("setRefreshToken", refresh);
-                store.commit("setId", user.id);
-                store.commit("setName", user.name);
-                store.commit("setEmail", user.email);
-                store.commit("setPrivilege", user.privilege);
-                store.commit("setRole", user.privilege);
-
-                switch (user.privilege) {
-                    case TICKETS:
-                    case ENTRY_TICKETS:
-                        this.$router.push({ name: "guests" });
-                        break;
-                    case ENTRY:
-                        this.$router.push({ name: "entry" });
-                        break;
-                    case ADMIN:
-                        this.$router.push({ name: "home" });
-                        break;
-                    case NONE:
-                    default:
-                        window.alert(
-                            "Nažalost, nemate privilegije za pristup ovoj stranici. Pričekajte ili se javite savjetniku"
-                        );
-                        break;
-                }
+                user = await login(res.credential);
             } catch (err) {
-                console.error("Login failed:", err);
+                if (err.response?.data?.code === "no_privileges") {
+                    denyLogin();
+                } else {
+                    console.error("Login failed:", err);
+                }
+                return;
             }
+
+            if (!HOME_BY_ROLE[user.role]) {
+                await logout();
+                denyLogin();
+                return;
+            }
+            const redirect = this.$route.query.redirect;
+            this.$router.push(
+                typeof redirect === "string" && redirect.startsWith("/admin")
+                    ? redirect
+                    : HOME_BY_ROLE[user.role]
+            );
         },
     },
     mounted() {

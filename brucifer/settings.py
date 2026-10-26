@@ -55,22 +55,21 @@ INSTALLED_APPS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8080',
-    'http://localhost:8081',
+    'https://brucifer.kset.org',
     'https://brucosijada.kset.org',
     'https://bruc-test.josip.igr.ec',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
 
 REST_FRAMEWORK = {
@@ -85,9 +84,15 @@ REST_FRAMEWORK = {
     'NUM_PROXIES': int(os.getenv('DJANGO_NUM_PROXIES', '1' if PRODUCTION else '0')),
 }
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8080',
+CSRF_TRUSTED_ORIGINS = [
+    'https://brucifer.kset.org',
     'https://brucosijada.kset.org',
     'https://bruc-test.josip.igr.ec',]
+
+# local dev servers only: with credentialed CORS, any page on these ports could mint access tokens
+if DEBUG:
+    CORS_ALLOWED_ORIGINS += ['http://localhost:8080', 'http://localhost:8081']
+    CSRF_TRUSTED_ORIGINS += ['http://localhost:8080']
 
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = 'Lax' 
@@ -114,13 +119,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'brucifer.wsgi.application'
 
+# refresh-token rotation and blacklisting happen in bruc.views.CookieTokenRefreshView
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
-    "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
+
+AUTH_REFRESH_COOKIE = "brucifer_refresh"
+AUTH_REFRESH_COOKIE_PATH = "/api/auth/"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

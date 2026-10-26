@@ -127,7 +127,7 @@ export default {
       return store.state.name;
     },
     isLoggedIn() {
-      return store.state.id !== "";
+      return store.getters.isLoggedIn;
     },
     isAdmin() {
       return store.getters.hasRole(ADMIN);

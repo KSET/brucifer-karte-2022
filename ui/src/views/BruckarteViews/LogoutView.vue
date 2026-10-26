@@ -1,10 +1,10 @@
 <script>
-import store from "@/store/index.js";
+import { logout } from "@/plugins/api";
 
 export default {
     name: "Logout",
-    mounted() {
-        store.commit("clearAuth");
+    async mounted() {
+        await logout();
 
         this.$router.push({ name: "login" });
     },

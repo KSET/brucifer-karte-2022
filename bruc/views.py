@@ -7,7 +7,7 @@ from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.models import User as DjangoUser
 from django.core.mail import EmailMultiAlternatives, get_connection
-from django.db import transaction
+from django.db import DatabaseError, transaction
 from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -17,17 +17,22 @@ from django.utils.html import strip_tags
 from django.utils.timezone import make_aware
 from django.views.decorators.cache import never_cache
 from django_filters.rest_framework import DjangoFilterBackend
+from google.auth.exceptions import GoogleAuthError
 from google.auth.transport import requests
 from google.oauth2 import id_token
 from rest_framework import filters, mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
+from rest_framework.parsers import JSONParser
 from rest_framework.permissions import AllowAny, BasePermission, SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle, SimpleRateThrottle
 from rest_framework.views import APIView
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.settings import api_settings as jwt_settings
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from .auth import RequireXHRHeader, blacklist_refresh_cookie, clear_refresh_cookie, set_refresh_cookie
 from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
 from .roles import Role, GUEST_ROLES
 from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer, PublicLineupSerializer, PublicSponsorsSerializer, SponsorGuestSerializer, SponsorPortalSerializer
@@ -60,6 +65,17 @@ class MailerThrottle(AnonRateThrottle):
 class FormThrottle(AnonRateThrottle):
     # Loose per-IP flood guard: freshmen on FER eduroam share one public IP.
     rate = '1000/hour'
+
+
+class LoginThrottle(AnonRateThrottle):
+    scope = 'auth_login'
+    rate = '30/minute'
+
+
+class RefreshThrottle(AnonRateThrottle):
+    # Every open tab refreshes, and entry staff at an event share one venue IP.
+    scope = 'auth_refresh'
+    rate = '120/minute'
 
 
 class FormJmbagThrottle(SimpleRateThrottle):
@@ -651,7 +667,12 @@ class BrucosiFormResponseViewSet(mixins.CreateModelMixin, viewsets.GenericViewSe
     throttle_classes = [FormThrottle, FormJmbagThrottle]
 
 class GoogleAuthView(APIView):
-    permission_classes = [AllowAny]
+    """POST /api/auth/google/ — exchanges a Google ID token for an access token + refresh cookie."""
+    # sets the refresh cookie, so it gets the same CSRF guard as refresh/logout; JSON-only rules out plain form posts
+    permission_classes = [RequireXHRHeader]
+    authentication_classes = []
+    parser_classes = [JSONParser]
+    throttle_classes = [LoginThrottle]
 
     def post(self, request):
         token = request.data.get("token")
@@ -659,20 +680,19 @@ class GoogleAuthView(APIView):
             return Response({"error": "Token is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            idinfo = id_token.verify_oauth2_token(
-                token,
-                requests.Request(),
-                settings.GOOGLE_CLIENT_ID
-            )
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), settings.GOOGLE_CLIENT_ID)
+        except (ValueError, GoogleAuthError):
+            return Response({"error": "Authentication failed."}, status=status.HTTP_400_BAD_REQUEST)
 
-            email = idinfo["email"]
-            if not idinfo.get("email_verified"):
-                return Response({"error": "Email not verified."}, status=status.HTTP_403_FORBIDDEN)
-            if idinfo.get("hd") != "kset.org" or not email.endswith("@kset.org"):
-                return Response({"error": "Unauthorized domain."}, status=status.HTTP_403_FORBIDDEN)
+        email = idinfo.get("email", "")
+        if not idinfo.get("email_verified"):
+            return Response({"error": "Email not verified."}, status=status.HTTP_403_FORBIDDEN)
+        if idinfo.get("hd") != "kset.org" or not email.endswith("@kset.org"):
+            return Response({"error": "Unauthorized domain."}, status=status.HTTP_403_FORBIDDEN)
 
-            name = idinfo.get("name", "")
+        name = idinfo.get("name", "")
 
+        try:
             custom_user, created = Users.objects.get_or_create(
                 email=email,
                 defaults={"name": name, "privilege": Role.NONE}
@@ -686,21 +706,86 @@ class GoogleAuthView(APIView):
                 auth_user.first_name = name
                 auth_user.save()
 
+            if not auth_user.is_active or custom_user.privilege == Role.NONE:
+                return Response({"error": "No privileges.", "code": "no_privileges"}, status=status.HTTP_403_FORBIDDEN)
+
+            blacklist_refresh_cookie(request)
             refresh = RefreshToken.for_user(auth_user)
-
-            return Response({
-                "access": str(refresh.access_token),
-                "refresh": str(refresh),
-                "user": {
-                    "id": custom_user.id,
-                    "name": custom_user.name,
-                    "email": custom_user.email,
-                    "privilege": custom_user.privilege,
-                }
-            })
-
-        except Exception:
+        except DatabaseError:
             return Response({"error": "Authentication failed."}, status=status.HTTP_400_BAD_REQUEST)
+
+        response = Response({
+            "access": str(refresh.access_token),
+            "user": _user_payload(custom_user),
+        })
+        set_refresh_cookie(response, refresh)
+        return response
+
+
+def _user_payload(user):
+    return {
+        "name": user.name,
+        "email": user.email,
+        "role": user.privilege,
+    }
+
+
+def _privileged_user(refresh):
+    """The token owner's (auth user, Users row), or None when they were deactivated, removed from Users or demoted to Role.NONE."""
+    auth_user = DjangoUser.objects.filter(pk=refresh[jwt_settings.USER_ID_CLAIM], is_active=True).first()
+    if auth_user is None:
+        return None
+    user = Users.objects.filter(email=auth_user.username).exclude(privilege=Role.NONE).first()
+    return (auth_user, user) if user else None
+
+
+def _revoked_session_response(refresh):
+    refresh.blacklist()
+    response = Response({"error": "No privileges."}, status=status.HTTP_401_UNAUTHORIZED)
+    clear_refresh_cookie(response)
+    return response
+
+
+class CookieTokenRefreshView(APIView):
+    """POST /api/auth/token/refresh/ — reads the refresh cookie, returns a new access token + the user, rotates the cookie."""
+    permission_classes = [RequireXHRHeader]
+    authentication_classes = []
+    throttle_classes = [RefreshThrottle]
+
+    def post(self, request):
+        try:
+            refresh = RefreshToken(request.COOKIES.get(settings.AUTH_REFRESH_COOKIE, ""))
+        except TokenError:
+            return Response({"error": "Session expired."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            owner = _privileged_user(refresh)
+            if owner is None:
+                return _revoked_session_response(refresh)
+            auth_user, user = owner
+
+            _, claimed = refresh.blacklist()
+            if not claimed:
+                return Response({"error": "Session expired."}, status=status.HTTP_401_UNAUTHORIZED)
+            new_refresh = RefreshToken.for_user(auth_user)
+        except DatabaseError:
+            return Response({"error": "Try again later."}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+        response = Response({"access": str(new_refresh.access_token), "user": _user_payload(user)})
+        set_refresh_cookie(response, new_refresh)
+        return response
+
+
+class LogoutView(APIView):
+    """POST /api/auth/logout/ — revokes the refresh cookie's token and clears the cookie."""
+    permission_classes = [RequireXHRHeader]
+    authentication_classes = []
+
+    def post(self, request):
+        blacklist_refresh_cookie(request)
+        response = Response(status=status.HTTP_204_NO_CONTENT)
+        clear_refresh_cookie(response)
+        return response
 
 
 class MeView(APIView):
@@ -709,12 +794,7 @@ class MeView(APIView):
 
     def get(self, request):
         try:
-            user = Users.objects.get(email=request.user.username)
-            return Response({
-                "email": user.email,
-                "name": user.name,
-                "role": user.privilege,
-            })
+            return Response(_user_payload(Users.objects.get(email=request.user.username)))
         except Users.DoesNotExist:
             return Response({
                 "email": request.user.username,

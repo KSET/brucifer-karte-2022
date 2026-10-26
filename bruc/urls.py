@@ -1,6 +1,5 @@
 from django.urls import path, include
 from rest_framework import routers
-from rest_framework_simplejwt.views import TokenRefreshView
 
 from .views import (
     GameLeaderboardViewSet,
@@ -17,6 +16,8 @@ from .views import (
     SponsorsViewSet,
     BrucosiFormResponseViewSet,
     GoogleAuthView,
+    CookieTokenRefreshView,
+    LogoutView,
     PublicSponsorsViewSet,
     MeView,
     DbTablesView,
@@ -45,9 +46,9 @@ router.register('forms', BrucosiFormResponseViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('auth/google/', GoogleAuthView.as_view(), name="google-auth"),
-    path('auth/token/refresh/', TokenRefreshView.as_view(), name="token-refresh"),
+    path('auth/token/refresh/', CookieTokenRefreshView.as_view(), name="token-refresh"),
+    path('auth/logout/', LogoutView.as_view(), name="logout"),
     path('me/', MeView.as_view(), name="me"),
     path('db/tables/', DbTablesView.as_view(), name="db-tables"),
     path('db/tables/<str:table>/', DbTableRowsView.as_view(), name="db-table-rows"),

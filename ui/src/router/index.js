@@ -9,6 +9,8 @@ import {
 } from "@/plugins/roles.js";
 import {
   refreshRole,
+  restoreSession,
+  whileAuthGuardPending,
   alertNoPrivilege,
   resetNoPrivilegeAlert,
 } from "@/plugins/api.js";
@@ -337,31 +339,31 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   //provjera auth i privilegija
-  if (to.path.startsWith("/admin")) {
-    const loggedIn =
-      store.state.id !== "" && Date.now() / 1000 <= store.state.tokenExp;
-    if (loggedIn && to.name !== "login" && to.name !== "logout") {
+  if (!to.path.startsWith("/admin") || to.name === "logout") {
+    return next();
+  }
+  await whileAuthGuardPending(async () => {
+    const refreshed = await restoreSession();
+    if (!refreshed && store.getters.isLoggedIn && to.name !== "login") {
       try {
         await refreshRole();
       } catch (e) {
       }
     }
-    if (Date.now() / 1000 > store.state.tokenExp && to.name !== "logout") {
-      next({ path: "/admin/logout" });
-    } else if (store.state.id === "" && to.name !== "login") {
-      next({ path: "/admin/login" });
-    } else if (store.getters.hasRole(NONE) && to.name !== "login") {
-      alertNoPrivilege();
-      next({ path: "/admin/login" });
-    } else if (
-      to.meta.roles !== undefined &&
-      !store.getters.hasAnyRole(...to.meta.roles)
-    ) {
-      alertNoPrivilege();
-      next({ path: "/admin" });
-    } else {
-      next();
-    }
+  });
+  if (to.name === "login") {
+    next();
+  } else if (!store.getters.isLoggedIn) {
+    next({ name: "login", query: { redirect: to.fullPath } });
+  } else if (store.getters.hasRole(NONE)) {
+    alertNoPrivilege();
+    next({ name: "logout" });
+  } else if (
+    to.meta.roles !== undefined &&
+    !store.getters.hasAnyRole(...to.meta.roles)
+  ) {
+    alertNoPrivilege();
+    next({ path: "/admin" });
   } else {
     next();
   }
