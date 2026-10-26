@@ -115,7 +115,7 @@ const strips = [
         tilt: '-1.5deg',
         tags: [
             { label: '3 pozornice', edge: 'top', left: '7%', dir: -1 },
-            { label: '16 izvođača', edge: 'bottom', left: '78%', dir: 1 },
+            { label: '14 izvođača', edge: 'bottom', left: '78%', dir: 1 },
         ],
     },
     {
