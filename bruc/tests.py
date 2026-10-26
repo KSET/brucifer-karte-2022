@@ -424,7 +424,7 @@ class SponsorPortalTests(APITestCase):
         self.client.force_authenticate(DjangoUser.objects.create(username='admin@kset.org'))
         self.add()
         listed = self.client.get('/api/sponsors/').data[0]
-        self.assertEqual(listed['link'], f'https://brucosijada.kset.org/sponzori/{self.sponsor.access_token}')
+        self.assertEqual(listed['link'], f'https://brucifer.kset.org/sponzori/{self.sponsor.access_token}')
         self.assertEqual((listed['guestsAdded'], listed['guestsEntered']), (1, 0))
         self.assertNotIn('access_token', listed)
 

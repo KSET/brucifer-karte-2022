@@ -140,7 +140,7 @@ def send_guest_ticket_email_async(guest_id):
         run()
 
 
-SPONSOR_PORTAL_URL = "https://brucosijada.kset.org/sponzori/{token}"
+SPONSOR_PORTAL_URL = "https://brucifer.kset.org/sponzori/{token}"
 SPONSORS_INPUT_TIME = "SPONSORS_INPUT_TIME"
 
 
