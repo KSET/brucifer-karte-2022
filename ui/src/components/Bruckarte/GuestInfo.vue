@@ -1,358 +1,181 @@
 <template>
-    <div class="grid-item grid1-item3" :class="{ [$style.cFix]: true, [$style.cFixExpanded]: guest?.tag === 'Brucoši' }"
-        id="c">
-        <div class="grid-container3">
-            <h1 class="textfield">Ime </h1>
-            <input readonly class="inputfield " :disabled="guest?.id == ''" type="text" @input="changeValue"
-                v-model="guest.name">
+    <div class="guest-info">
+        <div v-if="wasEntered" class="entered-banner">Već ušao</div>
 
-            <h1 v-if="guest?.tag !== undefined && !guest?.tag.includes('Sponzor')" class="textfield ">Prezime</h1>
-            <input v-if="guest?.tag !== undefined && !guest?.tag.includes('Sponzor')" readonly class="inputfield "
-                :disabled="guest?.id == ''" type="text" @input="changeValue" v-model="guest.surname">
+        <div class="guest-grid">
+            <label class="textfield">Ime</label>
+            <input readonly class="inputfield" type="text" :value="guest?.name">
 
-            <h1 v-if="guest?.tag?.includes('Brucoši')" class="textfield ">JMBAG </h1>
-            <input v-if="guest?.tag?.includes('Brucoši')" class="inputfield " readonly type="text" v-model="guest.jmbag">
+            <template v-if="hasGuest && !isSponsor">
+                <label class="textfield">Prezime</label>
+                <input readonly class="inputfield" type="text" :value="guest.surname">
+            </template>
 
-            <h1 v-if="guest?.tag?.includes('Brucoši')" class="textfield">Karta </h1>
+            <template v-if="isBrucos">
+                <label class="textfield">JMBAG</label>
+                <input readonly class="inputfield" type="text" :value="guest.jmbag">
 
-            <button disabled v-if="guest?.tag?.includes('Brucoši') && guest?.bought === true" class="bttn button2-yes"
-                @click="changeBought(guest, false)">
-                <img class="va" src="../../assets/icons/yes-icon.svg">
-            </button>
-            <button disabled class="bttn button2-no" v-if="guest?.tag?.includes('Brucoši') && guest?.bought === false"
-                @click="changeBought(guest, true)">
-                <img class="va" src="../../assets/icons/no-icon.svg">
-            </button>
-            <h1 class="textfield">Ulaz </h1>
+                <label class="textfield">Karta</label>
+                <span class="status-btn" :class="{ 'is-yes': guest.bought }">
+                    <img v-if="guest.bought" class="va" src="../../assets/icons/yes-icon.svg" alt="Kupljena">
+                    <img v-else class="va" src="../../assets/icons/no-icon.svg" alt="Nije kupljena">
+                </span>
+            </template>
 
-            <button v-if="guest?.entered === true" type="button" :disabled="guest?.id == ''" class="bttn button2-yes"
-                @click="changeEntered(guest, false)">
-                <img class="va" src="../../assets/icons/yes-icon.svg">
-            </button>
-            <button v-else @click="changeEntered(guest, true)" :disabled="guest?.id == ''" type="button"
-                class="bttn button2-no">
-                <img class="va" src="../../assets/icons/no-icon.svg">
+            <label class="textfield">Ulaz</label>
+            <button type="button" class="status-btn" :class="{ 'is-yes': guest?.entered }"
+                :disabled="!hasGuest || saving" @click="guest.entered ? undoCheckIn() : checkIn()">
+                <img v-if="guest?.entered" class="va" src="../../assets/icons/yes-icon.svg" alt="Ušao">
+                <img v-else class="va" src="../../assets/icons/no-icon.svg" alt="Nije ušao">
             </button>
 
-            <h1 v-if="guest?.tag?.includes('Brucoši')" class="textfield">Potvrda </h1>
-            <h1 v-if="guest?.tag?.includes('Brucoši')" class="textfield" style="width: 100%">{{ guest?.confCode }} </h1>
+            <p v-if="error" class="error-text">{{ error }}</p>
+
+            <template v-if="isBrucos">
+                <label class="textfield">Potvrda</label>
+                <span class="textfield conf-code">{{ guest.confCode }}</span>
+            </template>
         </div>
     </div>
 </template>
 
-
-
 <script>
 import { api } from "@/plugins/api";
+import { isBrucos, isSponsor, REQUEST_TIMEOUT } from '@/utils/guestTags';
+
 export default {
     name: 'GuestInfo',
-    components: {
-
-    },
     props: {
         guest: {
             type: Object,
             default: () => ({}),
         },
     },
+    emits: ['updated'],
     data() {
         return {
+            saving: false,
+            error: '',
+            // snapshot taken when a guest is opened, so toggling entry here doesn't raise the warning
+            wasEntered: false,
         }
     },
+    computed: {
+        guestId() {
+            return this.guest?.id;
+        },
+        hasGuest() {
+            return !!this.guestId;
+        },
+        isBrucos() {
+            return isBrucos(this.guest?.tag);
+        },
+        isSponsor() {
+            return isSponsor(this.guest?.tag);
+        },
+    },
+    watch: {
+        guestId: {
+            immediate: true,
+            handler() {
+                this.wasEntered = !!this.guest?.entered;
+                this.error = '';
+            },
+        },
+    },
     methods: {
-        changeEntered(guest, changenum) {
-            api.put('/guests/' + guest.id + '/',
-                { entered: changenum },
-            )
-                .then(() => {
-                    this.guest.entered = changenum;
-                })
+        checkIn() {
+            return this.postEntry('check-in');
+        },
+        undoCheckIn() {
+            if (!window.confirm('Poništiti ulaz za ovog gosta?')) return;
+            return this.postEntry('undo-check-in');
+        },
+        // the endpoints set entered instead of toggling it, so retrying after a timeout is safe
+        async postEntry(action) {
+            if (!this.hasGuest || this.saving) return;
+            const guest = this.guest;
+            this.saving = true;
+            this.error = '';
+            try {
+                const { data } = await api.post(`/guests/${guest.id}/${action}/`, {}, { timeout: REQUEST_TIMEOUT });
+                this.$emit('updated', data.guest);
+            } catch (err) {
+                if (err.response?.status === 409) {
+                    // another door already let them in; show the server's state, not ours
+                    this.$emit('updated', err.response.data.guest);
+                    if (this.guestId === guest.id) this.wasEntered = true;
+                } else if (this.guestId === guest.id) {
+                    this.error = err.response
+                        ? 'Spremanje ulaza nije uspjelo, pokušajte ponovno.'
+                        : 'Nema veze – pokušajte ponovno.';
+                }
+            } finally {
+                this.saving = false;
+            }
         },
     }
 }
 </script>
 
-<style module lang="scss">
-.person {
-
-    p {
-        font-size: .6em;
-        font-family: 'Montserrat';
-    }
-}
-
-
-
-:global(#flex) .cFix {
-    @media screen and (max-width: 550px) {
-        display: flex !important;
-        flex-direction: column;
-        height: fit-content;
-        justify-content: flex-start;
-
-        &.cFixExpanded {
-            height: 100%;
-        }
-    }
-}
-</style>
-
 <style scoped>
-.grid-container3 {
+.guest-info {
+    padding: 20px;
+    text-align: left;
+}
+
+.guest-grid {
     display: grid;
     grid-template-columns: 25% 75%;
     row-gap: 25px;
     align-items: center;
 }
 
-.inputfield {
+.guest-grid .inputfield {
     width: 100%;
 }
 
-.grid1-container {
-    display: grid;
-    grid-template-columns: auto 34.47%;
-    grid-template-rows: auto 80.76%;
-    width: 100vw;
-    height: 93vh;
-}
-
-.grid3-container {
-    left: 6%;
-    display: grid;
-    grid-template-columns: 23.6% auto;
+.entered-banner {
+    margin-bottom: 20px;
     padding: 10px;
-    grid-gap: 6%;
-
-
+    border-radius: 6px;
+    background-color: #c62828;
+    color: white;
+    font-family: "Montserrat";
+    font-weight: 700;
+    font-size: 20px;
+    text-align: center;
 }
 
-.grid-item {
-    padding: 20px;
-    font-size: 30px;
-    text-align: left;
-}
-
-.grid1-item1 {
-    border-bottom: 1px solid #000000;
-}
-
-.grid1-item2 {
-    border-left: 1px solid #000000;
-    overflow: auto;
-    margin-right: 5px;
-}
-
-.grid1-item3 {
-    overflow: visible;
-}
-
-.inputfield {
-    border: 1px solid;
-    left: 6%;
-
-}
-
-#inputfield {
-    width: 50.6%;
-}
-
-.nosubmit.search {
-    position: relative;
-    margin-top: 2.375rem;
-    width: 20%;
-    margin-left: 6%;
-}
-
-.person {
-    display: block;
-    width: 100%;
+.status-btn {
     box-sizing: border-box;
+    width: 25%;
     background-color: white;
-    border: 0px;
-    border-bottom: 1px solid #000000 !important;
-}
-
-.menu-item {
-    width: 35%;
-}
-
-.p {
-    font-size: 16px;
-}
-
-.button2-yes {
-    box-sizing: border-box;
-
-    width: 25%;
-
-
-    background: #000000;
     border: 1px solid #000000;
     border-radius: 6px;
+    text-align: center;
 }
 
-.button2-no {
-    box-sizing: border-box;
-    width: 25%;
-
-    background-color: white !important;
-    border: 1px solid #000000;
-    border-radius: 6px;
-
+.status-btn.is-yes {
+    background-color: #000000;
 }
 
-.va {
-    margin-bottom: 5px;
+.error-text {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: #c62828;
+    font-family: "Montserrat";
+    font-size: 14px;
 }
 
-.nosubmit.search.entry {
-    width: 90%;
-    left: 0px;
-    margin: 0px;
-}
-
-.inputfield.entry {
-    width: 90%;
-}
-
-.grid1-item {
-    width: 50% !important;
-    display: inline-block !important;
-
-}
-
-.grid-container2 {
-    left: 6%;
-    display: grid;
-    grid-template-columns: 5% auto !important;
-    padding: 10px;
-    grid-gap: 15%;
-    row-gap: 3rem;
-    align-items: center;
-}
-
-.showMobile {
-    display: none;
-}
-
-@media screen and (max-width: 980px) {
-    .hideDesktop {
-        display: inline-block !important;
-    }
-
-    .hideTablet {
-        display: none;
-    }
-
-    .textfield {
-        font-size: 14px;
-    }
-
-    .showMobile {
-        display: none !important;
-    }
-
+.conf-code {
+    overflow-wrap: anywhere;
 }
 
 @media screen and (max-width: 550px) {
-    .grid1-container {
-        display: block !important;
-    }
-
-    .grid1-container {
-        display: block !important;
-    }
-
-    .grid3-container {
-        display: block !important;
-
-
-    }
-
-    .grid-item {
-        display: block !important;
-    }
-
-    .grid1-item1 {
-        border-bottom: 1px solid #000000;
-    }
-
-    .grid1-item2 {
-        display: block !important;
-    }
-
-    #flex {
-        display: flex !important;
-        flex-direction: column;
-    }
-
-    #a {
-        order: 1;
-    }
-
-    #b {
-        order: 3;
-        height: 50%
-    }
-
-    #c {
-        order: 2;
-    }
-}
-
-
-@media screen and (max-width: 550px) {
-    .grid1-item {
-        display: inline-block !important;
-        margin: 0px;
-        padding: 0px;
-        width: 50% !important;
-    }
-
-    .nosubmit.search.entry {
-        width: 90% !important;
-    }
-
-    .inputfield.entry {
-        width: 90% !important;
-    }
-
-    .grid1-item2 {
-        border-left: none;
-
-    }
-
-    .textfield {
-        font-size: 12px;
-    }
-
-    .bttn {
+    .status-btn {
         width: 76px;
         height: 25px;
-    }
-
-    .va {
-        width: 19px;
-        height: 19px;
-        margin-top: 3px;
-        vertical-align: top;
-    }
-
-    .grid-container2 {
-        left: 6%;
-        display: grid;
-        grid-template-columns: 5% 1% 5% 10% 30%;
-        padding: 10px;
-        padding-top: 3px;
-
-        grid-gap: 15%;
-        row-gap: 3rem;
-        align-items: center;
-    }
-
-    .showMobile {
-        display: block !important;
     }
 }
 </style>

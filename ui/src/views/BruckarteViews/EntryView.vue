@@ -1,263 +1,251 @@
 <template>
-    <div class="grid1-container" id="flex">
-        <div class="grid-item grid1-item1" id="a">
-            <div class="grid2-container" style="width: 100%">
-                <div class="grid-item grid1-item" style="position: relative">
-                    <input class="nosubmit search entry" @input="prepSearchGuest" type="form" v-model="search"
-                        placeholder="Unesi Ime" style="width: 100% !important" />
-                    <div class="remove-icon" @click="removeSearch"></div>
+    <div class="entry-view">
+        <div class="entry-view__controls">
+            <div class="entry-view__fields">
+                <div class="entry-view__field">
+                    <input class="nosubmit search" type="text" v-model="search" placeholder="Unesi Ime"
+                        @input="onQueryChange" />
+                    <button v-if="search" type="button" class="field-icon remove-icon" aria-label="Očisti pretragu"
+                        @click="clearSearch"></button>
                 </div>
-                <div class="qr-scan">
+                <div class="entry-view__qr">
                     <MobileEntry />
                 </div>
-                <div class="grid-item grid1-item" style="position: relative">
-                    <select id="selector" class="inputfield entry" v-model="selectedTag" @change="searchGuest">
-                        <option v-for="(item, i) in items" :key="i" class="menu-item">
-                            {{ item }}
-                        </option>
+                <div class="entry-view__field">
+                    <select class="inputfield entry" v-model="selectedTag" @change="onQueryChange">
+                        <option value="">Svi tagovi</option>
+                        <option v-for="tag in tags" :key="tag" :value="tag">{{ tag }}</option>
                     </select>
-                    <div class="tagDropdown-icon"></div>
+                    <span class="field-icon dropdown-icon" aria-hidden="true"></span>
                 </div>
             </div>
         </div>
-        <div class="grid-item grid1-item2" id="b" style="padding: 0px;">
-            <v-progress-circular v-if="loading == true" size="90px" indeterminate color="black"></v-progress-circular>
 
-            <button class="person" :class="$style.person" v-bind:style="[
-                this.guest.id == guest.id
-                    ? { backgroundColor: '#D9D9D9' }
-                    : { backgroundColor: 'white' },
-            ]" v-for="guest in guests" :key="guest.class" @click="chooseGuest(guest)">
-                <p>
-                    <strong>{{ guest.name }} {{ guest.surname }}</strong>
-                </p>
-                <p>{{ guest.tag }}</p>
+        <div class="entry-view__list">
+            <div v-if="loading" class="entry-view__status">
+                <v-progress-circular size="90px" indeterminate color="black"></v-progress-circular>
+            </div>
+            <p v-else-if="error" class="entry-view__status entry-view__status--error">{{ error }}</p>
+            <p v-else-if="searched && !guests.length" class="entry-view__status">Nema rezultata</p>
+
+            <button v-for="g in guests" :key="g.id" type="button" class="person"
+                :class="{ 'person--selected': g.id === selectedGuest?.id }" @click="selectGuest(g)">
+                <p><strong>{{ g.name }} {{ g.surname }}</strong></p>
+                <p>{{ displayTag(g.tag) }}</p>
             </button>
         </div>
-        <div class="hideMobile">
-            <GuestInfo :guest="guest"></GuestInfo>
+
+        <div class="entry-view__details">
+            <GuestInfo :guest="selectedGuest" @updated="onGuestUpdated"></GuestInfo>
         </div>
-        <div class="overlayEntry showMobile" v-if="overlayEntry">
-            <div class="overlayEntry-container">
-                <GuestInfo :guest="guest"></GuestInfo>
-                <div class="closeBtn" @click="overlayEntry = false">
-                    Zatvori
-                </div>
+
+        <!-- only displayed on mobile, where the details panel is hidden -->
+        <div v-if="overlayOpen" class="entry-view__overlay" @click.self="overlayOpen = false">
+            <div class="entry-view__overlay-card">
+                <GuestInfo :guest="selectedGuest" @updated="onGuestUpdated"></GuestInfo>
+                <button type="button" class="close-btn" @click="overlayOpen = false">Zatvori</button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { api } from "@/plugins/api";
-import GuestInfo from '../../components/Bruckarte/GuestInfo.vue';
-import MobileEntry from '@/components/Bruckarte/MobileEntry.vue'
 import debounce from 'lodash/debounce';
+import { api } from "@/plugins/api";
+import GuestInfo from '@/components/Bruckarte/GuestInfo.vue';
+import MobileEntry from '@/components/Bruckarte/MobileEntry.vue';
+import { displayTag, REQUEST_TIMEOUT } from '@/utils/guestTags';
 
+const MIN_QUERY_LENGTH = 3;
+const SEARCH_FIELDS = ['tag', 'name', 'surname'];
 
 export default {
-    name: 'GuestsAdd',
+    name: 'EntryView',
     components: {
         GuestInfo,
         MobileEntry
     },
     data() {
         return {
-            items: [],
+            tags: [],
             selectedTag: '',
-            id: '',
-
-            guests: [],
-            guest: {},
             search: '',
 
-            overlayEntry: false,
+            guests: [],
+            selectedGuest: null,
+            overlayOpen: false,
 
             loading: false,
+            searched: false,
+            error: '',
+            searchSeq: 0,
         }
     },
-    mounted() {
-        this.searchGuest = debounce(this.searchGuest, 1000);
-
-        api.get('/tags/',)
-            .then(response => {
-                var itemss = response.data;
-                this.items.push("...");
-                itemss.forEach(element => {
-                    this.items.push(element.name);
-                });
-
-            })
+    created() {
+        this.runSearch = debounce(this.runSearch, 400);
+        this.fetchTags();
+    },
+    beforeUnmount() {
+        this.runSearch.cancel();
+        this.searchSeq++;
     },
     methods: {
-        prepSearchGuest() {
-            if (this.selectedTag == "...") {
-                this.selectedTag = "";
+        displayTag,
+        async fetchTags() {
+            try {
+                const { data } = await api.get('/tags/');
+                this.tags = data.map(tag => tag.name);
+            } catch (err) {
+                this.error = 'Dohvaćanje tagova nije uspjelo.';
             }
-
+        },
+        onQueryChange() {
+            // invalidate any in-flight search now, not when the debounce fires, so a slow
+            // stale response can't fill the list or auto-open the wrong guest in between
+            this.searchSeq++;
             this.guests = [];
-            this.guest = {};
+            this.selectedGuest = null;
+            this.overlayOpen = false;
+            this.searched = false;
+            this.error = '';
 
-            if (this.search != '' && this.search.length > 2) {
-                this.loading = true;
+            if (this.search.trim().length < MIN_QUERY_LENGTH) {
+                this.runSearch.cancel();
+                this.loading = false;
+                return;
             }
-            this.searchGuest()
+            this.loading = true;
+            this.runSearch();
         },
-        async searchGuest() {
-            if (this.selectedTag == "...") {
-                this.selectedTag = ""
+        async runSearch() {
+            const seq = ++this.searchSeq;
+            this.loading = true;
+            const params = new URLSearchParams({
+                search: [this.search.trim(), this.selectedTag].filter(Boolean).join(' '),
+            });
+            SEARCH_FIELDS.forEach(field => params.append('search_fields', field));
+            try {
+                const { data } = await api.get('/guests/', { params, timeout: REQUEST_TIMEOUT });
+                if (seq !== this.searchSeq) return;
+                this.guests = data;
+                this.searched = true;
+                if (data.length === 1) this.selectGuest(data[0]);
+            } catch (err) {
+                if (seq === this.searchSeq) {
+                    this.error = err.response ? 'Greška prilikom pretraživanja.' : 'Spora veza, pokušajte ponovno.';
+                }
+            } finally {
+                if (seq === this.searchSeq) this.loading = false;
             }
-            if (this.search != '' && this.search.length > 2) {
-                console.log("SEARCHING", this.search)
-
-                api.get('/guests/?search=' + this.search + ' ' + this.selectedTag + "&search_fields=tag&search_fields=name&search_fields=surname",)
-                    .then(response => {
-                        this.guests = response.data;
-
-                        this.guests.forEach(element => {
-                            if (element.tag.includes("Sponzor")) {
-                                element.tag = (element.tag).slice(36, element.tag.length)
-                            }
-                        });
-
-                        if (this.guests.length == 1) {
-                            this.overlayEntry = true
-                            this.guest = this.guests[0];
-                            this.id = this.guest.id;
-                        } else if (this.guests.length < 1) {
-                            this.guest = {}
-                            if (this.search != '') {
-                                this.guests = [];
-                            }
-                        }
-
-                    })
-            }
-            this.loading = false;
         },
-        chooseGuest(guest) {
-            this.guest = guest;
-            this.overlayEntry = true
+        clearSearch() {
+            this.search = '';
+            this.onQueryChange();
         },
-        removeSearch() {
-            this.search = ""
-            this.guests = [];
-            this.guest = {};
-        }
+        selectGuest(guest) {
+            this.selectedGuest = guest;
+            this.overlayOpen = true;
+        },
+        onGuestUpdated(updated) {
+            const index = this.guests.findIndex(g => g.id === updated.id);
+            if (index !== -1) this.guests.splice(index, 1, updated);
+            if (this.selectedGuest?.id === updated.id) this.selectedGuest = updated;
+        },
     }
 }
 </script>
 
-<style module lang="scss" scoped>
-.person {
-    p {
-        font-size: 0.6em;
-        font-family: "Montserrat";
-        color: black;
-    }
-}
-
-.span2Sm {
-    @media screen and (max-width: 550px) {
-        grid-column: span 2;
-    }
-}
-
-:global(#flex) .cFix {
-    @media screen and (max-width: 550px) {
-        display: flex !important;
-        flex-direction: column;
-        height: fit-content;
-        justify-content: flex-start;
-
-        &.cFixExpanded {
-            height: 100%;
-        }
-    }
-}
-</style>
-
-<style>
-.tagDropdown-icon,
-.remove-icon {
-    position: absolute;
-    right: 10px;
-    top: 55%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    background-size: contain;
-    background-repeat: no-repeat;
-    width: 16px;
-    height: 16px;
-}
-
-.tagDropdown-icon {
-    background-image: url('../../assets/icons/dopdwn-notopen-icon.svg');
-}
-
-.remove-icon {
-    background-image: url('../../assets/icons/remove-icon.svg');
-}
-
-
-.grid1-container {
+<style lang="scss" scoped>
+.entry-view {
     display: grid;
     grid-template-columns: auto 34.47%;
     grid-template-rows: auto 80.76%;
+    grid-template-areas:
+        "controls list"
+        "details list";
     width: 100vw;
     height: 93vh;
 }
 
-.grid3-container {
-    left: 6%;
-    display: grid;
-    grid-template-columns: 23.6% auto;
-    padding: 10px;
-    grid-gap: 6%;
-}
-
-.grid-item {
-    padding: 20px;
-    font-size: 30px;
-    text-align: left;
-}
-
-.grid1-item1 {
+.entry-view__controls {
+    grid-area: controls;
     display: flex;
     align-items: center;
+    padding: 20px;
     border-bottom: 1px solid #000000;
+    font-size: 30px;
 }
 
-.grid2-container {
+.entry-view__fields {
     display: grid;
     grid-template-columns: 50% 50%;
+    width: 100%;
 }
 
-.grid1-item2 {
+.entry-view__field {
+    position: relative;
+    width: 95%;
+    padding: 10px 0;
+
+    .nosubmit.search {
+        width: 100%;
+        left: 0;
+        margin: 0;
+    }
+}
+
+.entry-view__qr {
     grid-row: span 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.field-icon {
+    position: absolute;
+    right: 10px;
+    top: 55%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.remove-icon {
+    background-image: url('../../assets/icons/remove-icon.svg');
+    cursor: pointer;
+}
+
+.dropdown-icon {
+    background-image: url('../../assets/icons/dopdwn-notopen-icon.svg');
+    pointer-events: none;
+}
+
+.entry-view__list {
+    grid-area: list;
+    margin-right: 5px;
     border-left: 1px solid #000000;
     overflow: auto;
-    margin-right: 5px;
+    font-size: 30px;
 }
 
-.grid1-item3 {
-    overflow: visible;
+.entry-view__status {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    font-family: "Montserrat";
+    font-size: 16px;
 }
 
-.inputfield {
-    border: 1px solid;
-    left: 6%;
-}
-
-#inputfield {
-    width: 50.6%;
-}
-
-.nosubmit.search {
-    height: 39px;
-    position: relative;
-    width: 20%;
-    margin-left: 6%;
+.entry-view__status--error {
+    color: #c62828;
 }
 
 .person {
@@ -265,245 +253,77 @@ export default {
     width: 100%;
     box-sizing: border-box;
     background-color: white;
-    border: 0px;
-    border-bottom: 1px solid #000000 !important;
+    border: 0;
+    border-bottom: 1px solid #000000;
+
+    &--selected {
+        background-color: #D9D9D9;
+    }
+
+    p {
+        font-size: 0.6em;
+        font-family: "Montserrat";
+        color: black;
+    }
 }
 
-.qr-scan {
-    grid-row: span 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid black;
-    margin: 5px;
-    border-radius: 5px;
+.entry-view__details {
+    grid-area: details;
+    font-size: 30px;
 }
 
-.menu-item {
-    width: 35%;
-}
-
-.p {
-    font-size: 16px;
-}
-
-.button2-yes {
-    box-sizing: border-box;
-
-    width: 25%;
-
-    background: #000000;
-    border: 1px solid #000000;
-    border-radius: 6px;
-}
-
-.button2-no {
-    box-sizing: border-box;
-    width: 25%;
-
-    background-color: white !important;
-    border: 1px solid #000000;
-    border-radius: 6px;
-}
-
-.va {
-    margin-bottom: 5px;
-}
-
-.nosubmit.search.entry {
-    width: 100%;
-    left: 0px;
-    margin: 0px;
-}
-
-.inputfield.entry {
-    width: 100%;
-}
-
-.grid1-item {
-    width: 95%;
-    display: block !important;
-    padding: 10px 0px;
-    align-items: center;
-}
-
-.grid-container2 {
-    left: 6%;
-    display: grid;
-    grid-template-columns: 15% auto;
-    padding: 10px;
-    grid-gap: 15%;
-    row-gap: 3rem;
-    align-items: center;
-}
-
-.overlayEntry {
+.entry-view__overlay {
     display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
     align-items: center;
     justify-content: center;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.overlayEntry-container {
-    background-color: white;
+.entry-view__overlay-card {
     width: 80%;
-    height: fit-content;
+    background-color: white;
     border-radius: 15px;
 }
 
-.showMobile {
-    display: none;
-}
-
-.closeBtn {
+.close-btn {
+    display: block;
     width: 93%;
-    text-align: center;
     height: 30px;
-    border: 1px solid black;
     margin: -10px 10px 10px 10px;
+    border: 1px solid black;
     border-radius: 10px;
-}
-
-@media screen and (max-width: 980px) {
-    .hideDesktop {
-        display: inline-block !important;
-    }
-
-    .hideTablet {
-        display: none;
-    }
-
-    .textfield {
-        font-size: 14px;
-    }
-
-    .showMobile {
-        display: none !important;
-    }
+    background-color: white;
+    text-align: center;
 }
 
 @media screen and (max-width: 550px) {
-    .dropdown-arrow {
-        top: 50%
-    }
-
-    .grid1-container {
-        display: block !important;
-    }
-
-    .grid1-container {
-        display: block !important;
-    }
-
-    .grid3-container {
-        display: block !important;
-    }
-
-    .grid-item {
-        display: block !important;
-    }
-
-    .grid1-item1 {
-        border-bottom: 1px solid #000000;
-    }
-
-    .grid1-item2 {
-        display: block !important;
-    }
-
-    #flex {
-        display: flex !important;
+    .entry-view {
+        display: flex;
         flex-direction: column;
     }
 
-    #a {
-        order: 1;
+    .entry-view__field {
+        padding: 7px 0;
+
+        .nosubmit.search {
+            font-size: 12px;
+        }
     }
 
-    #b {
-        order: 3;
+    .entry-view__list {
         height: 100%;
-    }
-
-    #c {
-        order: 2;
-    }
-}
-
-@media screen and (max-width: 550px) {
-    .grid1-item {
-        display: flex !important;
-        margin: 0px;
-        padding: 7px 0px;
-        width: 95% !important;
-    }
-
-    .nosubmit.search.entry {
-        width: 100% !important;
-        font-size: 12px;
-    }
-
-    .inputfield.entry {
-        width: 100% !important;
-    }
-
-    .grid1-item2 {
         border-left: none;
     }
 
-    .textfield {
-        font-size: 5px;
+    .entry-view__details {
+        display: none;
     }
 
-    .bttn {
-        width: 76px;
-        height: 25px;
-    }
-
-    .va {
-        width: 19px;
-        height: 19px;
-        margin-top: 3px;
-        vertical-align: top;
-    }
-
-    .span2 {
-        grid-column: 1/2;
-    }
-
-    .span3 {
-        grid-column: 3/6;
-        height: 35px !important;
-    }
-
-    .grid-container2 {
-        left: 6%;
-        display: grid;
-        grid-template-columns: 5% 1% 5% 10% 30%;
-        padding: 10px;
-        padding-top: 3px;
-
-        grid-gap: 15%;
-        row-gap: 1rem;
-        align-items: center;
-    }
-
-    .showMobile {
-        display: block !important;
-    }
-
-    .qr-scan {
-        display: flex !important;
-    }
-
-    .overlayEntry {
-        display: flex !important;
+    .entry-view__overlay {
+        display: flex;
     }
 }
 </style>

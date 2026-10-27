@@ -129,3 +129,41 @@ input:checked + .slider:before {
 .admin-table-header .page-title {
   margin: 0;
 }
+
+/* Shared admin form rules (formerly leaked globally from EntryView) */
+.inputfield {
+  border: 1px solid;
+  left: 6%;
+}
+
+.inputfield.entry {
+  width: 100%;
+}
+
+.nosubmit.search {
+  height: 39px;
+  position: relative;
+  width: 20%;
+  margin-left: 6%;
+}
+
+.va {
+  margin-bottom: 5px;
+}
+
+@media screen and (max-width: 550px) {
+  .inputfield.entry {
+    width: 100% !important;
+  }
+
+  .va {
+    width: 19px;
+    height: 19px;
+    margin-top: 3px;
+    vertical-align: top;
+  }
+
+  .showMobile {
+    display: block !important;
+  }
+}

@@ -936,6 +936,53 @@ REFRESH_URL = '/api/auth/token/refresh/'
 LOGOUT_URL = '/api/auth/logout/'
 
 
+class GuestCheckInTests(APITestCase):
+    def setUp(self):
+        self.guest = Guests.objects.create(name='Ivan', tag='Brucoši', bought=True)
+
+    def login_as(self, role):
+        email = f'{role}@kset.org'
+        Users.objects.get_or_create(email=email, defaults={'privilege': role})
+        self.client.force_authenticate(DjangoUser.objects.get_or_create(username=email)[0])
+
+    def post(self, action):
+        return self.client.post(guests_url(self.guest, action), {}, format='json')
+
+    def test_check_in(self):
+        self.login_as(Role.ENTRY)
+        res = self.post('check-in')
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(res.data['guest']['entered'])
+        self.guest.refresh_from_db()
+        self.assertTrue(self.guest.entered)
+
+    def test_second_check_in_conflicts_and_stays_entered(self):
+        self.login_as(Role.ENTRY_TICKETS)
+        self.assertEqual(self.post('check-in').status_code, 200)
+        res = self.post('check-in')
+        self.assertEqual(res.status_code, 409)
+        self.assertTrue(res.data['guest']['entered'])
+        self.guest.refresh_from_db()
+        self.assertTrue(self.guest.entered)
+
+    def test_undo_check_in(self):
+        self.login_as(Role.ENTRY)
+        self.post('check-in')
+        res = self.post('undo-check-in')
+        self.assertEqual(res.status_code, 200)
+        self.assertFalse(res.data['guest']['entered'])
+        self.assertEqual(self.post('check-in').status_code, 200)
+
+    def test_permissions(self):
+        for role in (Role.NONE, Role.TICKETS):
+            for action in ('check-in', 'undo-check-in'):
+                with self.subTest(role=role, action=action):
+                    self.login_as(role)
+                    self.assertEqual(self.post(action).status_code, 403)
+        self.guest.refresh_from_db()
+        self.assertFalse(self.guest.entered)
+
+
 class AuthCookieTests(APITestCase):
     EMAIL = 'admin@kset.org'
 

@@ -330,6 +330,25 @@ class GuestsViewSet(viewsets.ModelViewSet):
         guest.refresh_from_db()
         return Response({"guest": GuestsSerializer(guest).data})
 
+    @action(detail=True, methods=['post'], url_path='check-in',
+            permission_classes=[HasRole(Role.ENTRY, Role.ENTRY_TICKETS, Role.ADMIN)])
+    def check_in(self, request, pk=None):
+        guest = self.get_object()
+        checked_in = Guests.objects.filter(pk=guest.pk, entered=False).update(entered=True)
+        guest.refresh_from_db()
+        data = GuestsSerializer(guest).data
+        if not checked_in:
+            return Response({"detail": "Gost je već ušao.", "guest": data}, status=status.HTTP_409_CONFLICT)
+        return Response({"guest": data})
+
+    @action(detail=True, methods=['post'], url_path='undo-check-in',
+            permission_classes=[HasRole(Role.ENTRY, Role.ENTRY_TICKETS, Role.ADMIN)])
+    def undo_check_in(self, request, pk=None):
+        guest = self.get_object()
+        Guests.objects.filter(pk=guest.pk).update(entered=False)
+        guest.refresh_from_db()
+        return Response({"guest": GuestsSerializer(guest).data})
+
     @action(detail=True, methods=['post'], url_path='resend-mail', permission_classes=[HasRole(Role.ADMIN)])
     def resend_mail(self, request, pk=None):
         guest = self.get_object()
