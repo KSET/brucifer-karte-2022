@@ -706,8 +706,6 @@ class GoogleAuthView(APIView):
         email = idinfo.get("email", "")
         if not idinfo.get("email_verified"):
             return Response({"error": "Email not verified."}, status=status.HTTP_403_FORBIDDEN)
-        if idinfo.get("hd") != "kset.org" or not email.endswith("@kset.org"):
-            return Response({"error": "Unauthorized domain."}, status=status.HTTP_403_FORBIDDEN)
 
         name = idinfo.get("name", "")
 

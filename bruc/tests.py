@@ -1010,6 +1010,23 @@ class AuthCookieTests(APITestCase):
         self.assertEqual(cookie['path'], settings.AUTH_REFRESH_COOKIE_PATH)
         self.assertEqual(cookie['samesite'], 'Strict')
 
+    @mock.patch('bruc.views.id_token.verify_oauth2_token')
+    def test_outside_domain_with_privilege_can_login(self, verify):
+        Users.objects.create(email='someone@gmail.com', privilege=Role.ENTRY)
+        verify.return_value = {'email': 'someone@gmail.com', 'email_verified': True, 'name': 'Someone'}
+        res = self.client.post(GOOGLE_AUTH_URL, {'token': 'google-id-token'}, format='json')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.data['user']['role'], Role.ENTRY)
+
+    @mock.patch('bruc.views.id_token.verify_oauth2_token')
+    def test_outside_domain_without_privilege_rejected(self, verify):
+        verify.return_value = {'email': 'stranger@gmail.com', 'email_verified': True, 'name': 'Stranger'}
+        res = self.client.post(GOOGLE_AUTH_URL, {'token': 'google-id-token'}, format='json')
+        self.assertEqual(res.status_code, 403)
+        self.assertEqual(res.data['code'], 'no_privileges')
+        self.assertEqual(Users.objects.get(email='stranger@gmail.com').privilege, Role.NONE)
+        self.assertNotIn(settings.AUTH_REFRESH_COOKIE, res.cookies)
+
     @mock.patch('bruc.views.id_token.verify_oauth2_token', side_effect=ValueError('bad token'))
     def test_invalid_google_token_rejected(self, _):
         res = self.client.post(GOOGLE_AUTH_URL, {'token': 'forged'}, format='json')

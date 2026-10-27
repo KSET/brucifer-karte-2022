@@ -63,7 +63,6 @@ export default {
             try {
                 window.google.accounts.id.initialize({
                     client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID,
-                    hosted_domain: "kset.org",
                     callback: this.handleCredentialResponse,
                 });
                 window.google.accounts.id.renderButton(
