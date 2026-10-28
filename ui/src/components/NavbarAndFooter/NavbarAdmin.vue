@@ -96,6 +96,8 @@
             :link="'/admin/visibility'"></RouterElement>
           <RouterElement class="overlay-element admin" v-if="isAdmin" :name="'Prijevodi'" @click="toggleNav()"
             :link="'/admin/translations'"></RouterElement>
+          <RouterElement class="overlay-element admin" v-if="isAdmin" :name="'Baza podataka'" @click="toggleNav()"
+            :link="'/admin/database'"></RouterElement>
         </div>
       </div>
     </div>
@@ -221,6 +223,10 @@ export default {
 }
 </style>
 <style lang="scss">
+.overlay.admin {
+  background-color: white;
+}
+
 .overlay-element.admin {
   height: 2.5rem;
   color: black;
