@@ -7,8 +7,43 @@ from django.db.models.signals import post_delete
 
 from .images import to_webp
 from .roles import Role
+from .search import search_key
 
 # Create your models here.
+
+
+class GuestsQuerySet(models.QuerySet):
+    """Keeps Guests.searchKey in step with name and surname on the writes that skip save()."""
+    NAME_FIELDS = {'name', 'surname'}
+
+    def bulk_create(self, objs, *args, **kwargs):
+        objs = list(objs)
+        for guest in objs:
+            guest.update_search_key()
+        return super().bulk_create(objs, *args, **kwargs)
+
+    def bulk_update(self, objs, fields, *args, **kwargs):
+        if self.NAME_FIELDS & set(fields):
+            objs = list(objs)
+            for guest in objs:
+                guest.update_search_key()
+            return self.model._base_manager.using(self.db).bulk_update(objs, {*fields, 'searchKey'}, *args, **kwargs)
+        return super().bulk_update(objs, fields, *args, **kwargs)
+
+    def update(self, **kwargs):
+        if 'searchKey' in kwargs:
+            raise ValueError('Guests.searchKey is derived from name and surname; leave it out of update()')
+        if not self.NAME_FIELDS & kwargs.keys():
+            return super().update(**kwargs)
+        with transaction.atomic(using=self.db):
+            pks = list(self.select_for_update().values_list('pk', flat=True))
+            rows = self.model._base_manager.using(self.db).filter(pk__in=pks)
+            updated = rows.update(**kwargs)
+            guests = list(rows.only('pk', 'name', 'surname'))
+            for guest in guests:
+                guest.update_search_key()
+            rows.bulk_update(guests, ['searchKey'])
+        return updated
 
 
 class Guests(models.Model):
@@ -36,6 +71,19 @@ class Guests(models.Model):
     mailSentAt = models.DateTimeField(null=True, blank=True)
     mailMessageId = models.CharField(max_length=255, default='', blank=True)
     sponsor = models.ForeignKey('Sponsors', null=True, blank=True, on_delete=models.SET_NULL, related_name='guests')
+    searchKey = models.TextField(default='', blank=True, editable=False)
+
+    objects = GuestsQuerySet.as_manager()
+
+    def update_search_key(self):
+        self.searchKey = search_key(self.name, self.surname)
+
+    def save(self, *args, **kwargs):
+        self.update_search_key()
+        update_fields = kwargs.get('update_fields')
+        if update_fields is not None and {'name', 'surname'} & set(update_fields):
+            kwargs['update_fields'] = {*update_fields, 'searchKey'}
+        super().save(*args, **kwargs)
 
 
 class Users(models.Model):

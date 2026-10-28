@@ -27,6 +27,7 @@
             </div>
             <p v-else-if="error" class="entry-view__status entry-view__status--error">{{ error }}</p>
             <p v-else-if="searched && !guests.length" class="entry-view__status">Nema rezultata</p>
+            <p v-if="hasMore" class="entry-view__more">Prikazano prvih {{ maxResults }} – upiši više slova</p>
 
             <button v-for="g in guests" :key="g.id" type="button" class="person"
                 :class="{ 'person--selected': g.id === selectedGuest?.id }" @click="selectGuest(g)">
@@ -57,7 +58,8 @@ import MobileEntry from '@/components/Bruckarte/MobileEntry.vue';
 import { displayTag, REQUEST_TIMEOUT } from '@/utils/guestTags';
 
 const MIN_QUERY_LENGTH = 3;
-const SEARCH_FIELDS = ['tag', 'name', 'surname'];
+// a short query like "ana" can match hundreds of guests, too much to download on a slow phone
+const MAX_RESULTS = 50;
 
 export default {
     name: 'EntryView',
@@ -72,6 +74,8 @@ export default {
             search: '',
 
             guests: [],
+            hasMore: false,
+            maxResults: MAX_RESULTS,
             selectedGuest: null,
             overlayOpen: false,
 
@@ -79,6 +83,7 @@ export default {
             searched: false,
             error: '',
             searchSeq: 0,
+            searchAbort: null,
         }
     },
     created() {
@@ -88,6 +93,7 @@ export default {
     beforeUnmount() {
         this.runSearch.cancel();
         this.searchSeq++;
+        this.searchAbort?.abort();
     },
     methods: {
         displayTag,
@@ -103,7 +109,10 @@ export default {
             // invalidate any in-flight search now, not when the debounce fires, so a slow
             // stale response can't fill the list or auto-open the wrong guest in between
             this.searchSeq++;
+            // and drop its download, which would compete with the next search on a slow connection
+            this.searchAbort?.abort();
             this.guests = [];
+            this.hasMore = false;
             this.selectedGuest = null;
             this.overlayOpen = false;
             this.searched = false;
@@ -119,15 +128,18 @@ export default {
         },
         async runSearch() {
             const seq = ++this.searchSeq;
+            this.searchAbort?.abort();
+            const abort = new AbortController();
+            this.searchAbort = abort;
             this.loading = true;
-            const params = new URLSearchParams({
-                search: [this.search.trim(), this.selectedTag].filter(Boolean).join(' '),
-            });
-            SEARCH_FIELDS.forEach(field => params.append('search_fields', field));
+            const params = new URLSearchParams({ name_search: this.search.trim() });
+            if (this.selectedTag) params.append('tag__icontains', this.selectedTag);
+            params.append('limit', MAX_RESULTS + 1);
             try {
-                const { data } = await api.get('/guests/', { params, timeout: REQUEST_TIMEOUT });
+                const { data } = await api.get('/guests/', { params, timeout: REQUEST_TIMEOUT, signal: abort.signal });
                 if (seq !== this.searchSeq) return;
-                this.guests = data;
+                this.hasMore = data.length > MAX_RESULTS;
+                this.guests = data.slice(0, MAX_RESULTS);
                 this.searched = true;
                 if (data.length === 1) this.selectGuest(data[0]);
             } catch (err) {
@@ -246,6 +258,21 @@ export default {
 
 .entry-view__status--error {
     color: #c62828;
+}
+
+.entry-view__more {
+    position: sticky;
+    top: 10px;
+    z-index: 1;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #c62828;
+    color: white;
+    font-family: "Montserrat";
+    font-weight: 700;
+    font-size: 16px;
+    text-align: center;
 }
 
 .person {

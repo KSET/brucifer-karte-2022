@@ -22,7 +22,7 @@ from google.auth.transport import requests
 from google.oauth2 import id_token
 from rest_framework import filters, mixins, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import AllowAny, BasePermission, SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
@@ -35,6 +35,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .auth import RequireXHRHeader, blacklist_refresh_cookie, clear_refresh_cookie, set_refresh_cookie
 from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
 from .roles import Role, GUEST_ROLES
+from .search import name_rank, name_search_q
 from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer, PublicLineupSerializer, PublicSponsorsSerializer, SponsorGuestSerializer, SponsorPortalSerializer
 from .services import (
     SponsorGuestCapReached, SponsorGuestEntered, SponsorInputClosed, add_sponsor_guest, delete_sponsor_guest, derive_fer_email,
@@ -197,8 +198,30 @@ class GuestsViewSet(viewsets.ModelViewSet):
     serializer_class = GuestsSerializer
     filter_backends = [DynamicSearchFilter, DjangoFilterBackend]
     search_fields = ['name', 'surname', 'tag', 'confCode', 'jmbag', 'email']
-    filterset_fields = ['bought', 'entered']
+    filterset_fields = {'bought': ['exact'], 'entered': ['exact'], 'tag': ['icontains']}
     permission_classes = [HasRole(*GUEST_ROLES)]
+    MAX_LIMIT = 200
+    MAX_TERMS = 10
+
+    def filter_queryset(self, queryset):
+        """Entry search: ?name_search= ignores diacritics in name and surname, and ?limit=N returns
+        only the N best matches; without them the full list is returned."""
+        queryset = super().filter_queryset(queryset)
+        if self.action != 'list':
+            return queryset
+        params = self.request.query_params
+        terms = params.get('name_search', '').split()[:self.MAX_TERMS]
+        if terms:
+            queryset = queryset.filter(name_search_q(terms))
+        if 'limit' not in params:
+            return queryset
+        try:
+            limit = int(params['limit'])
+        except ValueError:
+            limit = 0
+        if not 1 <= limit <= self.MAX_LIMIT:
+            raise ValidationError({'limit': f'Mora biti broj od 1 do {self.MAX_LIMIT}.'})
+        return queryset.annotate(rank=name_rank(terms)).order_by('-rank', 'searchKey', 'id')[:limit]
 
     @action(detail=False, methods=['post'], url_path='bulk-import')
     def bulk_import(self, request):
@@ -386,7 +409,7 @@ class TagsViewSet(viewsets.ModelViewSet):
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = Users.objects.all()
     serializer_class = UsersSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [DynamicSearchFilter]
     search_fields = ['name', 'email']
     permission_classes = [HasRole(Role.ADMIN)]
 

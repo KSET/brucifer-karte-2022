@@ -3,6 +3,7 @@ import shutil
 import smtplib
 import socket
 import tempfile
+import unicodedata
 from datetime import date, datetime, timedelta
 from io import BytesIO
 from unittest import mock
@@ -14,6 +15,7 @@ from django.core.cache import cache
 from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import IntegrityError
+from django.db.models import F
 from django.test import TestCase, override_settings
 from django.utils import timezone
 from PIL import Image
@@ -22,6 +24,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import BrucosiFormResponse, Guests, Lineup, Mailer, Sponsors, Users, Visibility
 from .roles import Role
+from .search import fold, search_key
 from .services import add_sponsor_guest, classify_mail_error, derive_fer_email
 from .views import FormThrottle, RefreshThrottle, SponsorPortalTokenThrottle
 
@@ -771,8 +774,8 @@ class GuestSaleTests(APITestCase):
 
     def test_resend_while_pending_conflicts(self):
         Guests.objects.filter(pk=self.guest.pk).update(
-            bought=True, confCode='abc', name='Ivan', surname='Horvat', mailStatus='pending',
-            boughtTicketTime=timezone.now())
+            bought=True, confCode='abc', name='Ivan', surname='Horvat',
+            mailStatus='pending', boughtTicketTime=timezone.now())
         self.login_as(Role.ADMIN)
         res = self.client.post(guests_url(self.guest, 'resend-mail'), {}, format='json')
         self.assertEqual(res.status_code, 409)
@@ -1181,3 +1184,232 @@ class AuthCookieTests(APITestCase):
             res = self.client.post(REFRESH_URL)
         self.assertEqual(res.status_code, 503)
         self.assertNotIn(settings.AUTH_REFRESH_COOKIE, res.cookies)
+
+
+class DiacriticSearchTests(APITestCase):
+    def setUp(self):
+        Guests.objects.create(name='Ivan', surname='Ćosić', tag='Brucoši')
+        Guests.objects.create(name='Đuro', surname='Šimić', tag='Brucoši')
+        Guests.objects.create(name='Djordje', surname='Cosic', tag='Gost')
+        email = f'{Role.ADMIN}@kset.org'
+        Users.objects.get_or_create(email=email, defaults={'privilege': Role.ADMIN})
+        self.client.force_authenticate(DjangoUser.objects.get_or_create(username=email)[0])
+
+    def search(self, term, **extra):
+        res = self.client.get('/api/guests/', {'name_search': term, **extra})
+        self.assertEqual(res.status_code, 200)
+        return sorted(f"{g['name']} {g['surname']}" for g in res.data)
+
+    def test_fold(self):
+        self.assertEqual(fold('ČĆŠŽĐ čćšžđ'), 'ccszd ccszd')
+        self.assertEqual(fold('Djuro'), fold('Đuro'))
+        self.assertIsNone(fold(None))
+
+    def test_ignores_diacritics_and_case(self):
+        for term in ('cosic', 'ćosić', 'COSIC', 'Čosic'):
+            with self.subTest(term=term):
+                self.assertEqual(self.search(term), ['Djordje Cosic', 'Ivan Ćosić'])
+
+    def test_dj_matches_đ(self):
+        for term in ('djuro', 'duro', 'đuro', 'simic'):
+            with self.subTest(term=term):
+                self.assertEqual(self.search(term), ['Đuro Šimić'])
+        self.assertEqual(self.search('đorđe'), ['Djordje Cosic'])
+
+    def test_finds_everything_a_plain_search_finds(self):
+        Guests.objects.create(name='Marko', surname='Djurdjević')
+        self.assertEqual(self.search('jur'), ['Marko Djurdjević', 'Đuro Šimić'])
+        self.assertEqual(self.search('rdjev'), ['Marko Djurdjević'])
+
+    def test_every_term_must_match(self):
+        self.assertEqual(self.search('cosic ivan'), ['Ivan Ćosić'])
+        self.assertEqual(self.search('cosic marko'), [])
+
+    def test_tag_filter_is_separate_from_search_text(self):
+        # "cos" must not match every "Brucoši" guest through the tag
+        self.assertEqual(self.search('cos', tag__icontains='Brucoši'), ['Ivan Ćosić'])
+        self.assertEqual(self.search('cos'), ['Djordje Cosic', 'Ivan Ćosić'])
+
+    def test_tag_filter_matches_part_of_the_tag(self):
+        sponsor = Sponsors.objects.create(name='Pivo', slug='pivo')
+        Guests.objects.create(name='Ana', surname='Horvat', tag=sponsor.guest_tag)
+        self.assertEqual(self.search('', tag__icontains='VIP'), ['Ana Horvat'])
+        self.assertEqual(self.search('ana', tag__icontains='Sponzor'), ['Ana Horvat'])
+
+    def limited(self, term, limit, **extra):
+        res = self.client.get('/api/guests/', {'name_search': term, 'limit': limit, **extra})
+        self.assertEqual(res.status_code, 200)
+        return [f"{g['name']} {g['surname']}" for g in res.data]
+
+    def test_limit_returns_best_matches_first(self):
+        Guests.objects.create(name='Ivana', surname='Babić', tag='Brucoši')
+        Guests.objects.create(name='Ana', surname='Zorić', tag='Gost')
+        Guests.objects.create(name='Marijana', surname='Anić', tag='Brucoši')
+        # "Ana" starts with the term, so it beats names that only contain it
+        self.assertEqual(self.limited('ana', 2), ['Ana Zorić', 'Marijana Anić'])
+        self.assertEqual(self.limited('ana', 51), ['Ana Zorić', 'Marijana Anić', 'Ivana Babić'])
+        self.assertEqual(self.limited('ana', 51, tag__icontains='Brucoši'), ['Marijana Anić', 'Ivana Babić'])
+        self.assertEqual(self.limited('cosic ivan', 1), ['Ivan Ćosić'])
+        Guests.objects.create(name='ANA', surname='ZEC')
+        self.assertEqual(self.limited('ana', 2), ['ANA ZEC', 'Ana Zorić'])  # sorted ignoring case
+
+    def test_diacritic_surnames_sort_with_their_base_letter(self):
+        for surname in ('Zorić', 'Šarić', 'Sabo', 'Čović', 'Cvitan'):
+            Guests.objects.create(name='Ana', surname=surname)
+        self.assertEqual(self.limited('ana', 3), ['Ana Čović', 'Ana Cvitan', 'Ana Sabo'])
+
+    def test_whole_name_in_one_field_sorts_with_the_rest(self):
+        Guests.objects.create(name='Zora  Ivić')
+        Guests.objects.create(name='Ivo', surname='Horvat')
+        Guests.objects.create(surname='Ana Ivanković')
+        self.assertEqual(self.limited('iv', 4), [' Ana Ivanković', 'Ivan Ćosić', 'Ivo Horvat', 'Zora  Ivić '])
+        self.assertEqual(self.search('ivic zora'), ['Zora  Ivić '])
+
+    def test_without_limit_everything_is_returned(self):
+        res = self.client.get('/api/guests/')
+        self.assertEqual(len(res.data), Guests.objects.count())
+
+    def test_invalid_limit(self):
+        for limit in ('0', 'abc', '201', '-1'):
+            with self.subTest(limit=limit):
+                res = self.client.get('/api/guests/', {'name_search': 'ana', 'limit': limit})
+                self.assertEqual(res.status_code, 400)
+
+    def test_decomposed_and_foreign_accents(self):
+        # NFD text (č as c + combining caron) is what a paste from macOS can produce
+        Guests.objects.create(name=unicodedata.normalize('NFD', 'Saša'), surname=unicodedata.normalize('NFD', 'Ćurić'))
+        Guests.objects.create(name='Zoë', surname='Müller')
+        Guests.objects.create(name='Lana', surname='Ðurić')  # eth, a lookalike of Đ
+        for term in ('sasa', 'Saša', unicodedata.normalize('NFD', 'ćurić')):
+            with self.subTest(term=term):
+                self.assertEqual(self.search(term), [unicodedata.normalize('NFD', 'Saša Ćurić')])
+        self.assertEqual(self.search('zoe muller'), ['Zoë Müller'])
+        self.assertEqual(self.search('lana djuric'), ['Lana Ðurić'])
+
+    def test_like_wildcards_are_literal(self):
+        Guests.objects.create(name='100%', surname='a_b')
+        self.assertEqual(self.search('%'), ['100% a_b'])
+        self.assertEqual(self.search('_'), ['100% a_b'])
+
+    def test_invisible_characters_are_ignored(self):
+        Guests.objects.create(name='Mar\u00adko', surname='Pe\u200btrić')  # soft hyphen, zero-width space
+        self.assertEqual(self.search('marko petric'), ['Mar\u00adko Pe\u200btrić'])
+        self.assertEqual(self.search('ivan\u200b'), ['Ivan Ćosić'])
+
+    def test_long_paste_is_not_a_server_error(self):
+        res = self.client.get('/api/guests/', {'name_search': ' '.join(['cosic'] * 300), 'limit': 50})
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(len(res.data), 2)
+
+    def test_key_separator_is_not_searchable(self):
+        self.assertEqual(self.search('|'), [])
+
+    def test_search_key_follows_every_write(self):
+        res = self.client.post('/api/guests/bulk-import/', [{'name': 'Žana', 'surname': 'Đokić'}], format='json')
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(self.search('zana dokic'), ['Žana Đokić'])
+        guest = Guests.objects.get(name='Žana')
+        res = self.client.patch(f'/api/guests/{guest.id}/', {'surname': 'Šegvić'}, format='json')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(self.search('zana dokic'), [])
+        self.assertEqual(self.search('segvic'), ['Žana Šegvić'])
+        guest.refresh_from_db()
+        guest.name = 'Čedna'
+        guest.save(update_fields=['name'])
+        self.assertEqual(self.search('cedna'), ['Čedna Šegvić'])
+        self.assertNotIn('searchKey', res.data)
+
+    def test_generic_search_is_not_folded(self):
+        # exact slug lookups and tag counting must not merge 'djmag' with 'dmag' or 'Đak' with 'Dak'
+        Lineup.objects.create(slug='djmag', name='DJ Mag')
+        Lineup.objects.create(slug='dmag', name='D Mag')
+        res = self.client.get('/api/lineup/', {'search': 'dmag', 'search_fields': 'slug'})
+        self.assertEqual([l['slug'] for l in res.data], ['dmag'])
+        Guests.objects.create(name='A', tag='Đak')
+        Guests.objects.create(name='B', tag='Dak')
+        res = self.client.get('/api/guests/', {'search': 'Dak', 'search_fields': 'tag'})
+        self.assertEqual([g['name'] for g in res.data], ['B'])
+
+
+@override_settings(TICKET_MAIL_ASYNC=False)
+class SearchKeyWritePathsTests(APITestCase):
+    """Every way a guest's name can be written must leave searchKey matching it, or the door can't find them."""
+
+    def setUp(self):
+        cache.clear()
+        email = f'{Role.ADMIN}@kset.org'
+        Users.objects.get_or_create(email=email, defaults={'privilege': Role.ADMIN})
+        self.client.force_authenticate(DjangoUser.objects.get_or_create(username=email)[0])
+        self.sponsor = Sponsors.objects.create(name='Acme', slug='acme', visible=True, guestCap=5, guestsEnabled=1)
+        self.portal = f'/api/sponsor-portal/{self.sponsor.access_token}/guests/'
+
+    def tearDown(self):
+        stale = [g for g in Guests.objects.all() if g.searchKey != search_key(g.name, g.surname)]
+        self.assertEqual(stale, [])
+
+    def found(self, term):
+        res = self.client.get('/api/guests/', {'name_search': term})
+        return [f"{g['name']} {g['surname']}".strip() for g in res.data]
+
+    def test_admin_create_and_edit(self):
+        res = self.client.post('/api/guests/', {'name': 'Đuro', 'surname': 'Šimić', 'tag': 'Gost'}, format='json')
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(self.found('djuro simic'), ['Đuro Šimić'])
+        res = self.client.put(f"/api/guests/{res.data['id']}/", {'name': 'Žana', 'surname': 'Čolić', 'tag': 'Gost'},
+                              format='json')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(self.found('simic'), [])
+        self.assertEqual(self.found('zana colic'), ['Žana Čolić'])
+
+    def test_bulk_import(self):
+        rows = [{'name': 'Ćiro', 'surname': 'Đokić'}, {'name': 'Šime', 'surname': 'Žic'}]
+        self.assertEqual(self.client.post('/api/guests/bulk-import/', rows, format='json').status_code, 201)
+        self.assertEqual(self.found('ciro dokic'), ['Ćiro Đokić'])
+        self.assertEqual(self.found('sime zic'), ['Šime Žic'])
+
+    def test_bulk_import_whole_name_in_one_field(self):
+        rows = [{'name': 'Ana  Marić Bilić'}, {'surname': 'Ivo Šimić'}]
+        self.assertEqual(self.client.post('/api/guests/bulk-import/', rows, format='json').status_code, 201)
+        for term in ('ana', 'maric', 'bil', 'bilic ana'):
+            with self.subTest(term=term):
+                self.assertEqual(self.found(term), ['Ana  Marić Bilić'])
+        self.assertEqual(self.found('simic ivo'), ['Ivo Šimić'])
+        self.assertEqual(Guests.objects.get(surname='Ivo Šimić').searchKey, ' ivo simic\n ivo simic')
+
+    def test_sponsor_portal_add_and_rename(self):
+        res = self.client.post(self.portal, {'name': 'Đurđa Čačić'}, format='json')
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(self.found('durda cacic'), ['Đurđa Čačić'])
+        res = self.client.patch(f"{self.portal}{res.data['id']}/", {'name': 'Šima Žic'}, format='json')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(self.found('cacic'), [])
+        self.assertEqual(self.found('sima'), ['Šima Žic'])
+
+    def test_brucosi_ticket_sale_and_resend(self):
+        guest = Guests.objects.create(jmbag='0036123456', tag='Brucoši')
+        BrucosiFormResponse.objects.create(name='Čedo', surname='Šarić', jmbag='0036123456', gdpr_accepted=True)
+        self.assertEqual(self.client.post(guests_url(guest, 'sell'), {}, format='json').status_code, 200)
+        self.assertEqual(self.found('cedo saric'), ['Čedo Šarić'])
+        res = self.client.post(guests_url(guest, 'resend-mail'), {'surname': 'Đorđević'}, format='json')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(self.found('saric'), [])
+        self.assertEqual(self.found('cedo djordjevic'), ['Čedo Đorđević'])
+
+    def test_bulk_update_fills_the_key(self):
+        guest = Guests.objects.create(name='Ana')
+        guest.name = 'Ćana'
+        Guests.objects.bulk_update([guest], ['name'])
+        self.assertEqual(self.found('cana'), ['Ćana'])
+
+    def test_queryset_update_keys_every_row(self):
+        Guests.objects.create(name='Ana', surname='Šarić', tag='X')
+        Guests.objects.create(name='Iva', surname='Đokić', tag='X')
+        Guests.objects.create(name='Eva', surname='Žic', tag='Y')
+        self.assertEqual(Guests.objects.filter(tag='X').update(name='Ćana'), 2)
+        self.assertEqual(self.found('cana saric'), ['Ćana Šarić'])
+        self.assertEqual(self.found('cana dokic'), ['Ćana Đokić'])
+        # the update changes the field it filters on, and F() differs per row
+        Guests.objects.filter(name='Ćana').update(name=F('surname'))
+        self.assertEqual(sorted(self.found('dokic')), ['Đokić Đokić'])
+        with self.assertRaises(ValueError):
+            Guests.objects.update(searchKey='x')
