@@ -45,7 +45,14 @@ class UsersSerializer(serializers.HyperlinkedModelSerializer):
 class LineupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Lineup
-        fields = ["id", "slug", "order", "visible", "name", "image", "biography"]
+        fields = ["id", "slug", "order", "visible", "name", "image", "biography", "startTime", "endTime", "stage"]
+
+    def validate(self, attrs):
+        start = attrs.get("startTime", getattr(self.instance, "startTime", None))
+        end = attrs.get("endTime", getattr(self.instance, "endTime", None))
+        if start and end and end <= start:
+            raise serializers.ValidationError({"endTime": "Kraj nastupa mora biti nakon početka."})
+        return attrs
 
 class PublicLineupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -54,6 +61,9 @@ class PublicLineupSerializer(serializers.HyperlinkedModelSerializer):
             'name',
             'image',
             'biography',
+            'startTime',
+            'endTime',
+            'stage',
         ]
 
 class SponsorsSerializer(serializers.HyperlinkedModelSerializer):

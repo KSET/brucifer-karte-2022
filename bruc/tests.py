@@ -285,6 +285,80 @@ class LineupImageTests(TestCase):
         self.assertFalse(Lineup.objects.filter(pk=item.pk).exists())
 
 
+class LineupScheduleTests(APITestCase):
+    ZG = ZoneInfo('Europe/Zagreb')
+
+    def setUp(self):
+        Users.objects.create(email='admin@kset.org', privilege=Role.ADMIN)
+        self.client.force_authenticate(DjangoUser.objects.create(username='admin@kset.org'))
+        self.item = Lineup.objects.create(name='Band', visible=True)
+        self.url = f'/api/lineup/{self.item.id}/'
+
+    def test_admin_sets_times_and_public_exposes_them(self):
+        start = datetime(2026, 11, 7, 23, 30, tzinfo=self.ZG)
+        end = datetime(2026, 11, 8, 0, 45, tzinfo=self.ZG)
+        res = self.client.patch(
+            self.url, {'startTime': start.isoformat(), 'endTime': end.isoformat()}, format='json')
+        self.assertEqual(res.status_code, 200, res.data)
+        self.item.refresh_from_db()
+        self.assertEqual(self.item.startTime, start)
+        self.assertEqual(self.item.endTime, end)
+
+        self.client.force_authenticate(None)
+        res = self.client.get('/api/public/lineup/')
+        self.assertEqual(res.status_code, 200)
+        rows = res.data['results'] if isinstance(res.data, dict) else res.data
+        row = next(r for r in rows if r['name'] == 'Band')
+        self.assertEqual(datetime.fromisoformat(row['startTime']), start)
+        self.assertEqual(datetime.fromisoformat(row['endTime']), end)
+
+    def test_end_before_start_rejected(self):
+        start = datetime(2026, 11, 7, 22, 0, tzinfo=self.ZG)
+        res = self.client.patch(
+            self.url,
+            {'startTime': start.isoformat(), 'endTime': (start - timedelta(minutes=30)).isoformat()},
+            format='json')
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('endTime', res.data)
+        res = self.client.patch(
+            self.url, {'startTime': start.isoformat(), 'endTime': start.isoformat()}, format='json')
+        self.assertEqual(res.status_code, 400)
+
+        # Only endTime sent: validated against the stored startTime.
+        Lineup.objects.filter(pk=self.item.pk).update(startTime=start)
+        res = self.client.patch(
+            self.url, {'endTime': (start - timedelta(hours=1)).isoformat()}, format='json')
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('endTime', res.data)
+        self.item.refresh_from_db()
+        self.assertIsNone(self.item.endTime)
+
+    def test_blank_multipart_clears_times(self):
+        start = datetime(2026, 11, 7, 22, 0, tzinfo=self.ZG)
+        Lineup.objects.filter(pk=self.item.pk).update(
+            startTime=start, endTime=start + timedelta(hours=1))
+        res = self.client.patch(self.url, {'startTime': '', 'endTime': ''}, format='multipart')
+        self.assertEqual(res.status_code, 200, res.data)
+        self.item.refresh_from_db()
+        self.assertIsNone(self.item.startTime)
+        self.assertIsNone(self.item.endTime)
+
+    def test_stage_saved_and_validated(self):
+        res = self.client.patch(self.url, {'stage': 'kino'}, format='json')
+        self.assertEqual(res.status_code, 200, res.data)
+        self.item.refresh_from_db()
+        self.assertEqual(self.item.stage, 'kino')
+
+        res = self.client.patch(self.url, {'stage': 'bina'}, format='json')
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('stage', res.data)
+
+        res = self.client.patch(self.url, {'stage': ''}, format='json')
+        self.assertEqual(res.status_code, 200, res.data)
+        self.item.refresh_from_db()
+        self.assertEqual(self.item.stage, '')
+
+
 class DeriveFerEmailTests(TestCase):
     def test_fer_jmbag(self):
         self.assertEqual(derive_fer_email('Ivan', 'Horvat', '0036123456'), 'ih12345@fer.hr')

@@ -26,6 +26,18 @@
                         <span class="slider round"></span>
                     </label>
 
+                    <h1 class="textfield">Stage</h1>
+                    <select class="inputfield" v-model="stage">
+                        <option value="">—</option>
+                        <option v-for="s in stageOptions" :key="s.value" :value="s.value">{{ s.label }}</option>
+                    </select>
+
+                    <h1 class="textfield">Početak nastupa</h1>
+                    <input class="inputfield" type="datetime-local" v-model="startTime" />
+
+                    <h1 class="textfield">Kraj nastupa</h1>
+                    <input class="inputfield" type="datetime-local" v-model="endTime" />
+
                     <h1 class="textfield">Biografija</h1>
                     <textarea class="inputfield" rows="6" v-model.trim="biography"
                         placeholder="Unesite biografiju izvođača..."></textarea>
@@ -47,6 +59,8 @@
 <script>
 import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import lineupStore from '@/store/lineupStore'
+import { zagrebLocalToDate, dateToZagrebLocalInput, parseStored } from '@/utils/datetime'
+import { STAGE_OPTIONS } from '@/utils/stages'
 
 export default {
     name: 'LineupAdd',
@@ -60,6 +74,10 @@ export default {
             name: '',
             visibility: true,
             biography: '',         // ← NEW
+            startTime: '',
+            endTime: '',
+            stage: '',
+            stageOptions: STAGE_OPTIONS,
 
             currentImage: null,
             previewImage: null,
@@ -102,6 +120,9 @@ export default {
                 this.name = item.name || ''
                 this.visibility = Boolean(item.visible)
                 this.biography = item.biography || ''   // ← NEW
+                this.startTime = dateToZagrebLocalInput(parseStored(item.startTime))
+                this.endTime = dateToZagrebLocalInput(parseStored(item.endTime))
+                this.stage = item.stage || ''
                 this.previewImage = item.image || null
                 this.currentImage = null
             } catch (e) {
@@ -130,16 +151,30 @@ export default {
             }
         },
 
-        buildFormData({ name, visible, image, biography }) {
+        buildFormData({ name, visible, image, biography, startTime, endTime, stage }) {
             const fd = new FormData()
             if (name != null) fd.append('name', name)
             if (visible != null) fd.append('visible', visible) // boolean true/false
             if (biography != null) fd.append('biography', biography) // ← NEW
+            if (startTime !== undefined) fd.append('startTime', startTime ? startTime.toISOString() : '')
+            if (endTime !== undefined) fd.append('endTime', endTime ? endTime.toISOString() : '')
+            if (stage != null) fd.append('stage', stage)
             if (image instanceof File) fd.append('image', image)
             return fd
         },
 
         async submit() {
+            const startTime = zagrebLocalToDate(this.startTime)
+            const endTime = zagrebLocalToDate(this.endTime)
+            if ((this.startTime && !startTime) || (this.endTime && !endTime)) {
+                alert('Neispravan datum.')
+                return
+            }
+            if (startTime && endTime && endTime <= startTime) {
+                alert('Kraj nastupa mora biti nakon početka.')
+                return
+            }
+
             this.loading = true
             try {
                 if (this.isEdit) {
@@ -147,6 +182,9 @@ export default {
                         name: this.name,
                         visible: this.visibility,
                         biography: this.biography,      // ← NEW
+                        startTime,
+                        endTime,
+                        stage: this.stage,
                         image: this.currentImage,
                     })
                     await lineupStore.dispatch('update', { id: this.id, formData })
@@ -160,6 +198,9 @@ export default {
                         name: this.name,
                         visible: this.visibility,
                         biography: this.biography,      // ← NEW
+                        startTime,
+                        endTime,
+                        stage: this.stage,
                         image: this.currentImage,
                     })
                     await lineupStore.dispatch('create', formData)

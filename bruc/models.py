@@ -122,6 +122,14 @@ class Lineup(models.Model):
     biography = models.TextField(default='', blank=True)
     image = models.ImageField(
         upload_to='uploads/lineup', blank=True, null=True)
+    startTime = models.DateTimeField(null=True, blank=True)
+    endTime = models.DateTimeField(null=True, blank=True)
+    STAGE_CHOICES = [
+        ('menza', 'Menza'),
+        ('kino', 'Kino'),
+        ('elektro', 'Elektro'),
+    ]
+    stage = models.CharField(max_length=10, choices=STAGE_CHOICES, default='', blank=True)
 
     class Meta:
         constraints = [

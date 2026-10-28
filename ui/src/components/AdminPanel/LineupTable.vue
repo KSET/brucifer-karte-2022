@@ -14,7 +14,37 @@
       </template>
     </Column>
 
-    <Column field="biography" header="Biografija" style="width: 75%; min-width: 12rem">
+    <Column field="stage" header="Stage" style="width: 9rem; min-width: 9rem">
+      <template #body="{ data }">
+        <span class="cell-text">{{ stageLabel(data.stage) || '—' }}</span>
+      </template>
+      <template #editor="{ data, field }">
+        <Select v-model="data[field]" :options="stageOptions" optionLabel="label" optionValue="value"
+          placeholder="—" showClear fluid @clear="data[field] = ''" />
+      </template>
+    </Column>
+
+    <Column field="startTime" header="Početak" style="width: 11rem; min-width: 11rem">
+      <template #body="{ data }">
+        <span class="cell-text">{{ formatTime(data.startTime) || '—' }}</span>
+      </template>
+      <template #editor="{ data, field }">
+        <InputText type="datetime-local" :modelValue="toLocalInput(data[field])" autofocus fluid
+          @change="data[field] = toIso($event.target.value)" />
+      </template>
+    </Column>
+
+    <Column field="endTime" header="Kraj" style="width: 11rem; min-width: 11rem">
+      <template #body="{ data }">
+        <span class="cell-text">{{ formatTime(data.endTime) || '—' }}</span>
+      </template>
+      <template #editor="{ data, field }">
+        <InputText type="datetime-local" :modelValue="toLocalInput(data[field])" autofocus fluid
+          @change="data[field] = toIso($event.target.value)" />
+      </template>
+    </Column>
+
+    <Column field="biography" header="Biografija" style="width: 50%; min-width: 12rem">
       <template #body="{ data }">
         <span class="cell-text cell-clamp" :title="data.biography">{{ data.biography || '—' }}</span>
       </template>
@@ -38,15 +68,20 @@ import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import Checkbox from 'primevue/checkbox'
+import Select from 'primevue/select'
 import Toast from 'primevue/toast'
 
 import AdminTable from '@/components/AdminPanel/AdminTable.vue'
 import { useOptimisticList } from '@/composables/useOptimisticList'
 import lineupStore from '@/store/lineupStore'
+import { zagrebLocalToDate, dateToZagrebLocalInput, formatZagreb, parseStored } from '@/utils/datetime'
+import { STAGE_OPTIONS, stageLabel } from '@/utils/stages'
+
+const TIME_FIELDS = ['startTime', 'endTime']
 
 export default {
   name: 'LineupTable',
-  components: { AdminTable, Column, InputText, Textarea, Checkbox, Toast },
+  components: { AdminTable, Column, InputText, Textarea, Checkbox, Select, Toast },
 
   setup() {
     return useOptimisticList(lineupStore)
@@ -55,6 +90,7 @@ export default {
   data() {
     return {
       hint: 'Povuci redak za promjenu redoslijeda. Klikni ćeliju za uređivanje (Ctrl/Cmd + Enter za spremanje biografije).',
+      stageOptions: STAGE_OPTIONS,
     }
   },
 
@@ -90,6 +126,25 @@ export default {
       return norm(a) === norm(b)
     },
 
+    stageLabel,
+
+    formatTime(value) {
+      return formatZagreb(parseStored(value))
+    },
+
+    toLocalInput(value) {
+      return dateToZagrebLocalInput(parseStored(value))
+    },
+
+    toIso(localValue) {
+      const date = zagrebLocalToDate(localValue)
+      return date ? date.toISOString() : null
+    },
+
+    timeOf(value) {
+      return parseStored(value)?.getTime() ?? null
+    },
+
     onBioEnter(event) {
       if (event.ctrlKey || event.metaKey) return
       event.stopPropagation()
@@ -102,6 +157,16 @@ export default {
 
       if (field === 'name' && (!value || value.length > 49)) {
         return this.rejectEdit(event, 'Ime je obavezno (max 49 znakova).')
+      }
+
+      if (TIME_FIELDS.includes(field)) {
+        if (this.timeOf(value) === this.timeOf(data[field])) return
+
+        const start = this.timeOf(field === 'startTime' ? value : data.startTime)
+        const end = this.timeOf(field === 'endTime' ? value : data.endTime)
+        if (start !== null && end !== null && end <= start) {
+          return this.rejectEdit(event, 'Kraj nastupa mora biti nakon početka.')
+        }
       }
 
       if (this.isUnchanged(value, data[field])) return
