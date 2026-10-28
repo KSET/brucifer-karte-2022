@@ -30,9 +30,7 @@
                 <div class="satnica-vscroll">
                     <div class="satnica-axis" aria-hidden="true">
                         <span v-for="hour in hours" :key="hour.offset" class="satnica-hour"
-                            :style="{ '--m': hour.offset }">{{ hour.label }}</span>
-                        <span v-if="nowVisible" class="satnica-now-pill" :style="{ '--m': nowOffset }">{{ nowLabel }}</span>
-                    </div>
+                            :style="{ '--m': hour.offset }">{{ hour.label }}</span>                    </div>
 
                     <div class="satnica-scroll" @scroll.passive="syncHeads">
                         <div class="satnica-grid">
@@ -41,7 +39,7 @@
                             <div v-for="(stage, index) in columns" :key="`col-${stage.key}`" class="satnica-column"
                                 :style="{ '--block-color': stage.color, gridColumn: index + 1 }" :aria-label="stage.label">
                                 <button v-for="act in stage.acts" :key="act.key" type="button" class="satnica-block"
-                                    :class="{ 'is-live': act.live }" :style="{ '--m': act.offset, '--d': act.duration }"
+                                    :style="{ '--m': act.offset, '--d': act.duration }"
                                     @click="openArtist(act, stage)">
                                     <span class="satnica-block-name">{{ act.name }}</span>
                                     <span class="satnica-block-time">{{ act.time }}</span>
@@ -114,7 +112,6 @@ export default {
                 }))
                 .filter(a => STAGE_KEYS.includes(a.stage) && a.start && a.end && a.end > a.start)
 
-            const t = this.currentTime
             return [...fromDb, ...HARDCODED_ACTS]
                 .map(a => {
                     const start = Math.max(a.start, EVENT_START)
@@ -128,7 +125,6 @@ export default {
                         offset: offsetOf(start),
                         duration: (end - start) / MINUTE,
                         time: `${formatTime(a.start)} – ${formatTime(a.end)}`,
-                        live: a.start <= t && t < a.end,
                     }
                 })
                 .filter(a => a.duration > 0)
@@ -160,10 +156,6 @@ export default {
 
         nowOffset() {
             return offsetOf(this.currentTime)
-        },
-
-        nowLabel() {
-            return formatTime(this.currentTime)
         },
     },
 
@@ -350,14 +342,10 @@ export default {
     height: calc(var(--track-h) + 2 * var(--pad));
 }
 
-.satnica-hour,
-.satnica-now-pill {
+.satnica-hour {
     position: absolute;
     top: calc(var(--pad) + var(--m) * var(--px-per-min));
     transform: translateY(-50%);
-}
-
-.satnica-hour {
     left: 0;
     right: 0;
     font-family: 'GC Epic Pro Cro', sans-serif;
@@ -368,19 +356,6 @@ export default {
     font-variant-numeric: slashed-zero;
     text-align: center;
     text-transform: uppercase;
-    color: white;
-}
-
-.satnica-now-pill {
-    right: 0;
-    z-index: 1;
-    padding: 4px 8px;
-    border-radius: 999px;
-    background: var(--satnica-now);
-    font-family: 'Rubik', sans-serif;
-    font-weight: 600;
-    font-size: 15px;
-    line-height: 1;
     color: white;
 }
 
@@ -447,11 +422,6 @@ export default {
     outline-offset: 2px;
 }
 
-.satnica-block.is-live {
-    box-shadow: 0 0 0 3px var(--satnica-now), 0 0 18px rgba(227, 38, 47, 0.45);
-    z-index: 1;
-}
-
 .satnica-block-name {
     font-family: 'GC Epic Pro Cro', sans-serif;
     font-weight: 800;
@@ -500,11 +470,6 @@ export default {
 
     .satnica-block-time {
         font-size: 14px;
-    }
-
-    .satnica-now-pill {
-        padding: 3px 6px;
-        font-size: 12px;
     }
 }
 
@@ -602,14 +567,6 @@ export default {
 
     .satnica-hour {
         font-size: 22px;
-    }
-
-    .satnica-now-pill {
-        left: 2px;
-        right: 2px;
-        text-align: center;
-        font-size: 11px;
-        padding: 3px 0;
     }
 }
 
