@@ -17,10 +17,12 @@
             </p>
 
             <div class="satnica-table" :style="{ '--stage-count': columns.length, '--span': span }">
-                <div class="satnica-heads-viewport">
-                    <div class="satnica-heads" ref="heads">
-                        <div v-for="stage in columns" :key="`head-${stage.key}`" class="satnica-stage-head">
-                            <span class="satnica-stage-label">{{ stage.label }}</span>
+                <div class="satnica-heads-bar">
+                    <div class="satnica-heads-viewport">
+                        <div class="satnica-heads" ref="heads">
+                            <div v-for="stage in columns" :key="`head-${stage.key}`" class="satnica-stage-head">
+                                <span class="satnica-stage-label">{{ stage.label }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -539,7 +541,20 @@ export default {
         right: -17vw;
     }
 
-    /* stage names sit above the vertical scroller and hours beside the horizontal one, so both freeze natively */
+    .satnica-page {
+        overflow: clip;
+    }
+
+    .satnica-heads-bar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background:
+            linear-gradient(rgba(15, 16, 17, 0.75), rgba(15, 16, 17, 0.75)),
+            var(--bw-texture) center / cover,
+            var(--bw-ink);
+    }
+
     .satnica-heads-viewport {
         overflow: hidden;
         container-type: inline-size;
@@ -555,12 +570,6 @@ export default {
             animation: satnica-heads-x linear both;
             animation-timeline: --satnica-x;
         }
-    }
-
-    .satnica-vscroll {
-        overflow-y: auto;
-        max-height: calc(100vh - var(--head-h));
-        max-height: calc(100dvh - var(--head-h));
     }
 
     .satnica-scroll {
