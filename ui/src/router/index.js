@@ -249,9 +249,10 @@ const routes = [
     path: "/tlocrt",
     name: "Tlocrt",
     component: Tlocrt,
-    // meta: {
-    //   visibilityCheck: "TLOCRT_VISIBILITY",
-    // },
+    meta: {
+      // visibilityCheck: "TLOCRT_VISIBILITY",
+      hideNavbar: true,
+    },
   },
   {
     path: "/Satnica",
