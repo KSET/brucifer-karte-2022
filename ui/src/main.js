@@ -90,12 +90,6 @@ const vuetify = createVuetify({
 
 app.use(vuetify)
 
-import QrcodeStream from "vue-qrcode-reader";
-import VueQrcodeReader from "vue-qrcode-reader";
-
-app.use(VueQrcodeReader)
-app.component('QrcodeStream', QrcodeStream);
-
 
 app.component('VueNavigationBar', VueNavigationBar);
 

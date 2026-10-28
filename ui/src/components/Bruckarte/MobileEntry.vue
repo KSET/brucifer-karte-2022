@@ -7,8 +7,13 @@
         <v-dialog v-model="cameraOpen" max-width="600">
             <v-card>
                 <v-card-item>
+                    <p v-if="cameraError" class="error-text">{{ cameraError }}</p>
                     <!-- v-if so the camera is released as soon as the dialog closes -->
-                    <StreamBarcodeReader v-if="cameraOpen" @decode="onDecode"></StreamBarcodeReader>
+                    <div v-else-if="cameraOpen" class="scanner">
+                        <QrcodeStream :track="onTrack" @error="onCameraError"
+                            @camera-on="cameraReady = true" @camera-off="cameraReady = false"></QrcodeStream>
+                        <v-progress-circular v-if="!cameraReady" class="camera-loading" indeterminate color="primary"></v-progress-circular>
+                    </div>
                 </v-card-item>
                 <v-card-actions>
                     <v-btn color="primary" block @click="cameraOpen = false">Zatvori</v-btn>
@@ -32,11 +37,29 @@
 
 <script>
 import { api } from "@/plugins/api";
-import { StreamBarcodeReader } from "vue-barcode-reader";
+import { QrcodeStream, setZXingModuleOverrides } from "vue-qrcode-reader";
+import zxingWasmUrl from "zxing-wasm/reader/zxing_reader.wasm";
 import GuestInfo from "./GuestInfo.vue";
 import { isBrucos, REQUEST_TIMEOUT } from '@/utils/guestTags';
 
-const UUID_RE = /^[0-9A-F]{8}-[0-9A-F]{4}-[14][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+setZXingModuleOverrides({
+    locateFile: (path, prefix) => path.endsWith('.wasm') ? zxingWasmUrl : prefix + path,
+});
+
+const RESCAN_COOLDOWN = 1000;
+
+const UUID_RE =/^[0-9A-F]{8}-[0-9A-F]{4}-[14][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+
+const CAMERA_ERRORS = {
+    NotAllowedError: 'Pristup kameri je odbijen, dopustite pristup kameri u postavkama preglednika',
+    NotFoundError: 'Kamera nije pronađena na ovom uređaju',
+    NotReadableError: 'Kamera je zauzeta, zatvorite druge aplikacije koje koriste kameru i pokušajte ponovno',
+    OverconstrainedError: 'Stražnja kamera nije dostupna na ovom uređaju',
+    InsecureContextError: 'Kamera radi samo preko HTTPS veze',
+    StreamApiNotSupportedError: 'Ovaj preglednik ne podržava kameru, pokušajte s drugim preglednikom',
+    NotSupportedError: 'Ovaj preglednik ne podržava kameru, pokušajte s drugim preglednikom',
+    StreamLoadTimeoutError: 'Kamera se nije pokrenula na vrijeme, zatvorite i ponovno otvorite kameru',
+};
 
 const SCAN_RESULT = {
     FOUND: 'found',
@@ -54,7 +77,7 @@ const RESULT_MESSAGES = {
 export default {
     name: 'MobileEntry',
     components: {
-        StreamBarcodeReader,
+        QrcodeStream,
         GuestInfo
     },
     data() {
@@ -65,6 +88,10 @@ export default {
             cameraOpen: false,
             resultOpen: false,
             lookingUp: false,
+            cameraReady: false,
+            cameraError: '',
+            lastCode: '',
+            resultClosedAt: 0,
         }
     },
     computed: {
@@ -72,10 +99,30 @@ export default {
             return RESULT_MESSAGES[this.result] || 'Dogodila se nepoznata greška, javite se administratoru';
         },
     },
+    watch: {
+        cameraOpen(open) {
+            if (!open) {
+                this.cameraReady = false;
+                this.cameraError = '';
+            }
+        },
+        resultOpen(open) {
+            if (!open) this.resultClosedAt = Date.now();
+        },
+    },
     methods: {
+        onTrack(codes) {
+            const code = codes[0]?.rawValue;
+            if (!code || this.lookingUp || this.resultOpen) return;
+            if (code === this.lastCode && Date.now() - this.resultClosedAt < RESCAN_COOLDOWN) return;
+            this.lastCode = code;
+            navigator.vibrate?.(100);
+            this.onDecode(code);
+        },
+        onCameraError(err) {
+            this.cameraError = CAMERA_ERRORS[err.name] || `Greška s kamerom (${err.name || err.message}), javite se administratoru`;
+        },
         async onDecode(code) {
-            if (this.lookingUp) return;
-            this.cameraOpen = false;
             this.guest = null;
 
             if (!UUID_RE.test(code)) {
@@ -117,6 +164,18 @@ export default {
 
 .qr-icon {
     height: 50px;
+}
+
+.scanner {
+    position: relative;
+    min-height: 200px;
+}
+
+.camera-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .lookup {
