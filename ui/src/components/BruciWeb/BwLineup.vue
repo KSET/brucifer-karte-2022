@@ -35,6 +35,8 @@
 <script>
 import lineupStore from '@/store/lineupStore'
 import BwArtistModal from '@/components/BruciWeb/BwArtistModal.vue'
+import { parseStored } from '@/utils/datetime'
+import { actSlot } from '@/utils/satnica'
 import rayPurple from '@/assets/design-elements/zraka-ljubicasta.webp'
 
 export default {
@@ -191,7 +193,11 @@ export default {
         },
 
         openDialog(lineup) {
-            this.selectedLineup = lineup
+            this.selectedLineup = {
+                ...lineup,
+                stage: null,
+                ...actSlot(lineup.stage, parseStored(lineup.startTime), parseStored(lineup.endTime)),
+            }
             this.showDialog = true
         },
     },

@@ -257,9 +257,10 @@ const routes = [
     path: "/Satnica",
     name: "satnica",
     component: Satnica,
-    // meta: {
-    //   visibilityCheck: "SATNICA_VISIBILITY",
-    // },
+    meta: {
+      // visibilityCheck: "SATNICA_VISIBILITY",
+      hideNavbar: true,
+    },
   },
   {
     path: "/igrica",

@@ -61,6 +61,11 @@ export function formatZagreb(date) {
     return `${p.day}.${p.month}.${p.year}. ${p.hour}:${p.minute}`
 }
 
+export function zagrebMinutes(date) {
+    const p = zagrebParts(date)
+    return +p.hour * 60 + +p.minute
+}
+
 export function parseStored(value) {
     if (!value || typeof value !== 'string') return null
     const d = new Date(value)

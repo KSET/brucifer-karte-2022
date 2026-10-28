@@ -16,7 +16,11 @@
 
                         <h2 v-if="artist" class="bw-artist-name">{{ artist.name }}</h2>
 
-                        <p v-if="subtitle" class="bw-artist-meta">{{ subtitle }}</p>
+                        <div v-if="showSlot" class="bw-artist-slot"
+                            :style="{ '--block-color': artist.color }">
+                            <span class="bw-artist-slot-stage">{{ artist.stage }}</span>
+                            <span v-if="artist.time" class="bw-artist-slot-time">{{ artist.time }}</span>
+                        </div>
 
                         <p v-if="biography" class="bw-artist-bio">{{ biography }}</p>
                     </div>
@@ -27,6 +31,8 @@
 </template>
 
 <script>
+import visibilityStore from '@/store/visibilityStore.js'
+
 export default {
     name: 'BwArtistModal',
 
@@ -50,11 +56,8 @@ export default {
             return bio && bio.trim().length ? bio : ''
         },
 
-        subtitle() {
-            const stage = this.artist?.stage?.trim()
-            const time = this.artist?.time?.trim()
-            if (stage && time) return `${stage} u ${time}`
-            return stage || time || ''
+        showSlot() {
+            return visibilityStore.state.SATNICA_VISIBILITY === true && !!this.artist?.stage
         },
     },
 
@@ -238,15 +241,35 @@ export default {
     margin-bottom: -0.25em;
 }
 
-.bw-artist-meta {
-    font-family: 'Cobya', sans-serif;
-    font-weight: 400;
-    font-size: clamp(18px, 2.6vw, 32px);
+.bw-artist-slot {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px clamp(12px, 1.4vw, 18px);
+    padding: clamp(10px, 1.2vw, 14px) clamp(16px, 2vw, 24px);
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background: var(--block-color, var(--bw-lineup-bar-bg));
+    color: white;
+    margin: clamp(16px, 1.8vw, 24px) 0 0;
+}
+
+.bw-artist-slot-stage {
+    font-family: 'GC Epic Pro Cro', sans-serif;
+    font-weight: 800;
+    font-size: clamp(18px, 2vw, 26px);
     line-height: 1;
-    letter-spacing: 0.02em;
+    text-box: trim-both cap alphabetic;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.55);
-    margin: clamp(12px, 1.4vw, 18px) 0 0;
+}
+
+.bw-artist-slot-time {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: clamp(15px, 1.5vw, 20px);
+    line-height: 1.15;
+    white-space: nowrap;
 }
 
 .bw-artist-bio {
