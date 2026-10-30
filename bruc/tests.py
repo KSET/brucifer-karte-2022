@@ -365,6 +365,11 @@ class DeriveFerEmailTests(TestCase):
 
     def test_transfer_jmbag(self):
         self.assertEqual(derive_fer_email('Ivan', 'Horvat', '0246012345'), 'ih024601234@fer.hr')
+        self.assertEqual(derive_fer_email('Ivan', 'Horvat', '0035123456'), 'ih003512345@fer.hr')
+
+    def test_official_examples(self):
+        self.assertEqual(derive_fer_email('Ivo', 'Horvat', '0036324986'), 'ih32498@fer.hr')
+        self.assertEqual(derive_fer_email('Željka', 'Čižmek', '2000987654'), 'zc200098765@fer.hr')
 
     def test_diacritics_and_whitespace(self):
         self.assertEqual(derive_fer_email(' Čedo ', 'Šimić', ' 0036123456 '), 'cs12345@fer.hr')

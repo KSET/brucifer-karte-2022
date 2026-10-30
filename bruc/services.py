@@ -34,7 +34,7 @@ def derive_fer_email(name, surname, jmbag):
     if not name or not surname or not jmbag:
         return None
 
-    digits = jmbag[4:9] if jmbag.startswith('003') else jmbag[:9]
+    digits = jmbag[4:9] if jmbag.startswith('0036') else jmbag[:9]
     initials = ''.join(DIACRITICS.get(c, c) for c in (name[0].lower(), surname[0].lower()))
     if not re.fullmatch(r"[a-z]{2}", initials) or not re.fullmatch(r"[0-9]{5}(?:[0-9]{4})?", digits):
         return None
