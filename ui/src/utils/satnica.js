@@ -28,7 +28,7 @@ export function eventNightDate(hhmm) {
 export const HARDCODED_ACTS = [
     { name: 'Silent Disco', stage: 'silent', start: eventNightDate('21:00'), end: eventNightDate('05:00') },
     { name: 'Brucistar', stage: 'brucistar', start: eventNightDate('22:00'), end: eventNightDate('03:00') },
-    { name: 'Votafak', stage: 'votafak', start: eventNightDate('23:00'), end: eventNightDate('05:00') },
+    { name: 'Votafak', stage: 'votafak', start: eventNightDate('23:59'), end: eventNightDate('03:59') },
 ]
 
 export const pad = (n) => String(n).padStart(2, '0')
