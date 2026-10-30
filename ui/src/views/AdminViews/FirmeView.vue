@@ -43,7 +43,7 @@ export default {
     async mounted() {
         this.loading = true;
         try {
-            const response = await api.get('/sponsors/');
+            const response = await api.get('/sponsors/', { params: { ordering: 'order' } });
             this.firms = response.data;
         } finally {
             this.loading = false;
