@@ -290,6 +290,18 @@ export default {
   overflow: visible;
 }
 
+:deep(.p-datatable-tfoot > tr > td) {
+  background-color: #f4f4f4;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 0.6rem 0.75rem;
+  border: 0;
+  border-top: 2px solid #111;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+}
+
 :deep(td.center-cell) {
   text-align: center;
 }

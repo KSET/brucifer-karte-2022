@@ -2,14 +2,17 @@
   <Toast />
   <AdminTable :rows="tags" :loading="loading" :searchFields="['name']" searchPlaceholder="Pretraži po imenu"
     emptyText="Nema tagova." deleteTitle="Obriši tag" @delete="deleteTag">
-    <Column field="name" header="Ime">
+    <Column field="name" header="Ime" footer="Ukupno">
       <template #body="{ data }">
         <span class="cell-text" :title="data.name">{{ data.name }}</span>
       </template>
     </Column>
-    <Column field="count" header="Broj" style="width: 7rem" bodyClass="center-cell" headerClass="center-head" />
-    <Column field="bought" header="Karta" style="width: 7rem" bodyClass="center-cell" headerClass="center-head" />
-    <Column field="entered" header="Ulaz" style="width: 7rem" bodyClass="center-cell" headerClass="center-head" />
+    <Column field="count" :footer="String(totals.count)" header="Broj" style="width: 7rem" bodyClass="center-cell" headerClass="center-head"
+      footerClass="center-cell" />
+    <Column field="bought" :footer="String(totals.bought)" header="Karta" style="width: 7rem" bodyClass="center-cell" headerClass="center-head"
+      footerClass="center-cell" />
+    <Column field="entered" :footer="String(totals.entered)" header="Ulaz" style="width: 7rem" bodyClass="center-cell" headerClass="center-head"
+      footerClass="center-cell" />
   </AdminTable>
 </template>
 
@@ -34,6 +37,15 @@ export default {
       tags: [],
       loading: false,
     };
+  },
+  computed: {
+    totals() {
+      return this.tags.reduce((sum, tag) => ({
+        count: sum.count + (tag.count || 0),
+        bought: sum.bought + (tag.bought || 0),
+        entered: sum.entered + (tag.entered || 0),
+      }), { count: 0, bought: 0, entered: 0 });
+    }
   },
   created() {
     this.fetchTags();
