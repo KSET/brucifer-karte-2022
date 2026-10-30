@@ -17,7 +17,7 @@
             </p>
 
             <div class="satnica-table" :style="{ '--stage-count': columns.length, '--span': span }">
-                <div class="satnica-heads-bar">
+                <div class="satnica-heads-bar" ref="headsBar">
                     <div class="satnica-heads-viewport">
                         <div class="satnica-heads" ref="heads">
                             <div v-for="stage in columns" :key="`head-${stage.key}`" class="satnica-stage-head">
@@ -37,12 +37,15 @@
                             <div class="satnica-lines" aria-hidden="true"></div>
 
                             <div v-for="(stage, index) in columns" :key="`col-${stage.key}`" class="satnica-column"
+                                :class="{ 'satnica-column--sticky': stage.sticky }"
                                 :style="{ '--block-color': stage.color, gridColumn: index + 1 }" :aria-label="stage.label">
                                 <button v-for="act in stage.acts" :key="act.key" type="button" class="satnica-block"
                                     :style="{ '--m': act.offset, '--d': act.duration }"
                                     @click="openArtist(act, stage)">
-                                    <span class="satnica-block-name">{{ act.name }}</span>
-                                    <span class="satnica-block-time">{{ act.time }}</span>
+                                    <span class="satnica-block-label">
+                                        <span class="satnica-block-name">{{ act.name }}</span>
+                                        <span class="satnica-block-time">{{ act.time }}</span>
+                                    </span>
                                 </button>
                             </div>
 
@@ -68,8 +71,11 @@ import { parseStored, zagrebMinutes } from '@/utils/datetime'
 import { EVENT_START, EVENT_END, SATNICA_STAGES, HARDCODED_ACTS, eventNightDate, pad, formatTime } from '@/utils/satnica'
 import rayPurple from '@/assets/design-elements/zraka-ljubicasta.webp'
 import rayYellow from '@/assets/design-elements/zraka-zuta.webp'
+import { gsap } from 'gsap'
 
 const MINUTE = 60000
+const BLOCK_PAD = 8
+const STATIC_LABEL_STAGES = ['menza', 'kino']
 const STAGE_KEYS = SATNICA_STAGES.map(s => s.key)
 // the frozen stage names follow horizontal scroll via a CSS scroll timeline where supported
 const SCROLL_TIMELINE = typeof CSS !== 'undefined' && CSS.supports('timeline-scope', '--a')
@@ -134,6 +140,7 @@ export default {
         columns() {
             return SATNICA_STAGES.map(stage => ({
                 ...stage,
+                sticky: !STATIC_LABEL_STAGES.includes(stage.key),
                 acts: this.acts.filter(a => a.stage === stage.key),
             }))
         },
@@ -159,16 +166,48 @@ export default {
         },
     },
 
+    watch: {
+        acts: {
+            handler: 'setupStickyLabels',
+            flush: 'post',
+        },
+    },
+
     mounted() {
         this.loadLineups()
         this._clock = setInterval(() => { this.now = new Date() }, 30000)
+        this.setupStickyLabels()
+        window.addEventListener('scroll', this.updateStickyLabels, { passive: true })
+        window.addEventListener('resize', this.updateStickyLabels)
+        document.fonts?.ready.then(this.updateStickyLabels)
     },
 
     beforeUnmount() {
         clearInterval(this._clock)
+        window.removeEventListener('scroll', this.updateStickyLabels)
+        window.removeEventListener('resize', this.updateStickyLabels)
     },
 
     methods: {
+        setupStickyLabels() {
+            this._labels = [...this.$el.querySelectorAll('.satnica-column--sticky .satnica-block')].map(block => {
+                const label = block.querySelector('.satnica-block-label')
+                return { block, label, setY: gsap.quickSetter(label, 'y', 'px') }
+            })
+            this.updateStickyLabels()
+        },
+
+        updateStickyLabels() {
+            if (!this._labels || !this.$refs.headsBar) return
+            const lineTop = Math.max(0, this.$refs.headsBar.getBoundingClientRect().bottom)
+
+            const ys = this._labels.map(({ block, label }) => {
+                const maxY = Math.max(0, block.clientHeight - 2 * BLOCK_PAD - label.offsetHeight)
+                return gsap.utils.clamp(0, maxY, lineTop - block.getBoundingClientRect().top - block.clientTop)
+            })
+            this._labels.forEach(({ setY }, i) => setY(ys[i]))
+        },
+
         syncHeads(e) {
             if (SCROLL_TIMELINE) return
             this.$refs.heads.style.transform = `translateX(${-e.target.scrollLeft}px)`
@@ -400,7 +439,6 @@ export default {
     height: calc(var(--d) * var(--px-per-min) - 2px);
     display: flex;
     flex-direction: column;
-    gap: 8px;
     padding: 8px;
     overflow: hidden;
     border: 2px solid rgba(0, 0, 0, 0.1);
@@ -420,6 +458,13 @@ export default {
 .satnica-block:focus-visible {
     outline: 2px solid white;
     outline-offset: 2px;
+}
+
+.satnica-block-label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    will-change: transform;
 }
 
 .satnica-block-name {

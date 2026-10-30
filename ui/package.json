@@ -28,6 +28,7 @@
     "fix-utf8": "^1.1.1",
     "fs": "^0.0.1-security",
     "googleapis": "^105.0.0",
+    "gsap": "^3.15.0",
     "jwt-decode": "^3.1.2",
     "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
