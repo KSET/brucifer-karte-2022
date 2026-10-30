@@ -109,12 +109,16 @@ export default {
         },
         ExportData() {
             var filename = 'export_guests.xlsx';
-            api.get('/guests/',)
-                .then(response => {
-                    var data = response.data;
-                    var ws = XLSX.utils.json_to_sheet(data);
+            Promise.all([api.get('/guests/'), api.get('/tags/')])
+                .then(([guestsResponse, tagsResponse]) => {
+                    var tags = tagsResponse.data.map(tag => {
+                        var row = { ...tag };
+                        delete row.id;
+                        return row;
+                    });
                     var wb = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(wb, ws, "People");
+                    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(guestsResponse.data), "Guests");
+                    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(tags), "Tags");
                     XLSX.writeFile(wb, filename);
                 });
 
