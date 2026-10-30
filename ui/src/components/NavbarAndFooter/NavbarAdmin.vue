@@ -156,13 +156,16 @@ export default {
       var filename = "export_guests.xlsx";
       Promise.all([
         axios.get(process.env.VUE_APP_BASE_URL + "/guests/"),
-        axios.get(process.env.VUE_APP_BASE_URL + "/tags/"),
+        axios.get(process.env.VUE_APP_BASE_URL + "/tags/stats/"),
       ]).then(([guestsResponse, tagsResponse]) => {
-        var tags = tagsResponse.data.map((tag) => {
+        var tags = tagsResponse.data.tags.map((tag) => {
           var row = { ...tag };
           delete row.id;
+          delete row.depth;
+          delete row.parent;
           return row;
         });
+        tags.push({ name: "Ukupno", ...tagsResponse.data.totals });
         var wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(guestsResponse.data), "Guests");
         XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(tags), "Tags");

@@ -33,7 +33,7 @@ class GuestsSerializer(serializers.HyperlinkedModelSerializer):
 class TagsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Tags
-        fields = ["id", "name", "count", "bought", "entered"]
+        fields = ["id", "name"]
 
 
 class UsersSerializer(serializers.HyperlinkedModelSerializer):

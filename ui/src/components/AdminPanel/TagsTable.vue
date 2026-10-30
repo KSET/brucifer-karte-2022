@@ -4,7 +4,8 @@
     emptyText="Nema tagova." deleteTitle="Obriši tag" @delete="deleteTag">
     <Column field="name" header="Ime" footer="Ukupno">
       <template #body="{ data }">
-        <span class="cell-text" :title="data.name">{{ data.name }}</span>
+        <span class="cell-text" :style="{ paddingLeft: `${data.depth * 1.5}rem` }"
+          :title="data.name">{{ data.name }}</span>
       </template>
     </Column>
     <Column field="count" :footer="String(totals.count)" header="Broj" style="width: 7rem" bodyClass="center-cell" headerClass="center-head"
@@ -35,17 +36,9 @@ export default {
   data() {
     return {
       tags: [],
+      totals: { count: 0, bought: 0, entered: 0 },
       loading: false,
     };
-  },
-  computed: {
-    totals() {
-      return this.tags.reduce((sum, tag) => ({
-        count: sum.count + (tag.count || 0),
-        bought: sum.bought + (tag.bought || 0),
-        entered: sum.entered + (tag.entered || 0),
-      }), { count: 0, bought: 0, entered: 0 });
-    }
   },
   created() {
     this.fetchTags();
@@ -54,37 +47,13 @@ export default {
     async fetchTags() {
       this.loading = true;
       try {
-        const response = await api.get(`/tags/`);
-        await this.processTags(response.data);
+        const { data } = await api.get(`/tags/stats/`);
+        this.tags = data.tags;
+        this.totals = data.totals;
       } catch (error) {
         console.error('Failed to fetch tags:', error);
       } finally {
         this.loading = false;
-      }
-    },
-    async processTags(tags) {
-      try {
-        for (const tag of tags) {
-          const response = await api.get(`/guests/?search=${tag.name}&search_fields=tag`);
-          let { numc, numb, nume } = { numc: 0, numb: 0, nume: 0 };
-
-          response.data.forEach(guest => {
-            numc++;
-            if (guest.bought === true) numb++;
-            if (guest.entered === true) nume++;
-          });
-
-          if (numc != tag.count || numb !== tag.bought || nume !== tag.entered) {
-            await api.put(`/tags/${tag.id}/`,
-              { count: numc, bought: numb, entered: nume },
-            );
-
-            Object.assign(tag, { count: numc, bought: numb, entered: nume });
-          }
-        }
-        this.tags = [...tags];
-      } catch (error) {
-        console.error('Failed to process tags:', error);
       }
     },
     async deleteTag(tag) {

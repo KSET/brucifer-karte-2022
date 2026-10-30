@@ -108,9 +108,6 @@ class Tags(models.Model):
     id = models.AutoField(primary_key=True)
     slug = models.CharField(max_length=200, default='', blank=True)
     name = models.CharField(max_length=49, default='', blank=True)
-    count = models.IntegerField(default=0)
-    bought = models.IntegerField(default=0)
-    entered = models.IntegerField(default=0)
 
 
 class Lineup(models.Model):

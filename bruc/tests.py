@@ -22,7 +22,7 @@ from PIL import Image
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import BrucosiFormResponse, Guests, Lineup, Mailer, Sponsors, Users, Visibility
+from .models import BrucosiFormResponse, Guests, Lineup, Mailer, Sponsors, Tags, Users, Visibility
 from .roles import Role
 from .search import fold, search_key
 from .services import add_sponsor_guest, classify_mail_error, derive_fer_email
@@ -1492,3 +1492,75 @@ class SearchKeyWritePathsTests(APITestCase):
         self.assertEqual(sorted(self.found('dokic')), ['Đokić Đokić'])
         with self.assertRaises(ValueError):
             Guests.objects.update(searchKey='x')
+
+
+class TagStatsTests(APITestCase):
+    URL = '/api/tags/stats/'
+
+    def login_as(self, role):
+        email = f'{role}@kset.org'
+        Users.objects.get_or_create(email=email, defaults={'privilege': role})
+        self.client.force_authenticate(DjangoUser.objects.get_or_create(username=email)[0])
+
+    def stats(self):
+        self.login_as(Role.ADMIN)
+        res = self.client.get(self.URL)
+        self.assertEqual(res.status_code, 200)
+        return {tag['name']: tag for tag in res.data['tags']}, res.data['totals']
+
+    def test_overlapping_tags_are_counted_once_in_totals(self):
+        Tags.objects.create(name='vip')
+        Tags.objects.create(name='vip-sponzor')
+        Guests.objects.create(tag='vip', bought=True, entered=True)
+        Guests.objects.create(tag='vip-sponzor', bought=True)
+        Guests.objects.create(tag='other', bought=True, entered=True)
+        tags, totals = self.stats()
+        self.assertEqual({k: tags['vip'][k] for k in ('count', 'bought', 'entered')},
+                         {'count': 2, 'bought': 2, 'entered': 1})
+        self.assertEqual({k: tags['vip-sponzor'][k] for k in ('count', 'bought', 'entered')},
+                         {'count': 1, 'bought': 1, 'entered': 0})
+        self.assertEqual(totals, {'count': 2, 'bought': 2, 'entered': 1})
+
+    def test_children_are_listed_under_their_closest_parent(self):
+        for name in ['vip-sponzor-gold', 'kset', 'vip', 'vip-sponzor']:
+            Tags.objects.create(name=name)
+        Guests.objects.create(tag='vip-sponzor-gold')
+        self.login_as(Role.ADMIN)
+        rows = self.client.get(self.URL).data['tags']
+        self.assertEqual([(row['name'], row['parent'], row['depth']) for row in rows], [
+            ('kset', None, 0),
+            ('vip', None, 0),
+            ('vip-sponzor', 'vip', 1),
+            ('vip-sponzor-gold', 'vip-sponzor', 2),
+        ])
+        self.assertEqual([row['count'] for row in rows], [0, 1, 1, 1])
+
+    def test_sorted_alphabetically_ignoring_case_and_accents(self):
+        for name in ['Zagreb', 'čiste', 'Brucoši', 'cimeri', 'alumni']:
+            Tags.objects.create(name=name)
+        self.login_as(Role.ADMIN)
+        rows = self.client.get(self.URL).data['tags']
+        self.assertEqual([row['name'] for row in rows], ['alumni', 'Brucoši', 'cimeri', 'čiste', 'Zagreb'])
+
+    def test_match_ignores_case(self):
+        Tags.objects.create(name='vip')
+        Guests.objects.create(tag='VIP')
+        tags, totals = self.stats()
+        self.assertEqual(tags['vip']['count'], 1)
+        self.assertEqual(totals['count'], 1)
+
+    def test_sponsor_tag_matches_whole_name(self):
+        Tags.objects.create(name='acme VIP - Sponzor - Acme')
+        Guests.objects.create(tag='acme VIP - Sponzor - Acme')
+        Guests.objects.create(tag='VIP - Sponzor - acme other')
+        tags, _ = self.stats()
+        self.assertEqual(tags['acme VIP - Sponzor - Acme']['count'], 1)
+
+    def test_no_tags(self):
+        Guests.objects.create(tag='vip')
+        tags, totals = self.stats()
+        self.assertEqual(tags, {})
+        self.assertEqual(totals, {'count': 0, 'bought': 0, 'entered': 0})
+
+    def test_requires_login(self):
+        self.assertIn(self.client.get(self.URL).status_code, (401, 403))

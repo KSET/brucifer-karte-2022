@@ -35,7 +35,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .auth import RequireXHRHeader, blacklist_refresh_cookie, clear_refresh_cookie, set_refresh_cookie
 from .models import Translations, Visibility, Cjenik, Guests, Tags, Users, Lineup, Sponsors, Contact, Mailer, GameLeaderboard, BrucosiFormResponse
 from .roles import Role, GUEST_ROLES
-from .search import name_rank, name_search_q
+from .search import LONG, fold, name_rank, name_search_q
 from .serializer import BrucosiFormResponseSerializer, TranslationsSerializer, VisibilitySerializer, CjenikSerializer, GuestsSerializer, TagsSerializer, UsersSerializer, LineupSerializer, SponsorsSerializer, ContactSerializer, DynamicSearchFilter, MailerSerializer, GameLeaderboardSerializer, PublicLineupSerializer, PublicSponsorsSerializer, SponsorGuestSerializer, SponsorPortalSerializer
 from .services import (
     SponsorGuestCapReached, SponsorGuestEntered, SponsorInputClosed, add_sponsor_guest, delete_sponsor_guest, derive_fer_email,
@@ -400,10 +400,58 @@ class GuestsViewSet(viewsets.ModelViewSet):
         guests = Guests.objects.filter(_failed_mail_q(), bought=True).order_by('-boughtTicketTime')
         return Response(GuestsSerializer(guests, many=True).data)
 
+def guest_stats(q):
+    return Guests.objects.filter(q).aggregate(
+        count=Count('id'),
+        bought=Count('id', filter=Q(bought=True)),
+        entered=Count('id', filter=Q(entered=True)),
+    )
+
+
+def tag_parents(tags):
+    """A tag's parent is the longest other tag whose name it contains (vip-sponzor goes under vip).
+    Tags with the same name can't contain each other, so there are no cycles."""
+    parents = {}
+    for tag in tags:
+        name = tag.name.casefold()
+        candidates = [other for other in tags
+                      if other.name and other.name.casefold() != name and other.name.casefold() in name]
+        parents[tag.id] = max(candidates, key=lambda other: len(other.name), default=None)
+    return parents
+
+
 class TagsViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
     permission_classes = [ReadOnlyOrRole(Role.ADMIN, read_roles=GUEST_ROLES)]
+
+    @action(detail=False, methods=['get'])
+    def stats(self, request):
+        """Guest counts per tag as a tree: each child is listed right after its parent. A guest's tag matches
+        every tag contained in it, so a parent's count already includes its children, and the totals count
+        each guest once instead of summing the rows."""
+        # alphabetical ignoring case and accents, so Č sorts with C instead of after Z
+        tags = sorted(self.get_queryset(), key=lambda tag: (fold(tag.name, LONG), tag.name))
+        parents = tag_parents(tags)
+        children = {}
+        for tag in tags:
+            children.setdefault(parents[tag.id] and parents[tag.id].id, []).append(tag)
+
+        rows = []
+
+        def add(parent_id, depth):
+            for tag in children.get(parent_id, []):
+                parent = parents[tag.id]
+                rows.append({'id': tag.id, 'name': tag.name, 'parent': parent and parent.name, 'depth': depth,
+                             **guest_stats(Q(tag__icontains=tag.name))})
+                add(tag.id, depth + 1)
+
+        add(None, 0)
+        any_tag = Q()
+        for tag in tags:
+            any_tag |= Q(tag__icontains=tag.name)
+        totals = guest_stats(any_tag) if tags else {'count': 0, 'bought': 0, 'entered': 0}
+        return Response({'tags': rows, 'totals': totals})
 
 
 class UsersViewSet(viewsets.ModelViewSet):
