@@ -13,7 +13,12 @@
           </Column>
           <Column field="jmbag" header="JMBAG" />
           <Column header="Email">
-            <template #body="{ data }">{{ ticketEmail(data) }}</template>
+            <template #body="{ data }">
+              {{ data.email || '-' }}
+              <div v-if="resendEmail(data) && resendEmail(data) !== data.email" class="resend-email">
+                ponovno slanje: {{ resendEmail(data) }}
+              </div>
+            </template>
           </Column>
           <Column header="Greška">
             <template #body="{ data }">{{ failureReason(data) }}</template>
@@ -70,8 +75,8 @@ export default {
         this.failedLoading = false;
       }
     },
-    ticketEmail(guest) {
-      return deriveFerEmail(guest.name, guest.surname, guest.jmbag) || guest.email || '-';
+    resendEmail(guest) {
+      return deriveFerEmail(guest.name, guest.surname, guest.jmbag);
     },
     failureReason(guest) {
       if (guest.mailError) return guest.mailError;
@@ -156,5 +161,10 @@ export default {
   margin: 0 0 0.75rem;
   font-size: 1.1rem;
   color: #c62828;
+}
+
+.resend-email {
+  font-size: 12px;
+  color: #777;
 }
 </style>
