@@ -9,6 +9,7 @@ from django.contrib.auth.models import User as DjangoUser
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.db import DatabaseError, transaction
 from django.db.models import Count, Q
+from django.db.models.functions import TruncDate
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils import timezone
@@ -295,6 +296,21 @@ class GuestsViewSet(viewsets.ModelViewSet):
             "ticketsAfter12": tickets_after_12,
             "failedMails": brucosi.filter(_failed_mail_q(), bought=True).count(),
         })
+
+    @action(detail=False, methods=['get'], url_path='daily-report', permission_classes=[HasRole(Role.ADMIN)])
+    def daily_report(self, request):
+        """Tickets sold per day in Zagreb time, split at 12:00."""
+        rows = (Guests.objects.filter(bought=True, boughtTicketTime__isnull=False)
+                .values(date=TruncDate('boughtTicketTime'))
+                .annotate(totalEntries=Count('id'),
+                          ticketsBefore12=Count('id', filter=Q(boughtTicketTime__hour__lt=12)))
+                .order_by('-date'))
+        return Response([{
+            "date": r['date'].isoformat(),
+            "totalEntries": r['totalEntries'],
+            "ticketsBefore12": r['ticketsBefore12'],
+            "ticketsAfter12": r['totalEntries'] - r['ticketsBefore12'],
+        } for r in rows])
 
     @staticmethod
     def _sale_names(request, guest):

@@ -50,7 +50,7 @@ import Sidebar from '@/components/NavbarAndFooter/Sidebar.vue'
 import * as XLSX from 'xlsx'
 import { XlsxRead, XlsxJson } from "../../../node_modules/vue3-xlsx/dist/vue3-xlsx.cjs.prod.js";
 import readXlsxFile from 'read-excel-file';
-import { api } from "@/plugins/api";;
+import { api } from "@/plugins/api";
 
 export default {
   components: {
@@ -62,33 +62,9 @@ export default {
     return {
       file: null,
       collection: null,
-      guests: [],
-      users: [],
-      idsguests: [],
-      idsusers: [],
       importstatusGuests: '',
       importstatusUsers: '',
     };
-  },
-  mounted() {
-    api.get('/guests/',)
-      .then(response => {
-        this.guests = response.data;
-        this.len = this.guests.length;
-        this.guests.forEach(element => {
-          this.idsguests.push(element.id);
-        });
-        api.get('/users/',)
-          .then(response => {
-            this.users = response.data;
-            this.len = this.guests.length;
-
-            this.users.forEach(element => {
-              this.idsusers.push(element.id);
-            });
-
-          })
-      })
   },
   methods: {
     exportExample(version) {

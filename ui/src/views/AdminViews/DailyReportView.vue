@@ -62,7 +62,7 @@ export default {
     };
   },
   created() {
-    this.fetchGuests();
+    this.fetchDailyReport();
     this.fetchFailedMails();
   },
   methods: {
@@ -101,47 +101,17 @@ export default {
     replaceFailed(id, updated) {
       this.failedMails = this.failedMails.map(g => (g.id === id ? updated : g));
     },
-    async fetchGuests() {
+    async fetchDailyReport() {
       this.loading = true;
       try {
-        const response = await api.get('/guests/?bought=true');
-        this.guests = response.data;
-        this.processDailyReport();
+        const response = await api.get('/guests/daily-report/');
+        this.dateSummary = response.data;
       } finally {
         this.loading = false;
       }
     },
-    processDailyReport() {
-      let entries = this.guests;
-      const dateSummary = {};
-
-      entries.forEach(entry => {
-        const { boughtTicketTime } = entry;
-        if (boughtTicketTime) {
-          const localDateTime = new Date(boughtTicketTime);
-          const date = localDateTime.toLocaleDateString('en-CA');
-          const hours = localDateTime.getHours();
-          if (!dateSummary[date]) {
-            dateSummary[date] = { totalEntries: 0, ticketsBefore12: 0, ticketsAfter12: 0 };
-          }
-          dateSummary[date].totalEntries++;
-          if (hours < 12) {
-            dateSummary[date].ticketsBefore12++;
-          } else {
-            dateSummary[date].ticketsAfter12++;
-          }
-        }
-      });
-
-      this.dateSummary = Object.entries(dateSummary)
-        .sort((a, b) => b[0].localeCompare(a[0]))
-        .map(([date, details]) => ({ date, ...details }));
-    },
     formatDate(date) {
-      const d = new Date(date);
-      const day = d.getDate().toString().padStart(2, '0');
-      const month = (d.getMonth() + 1).toString().padStart(2, '0');
-      const year = d.getFullYear();
+      const [year, month, day] = date.split('-');
       return `${day}.${month}.${year}.`;
     }
   }

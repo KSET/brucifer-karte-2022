@@ -1012,6 +1012,25 @@ class GuestSaleTests(APITestCase):
             (res.data['totalEntries'], res.data['ticketsBefore12'], res.data['ticketsAfter12'], res.data['failedMails']),
             (2, 1, 1, 1))
 
+    def test_daily_report_groups_by_zagreb_day_and_noon(self):
+        zg = ZoneInfo('Europe/Zagreb')
+        Guests.objects.create(tag='Brucoši', bought=True, boughtTicketTime=datetime(2026, 10, 1, 9, 0, tzinfo=zg))
+        Guests.objects.create(tag='Brucoši', bought=True, boughtTicketTime=datetime(2026, 10, 1, 12, 30, tzinfo=zg))
+        Guests.objects.create(tag='kset VIP', bought=True, boughtTicketTime=datetime(2026, 10, 1, 10, 0, tzinfo=zg))
+        Guests.objects.create(tag='Brucoši', bought=True, boughtTicketTime=datetime(2026, 10, 2, 0, 30, tzinfo=zg))
+        Guests.objects.create(tag='Brucoši', bought=True)
+        Guests.objects.create(tag='Brucoši', bought=False, boughtTicketTime=datetime(2026, 10, 1, 9, 0, tzinfo=zg))
+        self.login_as(Role.ADMIN)
+        res = self.client.get('/api/guests/daily-report/')
+        self.assertEqual(res.data, [
+            {'date': '2026-10-02', 'totalEntries': 1, 'ticketsBefore12': 1, 'ticketsAfter12': 0},
+            {'date': '2026-10-01', 'totalEntries': 3, 'ticketsBefore12': 2, 'ticketsAfter12': 1},
+        ])
+
+    def test_daily_report_is_admin_only(self):
+        self.login_as(Role.TICKETS)
+        self.assertEqual(self.client.get('/api/guests/daily-report/').status_code, 403)
+
 
 GOOGLE_AUTH_URL = '/api/auth/google/'
 REFRESH_URL = '/api/auth/token/refresh/'
