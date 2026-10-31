@@ -7,7 +7,7 @@
 
             <div class="grid-container" style="row-gap: 3rem;">
                 <h1 class="textfield">Ime i prezime </h1>
-                <input required class="inputfield" type="text" @input="changeValue" v-model="name">
+                <input class="inputfield" type="text" @input="changeValue" v-model="name">
 
                 <h1 class="textfield">KSET e-adresa </h1>
                 <input required class="inputfield" type="text" @input="changeValue" v-model="email">
@@ -62,6 +62,8 @@ export default {
     data() {
         return {
             users: [],
+            name: '',
+            email: '',
             privilege: '',
             NONE,
             ADMIN,
@@ -85,7 +87,7 @@ export default {
             this.privilege = changenum
         },
         async postUser() {
-            if (this.name == "" || this.email == "" || this.privilege == "") {
+            if (this.email == "" || this.privilege == "") {
                 window.alert("Unesite sve podatke");
             } else {
 

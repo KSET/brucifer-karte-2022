@@ -794,7 +794,7 @@ class GoogleAuthView(APIView):
         if not idinfo.get("email_verified"):
             return Response({"error": "Email not verified."}, status=status.HTTP_403_FORBIDDEN)
 
-        name = idinfo.get("name", "")
+        name = idinfo.get("name") or email.split("@")[0]
 
         try:
             custom_user, created = Users.objects.get_or_create(
