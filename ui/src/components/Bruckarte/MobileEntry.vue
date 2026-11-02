@@ -10,7 +10,7 @@
                     <p v-if="cameraError" class="error-text">{{ cameraError }}</p>
                     <!-- v-if so the camera is released as soon as the dialog closes -->
                     <div v-else-if="cameraOpen" class="scanner">
-                        <QrcodeStream :track="onTrack" @error="onCameraError"
+                        <QrcodeStream :track="onTrack" :paused="resultOpen" @error="onCameraError"
                             @camera-on="cameraReady = true" @camera-off="cameraReady = false"></QrcodeStream>
                         <v-progress-circular v-if="!cameraReady" class="camera-loading" indeterminate color="primary"></v-progress-circular>
                     </div>

@@ -36,6 +36,16 @@
                 <span class="textfield conf-code">{{ guest.confCode }}</span>
             </template>
         </div>
+
+        <v-dialog v-model="confirmUndoOpen" max-width="500px" :persistent="saving">
+            <v-card>
+                <v-card-title>Poništiti ulaz za ovog gosta?</v-card-title>
+                <v-card-actions>
+                    <v-btn text :disabled="saving" @click="confirmUndoOpen = false">Odustani</v-btn>
+                    <v-btn color="error" :loading="saving" @click="confirmUndo">Poništi ulaz</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -56,6 +66,7 @@ export default {
         return {
             saving: false,
             error: '',
+            confirmUndoOpen: false,
             // snapshot taken when a guest is opened, so toggling entry here doesn't raise the warning
             wasEntered: false,
         }
@@ -80,6 +91,7 @@ export default {
             handler() {
                 this.wasEntered = !!this.guest?.entered;
                 this.error = '';
+                this.confirmUndoOpen = false;
             },
         },
     },
@@ -88,8 +100,11 @@ export default {
             return this.postEntry('check-in');
         },
         undoCheckIn() {
-            if (!window.confirm('Poništiti ulaz za ovog gosta?')) return;
-            return this.postEntry('undo-check-in');
+            this.confirmUndoOpen = true;
+        },
+        async confirmUndo() {
+            await this.postEntry('undo-check-in');
+            this.confirmUndoOpen = false;
         },
         // the endpoints set entered instead of toggling it, so retrying after a timeout is safe
         async postEntry(action) {
