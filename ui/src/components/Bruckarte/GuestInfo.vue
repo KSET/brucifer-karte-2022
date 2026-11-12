@@ -11,6 +11,11 @@
                 <input readonly class="inputfield" type="text" :value="guest.surname">
             </template>
 
+            <template v-if="showTag && hasGuest">
+                <label class="textfield">Tag</label>
+                <input readonly class="inputfield" type="text" :value="displayTag(guest.tag)">
+            </template>
+
             <template v-if="isBrucos">
                 <label class="textfield">JMBAG</label>
                 <input readonly class="inputfield" type="text" :value="guest.jmbag">
@@ -51,7 +56,7 @@
 
 <script>
 import { api } from "@/plugins/api";
-import { isBrucos, isSponsor, REQUEST_TIMEOUT } from '@/utils/guestTags';
+import { displayTag, isBrucos, isSponsor, REQUEST_TIMEOUT } from '@/utils/guestTags';
 
 export default {
     name: 'GuestInfo',
@@ -59,6 +64,10 @@ export default {
         guest: {
             type: Object,
             default: () => ({}),
+        },
+        showTag: {
+            type: Boolean,
+            default: false,
         },
     },
     emits: ['updated'],
@@ -96,6 +105,7 @@ export default {
         },
     },
     methods: {
+        displayTag,
         checkIn() {
             return this.postEntry('check-in');
         },

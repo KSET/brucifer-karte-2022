@@ -27,7 +27,7 @@
                     <v-progress-circular indeterminate color="black"></v-progress-circular>
                     <p>Tražim gosta…</p>
                 </div>
-                <GuestInfo v-else-if="result === SCAN_RESULT.FOUND" :guest="guest" @updated="guest = $event"></GuestInfo>
+                <GuestInfo v-else-if="result === SCAN_RESULT.FOUND" :guest="guest" show-tag @updated="guest = $event"></GuestInfo>
                 <p v-else class="error-text">{{ resultMessage }}</p>
                 <button type="button" class="closeBtn" @click="resultOpen = false">Zatvori</button>
             </v-card>

@@ -43,7 +43,7 @@
         <!-- only displayed on mobile, where the details panel is hidden -->
         <div v-if="overlayOpen" class="entry-view__overlay" @click.self="overlayOpen = false">
             <div class="entry-view__overlay-card">
-                <GuestInfo :guest="selectedGuest" @updated="onGuestUpdated"></GuestInfo>
+                <GuestInfo :guest="selectedGuest" show-tag @updated="onGuestUpdated"></GuestInfo>
                 <button type="button" class="close-btn" @click="overlayOpen = false">Zatvori</button>
             </div>
         </div>
