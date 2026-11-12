@@ -175,7 +175,10 @@ export default {
 
     mounted() {
         this.loadLineups()
-        this._clock = setInterval(() => { this.now = new Date() }, 30000)
+        this._clock = setInterval(this.tick, 1000)
+        document.addEventListener('visibilitychange', this.tick)
+        window.addEventListener('pageshow', this.tick)
+        window.addEventListener('focus', this.tick)
         this.setupStickyLabels()
         window.addEventListener('scroll', this.updateStickyLabels, { passive: true })
         window.addEventListener('resize', this.updateStickyLabels)
@@ -184,11 +187,18 @@ export default {
 
     beforeUnmount() {
         clearInterval(this._clock)
+        document.removeEventListener('visibilitychange', this.tick)
+        window.removeEventListener('pageshow', this.tick)
+        window.removeEventListener('focus', this.tick)
         window.removeEventListener('scroll', this.updateStickyLabels)
         window.removeEventListener('resize', this.updateStickyLabels)
     },
 
     methods: {
+        tick() {
+            this.now = new Date()
+        },
+
         setupStickyLabels() {
             this._labels = [...this.$el.querySelectorAll('.satnica-column--sticky .satnica-block')].map(block => {
                 const label = block.querySelector('.satnica-block-label')
